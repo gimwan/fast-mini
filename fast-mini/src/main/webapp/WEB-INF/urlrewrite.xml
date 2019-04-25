@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE urlrewrite  
+    PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"  
+    "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">  
+<!-- url 转小写功能 -->
+<urlrewrite>  
+	<rule>
+		<from casesensitive="true">^/(?!WEB-INF|js|image|css)(.*[A-Z]{1,}.*)$</from>
+		<to>/${lower:$1}</to>
+	</rule>
+
+</urlrewrite> 
