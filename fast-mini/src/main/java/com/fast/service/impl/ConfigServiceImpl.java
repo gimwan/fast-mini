@@ -19,9 +19,8 @@ public class ConfigServiceImpl implements IConfigService {
 		Result result = new Result();
 
 		try {
-			Integer erro = null;
-			erro.toString();
-			result.setErrcode(0);
+			FastLog.debug("test debug");
+			FastLog.error("test error");
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用ConfigServiceImpl.miniProgramConfig报错：", e);
