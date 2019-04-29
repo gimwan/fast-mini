@@ -12,11 +12,11 @@ public class ProjectInit implements ServletContextListener {
 
 	HttpServletRequest request;
 
-	public void contextDestroyed(ServletContextEvent arg0) {
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		System.out.println("==========初始化信息进行销毁==========");
 	}
 
-	public void contextInitialized(ServletContextEvent arg0) {
+	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		System.out.println("==========系统初始化==========");
 		System.out.println("==========..........==========");
 
