@@ -13,12 +13,12 @@ public class ProjectInit implements ServletContextListener {
 	HttpServletRequest request;
 
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		System.out.println("==========初始化信息进行销毁==========");
+		circle();
 	}
 
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		heart(15,0.9,"love");
-		
+		heart();
+
 		// 初始化缓存系统
 		/*
 		 * MemcachedClientTools.ConnectMemcachedService(arg0.getServletContext()
@@ -36,19 +36,34 @@ public class ProjectInit implements ServletContextListener {
 		// ...
 	}
 
-	private static void heart(int r, double size, String req) {
-		size = 1 / (1.5 * r * size);
-		StringBuilder sb = new StringBuilder();
-		for (int y = r; y > -r; y--, sb.append("\n"))
-			for (int x = -2 * r; x < 2 * r; x++) {
-				char msg = (req + req).charAt((x - y) % req.length() + req.length());
-				sb.append((inHeart(size, x, y) ? msg + " " : " "));
+	private static void heart() {
+		for (float y = (float) 1.5; y > -1.5; y -= 0.1) {
+			for (float x = (float) -1.5; x < 1.5; x += 0.05) {
+				float a = x * x + y * y - 1;
+				if ((a * a * a - x * x * y * y * y) <= 0.0) {
+					System.out.print("^");
+				} else
+					System.out.print(" ");
 			}
-		System.err.println(sb.toString());
+			System.out.println();
+		}
 	}
 
-	private static boolean inHeart(double size, int x, int y) {
-		return Math.pow(Math.pow(x * size, 2) + Math.pow(y * 2 * size, 2) - 1, 3)
-				- Math.pow(x * size, 2) * Math.pow(y * 2 * size, 3) <= 0;
+	public static void circle() {
+		int r = 15;// 圆形的半径
+		for (int y = 0; y <= 2 * r; y += 2) {// y的步长为2,改变y的步长可以将圆形变成椭圆
+			int x = (int) Math.round(r - Math.sqrt(2 * r * y - y * y));
+			int len = 2 * (r - x);
+
+			for (int i = 0; i <= x; i++) {
+				System.out.print(' ');
+			}
+			System.out.print('*');
+
+			for (int j = 0; j <= len; j++) {
+				System.out.print(' ');
+			}
+			System.out.println('*');
+		}
 	}
 }

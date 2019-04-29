@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author gimwan
  *
  */
-@RequestMapping(value = "/login", produces = "application/json; charset=utf-8")
+@RequestMapping(value = "", produces = "application/json; charset=utf-8")
 @Controller
 public class LoginController {
 	
