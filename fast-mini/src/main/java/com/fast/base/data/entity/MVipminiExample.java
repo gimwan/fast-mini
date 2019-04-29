@@ -1,16 +1,17 @@
 package com.fast.base.data.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class MVipminidataExample {
+public class MVipminiExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public MVipminidataExample() {
+    public MVipminiExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -421,6 +422,66 @@ public class MVipminidataExample {
 
         public Criteria andVipidNotBetween(Integer value1, Integer value2) {
             addCriterion("VipID not between", value1, value2, "vipid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeIsNull() {
+            addCriterion("UpdatedTime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeIsNotNull() {
+            addCriterion("UpdatedTime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeEqualTo(Date value) {
+            addCriterion("UpdatedTime =", value, "updatedtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeNotEqualTo(Date value) {
+            addCriterion("UpdatedTime <>", value, "updatedtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeGreaterThan(Date value) {
+            addCriterion("UpdatedTime >", value, "updatedtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("UpdatedTime >=", value, "updatedtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeLessThan(Date value) {
+            addCriterion("UpdatedTime <", value, "updatedtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeLessThanOrEqualTo(Date value) {
+            addCriterion("UpdatedTime <=", value, "updatedtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeIn(List<Date> values) {
+            addCriterion("UpdatedTime in", values, "updatedtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeNotIn(List<Date> values) {
+            addCriterion("UpdatedTime not in", values, "updatedtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeBetween(Date value1, Date value2) {
+            addCriterion("UpdatedTime between", value1, value2, "updatedtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdatedtimeNotBetween(Date value1, Date value2) {
+            addCriterion("UpdatedTime not between", value1, value2, "updatedtime");
             return (Criteria) this;
         }
     }

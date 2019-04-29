@@ -1,6 +1,8 @@
 package com.fast.base.data.entity;
 
-public class MVipminidata {
+import java.util.Date;
+
+public class MVipmini {
     private Integer id;
 
     private Integer miniprogramid;
@@ -11,7 +13,7 @@ public class MVipminidata {
 
     private Integer vipid;
 
-    private byte[] updatedtime;
+    private Date updatedtime;
 
     public Integer getId() {
         return id;
@@ -53,11 +55,11 @@ public class MVipminidata {
         this.vipid = vipid;
     }
 
-    public byte[] getUpdatedtime() {
+    public Date getUpdatedtime() {
         return updatedtime;
     }
 
-    public void setUpdatedtime(byte[] updatedtime) {
+    public void setUpdatedtime(Date updatedtime) {
         this.updatedtime = updatedtime;
     }
 }
