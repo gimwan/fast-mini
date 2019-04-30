@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 日志类
- * @author gimwan
+ * @author J
  *
  */
 public class FastLog {

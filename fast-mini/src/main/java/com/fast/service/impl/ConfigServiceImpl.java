@@ -1,5 +1,7 @@
 package com.fast.service.impl;
 
+import java.io.Serializable;
+
 import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
@@ -8,11 +10,13 @@ import com.fast.system.log.FastLog;
 
 /**
  * 系统参数
- * @author gimwan
+ * @author J
  *
  */
 @Service
-public class ConfigServiceImpl implements IConfigService {
+public class ConfigServiceImpl implements IConfigService, Serializable {
+	
+	private static final long serialVersionUID = 71148004875517941L;
 
 	@Override
 	public Result miniProgramConfig() {

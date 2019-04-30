@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 接口结果类
- * @author gimwan
+ * @author J
  *
  */
 public class Result implements Serializable {

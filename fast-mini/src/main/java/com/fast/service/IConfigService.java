@@ -4,7 +4,7 @@ import com.fast.base.Result;
 
 /**
  * 系统参数
- * @author gimwan
+ * @author J
  *
  */
 public interface IConfigService {

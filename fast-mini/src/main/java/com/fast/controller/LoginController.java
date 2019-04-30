@@ -11,10 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 登录
- * @author gimwan
+ * @author J
  *
  */
-@RequestMapping(value = "/login", produces = "application/json; charset=utf-8")
+@RequestMapping(value = "", produces = "application/json; charset=utf-8")
 @Controller
 public class LoginController {
 	

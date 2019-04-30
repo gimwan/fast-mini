@@ -4,8 +4,10 @@ import java.util.Map;
 
 import org.springframework.util.AntPathMatcher;
 
-/*
+/**
  * 忽略url大小写
+ * @author J
+ *
  */
 public class CaseInsensitiveAntPathMatcher extends AntPathMatcher {
     @Override
