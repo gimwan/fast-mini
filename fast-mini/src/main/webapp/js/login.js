@@ -1,10 +1,16 @@
-import Vue from "vue";
-
 var loginData = {
-	message : "hello mini"
+	code : '',
+	password : ''
 }
 
-let vm = new Vue({
-	el : ".loginView",
-	data : loginData
-})
+window.onload = function() {
+	new Vue({
+		el : ".lowin-box-inner",
+		data : loginData,
+		methods : {
+			loginCheck : function() {
+				console.log(loginData);
+			}
+		}
+	});
+}
