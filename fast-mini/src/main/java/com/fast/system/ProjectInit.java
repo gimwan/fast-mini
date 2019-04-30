@@ -4,9 +4,10 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpServletRequest;
 
-/*
+/**
  * 系统初始化
- * 
+ * @author J
+ *
  */
 public class ProjectInit implements ServletContextListener {
 

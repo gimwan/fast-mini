@@ -15,7 +15,7 @@ import net.sf.json.JSONObject;
 
 /**
  * 系统参数
- * @author gimwan
+ * @author J
  *
  */
 @RequestMapping(value = "/config", produces = "application/json; charset=utf-8")

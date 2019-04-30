@@ -37,7 +37,7 @@
 	<aop:config proxy-target-class="true">
 		<aop:aspect id="logAspectSYS" ref="logInterceptor">
 			<aop:around method="invoke"
-				pointcut="execution(public * com.fuxi.controller..*.*(..))" />
+				pointcut="execution(public * com.fast.controller..*.*(..))" />
 		</aop:aspect>
 	</aop:config>
 
