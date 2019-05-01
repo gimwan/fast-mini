@@ -1,0 +1,57 @@
+let layer;
+let layuiElement;
+let loadIndex;
+
+layui.use(['layer','element'], function(){
+	layer = layui.layer;
+	layuiElement = layui.element;
+});
+
+let common = new Vue({
+	methods: {
+		tips: function(msg) {
+			layer.msg(msg,{time:2000});
+		},
+		showLoading: function(tip) {
+			loadIndex = layer.load(2);
+		},
+		closeLoading: function() {
+			layer.close(loadIndex);
+		},
+		doFunction: function(fn, target) {
+			let result = ``;
+	        if (!!fn) {
+	            try {
+	                let func = eval(fn);
+	                if (func && typeof(func) == `function`) {
+	                    result = func(target);
+	                }
+	            } catch (e) {
+	                console.log(e);
+	            }
+	        }
+	        return result;
+		}
+	}
+});
+
+let api = new Vue({
+	methods: {
+		load: function(url, method, params, fn) {
+			axios({
+			    method: method,
+			    url: url,
+			    headers: {
+	                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'  
+	            },
+			    data: Qs.stringify(params)
+			})
+			.then(function (response) {
+				common.doFunction(fn, response.data);
+			})
+			.catch(function (error) {
+			    console.log(error);
+			});
+		}
+	}
+});

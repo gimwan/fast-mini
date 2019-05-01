@@ -160,6 +160,7 @@ body {
 }
 
 .login .login-box .login-btn {
+	text-align: center;
 	display: inline-block;
 	width: 100%;
 	border: none;
@@ -191,7 +192,7 @@ body {
 	padding: 10px;
 	font-weight: 700;
 	margin-top: 20px;
-	color: var(--color-semidark);
+	color: #ff6464;
 }
 
 .login .login-footer {
