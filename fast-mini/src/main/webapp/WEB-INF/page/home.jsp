@@ -20,9 +20,7 @@
 	<div class="layui-layout layui-layout-admin">
 		<c:import url="nav.jsp"></c:import>
 		<c:import url="menu.jsp"></c:import>
-		<div class="layui-body home">
-			<span>hello world !</span>
-		</div>
+		<div class="layui-body home"></div>
 	</div>
 </body>
 </html>

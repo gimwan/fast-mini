@@ -13,5 +13,5 @@ public interface IConfigService {
 	 * 小程序系统参数
 	 * @return
 	 */
-	public Result miniProgramConfig();
+	public Result config();
 }

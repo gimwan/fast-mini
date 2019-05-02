@@ -26,10 +26,10 @@ document.onreadystatechange = function() {
 					errMessage.message = '';
 					common.showLoading();
 					api.load('./login','post',loginData, function(result) {
-						common.closeLoading();
 					    if (result.errcode == 0) {
-						    
+					    	window.location.href = $("base").attr("href") + "/home";
 						} else {
+                            common.closeLoading();
 							errMessage.message = result.message;
 						}
 					});

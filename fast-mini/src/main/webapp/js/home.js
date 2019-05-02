@@ -66,7 +66,6 @@ let menu = [
 ]
 
 let menuVm;
-
 document.onreadystatechange = function() {
     if(document.readyState == "interactive"){
         menuVm = new Vue({
@@ -84,11 +83,10 @@ document.onreadystatechange = function() {
                     }
                     try {
                         common.showLoading();
-                        $.get(url, {}, function(data) {
-                            var html = $.parseHTML(data, null, true);
-                            $(".layui-body").append(html);
+                        $(".layui-body").load(url, {},function(){
                             common.closeLoading();
-                        }, "html");
+                            common.bindVue();
+                        });
                     } catch (error) {
                         console.log(error);
                     }

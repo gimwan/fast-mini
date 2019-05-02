@@ -41,7 +41,7 @@ public class ConfigController {
 		String r = "";
 		
 		try {
-			Result result = iConfigService.miniProgramConfig();
+			Result result = iConfigService.config();
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

@@ -1,6 +1,7 @@
 let layer;
 let layuiElement;
 let loadIndex;
+let basePath = $("base").attr("href");
 
 layui.use(['layer','element'], function(){
 	layer = layui.layer;
@@ -23,7 +24,7 @@ let common = new Vue({
 	        if (!!fn) {
 	            try {
 	                let func = eval(fn);
-	                if (func && typeof(func) == `function`) {
+	                if (func && typeof(func) == "function") {
 	                    result = func(target);
 	                }
 	            } catch (e) {
@@ -31,6 +32,16 @@ let common = new Vue({
 	            }
 	        }
 	        return result;
+		},
+		bindVue : function() {
+			
+		},
+		warn : function(msg) {
+			layer.alert(msg,{title:'提示'});
+		},
+		error : function(msg) {
+			msg = "<span style='color:red;'>"+msg+"</span>";
+			layer.alert(msg,{title:'错误'});
 		}
 	}
 });
