@@ -32,7 +32,7 @@ public class LoginController {
 	IUserService IUserService;
 	
 	@RequestMapping("")
-	public ModelAndView loginView(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("login", map);
 	}
 	
@@ -47,6 +47,10 @@ public class LoginController {
 			Result result = IUserService.checkLogin(code, password);
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
+			
+			if (result.getErrcode().intValue() == 0) {
+				request.getSession().setAttribute("user",result.getData());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

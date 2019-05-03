@@ -138,7 +138,7 @@
 			<artifactId>sqljdbc4</artifactId>
 			<version>4.0</version>
 		</dependency>
-		 <dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.10</version>
@@ -170,6 +170,21 @@
 			<artifactId>jedis</artifactId>
 			<version>2.9.0</version>
 		</dependency>
+		<dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.8.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.8.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<finalName>fast-mini</finalName>
@@ -182,10 +197,10 @@
 					<source>1.7</source>
 					<target>1.7</target>
 					<encoding>utf8</encoding>
-					   <compilerArguments>  
-                        <verbose />  
-                       <bootclasspath>${java.home}\lib\rt.jar;${java.home}\lib\jce.jar</bootclasspath>  
-                    </compilerArguments>  
+					<compilerArguments>
+						<verbose />
+						<bootclasspath>${java.home}\lib\rt.jar;${java.home}\lib\jce.jar</bootclasspath>
+					</compilerArguments>
 				</configuration>
 			</plugin>
 		</plugins>

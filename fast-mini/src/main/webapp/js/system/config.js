@@ -70,15 +70,26 @@ function showEditBox(idx,id,name,val) {
             if (data == '') {
                 return;
             }
-            for (const key in data) {
-                if (key != "id" && config[idx].hasOwnProperty(key)) {
-                    config[idx][key] = data[key];
+
+            common.showLoading();
+            api.load('./config/change','post',data, function(result) {
+                if (result.errcode == 0) {
+                    for (const key in data) {
+                        if (key != "id" && config[idx].hasOwnProperty(key)) {
+                            config[idx][key] = data[key];
+                        }
+                    }
+                    layer.close(index);
+                    common.tips(result.message);
+                } else {
+                    common.error(result.message);
                 }
-            }
-            layer.close(index);
+                common.closeLoading();
+            });
         },
         success: function () {
-            $(".edit-view .focus").focus();
+            var val = $(".edit-view .focus").val();
+            $(".edit-view .focus").val("").focus().val(val);
         }
         
     });

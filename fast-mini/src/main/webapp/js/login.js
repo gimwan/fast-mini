@@ -27,7 +27,7 @@ document.onreadystatechange = function() {
 					common.showLoading();
 					api.load('./login','post',loginData, function(result) {
 					    if (result.errcode == 0) {
-					    	window.location.href = $("base").attr("href") + "/home";
+					    	window.location.href = $("base").attr("href") + "home";
 						} else {
                             common.closeLoading();
 							errMessage.message = result.message;
@@ -38,3 +38,13 @@ document.onreadystatechange = function() {
 		});
 	}
 }
+
+/**
+ * 监听回车
+ */
+document.onkeydown = function (event) {
+    var e = event || window.event;
+    if (e && e.keyCode == 13) {
+        $(".login-btn").click();
+    }
+}; 

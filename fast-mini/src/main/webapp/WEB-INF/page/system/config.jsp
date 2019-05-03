@@ -1,6 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<link rel="stylesheet" href="css/config/config.css?r=232132">
-<script type="text/javascript" src="js/config/config.js"></script>
+<link rel="stylesheet" href="css/system/config.css?r=232132">
+<script type="text/javascript" src="js/system/config.js"></script>
 <div class="configPage">
 	<div class="layui-tab layui-tab-brief nav-bar">
 		<ul class="layui-tab-title">

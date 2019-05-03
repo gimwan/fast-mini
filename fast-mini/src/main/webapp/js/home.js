@@ -9,11 +9,11 @@ let menu = [
             },
             {
                 name: '角色管理',
-                link: ''
+                link: 'role'
             },
             {
                 name: '用户管理',
-                link: ''
+                link: 'user'
             }
         ]
     },
@@ -23,11 +23,11 @@ let menu = [
         sub: [
             {
                 name: '员工资料 ',
-                link: ''
+                link: 'employee'
             },
             {
                 name: '门店资料',
-                link: ''
+                link: 'department'
             },
             {
                 name: '商品资料',
@@ -41,7 +41,7 @@ let menu = [
         sub: [
             {
                 name: '会员等级 ',
-                link: ''
+                link: 'viptype'
             },
             {
                 name: '会员档案',
@@ -55,11 +55,11 @@ let menu = [
         sub: [
             {
                 name: '公众号 ',
-                link: ''
+                link: 'publicplatform'
             },
             {
                 name: '小程序',
-                link: ''
+                link: 'miniprogram'
             }
         ]
     }
@@ -93,6 +93,9 @@ document.onreadystatechange = function() {
                 }
             }
 		});
+    }
+    if(document.readyState == "complete"){
+        
     }
 }
 

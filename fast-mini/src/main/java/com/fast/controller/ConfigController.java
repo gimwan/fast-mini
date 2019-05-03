@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.service.IConfigMaintService;
 import com.fast.service.IConfigService;
 
 import net.sf.json.JSONObject;
@@ -25,16 +26,24 @@ import net.sf.json.JSONObject;
 @Controller
 public class ConfigController {
 	
-	HashMap<String, Object> map = new HashMap<String, Object>();
-	
 	@Autowired
 	IConfigService iConfigService;
 	
+	@Autowired
+	IConfigMaintService iConfigMaintService;
+	
 	@RequestMapping("")
-	public ModelAndView configView(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		return new ModelAndView("system/config", map);
 	}
 	
+	/**
+	 * 查询所有参数
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping("/config")
 	@ResponseBody
 	public String config(HttpServletRequest request, HttpServletResponse response) {
@@ -42,6 +51,32 @@ public class ConfigController {
 		
 		try {
 			Result result = iConfigService.config();
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 修改参数
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/change")
+	@ResponseBody
+	public String change(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			String value = request.getParameter("value");
+			
+			Result result = iConfigMaintService.changeConfig(Integer.valueOf(id), value);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

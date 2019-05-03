@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fast.base.data.entity.MUser;
+
 /**
  * 主页
  * @author J
@@ -18,10 +20,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomeController {
 	
-	HashMap<String, Object> map = new HashMap<String, Object>();
-	
 	@RequestMapping("")
-	public ModelAndView home(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
+		MUser user = (MUser) request.getSession().getAttribute("user");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("user", user);
 		return new ModelAndView("home", map);
 	}
 

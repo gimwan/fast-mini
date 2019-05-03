@@ -2,7 +2,6 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,35 @@ public class UserServiceImpl implements IUserService, Serializable {
 	
 	@Autowired
 	MUserMapper mUserMapper;
+	
+	/**
+	 * 查询所有用户
+	 * @return
+	 */
+	@Override
+	public Result user() {
+		Result result = new Result();
 
+		try {
+			MUserExample example = new MUserExample();
+			example.setOrderByClause("code asc");
+			List<MUser> list = mUserMapper.selectByExample(example);
+			result.setErrcode(0);
+			result.setData(list);
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用UserServiceImpl.user报错：", e);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 登录校验
+	 * @param code
+	 * @param password
+	 * @return
+	 */
 	@Override
 	public Result checkLogin(String code, String password) {
 		Result result = new Result();
@@ -52,6 +79,7 @@ public class UserServiceImpl implements IUserService, Serializable {
 				
 				result.setErrcode(0);
 				result.setId(mUser.getId());
+				result.setData(mUser);
 			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
