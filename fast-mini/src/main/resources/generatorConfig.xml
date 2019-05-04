@@ -17,7 +17,7 @@
 		<javaClientGenerator targetPackage="com.fast.base.data.dao"
 			targetProject="fast-mini" type="XMLMAPPER" />
         
-        <table tableName="m_publicplatform" enableCountByExample="true"
+        <table tableName="m_role" enableCountByExample="true"
 			enableUpdateByExample="false" enableDeleteByExample="true"
 			enableSelectByExample="true" selectByExampleQueryId="false" />
 	</context>

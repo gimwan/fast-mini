@@ -1,13 +1,25 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<link rel="stylesheet" href="css/system/role.css">
+<link rel="stylesheet" href="css/system/role.css?r=87232">
 <script type="text/javascript" src="js/system/role.js"></script>
 <div class="rolePage">
 	<div class="layui-tab layui-tab-brief nav-bar">
 		<ul class="layui-tab-title">
 		    <li class="layui-this">角色管理</li>
 		</ul>
-	<div class="layui-tab-content"></div>
-	</div> 
+		<div class="layui-tab-content"></div>
+	</div>
+	
+	<div class="operating">
+		<div class="layui-btn-group">
+	        <button class="layui-btn layui-btn-sm" title="新增">
+	          <i class="layui-icon"></i>
+	        </button>
+	        <button class="layui-btn layui-btn-sm" title="删除">
+	          <i class="layui-icon"></i>
+	        </button>
+	     </div>
+	</div>
+	
 	<div class="layui-tab-item layui-show">
 		<div class="layui-main">
 			<div id="lay_preview">

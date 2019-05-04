@@ -1,17 +1,21 @@
 package com.fast.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MConfig;
+import com.fast.base.data.entity.MUser;
 import com.fast.service.IConfigMaintService;
 import com.fast.service.IConfigService;
 
@@ -65,18 +69,18 @@ public class ConfigController {
 	 * 修改参数
 	 * @param request
 	 * @param response
+	 * @param config
 	 * @return
 	 */
 	@RequestMapping("/change")
 	@ResponseBody
-	public String change(HttpServletRequest request, HttpServletResponse response) {
+	public String change(HttpServletRequest request, HttpServletResponse response, MConfig config) {
 		String r = "";
 		
 		try {
-			String id = request.getParameter("id");
-			String value = request.getParameter("value");
+			MUser mUser = (MUser) request.getSession().getAttribute("user");
 			
-			Result result = iConfigMaintService.changeConfig(Integer.valueOf(id), value);
+			Result result = iConfigMaintService.changeConfig(config, mUser);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

@@ -1,6 +1,8 @@
 package com.fast.service;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MConfig;
+import com.fast.base.data.entity.MUser;
 
 /**
  * 系统参数
@@ -11,10 +13,10 @@ public interface IConfigMaintService {
 	
 	/**
 	 * 修改参数
-	 * @param id  参数id
-	 * @param value  参数值
+	 * @param config
+	 * @param user
 	 * @return
 	 */
-	public Result changeConfig(Integer id, String value);
+	public Result changeConfig(MConfig config, MUser user);
 
 }

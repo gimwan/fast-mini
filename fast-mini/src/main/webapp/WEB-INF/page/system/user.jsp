@@ -17,7 +17,12 @@
 							<table cellspacing="0" cellpadding="0" border="0" class="layui-table">
 								<thead>
 									<tr>
-										<th class="item code" data-minwidth="100">
+										<th class="item photourl">
+											<div class="layui-table-cell">
+												<span>头像</span>
+											</div>
+										</th>
+										<th class="item code">
 											<div class="layui-table-cell">
 												<span>编号</span>
 											</div>
@@ -66,9 +71,14 @@
 								class="layui-table">
 								<tbody>
 									<tr v-bind:data-id="u.id" v-bind:data-index="index" class="" v-for="(u, index) in user">
+										<td class="item photourl">
+											<div class="layui-table-cell laytable-cell-1-0-0">
+												<img v-bind:src="u.photourl" class="layui-nav-img">
+											</div>
+										</td>
 										<td class="item code">
 											<div class="layui-table-cell laytable-cell-1-0-0">
-											<a href="javascript:void(0);" v-on:click="edit">{{u.code}}</a>
+											<a href="'+javascript:void(0);" v-on:click="edit">{{u.code}}</a>
 											</div>
 										</td>
 										<td class="item name">

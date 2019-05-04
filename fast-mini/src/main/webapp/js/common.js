@@ -1,11 +1,13 @@
 let layer;
 let layuiElement;
+let layuiForm;
 let loadIndex;
 let basePath = $("base").attr("href");
 
-layui.use(['layer','element'], function(){
+layui.use(['layer','element','form'], function(){
 	layer = layui.layer;
 	layuiElement = layui.element;
+	layuiForm = layui.form;
 });
 
 let common = new Vue({
@@ -63,6 +65,20 @@ let api = new Vue({
 			.catch(function (error) {
 			    console.log(error);
 			});
+		},
+		ajaxLoad : function(url, method, params, fn) {
+			$.ajax({  
+	             type: method,  
+	             url: url,  
+	             contentType: 'application/x-www-form-urlencoded;charset=utf-8',  
+	             data: params,  
+	             dataType: "json",
+	             async: true
+			}).done(function (response) {
+	            common.doFunction(fn, response.data);
+	        }).fail(function (error) {
+            	console.log(error);
+            });
 		}
 	}
 });

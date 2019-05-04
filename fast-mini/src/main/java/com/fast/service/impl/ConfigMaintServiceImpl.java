@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MConfigMapper;
 import com.fast.base.data.entity.MConfig;
+import com.fast.base.data.entity.MUser;
 import com.fast.service.IConfigMaintService;
 import com.fast.system.log.FastLog;
+import com.fast.util.BeanUtil;
 
 /**
  * 系统参数
@@ -24,23 +26,23 @@ public class ConfigMaintServiceImpl implements IConfigMaintService, Serializable
 	
 	@Autowired
 	MConfigMapper mConfigMapper;
-
+	
 	@Override
-	public Result changeConfig(Integer id, String value) {
+	public Result changeConfig(MConfig config, MUser user) {
 		Result result = new Result();
 
 		try {
 			Date now = new Date();
-			MConfig mConfig = new MConfig();
-			mConfig.setId(id);
-			mConfig.setValue(value.trim());
-			mConfig.setModifier("");
+			MConfig mConfig = mConfigMapper.selectByPrimaryKey(config.getId());
+			BeanUtil.copyPropertiesIgnoreNull(config, mConfig);
+			mConfig.setModifier(user.getName());
 			mConfig.setModifytime(now);
 			mConfig.setUpdatedtime(now);
 			int changeNum = mConfigMapper.updateByPrimaryKeySelective(mConfig);
 			if (changeNum > 0) {
 				result.setErrcode(0);
-				result.setId(id);
+				result.setId(mConfig.getId());
+				result.setData(mConfig);
 				result.setMessage("保存成功");
 			} else {
 				result.setMessage("保存失败");

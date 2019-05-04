@@ -44,16 +44,16 @@ function showEditBox(idx,id,name,val) {
                             "<div class=\"edit-title\">"+
                                 "<span class=\"title\"><label class=\"name\">ID</label>：</span>"+
                             "</div>"+
-                            "<div class=\"edit-value\">"+
-                                "<input type=\"text\" data-field=\"id\" value=\""+id+"\" class=\"layui-input value\"/>"+
+                            "<div class=\"edit-value\" data-field=\"id\">"+
+                                "<input type=\"text\" value=\""+id+"\" class=\"layui-input value\"/>"+
                             "</div>"+
                         "</div>"+
                         "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
                             "<div class=\"edit-title\">"+
                                 "<span class=\"title\"><label class=\"name\">"+name+"</label>：</span>"+
                             "</div>"+
-                            "<div class=\"edit-value\">"+
-                                "<input type=\"text\" data-field=\"value\" value=\""+val+"\" class=\"layui-input value focus\"/>"+
+                            "<div class=\"edit-value\" data-field=\"value\">"+
+                                "<input type=\"text\" value=\""+val+"\" class=\"layui-input value focus\"/>"+
                             "</div>"+
                         "</div>"+
                     "</div>"+
@@ -74,8 +74,9 @@ function showEditBox(idx,id,name,val) {
             common.showLoading();
             api.load('./config/change','post',data, function(result) {
                 if (result.errcode == 0) {
+                	data = result.data;
                     for (const key in data) {
-                        if (key != "id" && config[idx].hasOwnProperty(key)) {
+                        if (config[idx].hasOwnProperty(key)) {
                             config[idx][key] = data[key];
                         }
                     }
@@ -102,7 +103,7 @@ function catchBoxValue() {
         let need = $(this).attr("need");
         let title = $(this).find(".name").html();
         let value = $(this).find(".value").val();
-        let field = $(this).find(".value").data("field");
+        let field = $(this).find(".edit-value").data("field");
 
         let errorMsg;
         if (need == 1) {

@@ -11,6 +11,11 @@
     border-bottom-width: 1px;
 }
 
+.userPage .layui-table-view .layui-table-box tr .layui-nav-img {
+	width: 25px;
+    height: 25px;
+}
+
 .userPage .layui-table-view .layui-table-box tr .name {
 	min-width: 180px;
 }

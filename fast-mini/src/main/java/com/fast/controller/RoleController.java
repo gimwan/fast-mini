@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MRole;
+import com.fast.base.data.entity.MUser;
+import com.fast.service.IRoleMaintService;
 import com.fast.service.IRoleService;
 
 import net.sf.json.JSONObject;
@@ -27,6 +30,9 @@ public class RoleController {
 	
 	@Autowired
 	IRoleService iRoleService;
+	
+	@Autowired
+	IRoleMaintService iRoleMaintService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
@@ -47,6 +53,32 @@ public class RoleController {
 		
 		try {
 			Result result = iRoleService.role();
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 修改角色
+	 * @param request
+	 * @param response
+	 * @param role
+	 * @return
+	 */
+	@RequestMapping("/change")
+	@ResponseBody
+	public String change(HttpServletRequest request, HttpServletResponse response, MRole role) {
+		String r = "";
+		
+		try {
+			MUser user = (MUser) request.getSession().getAttribute("user");
+			
+			Result result = iRoleMaintService.changeRole(role, user);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

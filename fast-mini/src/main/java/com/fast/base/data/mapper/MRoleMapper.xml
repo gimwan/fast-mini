@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MRoleMapper" >
   <resultMap id="BaseResultMap" type="com.fast.base.data.entity.MRole" >
-    <result column="ID" property="id" jdbcType="INTEGER" />
+    <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="Code" property="code" jdbcType="VARCHAR" />
     <result column="Name" property="name" jdbcType="VARCHAR" />
     <result column="CreateTime" property="createtime" jdbcType="DATE" />
@@ -61,6 +61,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_role
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from m_role
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
   <delete id="deleteByExample" parameterType="com.fast.base.data.entity.MRoleExample" >
     delete from m_role
     <if test="_parameter != null" >
@@ -150,4 +160,50 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MRole" >
+    update m_role
+    <set >
+      <if test="code != null" >
+        Code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=DATE},
+      </if>
+      <if test="creator != null" >
+        Creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifytime != null" >
+        ModifyTime = #{modifytime,jdbcType=DATE},
+      </if>
+      <if test="modifier != null" >
+        Modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedtime != null" >
+        UpdatedTime = #{updatedtime,jdbcType=DATE},
+      </if>
+      <if test="useflag != null" >
+        UseFlag = #{useflag,jdbcType=TINYINT},
+      </if>
+      <if test="memo != null" >
+        Memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MRole" >
+    update m_role
+    set Code = #{code,jdbcType=VARCHAR},
+      Name = #{name,jdbcType=VARCHAR},
+      CreateTime = #{createtime,jdbcType=DATE},
+      Creator = #{creator,jdbcType=VARCHAR},
+      ModifyTime = #{modifytime,jdbcType=DATE},
+      Modifier = #{modifier,jdbcType=VARCHAR},
+      UpdatedTime = #{updatedtime,jdbcType=DATE},
+      UseFlag = #{useflag,jdbcType=TINYINT},
+      Memo = #{memo,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>
