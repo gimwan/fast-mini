@@ -11,10 +11,10 @@
 	
 	<div class="operating">
 		<div class="layui-btn-group">
-	        <button class="layui-btn layui-btn-sm" title="新增">
+	        <button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add">
 	          <i class="layui-icon"></i>
 	        </button>
-	        <button class="layui-btn layui-btn-sm" title="删除">
+	        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
 	          <i class="layui-icon"></i>
 	        </button>
 	     </div>
