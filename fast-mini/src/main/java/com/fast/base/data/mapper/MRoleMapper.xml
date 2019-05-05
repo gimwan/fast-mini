@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fast.base.data.dao.MRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.fast.base.data.entity.MRole" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="Code" property="code" jdbcType="VARCHAR" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createtime" jdbcType="DATE" />
+    <result column="Creator" property="creator" jdbcType="VARCHAR" />
+    <result column="ModifyTime" property="modifytime" jdbcType="DATE" />
+    <result column="Modifier" property="modifier" jdbcType="VARCHAR" />
+    <result column="UpdatedTime" property="updatedtime" jdbcType="DATE" />
+    <result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+    <result column="Memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, Code, Name, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime, UseFlag, 
+    Memo
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fast.base.data.entity.MRoleExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from m_role
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_role
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from m_role
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.fast.base.data.entity.MRoleExample" >
+    delete from m_role
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fast.base.data.entity.MRole" >
+    insert into m_role (ID, Code, Name, 
+      CreateTime, Creator, ModifyTime, 
+      Modifier, UpdatedTime, UseFlag, 
+      Memo)
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=DATE}, #{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=DATE}, 
+      #{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=DATE}, #{useflag,jdbcType=TINYINT}, 
+      #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MRole" >
+    insert into m_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="code != null" >
+        Code,
+      </if>
+      <if test="name != null" >
+        Name,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+      <if test="creator != null" >
+        Creator,
+      </if>
+      <if test="modifytime != null" >
+        ModifyTime,
+      </if>
+      <if test="modifier != null" >
+        Modifier,
+      </if>
+      <if test="updatedtime != null" >
+        UpdatedTime,
+      </if>
+      <if test="useflag != null" >
+        UseFlag,
+      </if>
+      <if test="memo != null" >
+        Memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=DATE},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifytime != null" >
+        #{modifytime,jdbcType=DATE},
+      </if>
+      <if test="modifier != null" >
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedtime != null" >
+        #{updatedtime,jdbcType=DATE},
+      </if>
+      <if test="useflag != null" >
+        #{useflag,jdbcType=TINYINT},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fast.base.data.entity.MRoleExample" resultType="java.lang.Integer" >
+    select count(*) from m_role
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MRole" >
+    update m_role
+    <set >
+      <if test="code != null" >
+        Code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=DATE},
+      </if>
+      <if test="creator != null" >
+        Creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifytime != null" >
+        ModifyTime = #{modifytime,jdbcType=DATE},
+      </if>
+      <if test="modifier != null" >
+        Modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedtime != null" >
+        UpdatedTime = #{updatedtime,jdbcType=DATE},
+      </if>
+      <if test="useflag != null" >
+        UseFlag = #{useflag,jdbcType=TINYINT},
+      </if>
+      <if test="memo != null" >
+        Memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MRole" >
+    update m_role
+    set Code = #{code,jdbcType=VARCHAR},
+      Name = #{name,jdbcType=VARCHAR},
+      CreateTime = #{createtime,jdbcType=DATE},
+      Creator = #{creator,jdbcType=VARCHAR},
+      ModifyTime = #{modifytime,jdbcType=DATE},
+      Modifier = #{modifier,jdbcType=VARCHAR},
+      UpdatedTime = #{updatedtime,jdbcType=DATE},
+      UseFlag = #{useflag,jdbcType=TINYINT},
+      Memo = #{memo,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

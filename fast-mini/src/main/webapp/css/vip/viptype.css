@@ -1,0 +1,43 @@
+.viptypePage .layui-table-view .layui-table-box .layui-table-header span {
+	font-weight: 600;
+}
+
+.viptypePage .layui-table-view .layui-table-box tr .item {
+	width: 100px;
+	min-width: 100px;
+	border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 1px;
+}
+
+.viptypePage .layui-table-view .layui-table-box tr .name {
+	min-width: 180px;
+}
+
+.viptypePage .layui-table-view .layui-table-box tr .memo {
+	width: 100%;
+}
+
+.viptypePage .layui-table-view .layui-table-box tr .creator,.viptypePage .layui-table-view .layui-table-box tr .modifier {
+	min-width: 120px;
+}
+
+.viptypePage .layui-table-view .layui-table-box tr .time-item {
+	min-width: 200px;
+}
+
+.viptypePage .layui-table-view .layui-table-box .viptype-data {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 620px;
+}
+
+.edit-view {
+    padding: 15px;
+}
+
+.edit-view .edit-box .edit-item>div {
+    margin: 10px 0;
+}
+
