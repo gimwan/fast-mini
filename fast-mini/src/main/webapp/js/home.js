@@ -60,6 +60,10 @@ let menu = [
             {
                 name: '小程序',
                 link: 'miniprogram'
+            },
+            {
+                name: '微页面',
+                link: 'micropage'
             }
         ]
     }
