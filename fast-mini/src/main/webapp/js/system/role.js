@@ -3,7 +3,7 @@ let roleVm;
 
 common.bindVue = function() {
     roleVm = new Vue({
-        el : ".role-data",
+        el : ".rolePage",
         data : {
             role: role
         },
@@ -13,11 +13,16 @@ common.bindVue = function() {
                     let index = $(event.target).parents("tr").data("index");
                     showEditBox(index,role[index]);
                 }
+            },
+            add: function () {
+                showEditBox(-1, null);
+            },
+            del: function () {
+                console.log('delete');
             }
         }
     });
     loadData();
-    console.log('role');
 }
 
 function loadData() {
@@ -38,6 +43,18 @@ function loadData() {
 }
 
 function createElement(data) {
+    let id = "";
+    let code = "";
+    let name = "";
+    let useflag = 1;
+    let memo = "";
+    if (data != null && data != undefined && data != "") {
+        id = data.id;
+        code = data.code;
+        name = data.name;
+        useflag = data.useflag;
+        memo = data.memo;
+    }
 	let element = "<div class=\"edit-view\">"+
 				    "<div class=\"edit-box\">"+
 				        "<div class=\"edit-item\" need=\"0\" key=\"1\" hidden>"+
@@ -45,7 +62,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">ID</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"id\">"+
-				                "<input type=\"text\" value=\""+data.id+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"text\" value=\""+id+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -53,7 +70,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">编号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"code\">"+
-				                "<input type=\"text\" value=\""+data.code+"\" class=\"layui-input value focus\"/>"+
+				                "<input type=\"text\" value=\""+code+"\" class=\"layui-input value focus\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -61,7 +78,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">名称</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"name\">"+
-				                "<input type=\"text\" value=\""+data.name+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"text\" value=\""+name+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
@@ -70,8 +87,8 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value layui-form-item\" data-field=\"useflag\">"+
 				                "<div class=\"layui-input-block\">" +
-				                	"<input type=\"radio\" name=\"useflag\" value=\"1\" title=\"是\" "+(data.useflag==1?'checked':'')+" class=\"layui-input value\">" +
-				                	"<input type=\"radio\" name=\"useflag\" value=\"0\" title=\"否\" "+(data.useflag!=1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"useflag\" value=\"1\" title=\"是\" "+(useflag==1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"useflag\" value=\"0\" title=\"否\" "+(useflag!=1?'checked':'')+" class=\"layui-input value\">" +
 				                "</div>" +
 				            "</div>"+
 				        "</div>"+
@@ -81,7 +98,7 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value layui-form-item\" data-field=\"memo\">"+
 				                "<div class=\"layui-input-block\">" +
-				                	"<textarea name=\"memo\" class=\"layui-textarea value\">"+data.memo+"</textarea>" +
+				                	"<textarea name=\"memo\" class=\"layui-textarea value\">"+memo+"</textarea>" +
 				                "</div>" +
 				            "</div>"+
 				        "</div>"+

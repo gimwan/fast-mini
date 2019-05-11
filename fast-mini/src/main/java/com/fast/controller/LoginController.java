@@ -25,13 +25,12 @@ import net.sf.json.JSONObject;
 @Controller
 public class LoginController {
 	
-	HashMap<String, Object> map = new HashMap<String, Object>();
-	
 	@Autowired
 	IUserService IUserService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		return new ModelAndView("login", map);
 	}
 	

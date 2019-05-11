@@ -1,0 +1,57 @@
+.microPage {
+    margin-top: 30px;
+}
+
+.microPage .configureView {
+    display: table;
+    width: 100%;
+}
+
+.microPage .configureView .configurePanel {
+    display: table-cell;
+    vertical-align: top;
+    text-align: center;
+}
+
+/**************** left ****************/
+
+.microPage .configureView .leftPanel {
+    max-width: 300px;
+}
+
+.microPage .configureView .leftPanel .itemBox .item {
+    display: inline-block;
+    text-align: center;
+    margin: 0px 5px;
+}
+
+.microPage .configureView .leftPanel .itemBox .item .itemImg {
+    width: 120px;
+    display: block;
+}
+
+.microPage .configureView .leftPanel .itemBox .item .itemName {
+    margin: 10px;
+}
+
+/**************** middle ****************/
+
+.microPage .configureView .middlePanel {
+    text-align: center;
+}
+
+.microPage .configureView .middlePanel .phoneBox {
+    background: url(../../images/miniprogram.png) no-repeat center center;
+    width: 332px;
+    height: 666px;
+    display: inline-block;
+    text-align: center;
+}
+
+.microPage .configureView .middlePanel .phoneBox .editView {
+    display: inline-block;
+    margin-top: 98px;
+    width: 322px;
+    height: 519px;
+    overflow: hidden;
+}

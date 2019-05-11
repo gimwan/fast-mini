@@ -13,10 +13,10 @@ public interface MRoleMapper {
 
     int deleteByPrimaryKey(Integer id);
 
-    @Options(useGeneratedKeys = true)
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(MRole record);
 
-    @Options(useGeneratedKeys = true)
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insertSelective(MRole record);
 
     List<MRole> selectByExample(MRoleExample example);
