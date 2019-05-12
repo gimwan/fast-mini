@@ -6,6 +6,18 @@ a {
     color: #01AAED;
 }
 
+.home {
+    overflow: auto;
+}
+
 .home .nav-bar {
     margin: 6px 15px;
+}
+
+.layTable {
+    display: table;
+}
+
+.layTableCell {
+    display: table-cell;
 }

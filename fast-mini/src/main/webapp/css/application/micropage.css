@@ -16,13 +16,20 @@
 /**************** left ****************/
 
 .microPage .configureView .leftPanel {
-    max-width: 300px;
+    width: 400px;
+    text-align: right;
+}
+
+.microPage .configureView .leftPanel .itemBox {
+    width: 400px;
+    display: inline-block;
 }
 
 .microPage .configureView .leftPanel .itemBox .item {
     display: inline-block;
     text-align: center;
     margin: 0px 5px;
+    cursor: pointer;
 }
 
 .microPage .configureView .leftPanel .itemBox .item .itemImg {
@@ -37,13 +44,16 @@
 /**************** middle ****************/
 
 .microPage .configureView .middlePanel {
-    text-align: center;
+    padding: 0px 10px;
+    width: 332px;
 }
 
 .microPage .configureView .middlePanel .phoneBox {
     background: url(../../images/miniprogram.png) no-repeat center center;
     width: 332px;
     height: 666px;
+    min-width: 332px;
+    min-height: 666px;
     display: inline-block;
     text-align: center;
 }
@@ -54,4 +64,49 @@
     width: 322px;
     height: 519px;
     overflow: hidden;
+}
+
+/**************** right ****************/
+
+.microPage .configureView .rightPanel {
+    text-align: left;
+    width: 400px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .selectTitle {
+    margin: 10px 0px 0px 0px;
+    text-align: left;
+    padding: 0px 10px;
+    width: 100%;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .selectItem:first-child .selectTitle {
+    margin: 0px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .selectBox {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .layTableCell {
+    vertical-align: top;
+}
+
+.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    min-height: 100px;
+}
+
+.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .layui-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.microPage .configureView .rightPanel .editBox .uploadField .layui-form .layui-form-item {
+    margin-bottom: 0px;
 }

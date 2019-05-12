@@ -1,13 +1,15 @@
 let layer;
 let layuiElement;
 let layuiForm;
+let layuiUpload;
 let loadIndex;
 let basePath = $("base").attr("href");
 
-layui.use(['layer', 'element', 'form'], function () {
+layui.use(['layer', 'element', 'form', 'upload'], function () {
     layer = layui.layer;
     layuiElement = layui.element;
     layuiForm = layui.form;
+    layuiUpload = layui.upload;
 });
 
 let common = new Vue({
