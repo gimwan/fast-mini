@@ -4,7 +4,7 @@
 
 .microPage .configureView {
     display: table;
-    width: 100%;
+    /*width: 100%;*/
 }
 
 .microPage .configureView .configurePanel {
@@ -44,7 +44,7 @@
 /**************** middle ****************/
 
 .microPage .configureView .middlePanel {
-    padding: 0px 10px;
+    padding: 0px 50px;
     width: 332px;
 }
 
@@ -109,4 +109,35 @@
 
 .microPage .configureView .rightPanel .editBox .uploadField .layui-form .layui-form-item {
     margin-bottom: 0px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .blockTitle {
+    text-align: left;
+    padding-left: 0px;
+    width: 100%;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .blockInput {
+    display: block;
+    margin-left: 0px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .blockInput input {
+    width: 360px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .selectBlock input {
+    width: 360px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .selectBlock .selectTitle {
+    padding-left: 0px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .selectBlock .selectBox {
+    margin-left: 0px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .cascadeSelect input {
+    width: 178px;
 }
