@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
 import com.fast.service.IUserService;
+import com.fast.system.RedisCache;
 
 import net.sf.json.JSONObject;
 
@@ -47,7 +48,9 @@ public class LoginController {
 			r = jsonObject.toString();
 			
 			if (result.getErrcode().intValue() == 0) {
-				request.getSession().setAttribute("user",result.getData());
+				String sessionid = request.getSession().getId();
+				RedisCache.set(sessionid, result.getData());
+				//request.getSession().setAttribute("user",result.getData());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

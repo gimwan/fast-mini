@@ -18,7 +18,8 @@ public class Filter implements HandlerInterceptor {
 		response.setContentType("text/html;charset=UTF-8");
 
 		String url = request.getSession().getServletContext().getContextPath();
-		MUser user = (MUser) request.getSession().getAttribute("user");
+		String sessionid = request.getSession().getId();
+		MUser user = (MUser) RedisCache.retake(sessionid);
 		if (user != null) {
 			return true;
 		} else {

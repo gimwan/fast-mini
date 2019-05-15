@@ -16,6 +16,7 @@ import com.fast.base.data.entity.MConfig;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IConfigMaintService;
 import com.fast.service.IConfigService;
+import com.fast.system.RedisCache;
 
 import net.sf.json.JSONObject;
 
@@ -76,9 +77,10 @@ public class ConfigController {
 		String r = "";
 		
 		try {
-			MUser mUser = (MUser) request.getSession().getAttribute("user");
+			String sessionid = request.getSession().getId();
+			MUser user = (MUser) RedisCache.retake(sessionid);
 			
-			Result result = iConfigMaintService.changeConfig(config, mUser);
+			Result result = iConfigMaintService.changeConfig(config, user);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

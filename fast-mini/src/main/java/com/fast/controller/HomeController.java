@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.data.entity.MUser;
+import com.fast.system.RedisCache;
 
 /**
  * 主页
@@ -22,7 +23,8 @@ public class HomeController {
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
-		MUser user = (MUser) request.getSession().getAttribute("user");
+		String sessionid = request.getSession().getId();
+		MUser user = (MUser) RedisCache.retake(sessionid);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("user", user);
 		return new ModelAndView("home", map);

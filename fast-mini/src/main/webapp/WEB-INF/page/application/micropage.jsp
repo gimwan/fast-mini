@@ -2,6 +2,12 @@
 <link rel="stylesheet" href="css/application/micropage.css">
 <script type="text/javascript" src="js/application/micropage.js"></script>
 <div class="microPage">
+	<div class="layui-tab layui-tab-brief nav-bar">
+		<ul class="layui-tab-title">
+		    <li class="layui-this">微页面</li>
+		</ul>
+	<div class="layui-tab-content"></div>
+	</div>
 	<div class="configureView">
 		<div class="configurePanel leftPanel">
 			<div class="itemBox">

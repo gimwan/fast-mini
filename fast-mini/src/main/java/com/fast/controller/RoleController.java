@@ -16,6 +16,7 @@ import com.fast.base.data.entity.MRole;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IRoleMaintService;
 import com.fast.service.IRoleService;
+import com.fast.system.RedisCache;
 
 import net.sf.json.JSONObject;
 
@@ -76,7 +77,8 @@ public class RoleController {
 		String r = "";
 		
 		try {
-			MUser user = (MUser) request.getSession().getAttribute("user");
+			String sessionid = request.getSession().getId();
+			MUser user = (MUser) RedisCache.retake(sessionid);
 			
 			Result result = iRoleMaintService.changeRole(role, user);
 			
