@@ -35,11 +35,12 @@ http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
     <!-- 多个拦截器,顺序执行 -->
         <mvc:interceptor>
             <mvc:mapping path="/*" />
-            <mvc:exclude-mapping path="/" />
             <mvc:exclude-mapping path="/login.*" />
             <mvc:exclude-mapping path="/login/**" />
             <mvc:exclude-mapping path="/open.*" />
             <mvc:exclude-mapping path="/open/**" />
+            <mvc:exclude-mapping path="/mini.*" />
+            <mvc:exclude-mapping path="/mini/**" />
             <bean class="com.fast.system.Filter"></bean> 
         </mvc:interceptor> 
 	</mvc:interceptors>

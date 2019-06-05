@@ -1,4 +1,4 @@
-package com.fast.controller.wechat;
+package com.fast.controller.open;
 
 import java.io.BufferedReader;
 
@@ -35,7 +35,7 @@ import com.fast.util.WechatUtils;
  */
 @Controller
 @RequestMapping(value="/open", produces = "application/json; charset=utf-8")
-public class OpenController {
+public class Open {
 	
 	@Autowired
 	IWechatService iWechatService;

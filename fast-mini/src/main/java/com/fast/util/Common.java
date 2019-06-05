@@ -38,7 +38,7 @@ public class Common {
 	 * @return
 	 */
 	public static boolean isEmpty(String s) {
-		if (null == s || "".equals(s) || "".equals(s.trim()) || "null".equalsIgnoreCase(s)) {
+		if (null == s || "".equals(s) || "".equals(s.trim()) || "null".equalsIgnoreCase(s.trim()) || "undefined".equalsIgnoreCase(s.trim())) {
 			return true;
 		} else {
 			return false;
