@@ -67,6 +67,12 @@ public class Base extends MiniMaster {
 		return r;
 	}
 	
+	/**
+	 * 省市区县
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping("/region")
 	@ResponseBody
 	public String region(HttpServletRequest request, HttpServletResponse response) {
