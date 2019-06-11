@@ -12,6 +12,7 @@ import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MMiniprogramExample;
 import com.fast.service.IMiniProgramService;
 import com.fast.system.log.FastLog;
+import com.fast.util.Common;
 
 /**
  * 小程序
@@ -42,6 +43,51 @@ public class MiniProgramServiceImpl implements IMiniProgramService, Serializable
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用MiniProgramServiceImpl.miniprogram报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result queryMiniprogramByAppid(String appid) {
+		Result result = new Result();
+
+		try {
+			if (Common.isEmpty(appid)) {
+				result.setMessage("appid无效");
+				return result;
+			}
+			
+			MMiniprogramExample example = new MMiniprogramExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andAppidEqualTo(appid.trim());
+			List<MMiniprogram> list = mMiniprogramMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setData(list.get(0));
+				result.setErrcode(Integer.valueOf(0));
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用MiniProgramServiceImpl.queryMiniprogramByAppid报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryMiniprogramIDByAppid(String appid) {
+		Result result = new Result();
+
+		try {
+			result = queryMiniprogramByAppid(appid);
+			if (result != null && result.getErrcode() != null && result.getErrcode().intValue() == 0) {
+				MMiniprogram miniprogram = (MMiniprogram) result.getData();
+				if (miniprogram != null) {
+					result.setData(miniprogram.getId());
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用MiniProgramServiceImpl.queryMiniprogramIDByAppid报错：", e);
 		}
 
 		return result;

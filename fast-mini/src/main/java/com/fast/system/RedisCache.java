@@ -136,6 +136,18 @@ public class RedisCache implements Cache {
 		}
 	}
 	
+	public static Object get(Object key) {
+		try {
+			if (null != key) {
+				return redisTemplate.opsForValue().get(key.toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("redis刷新数据异常！");
+		}
+		return null;
+	}
+	
 	public static Object retake(Object key) {
 		try {
 			if (null != key) {

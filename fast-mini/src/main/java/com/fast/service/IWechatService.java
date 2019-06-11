@@ -46,4 +46,29 @@ public interface IWechatService {
 	 * @return
 	 */
 	public String preAuthCode(String componentAppid, String componentAccessToken);
+	
+	/**
+	 * 登录凭证校验使用 临时登录凭证code 获取 session_key 和 openid 等
+	 * @param appid
+	 * @param appsecret
+	 * @param code
+	 * @return
+	 */
+	public JSONObject jscode2session(String appid, String appsecret, String code);
+	
+	/**
+	 * 获取小程序AppSecret
+	 * @param appid
+	 * @return
+	 */
+	public String queryAppSecret(String appid);
+	
+	/**
+	 * 解密获取手机号
+	 * @param sessionKey
+	 * @param ivData
+	 * @param encrypData
+	 * @return
+	 */
+	public JSONObject decryptPhoneNumber(String sessionKey, String ivData, String encrypData);
 }

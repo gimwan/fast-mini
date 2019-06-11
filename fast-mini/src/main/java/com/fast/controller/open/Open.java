@@ -55,9 +55,12 @@ public class Open {
 		String resp = "";
 		try {
 			// 接收URL中的参数
-			String msgSignature = request.getParameter("msg_signature");  // 消息体签名，用于验证消息体的正确性
-			String timeStamp = request.getParameter("timestamp");  // 时间戳
-			String nonce = request.getParameter("nonce");  // 随机数
+			// 消息体签名，用于验证消息体的正确性
+			String msgSignature = request.getParameter("msg_signature");
+			// 时间戳
+			String timeStamp = request.getParameter("timestamp");
+			// 随机数
+			String nonce = request.getParameter("nonce");
 			
 			// 获取post过来的xml
 			StringBuffer sb = new StringBuffer() ; 
