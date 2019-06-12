@@ -30,6 +30,7 @@
     <result column="Modifier" property="modifier" jdbcType="VARCHAR" />
     <result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
     <result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+    <result column="Type" property="type" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -63,7 +64,8 @@
   <sql id="Base_Column_List" >
     ID, Code, Name, Sex, MobilePhone, PhotoUrl, NickName, Birthday, ProvinceID, Province, 
     CityID, City, CountyID, County, DepartmentID, Recommender, Source, RegistTime, ValidDate, 
-    UnionID, GuideID, Memo, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime, UseFlag
+    UnionID, GuideID, Memo, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime, UseFlag, 
+    Type
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fast.base.data.entity.MVipExample" >
     select
@@ -106,7 +108,7 @@
       ValidDate, UnionID, GuideID, 
       Memo, CreateTime, Creator, 
       ModifyTime, Modifier, UpdatedTime, 
-      UseFlag)
+      UseFlag, Type)
     values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{sex,jdbcType=TINYINT}, #{mobilephone,jdbcType=VARCHAR}, #{photourl,jdbcType=VARCHAR}, 
       #{nickname,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, #{provinceid,jdbcType=INTEGER}, 
@@ -116,7 +118,7 @@
       #{validdate,jdbcType=TIMESTAMP}, #{unionid,jdbcType=VARCHAR}, #{guideid,jdbcType=INTEGER}, 
       #{memo,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
       #{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP}, 
-      #{useflag,jdbcType=TINYINT})
+      #{useflag,jdbcType=TINYINT}, #{type,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.fast.base.data.entity.MVip" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_vip
@@ -205,6 +207,9 @@
       <if test="useflag != null" >
         UseFlag,
       </if>
+      <if test="type != null" >
+        Type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -290,6 +295,9 @@
       </if>
       <if test="useflag != null" >
         #{useflag,jdbcType=TINYINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -383,6 +391,9 @@
       <if test="useflag != null" >
         UseFlag = #{useflag,jdbcType=TINYINT},
       </if>
+      <if test="type != null" >
+        Type = #{type,jdbcType=INTEGER},
+      </if>
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
@@ -414,7 +425,8 @@
       ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
       Modifier = #{modifier,jdbcType=VARCHAR},
       UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-      UseFlag = #{useflag,jdbcType=TINYINT}
+      UseFlag = #{useflag,jdbcType=TINYINT},
+      Type = #{type,jdbcType=INTEGER}
     where ID = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

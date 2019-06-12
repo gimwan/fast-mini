@@ -59,6 +59,8 @@ public class MVip {
 
     private Byte useflag;
 
+    private Integer type;
+
     public Integer getId() {
         return id;
     }
@@ -281,5 +283,13 @@ public class MVip {
 
     public void setUseflag(Byte useflag) {
         this.useflag = useflag;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }
