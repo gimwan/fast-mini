@@ -26,6 +26,7 @@ import org.xml.sax.InputSource;
 
 import com.fast.service.IWechatEventDealService;
 import com.fast.service.IWechatService;
+import com.fast.system.RedisCache;
 import com.fast.util.WXBizMsgCrypt;
 import com.fast.util.WechatUtils;
 /**
@@ -55,9 +56,12 @@ public class Open {
 		String resp = "";
 		try {
 			// 接收URL中的参数
-			String msgSignature = request.getParameter("msg_signature");  // 消息体签名，用于验证消息体的正确性
-			String timeStamp = request.getParameter("timestamp");  // 时间戳
-			String nonce = request.getParameter("nonce");  // 随机数
+			// 消息体签名，用于验证消息体的正确性
+			String msgSignature = request.getParameter("msg_signature");
+			// 时间戳
+			String timeStamp = request.getParameter("timestamp");
+			// 随机数
+			String nonce = request.getParameter("nonce");
 			
 			// 获取post过来的xml
 			StringBuffer sb = new StringBuffer() ; 
@@ -93,7 +97,8 @@ public class Open {
 				if (InfoType.equals("component_verify_ticket")) {
 					String ComponentVerifyTicket = root.getElementsByTagName("ComponentVerifyTicket").item(0).getTextContent();
 					//iCacheService.set("ComponentVerifyTicket", ComponentVerifyTicket);
-					request.getSession().setAttribute("ComponentVerifyTicket", ComponentVerifyTicket);
+					//request.getSession().setAttribute("ComponentVerifyTicket", ComponentVerifyTicket);
+					RedisCache.set("ComponentVerifyTicket", ComponentVerifyTicket);
 					resp = "success";
 				}
 				

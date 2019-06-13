@@ -14,5 +14,19 @@ public interface IMiniProgramService {
 	 * @return
 	 */
 	public Result miniprogram();
+	
+	/**
+	 * 根据appid查询
+	 * @param appid
+	 * @return
+	 */
+	public Result queryMiniprogramByAppid(String appid);
+	
+	/**
+	 * 根据appid查询id
+	 * @param appid
+	 * @return
+	 */
+	public Result queryMiniprogramIDByAppid(String appid);
 
 }
