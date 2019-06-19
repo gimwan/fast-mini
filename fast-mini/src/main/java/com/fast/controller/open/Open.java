@@ -26,6 +26,7 @@ import org.xml.sax.InputSource;
 
 import com.fast.service.IWechatEventDealService;
 import com.fast.service.IWechatService;
+import com.fast.system.RedisCache;
 import com.fast.util.WXBizMsgCrypt;
 import com.fast.util.WechatUtils;
 /**
@@ -96,7 +97,8 @@ public class Open {
 				if (InfoType.equals("component_verify_ticket")) {
 					String ComponentVerifyTicket = root.getElementsByTagName("ComponentVerifyTicket").item(0).getTextContent();
 					//iCacheService.set("ComponentVerifyTicket", ComponentVerifyTicket);
-					request.getSession().setAttribute("ComponentVerifyTicket", ComponentVerifyTicket);
+					//request.getSession().setAttribute("ComponentVerifyTicket", ComponentVerifyTicket);
+					RedisCache.set("ComponentVerifyTicket", ComponentVerifyTicket);
 					resp = "success";
 				}
 				

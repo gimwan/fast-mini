@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fast.base.Result;
 
 public class Common {
 	/**
@@ -39,6 +40,19 @@ public class Common {
 	 */
 	public static boolean isEmpty(String s) {
 		if (null == s || "".equals(s) || "".equals(s.trim()) || "null".equalsIgnoreCase(s.trim()) || "undefined".equalsIgnoreCase(s.trim())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * 判断接口是否成功返回
+	 * @param s
+	 * @return
+	 */
+	public static boolean isActive(Result result) {
+		if (result != null && result.getErrcode() != null && result.getErrcode().intValue() == 0) {
 			return true;
 		} else {
 			return false;

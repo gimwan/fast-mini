@@ -63,6 +63,7 @@ public class MiniProgramServiceImpl implements IMiniProgramService, Serializable
 			List<MMiniprogram> list = mMiniprogramMapper.selectByExample(example);
 			if (list != null && list.size() > 0) {
 				result.setData(list.get(0));
+				result.setId(list.get(0).getId());
 				result.setErrcode(Integer.valueOf(0));
 			}
 		} catch (Exception e) {

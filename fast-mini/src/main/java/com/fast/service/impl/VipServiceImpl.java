@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MVipMapper;
+import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.entity.MVip;
-import com.fast.base.data.entity.MVipExample;
+import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipmini;
 import com.fast.base.data.entity.MVipminiExample;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
-
-import net.sf.json.JSONObject;
 
 /**
  * 会员
@@ -39,6 +39,9 @@ public class VipServiceImpl implements IVipService, Serializable {
 	@Autowired
 	IMiniProgramService iMiniProgramService;
 	
+	@Autowired
+	MVipaccountMapper mVipaccountMapper;
+	
 	@Override
 	public Result queryVipByOpenid(String appid, String openid) {
 		Result result = new Result();
@@ -49,7 +52,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 			}
 			Integer miniprogramid = 0;
 			Result r = iMiniProgramService.queryMiniprogramIDByAppid(appid);
-			if (r != null && r.getErrcode() != null && r.getErrcode().intValue() == 0) {
+			if (Common.isActive(r)) {
 				miniprogramid = (Integer) r.getData();
 			}			
 			MVipminiExample example = new MVipminiExample();
@@ -61,6 +64,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 					MVip vip = mVipMapper.selectByPrimaryKey(vipid);
 					if (vip != null && vip.getId() != null) {
 						result.setData(vip);
+						result.setId(vip.getId());
 						result.setErrcode(Integer.valueOf(0));
 					}
 				}
@@ -82,7 +86,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 			}
 			Integer miniprogramid = 0;
 			Result r = iMiniProgramService.queryMiniprogramIDByAppid(appid);
-			if (r != null && r.getErrcode() != null && r.getErrcode().intValue() == 0) {
+			if (Common.isActive(r)) {
 				miniprogramid = (Integer) r.getData();
 			}			
 			MVipminiExample example = new MVipminiExample();
@@ -94,6 +98,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 					MVip vip = mVipMapper.selectByPrimaryKey(vipid);
 					if (vip != null && vip.getId() != null) {
 						result.setData(vip);
+						result.setId(vip.getId());
 						result.setErrcode(Integer.valueOf(0));
 					}
 				}
@@ -117,7 +122,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 			boolean login = false;
 			Integer miniprogramid = 0;
 			Result r = iMiniProgramService.queryMiniprogramIDByAppid(appid);
-			if (r != null && r.getErrcode() != null && r.getErrcode().intValue() == 0) {
+			if (Common.isActive(r)) {
 				miniprogramid = (Integer) r.getData();
 			}
 			// 使用openid查找会员			
@@ -130,6 +135,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 					MVip vip = mVipMapper.selectByPrimaryKey(vipid);
 					if (vip != null && vip.getId() != null) {
 						result.setData(vip);
+						result.setId(vip.getId());
 						result.setErrcode(Integer.valueOf(0));
 						login = true;
 					}
@@ -146,6 +152,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 						MVip vip = mVipMapper.selectByPrimaryKey(vipid);
 						if (vip != null && vip.getId() != null) {
 							result.setData(vip);
+							result.setId(vip.getId());
 							result.setErrcode(Integer.valueOf(0));
 							login = true;
 						}
@@ -155,6 +162,74 @@ public class VipServiceImpl implements IVipService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用VipServiceImpl.defaultLogin报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result queryVipAccount(String appid, String openid) {
+		Result result = new Result();
+		try {
+			result = queryVipByOpenid(appid, openid);
+			if (Common.isActive(result)) {
+				MVip vip = (MVip) result.getData();
+				if (vip != null && vip.getId() != null) {
+					MVipaccount vipaccount = mVipaccountMapper.selectByPrimaryKey(vip.getId());
+					if (vipaccount != null && vipaccount.getId() != null) {
+						result.setData(vipaccount);
+						result.setId(vipaccount.getId());
+						result.setErrcode(Integer.valueOf(0));
+					}
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipServiceImpl.queryVipPoint报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryVipPoint(String appid, String openid) {
+		Result result = new Result();
+		try {
+			result = queryVipAccount(appid, openid);
+			if (Common.isActive(result)) {
+				MVipaccount vipaccount = (MVipaccount) result.getData();
+				if (vipaccount != null && vipaccount.getId() != null) {
+					Integer point = vipaccount.getPoint() == null ? 0 : vipaccount.getPoint();
+					result.setData(point);
+					result.setId(vipaccount.getId());
+					result.setErrcode(Integer.valueOf(0));
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipServiceImpl.queryVipPoint报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryVipDeposit(String appid, String openid) {
+		Result result = new Result();
+		try {
+			result = queryVipAccount(appid, openid);
+			if (Common.isActive(result)) {
+				MVipaccount vipaccount = (MVipaccount) result.getData();
+				if (vipaccount != null && vipaccount.getId() != null) {
+					Long deposit = vipaccount.getDeposit() == null ? 0 : vipaccount.getDeposit();
+					result.setData(deposit);
+					result.setId(vipaccount.getId());
+					result.setErrcode(Integer.valueOf(0));
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipServiceImpl.queryVipDeposit报错：", e);
 		}
 
 		return result;

@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipMaintService;
-import com.fast.service.IWechatService;
+import com.fast.service.IVipService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
 
@@ -55,6 +56,9 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	
 	@Autowired
 	MViptypeMapper mViptypeMapper;
+	
+	@Autowired
+	IVipService iVipService;
 
 	@Override
 	public Result bind(String appid, String openid, MVip vip) {
@@ -158,6 +162,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			regionExample.createCriteria().andTypeEqualTo(Byte.valueOf("2")).andNameLike("%"+vip.getProvince()+"%");
 			List<MRegion> regions = mRegionMapper.selectByExample(regionExample);
 			if (regions != null && regions.size() > 0) {
+				vip.setProvince(regions.get(0).getName());
 				vip.setProvinceid(regions.get(0).getId());
 			}
 		}
@@ -166,9 +171,19 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			regionExample.createCriteria().andTypeEqualTo(Byte.valueOf("3")).andNameLike("%"+vip.getCity()+"%");
 			List<MRegion> regions = mRegionMapper.selectByExample(regionExample);
 			if (regions != null && regions.size() > 0) {
+				vip.setCity(regions.get(0).getName());
 				vip.setCityid(regions.get(0).getId());
 			}
-		}		
+		}
+		if (!Common.isEmpty(vip.getCounty())) {
+			MRegionExample regionExample = new MRegionExample();
+			regionExample.createCriteria().andTypeEqualTo(Byte.valueOf("4")).andNameLike("%"+vip.getCounty()+"%");
+			List<MRegion> regions = mRegionMapper.selectByExample(regionExample);
+			if (regions != null && regions.size() > 0) {
+				vip.setCounty(regions.get(0).getName());
+				vip.setCityid(regions.get(0).getId());
+			}
+		}
 		return vip;
 	}
 	
@@ -246,6 +261,63 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 		} catch (Exception e) {
 			FastLog.error("调用VipMaintServiceImpl.resetVipMini报错：", e);
 		}
+	}
+
+	@Override
+	public Result updateVipInfo(String appid, String openid, String name, String nickname, String birthday,
+			String province, String city, String county, String avatarurl, String gender) {
+		Result result = new Result();
+
+		try {
+			Result r = iVipService.queryVipByOpenid(appid, openid);
+			if (r != null && r.getErrcode() != null && r.getErrcode().intValue() == 0) {
+				MVip vip = (MVip) r.getData();
+				
+				if (!Common.isEmpty(name)) {
+					vip.setName(name);
+				}
+				if (!Common.isEmpty(nickname)) {
+					vip.setNickname(nickname);
+				}
+				if (!Common.isEmpty(birthday)) {
+					try {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						vip.setBirthday(sdf.parse(birthday));
+					} catch (Exception e) {
+						FastLog.error("VipMaintServiceImpl.updateVipInfo日期转换出错：" + e);
+					}
+				}
+				boolean resetRegin = false;
+				if (!Common.isEmpty(province)) {
+					vip.setProvince(province);
+					resetRegin = true;
+				}
+				if (!Common.isEmpty(city)) {
+					vip.setCity(city);
+					resetRegin = true;
+				}
+				if (!Common.isEmpty(county)) {
+					vip.setCounty(county);
+					resetRegin = true;
+				}
+				if (!Common.isEmpty(avatarurl)) {
+					vip.setPhotourl(avatarurl);
+				}
+				if (!Common.isEmpty(gender)) {
+					vip.setSex(Byte.valueOf(gender));
+				}
+				
+				if (resetRegin) {
+					vip = resetVipRegion(vip);
+				}
+				
+				mVipMapper.updateByPrimaryKeySelective(vip);
+			}
+		} catch (Exception e) {
+			FastLog.error("调用VipMaintServiceImpl.updateVipInfo报错：", e);
+		}
+		
+		return result;
 	}
 
 }

@@ -159,5 +159,126 @@ public class Vip extends MiniMaster {
 		
 		return result;
 	}
+	
+	/**
+	 * 会员信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/data")
+	@ResponseBody
+	public String data(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			r = iVipService.queryVipByOpenid(appid, openid);
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 更新会员信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/update")
+	@ResponseBody
+	public String update(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String name = request.getParameter("name");
+			String nickname = request.getParameter("nickname");
+			String province = request.getParameter("province");
+			String city = request.getParameter("city");
+			String county = request.getParameter("county");
+			String avatarurl = request.getParameter("avatarurl");
+			String gender = request.getParameter("gender");
+			String birthday = request.getParameter("birthday");
+			
+			r = iVipMaintService.updateVipInfo(appid, openid, name, nickname, birthday, province, city, county, avatarurl, gender);
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 获取会员积分
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/point")
+	@ResponseBody
+	public String point(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			
+			r = iVipService.queryVipPoint(appid, openid);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 获取会员储值
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/deposit")
+	@ResponseBody
+	public String deposit(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			
+			r = iVipService.queryVipDeposit(appid, openid);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
 
 }
