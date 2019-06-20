@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,6 +86,8 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			if (vip.getId() != null) {
 				mVipMapper.updateByPrimaryKeySelective(vip);
 			} else {
+				String code = newCode(1);
+				vip.setCode(code);
 				mVipMapper.insertSelective(vip);
 			}
 			
@@ -149,6 +152,74 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			vip.setUpdatedtime(now);
 		}
 		return vip;
+	}
+	
+	/**
+	 * 会员卡号生成
+	 * @param type 1随机 2顺序
+	 * @return
+	 */
+	public String newCode(int type) {
+		StringBuffer codeBuf = new StringBuffer();
+		int len = 12;
+		if (type == 1) {
+			Random rand = new Random();
+			int bounds[];
+			if (len >= 10) {
+				bounds = new int[] { 1, 1 };
+			} else {
+				bounds = new int[] { 1 };
+			}
+			int templen = 0;
+			for (int blen = 0; blen < bounds.length; blen++) {
+				int temp = len / bounds.length;
+
+				if (blen == bounds.length - 1) {
+					temp = len - templen;
+				} else
+					templen = templen + temp;
+				for (int i = 0; i < temp; i++) {
+					bounds[blen] = bounds[blen] * 10;
+				}
+			}
+
+			while (true) {
+				String code = "00000000000000000000";
+				for (int blen = 0; blen < bounds.length; blen++) {
+					Integer r1 = rand.nextInt(bounds[blen]);
+					code = code + String.valueOf(r1);
+					code = code.substring(code.length() - len);
+				}
+				MVipExample example = new MVipExample();
+				example.createCriteria().andCodeEqualTo(codeBuf.toString()+code);
+				List<MVip> list = mVipMapper.selectByExample(example);
+				if (list == null || list.size() < 1) {
+					codeBuf.append(code);
+					break;
+				}
+			}
+		} else {
+			MVipExample example = new MVipExample();
+			example.setOrderByClause(" code desc");
+			List<MVip> list = mVipMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				codeBuf.append(this.incCode(list.get(0).getCode(), "", len));
+			} else {
+				codeBuf.append(this.snToStr(1, len));
+			}
+		}
+		
+		return codeBuf.toString();
+	}
+	
+	private String snToStr(Integer sn, int snLen) {
+		String result = "0000000000" + String.valueOf(sn);
+		return result.substring(result.length() - snLen);
+	}
+
+	private String incCode(String code, String pre, int len) {
+		String sn = code.substring(pre.length());
+		return pre + this.snToStr(Integer.valueOf(sn) + 1, len);
 	}
 	
 	/**

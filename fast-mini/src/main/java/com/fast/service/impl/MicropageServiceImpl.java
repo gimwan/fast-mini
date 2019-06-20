@@ -1,6 +1,8 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +15,10 @@ import com.fast.base.data.dao.MMicropagesetMapper;
 import com.fast.base.data.dao.MMicropagesetdtlMapper;
 import com.fast.base.data.entity.MMicropage;
 import com.fast.base.data.entity.MMicropageExample;
+import com.fast.base.data.entity.MMicropageset;
+import com.fast.base.data.entity.MMicropagesetExample;
+import com.fast.base.data.entity.MMicropagesetdtl;
+import com.fast.base.data.entity.MMicropagesetdtlExample;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.service.IMicropageService;
 import com.fast.service.IMiniProgramService;
@@ -82,29 +88,58 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 				result.setMessage("无微页面");
 				return result;
 			}
-
-			/*Result r = iOmMicroformService.getShowsetByPageId(omMicroform.getId());
-			if (r != null && r.getErrcode().intValue() == 0) {
-				List<Map<String, Object>> list = (List<Map<String, Object>>) r.getData();
-
-				Integer openidid = iWeChatService.queryOpenidid(appid);
-				JSONObject micropageObject = appendMicroPageData(list, omMicroform, openidid);
-
-				result.setErrcode(Integer.valueOf("0"));
-				result.setData(micropageObject);
+			
+			List<HashMap<String, Object>> microData = new ArrayList<>();
+			MMicropagesetExample example = new MMicropagesetExample();
+			example.createCriteria().andMicropageidEqualTo(micropage.getId());
+			example.setOrderByClause("index asc");
+			List<MMicropageset> list = micropagesetMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				List<Integer> idList = new ArrayList<>();
+				for (int i = 0; i < list.size(); i++) {
+					idList.add(list.get(i).getId());
+				}
+				MMicropagesetdtlExample dtlExample = new MMicropagesetdtlExample();
+				dtlExample.createCriteria().andMicropagesetidIn(idList);
+				dtlExample.setOrderByClause("index asc");
+				List<MMicropagesetdtl> dtlList = micropagesetdtlMapper.selectByExample(dtlExample);
+				
+				for (int i = 0; i < list.size(); i++) {
+					MMicropageset micropageset = list.get(i);
+					HashMap<String, Object> map = new HashMap<>();
+					map.put("id", micropageset.getId());
+					map.put("kind", micropageset.getKind());
+					map.put("index", micropageset.getIndex());
+					map.put("showname", micropageset.getShowname());
+					map.put("showprice", micropageset.getShowprice());
+					map.put("imagestyle", micropageset.getImagestyle());
+					map.put("orderby", micropageset.getOrderby());
+					
+					List<HashMap<String, Object>> childsList = new ArrayList<>();
+					for (int j = 0; j < dtlList.size(); j++) {
+						MMicropagesetdtl micropagesetdtl = dtlList.get(j);
+						if (micropagesetdtl.getMicropagesetid().intValue() == micropageset.getId().intValue()) {
+							HashMap<String, Object> childMap = new HashMap<String, Object>();
+							childMap.put("id", micropagesetdtl.getId());
+							childMap.put("index", micropagesetdtl.getIndex());
+							childMap.put("first", micropagesetdtl.getFirst());
+							childMap.put("second", micropagesetdtl.getSecond());
+							childMap.put("third", micropagesetdtl.getThird());
+							childMap.put("text", micropagesetdtl.getText());
+							childMap.put("photourl", micropagesetdtl.getPhotourl());
+							childMap.put("targetpath", micropagesetdtl.getTargetpath());
+							childMap.put("type", micropagesetdtl.getType());
+							childsList.add(childMap);
+						}
+					}
+					
+					map.put("childs", childsList);
+				}
 			}
 			
-			// 纪录访客数、浏览量
-			try {
-				refreshVisitRecordThread thread = new refreshVisitRecordThread();
-				thread.setPageid(omMicroform.getId());
-				thread.setIp(ip);
-				thread.setOpenid(openid);
-				Thread t = new Thread(thread);
-	            t.start();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}*/
+			result.setErrcode(Integer.valueOf(0));
+			result.setData(microData);
+			result.setId(micropage.getId());
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用MicropageServiceImpl.micropage报错：", e);
