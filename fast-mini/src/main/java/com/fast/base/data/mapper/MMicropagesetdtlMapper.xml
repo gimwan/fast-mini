@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.fast.base.data.entity.MMicropagesetdtl" >
     <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="MicroPageSetID" property="micropagesetid" jdbcType="INTEGER" />
-    <result column="Index" property="index" jdbcType="INTEGER" />
+    <result column="ShowIndex" property="showindex" jdbcType="INTEGER" />
     <result column="First" property="first" jdbcType="INTEGER" />
     <result column="Second" property="second" jdbcType="INTEGER" />
     <result column="Third" property="third" jdbcType="INTEGER" />
@@ -43,7 +43,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    ID, MicroPageSetID, Index, First, Second, Third, Text, PhotoUrl, TargetPath, Type
+    ID, MicroPageSetID, ShowIndex, First, Second, Third, Text, PhotoUrl, TargetPath, 
+    Type
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fast.base.data.entity.MMicropagesetdtlExample" >
     select
@@ -77,11 +78,11 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.fast.base.data.entity.MMicropagesetdtl" >
-    insert into m_micropagesetdtl (ID, MicroPageSetID, Index, 
+    insert into m_micropagesetdtl (ID, MicroPageSetID, ShowIndex, 
       First, Second, Third, 
       Text, PhotoUrl, TargetPath, 
       Type)
-    values (#{id,jdbcType=INTEGER}, #{micropagesetid,jdbcType=INTEGER}, #{index,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{micropagesetid,jdbcType=INTEGER}, #{showindex,jdbcType=INTEGER}, 
       #{first,jdbcType=INTEGER}, #{second,jdbcType=INTEGER}, #{third,jdbcType=INTEGER}, 
       #{text,jdbcType=VARCHAR}, #{photourl,jdbcType=VARCHAR}, #{targetpath,jdbcType=VARCHAR}, 
       #{type,jdbcType=INTEGER})
@@ -95,8 +96,8 @@
       <if test="micropagesetid != null" >
         MicroPageSetID,
       </if>
-      <if test="index != null" >
-        Index,
+      <if test="showindex != null" >
+        ShowIndex,
       </if>
       <if test="first != null" >
         First,
@@ -127,8 +128,8 @@
       <if test="micropagesetid != null" >
         #{micropagesetid,jdbcType=INTEGER},
       </if>
-      <if test="index != null" >
-        #{index,jdbcType=INTEGER},
+      <if test="showindex != null" >
+        #{showindex,jdbcType=INTEGER},
       </if>
       <if test="first != null" >
         #{first,jdbcType=INTEGER},
@@ -165,8 +166,8 @@
       <if test="micropagesetid != null" >
         MicroPageSetID = #{micropagesetid,jdbcType=INTEGER},
       </if>
-      <if test="index != null" >
-        Index = #{index,jdbcType=INTEGER},
+      <if test="showindex != null" >
+        ShowIndex = #{showindex,jdbcType=INTEGER},
       </if>
       <if test="first != null" >
         First = #{first,jdbcType=INTEGER},
@@ -195,7 +196,7 @@
   <update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MMicropagesetdtl" >
     update m_micropagesetdtl
     set MicroPageSetID = #{micropagesetid,jdbcType=INTEGER},
-      Index = #{index,jdbcType=INTEGER},
+      ShowIndex = #{showindex,jdbcType=INTEGER},
       First = #{first,jdbcType=INTEGER},
       Second = #{second,jdbcType=INTEGER},
       Third = #{third,jdbcType=INTEGER},

@@ -5,7 +5,7 @@
     <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="MicroPageID" property="micropageid" jdbcType="INTEGER" />
     <result column="Kind" property="kind" jdbcType="INTEGER" />
-    <result column="Index" property="index" jdbcType="INTEGER" />
+    <result column="ShowIndex" property="showindex" jdbcType="INTEGER" />
     <result column="ShowName" property="showname" jdbcType="TINYINT" />
     <result column="ShowPrice" property="showprice" jdbcType="TINYINT" />
     <result column="ImageStyle" property="imagestyle" jdbcType="TINYINT" />
@@ -47,8 +47,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    ID, MicroPageID, Kind, Index, ShowName, ShowPrice, ImageStyle, OrderBy, Memo, CreateTime, 
-    Creator, ModifyTime, Modifier, UpdatedTime
+    ID, MicroPageID, Kind, ShowIndex, ShowName, ShowPrice, ImageStyle, OrderBy, Memo, 
+    CreateTime, Creator, ModifyTime, Modifier, UpdatedTime
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fast.base.data.entity.MMicropagesetdraftExample" >
     select
@@ -83,12 +83,12 @@
   </delete>
   <insert id="insert" parameterType="com.fast.base.data.entity.MMicropagesetdraft" >
     insert into m_micropagesetdraft (ID, MicroPageID, Kind, 
-      Index, ShowName, ShowPrice, 
+      ShowIndex, ShowName, ShowPrice, 
       ImageStyle, OrderBy, Memo, 
       CreateTime, Creator, ModifyTime, 
       Modifier, UpdatedTime)
     values (#{id,jdbcType=INTEGER}, #{micropageid,jdbcType=INTEGER}, #{kind,jdbcType=INTEGER}, 
-      #{index,jdbcType=INTEGER}, #{showname,jdbcType=TINYINT}, #{showprice,jdbcType=TINYINT}, 
+      #{showindex,jdbcType=INTEGER}, #{showname,jdbcType=TINYINT}, #{showprice,jdbcType=TINYINT}, 
       #{imagestyle,jdbcType=TINYINT}, #{orderby,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR}, 
       #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, 
       #{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP})
@@ -105,8 +105,8 @@
       <if test="kind != null" >
         Kind,
       </if>
-      <if test="index != null" >
-        Index,
+      <if test="showindex != null" >
+        ShowIndex,
       </if>
       <if test="showname != null" >
         ShowName,
@@ -149,8 +149,8 @@
       <if test="kind != null" >
         #{kind,jdbcType=INTEGER},
       </if>
-      <if test="index != null" >
-        #{index,jdbcType=INTEGER},
+      <if test="showindex != null" >
+        #{showindex,jdbcType=INTEGER},
       </if>
       <if test="showname != null" >
         #{showname,jdbcType=TINYINT},
@@ -199,8 +199,8 @@
       <if test="kind != null" >
         Kind = #{kind,jdbcType=INTEGER},
       </if>
-      <if test="index != null" >
-        Index = #{index,jdbcType=INTEGER},
+      <if test="showindex != null" >
+        ShowIndex = #{showindex,jdbcType=INTEGER},
       </if>
       <if test="showname != null" >
         ShowName = #{showname,jdbcType=TINYINT},
@@ -239,7 +239,7 @@
     update m_micropagesetdraft
     set MicroPageID = #{micropageid,jdbcType=INTEGER},
       Kind = #{kind,jdbcType=INTEGER},
-      Index = #{index,jdbcType=INTEGER},
+      ShowIndex = #{showindex,jdbcType=INTEGER},
       ShowName = #{showname,jdbcType=TINYINT},
       ShowPrice = #{showprice,jdbcType=TINYINT},
       ImageStyle = #{imagestyle,jdbcType=TINYINT},

@@ -92,7 +92,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 			List<HashMap<String, Object>> microData = new ArrayList<>();
 			MMicropagesetExample example = new MMicropagesetExample();
 			example.createCriteria().andMicropageidEqualTo(micropage.getId());
-			example.setOrderByClause("index asc");
+			example.setOrderByClause("showindex asc");
 			List<MMicropageset> list = micropagesetMapper.selectByExample(example);
 			if (list != null && list.size() > 0) {
 				List<Integer> idList = new ArrayList<>();
@@ -101,7 +101,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 				}
 				MMicropagesetdtlExample dtlExample = new MMicropagesetdtlExample();
 				dtlExample.createCriteria().andMicropagesetidIn(idList);
-				dtlExample.setOrderByClause("index asc");
+				dtlExample.setOrderByClause("showindex asc");
 				List<MMicropagesetdtl> dtlList = micropagesetdtlMapper.selectByExample(dtlExample);
 				
 				for (int i = 0; i < list.size(); i++) {
@@ -109,7 +109,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 					HashMap<String, Object> map = new HashMap<>();
 					map.put("id", micropageset.getId());
 					map.put("kind", micropageset.getKind());
-					map.put("index", micropageset.getIndex());
+					map.put("index", micropageset.getShowindex());
 					map.put("showname", micropageset.getShowname());
 					map.put("showprice", micropageset.getShowprice());
 					map.put("imagestyle", micropageset.getImagestyle());
@@ -121,7 +121,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 						if (micropagesetdtl.getMicropagesetid().intValue() == micropageset.getId().intValue()) {
 							HashMap<String, Object> childMap = new HashMap<String, Object>();
 							childMap.put("id", micropagesetdtl.getId());
-							childMap.put("index", micropagesetdtl.getIndex());
+							childMap.put("index", micropagesetdtl.getShowindex());
 							childMap.put("first", micropagesetdtl.getFirst());
 							childMap.put("second", micropagesetdtl.getSecond());
 							childMap.put("third", micropagesetdtl.getThird());
@@ -134,6 +134,8 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 					}
 					
 					map.put("childs", childsList);
+					
+					microData.add(map);
 				}
 			}
 			

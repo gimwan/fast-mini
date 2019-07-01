@@ -39,14 +39,14 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 		
 		try {
 	        //获取文件需要上传到的路径
-			String path = request.getRealPath("/uploadimages") + "/";
+			String path = request.getRealPath("/uploadimages") + "\\";
 	        File dir = new File(path);
 	        if (!dir.exists()) {
 	            dir.mkdir();
 	        }
 	        System.out.println("path=" + path);
-	
-	        request.setCharacterEncoding("utf-8");  //设置编码
+	        //设置编码
+	        request.setCharacterEncoding("utf-8");
 	        //获得磁盘文件条目工厂
 	        DiskFileItemFactory factory = new DiskFileItemFactory();
 	
@@ -62,7 +62,8 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 	        factory.setSizeThreshold(1024 * 1024);
 	        //高水平的API文件上传处理
 	        ServletFileUpload upload = new ServletFileUpload(factory);
-        
+	        upload.setHeaderEncoding("UTF-8");
+	        
             List<FileItem> list = upload.parseRequest(request);
             FileItem picture = null;
             for (FileItem item : list) {
@@ -81,7 +82,7 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 
             //自定义上传图片的名字
             Date date = new Date();
-            String fileName = String.valueOf(date.getTime()) + ".png";
+            String fileName = String.valueOf(date.getTime()) + ".jpg";
             String destPath = path + fileName;
             System.out.println("destPath=" + destPath);
             
