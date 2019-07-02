@@ -65,13 +65,16 @@ common.bindVue = function() {
     });
 	uploadInst = layuiUpload.render({
 	    elem: '.layui-upload-drag',
-	    url: './upload/image',
+	    url: './upload/field/image',
 	    size: 1024,
 	    multiple: false,
 	    done: function(res, index, upload){
 	    	// 上传完毕回调
 	    	console.log(res);
 	    	console.log(index);
+	    	var item = this.item;
+	    	$(item).html('<img alt="" src="'+res.data+'" class="dragImg">');
+	    	console.log(item);
 	    },
 	    error: function(res, index){
 	    	// 请求异常回调

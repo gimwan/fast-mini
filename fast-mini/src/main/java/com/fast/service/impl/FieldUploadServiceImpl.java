@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -15,9 +16,11 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fast.base.Result;
 import com.fast.service.IFieldUploadService;
+import com.fast.system.log.FastLog;
 
 /**
  * 文件上传
@@ -124,5 +127,39 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
         
         return result;
     }
+
+	@Override
+	public Result uploadFieldImage(HttpServletRequest request, MultipartFile file) {
+		Result result = new Result();
+		try {
+			//获取文件需要上传到的路径
+			String path = request.getRealPath("/uploadimages") + "\\";
+			String originalFieldName = file.getOriginalFilename();
+			String prefix = originalFieldName.substring(originalFieldName.lastIndexOf("."));
+			String fieldName = String.valueOf(new Date().getTime()) + prefix;
+			String filePath = path + fieldName;
+			System.out.println("filePath:"+filePath);
+			File desFile = new File(filePath);
+			if(!desFile.getParentFile().exists()){
+				desFile.mkdirs();
+			}
+			file.transferTo(desFile);
+			// 域名
+            String scheme = request.getScheme();
+            String serverName = request.getServerName();
+            int serverPort = request.getServerPort();
+            String contextPath = request.getContextPath();
+            String domain = scheme + "://" + serverName + ":" + serverPort + contextPath;
+			String imageUrls = domain + "/uploadimages/" + fieldName;
+			
+			result.setErrcode(0);
+            result.setData(imageUrls);
+            result.setMessage("上传成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			FastLog.error("调用FieldUploadServiceImpl.uploadFieldImage报错：", e);
+		}
+		return result;
+	}
 
 }

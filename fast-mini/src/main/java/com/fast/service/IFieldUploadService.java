@@ -2,6 +2,8 @@ package com.fast.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fast.base.Result;
 
 /**
@@ -19,5 +21,13 @@ public interface IFieldUploadService {
 	 * @throws Exception
 	 */
 	public Result uploadImage(HttpServletRequest request) throws Exception;
+	
+	/**
+	 * 上传图片
+	 * @param request
+	 * @param file
+	 * @return
+	 */
+	public Result uploadFieldImage(HttpServletRequest request, MultipartFile file);
 
 }

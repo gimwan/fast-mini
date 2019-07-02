@@ -90,10 +90,11 @@
 }
 
 .microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    padding: 0px;
+    /* height: 100px;
     min-width: 100px;
-    min-height: 100px;
+    min-height: 100px; */
 }
 
 .microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .layui-icon {
@@ -101,6 +102,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
+}
+
+.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .dragImg {
+	width: 100%;
+	display: block;
 }
 
 .microPage .configureView .rightPanel .editBox .uploadField .layui-form .layui-form-item {
