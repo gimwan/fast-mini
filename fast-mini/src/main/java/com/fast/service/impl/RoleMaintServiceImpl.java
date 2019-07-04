@@ -67,7 +67,7 @@ public class RoleMaintServiceImpl implements IRoleMaintService, Serializable {
 			
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
-			FastLog.error("调用RoleMaintServiceImpl.changeConfig报错：", e);
+			FastLog.error("调用RoleMaintServiceImpl.changeRole报错：", e);
 		}
 
 		return result;

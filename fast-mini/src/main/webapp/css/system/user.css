@@ -1,3 +1,11 @@
+.userPage .operating {
+	margin: 0px 15px;
+}
+
+.userPage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
 .userPage .layui-table-view .layui-table-box .layui-table-header span {
 	font-weight: 600;
 }
@@ -18,6 +26,10 @@
 
 .userPage .layui-table-view .layui-table-box tr .name {
 	min-width: 180px;
+}
+
+.userPage .layui-table-view .layui-table-box tr .mobilephone {
+	min-width: 140px;
 }
 
 .userPage .layui-table-view .layui-table-box tr .value {
@@ -46,7 +58,24 @@
     padding: 15px;
 }
 
+.edit-view .edit-box {
+	margin: 5px;
+}
+
 .edit-view .edit-box .edit-item>div {
     margin: 10px 0;
 }
 
+.edit-view .edit-box .edit-item .layui-circle-img {
+	width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block {
+	margin-left: 0px;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block textarea {
+	resize: none;
+}

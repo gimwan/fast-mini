@@ -37,6 +37,10 @@
     padding: 15px;
 }
 
+.edit-view .edit-box {
+	margin: 5px;
+}
+
 .edit-view .edit-box .edit-item>div {
     margin: 10px 0;
 }

@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MUser;
+import com.fast.service.IUserMaintService;
 import com.fast.service.IUserService;
+import com.fast.system.RedisCache;
 
 import net.sf.json.JSONObject;
 
@@ -27,6 +30,9 @@ public class UserController {
 	
 	@Autowired
 	IUserService iUserService;
+	
+	@Autowired
+	IUserMaintService iUserMaintService;
 	
 	@RequestMapping("")
 	public ModelAndView userView(HttpServletRequest request, HttpServletResponse response) {
@@ -50,6 +56,40 @@ public class UserController {
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 修改用户
+	 * @param request
+	 * @param response
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping("/change")
+	@ResponseBody
+	public String change(HttpServletRequest request, HttpServletResponse response, MUser user) {
+		String r = "";
+		
+		try {
+			String sessionid = request.getSession().getId();
+			MUser mUser = (MUser) RedisCache.retake(sessionid);
+			
+			Result result = iUserMaintService.changeUser(user);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+			
+			if (result.getErrcode().intValue() == 0) {
+				if (result.getId().intValue() == mUser.getId().intValue()) {
+					RedisCache.set(sessionid, result.getData());
+					request.getSession().setAttribute("user",result.getData());
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
