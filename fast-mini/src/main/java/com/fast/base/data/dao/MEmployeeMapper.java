@@ -4,6 +4,8 @@ import com.fast.base.data.entity.MEmployee;
 import com.fast.base.data.entity.MEmployeeExample;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Options;
+
 public interface MEmployeeMapper {
     int countByExample(MEmployeeExample example);
 
@@ -11,8 +13,10 @@ public interface MEmployeeMapper {
 
     int deleteByPrimaryKey(Integer id);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(MEmployee record);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insertSelective(MEmployee record);
 
     List<MEmployee> selectByExample(MEmployeeExample example);

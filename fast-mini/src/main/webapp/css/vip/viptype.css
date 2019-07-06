@@ -1,3 +1,11 @@
+.viptypePage .operating {
+	margin: 0px 15px;
+}
+
+.viptypePage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
 .viptypePage .layui-table-view .layui-table-box .layui-table-header span {
 	font-weight: 600;
 }
@@ -45,3 +53,14 @@
     margin: 10px 0;
 }
 
+.edit-view .edit-box .edit-item .edit-value .value {
+	color: gray;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block {
+	margin-left: 0px;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block textarea {
+	resize: none;
+}

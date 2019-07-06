@@ -66,6 +66,10 @@
     margin: 10px 0;
 }
 
+.edit-view .edit-box .edit-item .edit-value .value {
+	color: gray;
+}
+
 .edit-view .edit-box .edit-item .layui-circle-img {
 	width: 100px;
     height: 100px;

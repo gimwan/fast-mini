@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MEmployee;
+import com.fast.base.data.entity.MUser;
+import com.fast.base.data.entity.MViptype;
+import com.fast.service.IViptypeMaintService;
 import com.fast.service.IViptypeService;
+import com.fast.system.RedisCache;
 
 import net.sf.json.JSONObject;
 
@@ -27,6 +32,9 @@ public class ViptypeController {
 	
 	@Autowired
 	IViptypeService iViptypeService;
+	
+	@Autowired
+	IViptypeMaintService iViptypeMaintService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
@@ -47,6 +55,33 @@ public class ViptypeController {
 		
 		try {
 			Result result = iViptypeService.viptype();
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 修改会员等级
+	 * @param request
+	 * @param response
+	 * @param viptype
+	 * @return
+	 */
+	@RequestMapping("/change")
+	@ResponseBody
+	public String change(HttpServletRequest request, HttpServletResponse response, MViptype viptype) {
+		String r = "";
+		
+		try {
+			String sessionid = request.getSession().getId();
+			MUser user = (MUser) RedisCache.retake(sessionid);
+			
+			Result result = iViptypeMaintService.changeVipType(viptype, user);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

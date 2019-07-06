@@ -19,6 +19,24 @@ common.bindVue = function() {
             },
             del: function () {
                 console.log('delete');
+            },
+            formatDate: function(jsonDate) {
+            	if (jsonDate == null || jsonDate == undefined || $.trim(jsonDate) == "") {
+					return '';
+				}
+				var year = jsonDate.year + 1900;
+				var month = jsonDate.month + 1;
+				var day = jsonDate.date;
+				// 如果得到的数字小于9要在前面加'0'
+				day = (day > 9) ? ("" + day) : ("0" + day);
+				month = (month > 9) ? ("" + month) : ("0" + month);
+				var hour = jsonDate.hours;
+				var minute = jsonDate.minutes;
+				var seconds = jsonDate.seconds;
+				hour = (hour > 9) ? ("" + hour) : ("0" + hour);
+				minute = (minute > 9) ? ("" + minute) : ("0" + minute);
+				seconds = (seconds > 9) ? ("" + seconds) : ("0" + seconds);
+				return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + seconds;
             }
         }
     });

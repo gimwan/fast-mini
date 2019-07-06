@@ -113,13 +113,13 @@
 											<div class="layui-table-cell laytable-cell-1-0-3">{{u.creator}}</div>
 										</td>
 										<td class="item createtime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{u.createtime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(u.createtime)}}</div>
 										</td>
 										<td class="item modifier">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{u.modifier}}</div>
 										</td>
 										<td class="item modifytime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{u.modifytime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(u.modifytime)}}</div>
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{u.memo}}</div>

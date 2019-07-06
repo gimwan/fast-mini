@@ -6,8 +6,20 @@
 		<ul class="layui-tab-title">
 		    <li class="layui-this">门店资料</li>
 		</ul>
-	<div class="layui-tab-content"></div>
+		<div class="layui-tab-content"></div>
 	</div> 
+	
+	<div class="operating">
+		<div class="layui-btn-group">
+	        <button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add">
+	          <i class="layui-icon"></i>
+	        </button>
+	        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
+	          <i class="layui-icon"></i>
+	        </button>
+	     </div>
+	</div>
+	
 	<div class="layui-tab-item layui-show">
 		<div class="layui-main">
 			<div id="lay_preview">
@@ -83,13 +95,13 @@
 											<div class="layui-table-cell laytable-cell-1-0-3">{{d.creator}}</div>
 										</td>
 										<td class="item createtime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{d.createtime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(d.createtime)}}</div>
 										</td>
 										<td class="item modifier">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{d.modifier}}</div>
 										</td>
 										<td class="item modifytime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{d.modifytime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(d.modifytime)}}</div>
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{d.memo}}</div>

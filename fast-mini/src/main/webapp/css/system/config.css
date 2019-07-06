@@ -12,11 +12,11 @@
 }
 
 .configPage .layui-table-view .layui-table-box tr .name {
-	min-width: 180px;
+	min-width: 220px;
 }
 
 .configPage .layui-table-view .layui-table-box tr .value {
-	min-width: 200px;
+	min-width: 260px;
 }
 
 .configPage .layui-table-view .layui-table-box tr .memo {
@@ -49,3 +49,6 @@
     margin: 10px 0;
 }
 
+.edit-view .edit-box .edit-item .edit-value .value {
+	color: gray;
+}

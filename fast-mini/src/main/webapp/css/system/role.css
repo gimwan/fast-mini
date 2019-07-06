@@ -59,6 +59,10 @@
 	margin: 10px 0;
 }
 
+.edit-view .edit-box .edit-item .edit-value .value {
+	color: gray;
+}
+
 .edit-view .edit-box .layui-form .layui-form-item .layui-input-block {
 	margin-left: 0px;
 }

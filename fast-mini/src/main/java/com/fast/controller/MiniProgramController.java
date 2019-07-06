@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MEmployee;
+import com.fast.base.data.entity.MMiniprogram;
+import com.fast.base.data.entity.MUser;
+import com.fast.service.IMiniProgramMaintService;
 import com.fast.service.IMiniProgramService;
+import com.fast.system.RedisCache;
 
 import net.sf.json.JSONObject;
 
@@ -27,6 +32,9 @@ public class MiniProgramController {
 
 	@Autowired
 	IMiniProgramService iMiniProgramService;
+	
+	@Autowired
+	IMiniProgramMaintService iMiniProgramMaintService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
@@ -47,6 +55,33 @@ public class MiniProgramController {
 		
 		try {
 			Result result = iMiniProgramService.miniprogram();
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 修改小程序
+	 * @param request
+	 * @param response
+	 * @param miniprogram
+	 * @return
+	 */
+	@RequestMapping("/change")
+	@ResponseBody
+	public String change(HttpServletRequest request, HttpServletResponse response, MMiniprogram miniprogram) {
+		String r = "";
+		
+		try {
+			String sessionid = request.getSession().getId();
+			MUser user = (MUser) RedisCache.retake(sessionid);
+			
+			Result result = iMiniProgramMaintService.changeMiniProgram(miniprogram, user);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

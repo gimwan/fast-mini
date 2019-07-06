@@ -1,3 +1,11 @@
+.miniprogramPage .operating {
+	margin: 0px 15px;
+}
+
+.miniprogramPage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
 .miniprogramPage .layui-table-view .layui-table-box .layui-table-header span {
 	font-weight: 600;
 }
@@ -45,3 +53,20 @@
     margin: 10px 0;
 }
 
+.edit-view .edit-box .edit-item .edit-value .value {
+	color: gray;
+}
+
+.edit-view .edit-box .edit-item .layui-circle-img {
+	width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block {
+	margin-left: 0px;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block textarea {
+	resize: none;
+}

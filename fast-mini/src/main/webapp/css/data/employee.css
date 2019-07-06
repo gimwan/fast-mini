@@ -1,3 +1,11 @@
+.employeePage .operating {
+	margin: 0px 15px;
+}
+
+.employeePage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
 .employeePage .layui-table-view .layui-table-box .layui-table-header span {
 	font-weight: 600;
 }
@@ -9,6 +17,11 @@
     border-left-width: 0;
     border-right-width: 0;
     border-bottom-width: 1px;
+}
+
+.userPage .layui-table-view .layui-table-box tr .layui-nav-img {
+	width: 25px;
+    height: 25px;
 }
 
 .employeePage .layui-table-view .layui-table-box tr .name {
@@ -45,3 +58,20 @@
     margin: 10px 0;
 }
 
+.edit-view .edit-box .edit-item .edit-value .value {
+	color: gray;
+}
+
+.edit-view .edit-box .edit-item .layui-circle-img {
+	width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block {
+	margin-left: 0px;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block textarea {
+	resize: none;
+}

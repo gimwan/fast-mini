@@ -71,7 +71,7 @@
 											<div class="layui-table-cell laytable-cell-1-0-3">{{c.modifier}}</div>
 										</td>
 										<td class="item modifytime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{c.modifytime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(c.modifytime)}}</div>
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{c.memo}}</div>

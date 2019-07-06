@@ -4,6 +4,8 @@ import com.fast.base.data.entity.MConfig;
 import com.fast.base.data.entity.MConfigExample;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Options;
+
 public interface MConfigMapper {
     int countByExample(MConfigExample example);
 

@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MPublicplatform;
+import com.fast.base.data.entity.MUser;
+import com.fast.service.IPublicPlatformMaintService;
 import com.fast.service.IPublicPlatformService;
+import com.fast.system.RedisCache;
 
 import net.sf.json.JSONObject;
 
@@ -27,6 +31,9 @@ public class PublicPlatformController {
 	
 	@Autowired
 	IPublicPlatformService iPublicPlatformService;
+	
+	@Autowired
+	IPublicPlatformMaintService iPublicPlatformMaintService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
@@ -47,6 +54,33 @@ public class PublicPlatformController {
 		
 		try {
 			Result result = iPublicPlatformService.publicplatform();
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 修改公众号
+	 * @param request
+	 * @param response
+	 * @param publicplatform
+	 * @return
+	 */
+	@RequestMapping("/change")
+	@ResponseBody
+	public String change(HttpServletRequest request, HttpServletResponse response, MPublicplatform publicplatform) {
+		String r = "";
+		
+		try {
+			String sessionid = request.getSession().getId();
+			MUser user = (MUser) RedisCache.retake(sessionid);
+			
+			Result result = iPublicPlatformMaintService.changePublicplatform(publicplatform, user);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

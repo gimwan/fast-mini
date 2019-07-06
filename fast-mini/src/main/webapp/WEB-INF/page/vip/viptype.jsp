@@ -6,8 +6,20 @@
 		<ul class="layui-tab-title">
 		    <li class="layui-this">会员等级</li>
 		</ul>
-	<div class="layui-tab-content"></div>
-	</div> 
+		<div class="layui-tab-content"></div>
+	</div>
+	
+	<div class="operating">
+		<div class="layui-btn-group">
+	        <button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add">
+	          <i class="layui-icon"></i>
+	        </button>
+	        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
+	          <i class="layui-icon"></i>
+	        </button>
+	     </div>
+	</div>
+	
 	<div class="layui-tab-item layui-show">
 		<div class="layui-main">
 			<div id="lay_preview">
@@ -27,7 +39,17 @@
 												<span>名称</span>
 											</div>
 										</th>
-										<th class="item value">
+										<th class="item grade">
+											<div class="layui-table-cell">
+												<span>级别</span>
+											</div>
+										</th>
+										<th class="item defaultflag">
+											<div class="layui-table-cell">
+												<span>默认等级</span>
+											</div>
+										</th>
+										<th class="item useflag">
 											<div class="layui-table-cell">
 												<span>是否使用</span>
 											</div>
@@ -74,7 +96,15 @@
 										<td class="item name">
 											<div class="layui-table-cell laytable-cell-1-0-1">{{v.name}}</div>
 										</td>
-										<td class="item value">
+										<td class="item grade">
+											<div class="layui-table-cell laytable-cell-1-0-1">{{v.grade}}</div>
+										</td>
+										<td class="item defaultflag">
+											<div class="layui-table-cell laytable-cell-1-0-2">
+												<i class="layui-icon layui-icon-ok" v-if="v.defaultflag == 1"></i>
+											</div>
+										</td>
+										<td class="item useflage">
 											<div class="layui-table-cell laytable-cell-1-0-2">
 												<i class="layui-icon layui-icon-ok" v-if="v.useflag == 1"></i>
 											</div>
@@ -83,13 +113,13 @@
 											<div class="layui-table-cell laytable-cell-1-0-3">{{v.creator}}</div>
 										</td>
 										<td class="item createtime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{v.createtime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(v.createtime)}}</div>
 										</td>
 										<td class="item modifier">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{v.modifier}}</div>
 										</td>
 										<td class="item modifytime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{v.modifytime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(v.modifytime)}}</div>
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{v.memo}}</div>

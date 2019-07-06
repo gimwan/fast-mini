@@ -4,6 +4,8 @@ import com.fast.base.data.entity.MMicropagesetdtl;
 import com.fast.base.data.entity.MMicropagesetdtlExample;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Options;
+
 public interface MMicropagesetdtlMapper {
     int countByExample(MMicropagesetdtlExample example);
 
@@ -11,8 +13,10 @@ public interface MMicropagesetdtlMapper {
 
     int deleteByPrimaryKey(Integer id);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(MMicropagesetdtl record);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insertSelective(MMicropagesetdtl record);
 
     List<MMicropagesetdtl> selectByExample(MMicropagesetdtlExample example);
