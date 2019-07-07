@@ -18,25 +18,30 @@ common.bindVue = function() {
                 showEditBox(-1, null);
             },
             del: function () {
-            	var id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
-            	var deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
-            	if (id == null || id == undefined || $.trim(id) == "") {
-            		common.warn("请先选择要删除项");
-                    return false;
-				}
-				var data = {};
-				data['id'] = id;
-            	common.showLoading();
-                api.load('./viptype/delete','post',data, function(result) {
-                    if (result.errcode == 0) {
-                    	viptype.splice(deleteIndex);
-                        
-                        common.tips(result.message);
-                    } else {
-                        common.error(result.message);
-                    }
-                    common.closeLoading();
-                });
+            	layer.confirm('确定删除？', {
+            		btn: ['确定','取消'],
+            		btn1 : function(index, layero) {
+            			let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
+            			let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
+                    	if (id == null || id == undefined || $.trim(id) == "") {
+                    		common.warn("请先选择要删除项");
+                            return false;
+        				}
+        				var data = {};
+        				data['id'] = id;
+                    	common.showLoading();
+                        api.load('./viptype/delete','post',data, function(result) {
+                            if (result.errcode == 0) {
+                            	viptype.splice(deleteIndex);
+                                
+                                common.tips(result.message);
+                            } else {
+                                common.error(result.message);
+                            }
+                            common.closeLoading();
+                        });
+            		}
+            	});
             },
             formatDate: function(jsonDate) {
             	if (jsonDate == null || jsonDate == undefined || $.trim(jsonDate) == "") {
@@ -172,12 +177,47 @@ function createElement(data) {
 				                "<input type=\"text\" value=\""+name+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
-				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				        "<div class=\"edit-item\" select=\"1\" need=\"1\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">级别</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"grade\">"+
-				                "<input type=\"text\" value=\""+grade+"\" class=\"layui-input value\"/>"+
+				                "<form class=\"layui-form\" action=\"\">" +
+				                	"<div class=\"layui-form-item\">" +
+				                		"<div class=\"selectItem\">" +
+				                			"<div class=\"layui-input-inline selectBox\">" +
+				                				"<select>" +
+				                					"<option value=\"1\" "+(grade == 1 ? 'selected' : '')+">1</option>" +
+				                					"<option value=\"2\" "+(grade == 2 ? 'selected' : '')+">2</option>" +
+				                					"<option value=\"3\" "+(grade == 3 ? 'selected' : '')+">3</option>" +
+				                					"<option value=\"4\" "+(grade == 4 ? 'selected' : '')+">4</option>" +
+				                					"<option value=\"5\" "+(grade == 5 ? 'selected' : '')+">5</option>" +
+				                					"<option value=\"6\" "+(grade == 6 ? 'selected' : '')+">6</option>" +
+				                					"<option value=\"7\" "+(grade == 7 ? 'selected' : '')+">7</option>" +
+				                					"<option value=\"8\" "+(grade == 8 ? 'selected' : '')+">8</option>" +
+				                					"<option value=\"9\" "+(grade == 9 ? 'selected' : '')+">9</option>" +
+				                				"</select>" +
+				                				"<div class=\"layui-unselect layui-form-select\">" +
+				                					"<div class=\"layui-select-title\">" +
+				                						"<input type=\"text\" placeholder=\"请选择\" value=\""+grade+"\" class=\"layui-input layui-unselect value\"> " +
+				                						"<i class=\"layui-edge\"></i>" +
+				                					"</div>" +
+				                					"<dl class=\"layui-anim layui-anim-upbit\">" +
+					                					"<dd lay-value=\"1\" class=\"\">1</dd>" +
+					                					"<dd lay-value=\"2\" class=\"\">2</dd>" +
+					                					"<dd lay-value=\"3\" class=\"\">3</dd>" +
+					                					"<dd lay-value=\"4\" class=\"\">4</dd>" +
+					                					"<dd lay-value=\"5\" class=\"\">5</dd>" +
+					                					"<dd lay-value=\"6\" class=\"\">6</dd>" +
+					                					"<dd lay-value=\"7\" class=\"\">7</dd>" +
+					                					"<dd lay-value=\"8\" class=\"\">8</dd>" +
+					                					"<dd lay-value=\"9\" class=\"\">9</dd>" +
+				                					"</dl>" +
+				                				"</div>" +
+				                			"</div>" +
+				                		"</div>"+
+				                	"</div>"+
+				                "</form>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
@@ -215,46 +255,4 @@ function createElement(data) {
 				    "</div>"+
 				"</div>";
 	return element;
-}
-
-function catchBoxValue() {
-    let data = {};
-    let error = false;
-    $(".edit-view .edit-box .edit-item").each(function() {
-        let need = $(this).attr("need");
-        let title = $(this).find(".name").html();
-        let field = $(this).find(".edit-value").data("field");
-        let value = "";
-        let isImage = $(this).attr("image");
-        let isRadio = $(this).attr("radio");
-        
-        value = $(this).find(".value").val();
-        if (isRadio == "1") {
-        	value = $(this).find('input[type="radio"]:checked').val();
-		}
-        if (isImage == "1") {
-        	value = $(this).find('img').attr("src");
-        }
-        
-        if (value == null || value == undefined || $.trim(value) == "") {
-        	value = "";
-        }
-
-        let errorMsg;
-        if (need == 1) {
-            if (value == null || value == undefined || $.trim(value) == "") {
-                errorMsg = title + "不能为空";
-            }
-        }
-        if (errorMsg != null && errorMsg != undefined && $.trim(errorMsg) != "") {
-            error = true;
-            common.warn(errorMsg);
-            return false;
-        }
-        data[field] = value;
-    });
-    if (error) {
-        data = '';
-    }
-    return data;
 }

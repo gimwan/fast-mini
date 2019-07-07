@@ -36,19 +36,3 @@
 	overflow-x: hidden;
 	height: 658px;
 }
-
-.edit-view {
-    padding: 15px;
-}
-
-.edit-view .edit-box {
-	margin: 5px;
-}
-
-.edit-view .edit-box .edit-item>div {
-    margin: 10px 0;
-}
-
-.edit-view .edit-box .edit-item .edit-value .value {
-	color: gray;
-}

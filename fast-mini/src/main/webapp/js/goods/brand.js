@@ -18,25 +18,30 @@ common.bindVue = function() {
                 showEditBox(-1, null);
             },
             del: function () {
-            	var id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
-            	var deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
-            	if (id == null || id == undefined || $.trim(id) == "") {
-            		common.warn("请先选择要删除项");
-                    return false;
-				}
-				var data = {};
-				data['id'] = id;
-            	common.showLoading();
-                api.load('./brand/delete','post',data, function(result) {
-                    if (result.errcode == 0) {
-                    	brand.splice(deleteIndex);
-                        
-                        common.tips(result.message);
-                    } else {
-                        common.error(result.message);
-                    }
-                    common.closeLoading();
-                });
+            	layer.confirm('确定删除？', {
+            		btn: ['确定','取消'],
+            		btn1 : function(index, layero) {
+            			let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
+            			let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
+                    	if (id == null || id == undefined || $.trim(id) == "") {
+                    		common.warn("请先选择要删除项");
+                            return false;
+        				}
+        				var data = {};
+        				data['id'] = id;
+                    	common.showLoading();
+                        api.load('./brand/delete','post',data, function(result) {
+                            if (result.errcode == 0) {
+                            	brand.splice(deleteIndex);
+                                
+                                common.tips(result.message);
+                            } else {
+                                common.error(result.message);
+                            }
+                            common.closeLoading();
+                        });
+            		}
+            	});
             },
             formatDate: function(jsonDate) {
             	if (jsonDate == null || jsonDate == undefined || $.trim(jsonDate) == "") {
@@ -192,42 +197,4 @@ function showEditBox(idx,data) {
         }
         
     });
-}
-
-function catchBoxValue() {
-    let data = {};
-    let error = false;
-    $(".edit-view .edit-box .edit-item").each(function() {
-        let need = $(this).attr("need");
-        let title = $(this).find(".name").html();
-        let field = $(this).find(".edit-value").data("field");
-        let value = "";
-        let isRadio = $(this).attr("radio");
-        if (isRadio == "1") {
-        	value = $(this).find('input[type="radio"]:checked').val();
-		} else {
-			value = $(this).find(".value").val();
-		}
-        
-        if (value == null || value == undefined || $.trim(value) == "") {
-        	value = "";
-        }
-
-        let errorMsg;
-        if (need == 1) {
-            if (value == null || value == undefined || $.trim(value) == "") {
-                errorMsg = title + "不能为空";
-            }
-        }
-        if (errorMsg != null && errorMsg != undefined && $.trim(errorMsg) != "") {
-            error = true;
-            common.warn(errorMsg);
-            return false;
-        }
-        data[field] = value;
-    });
-    if (error) {
-        data = '';
-    }
-    return data;
 }

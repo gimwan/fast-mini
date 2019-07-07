@@ -113,31 +113,3 @@ function showEditBox(idx,id,name,val) {
         
     });
 }
-
-function catchBoxValue() {
-    let data = {};
-    let error = false;
-    $(".edit-view .edit-box .edit-item").each(function() {
-        let need = $(this).attr("need");
-        let title = $(this).find(".name").html();
-        let value = $(this).find(".value").val();
-        let field = $(this).find(".edit-value").data("field");
-
-        let errorMsg;
-        if (need == 1) {
-            if (value == null || value == undefined || $.trim(value) == "") {
-                errorMsg = title + "不能为空";
-            }
-        }
-        if (errorMsg != null && errorMsg != undefined && $.trim(errorMsg) != "") {
-            error = true;
-            common.warn(errorMsg);
-            return false;
-        }
-        data[field] = value;
-    });
-    if (error) {
-        data = '';
-    }
-    return data;
-}
