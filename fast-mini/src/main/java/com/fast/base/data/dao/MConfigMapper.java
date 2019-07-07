@@ -13,8 +13,10 @@ public interface MConfigMapper {
 
     int deleteByPrimaryKey(Integer id);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(MConfig record);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insertSelective(MConfig record);
 
     List<MConfig> selectByExample(MConfigExample example);

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +24,6 @@ import com.fast.service.IMiniProgramService;
 import com.fast.service.IWechatService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
-
-import net.sf.json.JSONObject;
 
 /**
  * 微页面

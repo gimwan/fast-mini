@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
 import com.fast.base.data.entity.MEmployee;
-import com.fast.base.data.entity.MRole;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IEmployeeMaintService;
 import com.fast.service.IEmployeeService;
@@ -82,6 +81,31 @@ public class EmployeeController {
 			MUser user = (MUser) RedisCache.retake(sessionid);
 			
 			Result result = iEmployeeMaintService.changeEmployee(employee, user);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 删除员工
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/delete")
+	@ResponseBody
+	public String delete(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			Result result = iEmployeeMaintService.deleteEmployee(Integer.valueOf(id));
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

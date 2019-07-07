@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MUserMapper;
-import com.fast.base.data.entity.MRole;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IUserMaintService;
 import com.fast.system.log.FastLog;
@@ -66,6 +65,30 @@ public class UserMaintServiceImpl implements IUserMaintService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用UserMaintServiceImpl.changeUser报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result deleteUser(Integer id, MUser user) {
+		Result result = new Result();
+
+		try {
+			if (user.getId().intValue() == id.intValue()) {
+				result.setMessage("当前登录用户无法删除");
+				return result;
+			}
+			int i = userMapper.deleteByPrimaryKey(id);
+			if (i > 0) {
+				result.setErrcode(0);
+				result.setMessage("删除成功");
+			} else {
+				result.setMessage("删除失败");
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用UserMaintServiceImpl.deleteUser报错：", e);
 		}
 
 		return result;

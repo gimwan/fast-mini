@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
-import com.fast.base.data.entity.MEmployee;
 import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MViptype;
 import com.fast.service.IViptypeMaintService;
@@ -92,4 +91,28 @@ public class ViptypeController {
 		return r;
 	}
 
+	/**
+	 * 删除会员等级
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/delete")
+	@ResponseBody
+	public String delete(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			Result result = iViptypeMaintService.deleteVipType(Integer.valueOf(id));
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
 }

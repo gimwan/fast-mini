@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<link rel="stylesheet" href="css/system/role.css?r=87232">
+<link rel="stylesheet" href="css/system/role.css">
 <script type="text/javascript" src="js/system/role.js"></script>
 <div class="rolePage">
 	<div class="layui-tab layui-tab-brief nav-bar">

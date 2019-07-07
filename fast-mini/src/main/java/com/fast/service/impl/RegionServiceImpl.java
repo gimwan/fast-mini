@@ -21,7 +21,7 @@ import com.fast.system.log.FastLog;
  *
  */
 @Service
-public class RegionService implements IRegionService, Serializable {
+public class RegionServiceImpl implements IRegionService, Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
@@ -57,7 +57,7 @@ public class RegionService implements IRegionService, Serializable {
 			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
-			FastLog.error("调用PublicPlatformServiceImpl.publicplatform报错：", e);
+			FastLog.error("调用RegionServiceImpl.region报错：", e);
 		}
 
 		return result;

@@ -72,4 +72,24 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 		return result;
 	}
 
+	@Override
+	public Result deleteVipType(Integer id) {
+		Result result = new Result();
+
+		try {
+			int i = viptypeMapper.deleteByPrimaryKey(id);
+			if (i > 0) {
+				result.setErrcode(0);
+				result.setMessage("删除成功");
+			} else {
+				result.setMessage("删除失败");
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ViptypeMaintServiceImpl.deleteVipType报错：", e);
+		}
+
+		return result;
+	}
+
 }

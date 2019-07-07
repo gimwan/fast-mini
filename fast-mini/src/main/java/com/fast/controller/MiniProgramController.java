@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
-import com.fast.base.data.entity.MEmployee;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IMiniProgramMaintService;
@@ -82,6 +81,31 @@ public class MiniProgramController {
 			MUser user = (MUser) RedisCache.retake(sessionid);
 			
 			Result result = iMiniProgramMaintService.changeMiniProgram(miniprogram, user);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 删除小程序
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/delete")
+	@ResponseBody
+	public String delete(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			Result result = iMiniProgramMaintService.deleteMiniProgram(Integer.valueOf(id));
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

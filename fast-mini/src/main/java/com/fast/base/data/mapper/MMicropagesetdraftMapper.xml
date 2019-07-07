@@ -81,7 +81,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MMicropagesetdraft" >
+  <insert id="insert" parameterType="com.fast.base.data.entity.MMicropagesetdraft" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_micropagesetdraft (ID, MicroPageID, Kind, 
       ShowIndex, ShowName, ShowPrice, 
       ImageStyle, OrderBy, Memo, 
@@ -93,7 +93,7 @@
       #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, 
       #{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MMicropagesetdraft" >
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MMicropagesetdraft" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_micropagesetdraft
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

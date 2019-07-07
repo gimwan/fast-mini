@@ -11,6 +11,19 @@ import com.fast.base.data.entity.MViptype;
  */
 public interface IViptypeMaintService {
 	
+	/**
+	 * 修改会员等级
+	 * @param viptype
+	 * @param user
+	 * @return
+	 */
 	public Result changeVipType(MViptype viptype, MUser user);
+	
+	/**
+	 * 删除会员等级
+	 * @param id
+	 * @return
+	 */
+	public Result deleteVipType(Integer id);
 
 }

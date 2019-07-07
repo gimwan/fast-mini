@@ -26,3 +26,7 @@ a {
 .layTableCell {
     display: table-cell;
 }
+
+.selected {
+	background-color: #f2f2f2;
+}

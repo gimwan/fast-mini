@@ -79,7 +79,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MViptype" >
+  <insert id="insert" parameterType="com.fast.base.data.entity.MViptype" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_viptype (ID, Code, Name, 
       Grade, DefaultFlag, CreateTime, 
       Creator, ModifyTime, Modifier, 
@@ -91,7 +91,7 @@
       #{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MViptype" >
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MViptype" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_viptype
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

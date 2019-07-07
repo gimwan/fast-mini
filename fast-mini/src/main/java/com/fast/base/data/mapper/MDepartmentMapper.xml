@@ -90,7 +90,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MDepartment" >
+  <insert id="insert" parameterType="com.fast.base.data.entity.MDepartment" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_department (ID, Code, Name, 
       TypeID, Province, ProvinceID, 
       City, CityID, County, 
@@ -108,7 +108,7 @@
       #{modifier,jdbcType=VARCHAR}, #{useflag,jdbcType=TINYINT}, #{updatedtime,jdbcType=TIMESTAMP}, 
       #{memo,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MDepartment" >
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MDepartment" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_department
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

@@ -77,7 +77,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MMicropagesetdtl" >
+  <insert id="insert" parameterType="com.fast.base.data.entity.MMicropagesetdtl" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_micropagesetdtl (ID, MicroPageSetID, ShowIndex, 
       First, Second, Third, 
       Text, PhotoUrl, TargetPath, 
@@ -87,7 +87,7 @@
       #{text,jdbcType=VARCHAR}, #{photourl,jdbcType=VARCHAR}, #{targetpath,jdbcType=VARCHAR}, 
       #{type,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MMicropagesetdtl" >
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MMicropagesetdtl" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_micropagesetdtl
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

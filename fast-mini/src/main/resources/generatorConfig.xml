@@ -17,16 +17,13 @@
 		<javaClientGenerator targetPackage="com.fast.base.data.dao"
 			targetProject="fast-mini" type="XMLMAPPER" />
         
-        <table tableName="m_micropageset" enableCountByExample="true"
+        <table tableName="m_color" enableCountByExample="true"
 			enableUpdateByExample="false" enableDeleteByExample="true"
 			enableSelectByExample="true" selectByExampleQueryId="false" />
-		<table tableName="m_micropagesetdtl" enableCountByExample="true"
+		<table tableName="m_pattern" enableCountByExample="true"
 			enableUpdateByExample="false" enableDeleteByExample="true"
 			enableSelectByExample="true" selectByExampleQueryId="false" />
-		<table tableName="m_micropagesetdraft" enableCountByExample="true"
-			enableUpdateByExample="false" enableDeleteByExample="true"
-			enableSelectByExample="true" selectByExampleQueryId="false" />
-		<table tableName="m_micropagesetdtldraft" enableCountByExample="true"
+		<table tableName="m_size" enableCountByExample="true"
 			enableUpdateByExample="false" enableDeleteByExample="true"
 			enableSelectByExample="true" selectByExampleQueryId="false" />
 	</context>

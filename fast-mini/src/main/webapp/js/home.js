@@ -28,9 +28,31 @@ let menu = [
             {
                 name: '门店资料',
                 link: 'department'
+            }
+        ]
+    },
+    {
+    	name: '商品管理 ',
+        link: '',
+        sub: [
+        	{
+                name: '颜色',
+                link: 'color'
             },
             {
-                name: '商品资料',
+                name: '版型',
+                link: 'pattern'
+            },
+            {
+                name: '尺码',
+                link: 'size'
+            },
+            {
+                name: '品牌档案',
+                link: 'brand'
+            },
+            {
+                name: '商品档案',
                 link: ''
             }
         ]
@@ -99,7 +121,11 @@ document.onreadystatechange = function() {
 		});
     }
     if(document.readyState == "complete"){
-        
+    	// 表格选中
+    	$("body").on("click", ".layui-table-view .layui-table-box .layui-table-body table tr", function () {
+    		$(".layui-table-view .layui-table-box .layui-table-body table .selected").removeClass("selected");
+    		$(this).addClass("selected");
+    	});
     }
 }
 

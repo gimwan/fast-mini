@@ -18,7 +18,25 @@ common.bindVue = function() {
                 showEditBox(-1, null);
             },
             del: function () {
-                console.log('delete');
+            	var id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
+            	var deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
+            	if (id == null || id == undefined || $.trim(id) == "") {
+            		common.warn("请先选择要删除项");
+                    return false;
+				}
+				var data = {};
+				data['id'] = id;
+            	common.showLoading();
+                api.load('./department/delete','post',data, function(result) {
+                    if (result.errcode == 0) {
+                    	department.splice(deleteIndex);
+                        
+                        common.tips(result.message);
+                    } else {
+                        common.error(result.message);
+                    }
+                    common.closeLoading();
+                });
             },
             formatDate: function(jsonDate) {
             	if (jsonDate == null || jsonDate == undefined || $.trim(jsonDate) == "") {
@@ -76,6 +94,7 @@ function showEditBox(idx,data) {
         btn: ['保存','取消'],
         btn1: function (index, layero) {
             let data = catchBoxValue();
+            console.log(data);
             if (data == '') {
                 return;
             }
@@ -176,7 +195,7 @@ function createElement(data) {
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">详细地址</label>：</span>"+
 				            "</div>"+
-				            "<div class=\"edit-value\" data-field=\"name\">"+
+				            "<div class=\"edit-value\" data-field=\"address\">"+
 				                "<input type=\"text\" value=\""+address+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+

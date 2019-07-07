@@ -18,7 +18,25 @@ common.bindVue = function() {
                 showEditBox(-1, null);
             },
             del: function () {
-                console.log('delete');
+            	var id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
+            	var deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
+            	if (id == null || id == undefined || $.trim(id) == "") {
+            		common.warn("请先选择要删除项");
+                    return false;
+				}
+				var data = {};
+				data['id'] = id;
+            	common.showLoading();
+                api.load('./role/delete','post',data, function(result) {
+                    if (result.errcode == 0) {
+                    	role.splice(deleteIndex);
+                        
+                        common.tips(result.message);
+                    } else {
+                        common.error(result.message);
+                    }
+                    common.closeLoading();
+                });
             },
             formatDate: function(jsonDate) {
             	if (jsonDate == null || jsonDate == undefined || $.trim(jsonDate) == "") {

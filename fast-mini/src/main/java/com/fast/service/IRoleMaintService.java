@@ -18,5 +18,12 @@ public interface IRoleMaintService {
 	 * @return
 	 */
 	public Result changeRole(MRole role, MUser user);
+	
+	/**
+	 * 删除角色
+	 * @param id
+	 * @return
+	 */
+	public Result deleteRole(Integer id);
 
 }

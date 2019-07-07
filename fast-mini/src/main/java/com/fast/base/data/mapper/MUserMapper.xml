@@ -83,7 +83,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MUser">
+  <insert id="insert" parameterType="com.fast.base.data.entity.MUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_user (ID, Code, Name, 
       Sex, PassWord, MobilePhone, 
       UserID, PhotoUrl, UseFlag, 
@@ -97,7 +97,7 @@
       #{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, 
       #{updatedtime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MUser">
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

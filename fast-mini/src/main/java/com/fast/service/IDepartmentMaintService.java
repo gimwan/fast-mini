@@ -18,5 +18,12 @@ public interface IDepartmentMaintService {
 	 * @return
 	 */
 	public Result changeDepartment(MDepartment department, MUser user);
+	
+	/**
+	 * 删除门店
+	 * @param id
+	 * @return
+	 */
+	public Result deleteDepartment(Integer id);
 
 }

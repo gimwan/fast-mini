@@ -35,7 +35,7 @@ public class UserController {
 	IUserMaintService iUserMaintService;
 	
 	@RequestMapping("")
-	public ModelAndView userView(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		return new ModelAndView("system/user", map);
 	}
@@ -90,6 +90,33 @@ public class UserController {
 					request.getSession().setAttribute("user",result.getData());
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 删除用户
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/delete")
+	@ResponseBody
+	public String delete(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			String sessionid = request.getSession().getId();
+			MUser mUser = (MUser) RedisCache.retake(sessionid);
+			Result result = iUserMaintService.deleteUser(Integer.valueOf(id), mUser);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

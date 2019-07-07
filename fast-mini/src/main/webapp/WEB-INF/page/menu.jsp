@@ -4,7 +4,8 @@
     <div class="layui-side-scroll">
         <div title="菜单缩放" class="kit-side-fold"><i class="fa fa-navicon" aria-hidden="true"></i></div>
         <ul class="layui-nav layui-nav-tree" >
-        	<li class="layui-nav-item layui-nav-itemed" v-bind:data-id="'#'+index" v-for="(m,index) in menu">
+        	<!-- <li class="layui-nav-item layui-nav-itemed" v-bind:data-id="'#'+index" v-for="(m,index) in menu"> -->
+        	<li class="layui-nav-item" v-bind:data-id="'#'+index" v-for="(m,index) in menu">
         		<a class="" href="javascript:void(0);">
                 	<i class="fa fa-user-circle-o fa-lg"></i>
                 	<span >{{m.name}}</span>

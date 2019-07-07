@@ -1,0 +1,72 @@
+.patternPage .operating {
+	margin: 0px 15px;
+}
+
+.patternPage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
+.patternPage .layui-table-view .layui-table-box .layui-table-header span {
+	font-weight: 600;
+}
+
+.patternPage .layui-table-view .layui-table-box tr .item {
+	width: 100px;
+	min-width: 100px;
+	border-top-width: 0;
+	border-left-width: 0;
+	border-right-width: 0;
+	border-bottom-width: 1px;
+}
+
+.patternPage .layui-table-view .layui-table-box tr .name {
+	min-width: 180px;
+}
+
+.patternPage .layui-table-view .layui-table-box tr .value {
+	min-width: 200px;
+}
+
+.patternPage .layui-table-view .layui-table-box tr .memo {
+	width: 100%;
+}
+
+.patternPage .layui-table-view .layui-table-box tr .creator, .patternPage .layui-table-view .layui-table-box tr .modifier
+	{
+	min-width: 120px;
+}
+
+.patternPage .layui-table-view .layui-table-box tr .time-item {
+	min-width: 200px;
+}
+
+.patternPage .layui-table-view .layui-table-box .pattern-data {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 620px;
+}
+
+.edit-view {
+	padding: 15px;
+}
+
+
+.edit-view .edit-box {
+	margin: 5px;
+}
+
+.edit-view .edit-box .edit-item>div {
+	margin: 10px 0;
+}
+
+.edit-view .edit-box .edit-item .edit-value .value {
+	color: gray;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block {
+	margin-left: 0px;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block textarea {
+	resize: none;
+}

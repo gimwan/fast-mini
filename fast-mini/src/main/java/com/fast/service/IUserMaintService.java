@@ -16,5 +16,13 @@ public interface IUserMaintService {
 	 * @return
 	 */
 	public Result changeUser(MUser user);
+	
+	/**
+	 * 删除用户
+	 * @param id
+	 * @param user
+	 * @return
+	 */
+	public Result deleteUser(Integer id, MUser user);
 
 }
