@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MPublicplatformMapper;
 import com.fast.base.data.entity.MPublicplatform;
 import com.fast.base.data.entity.MPublicplatformExample;
+import com.fast.base.page.PagingView;
 import com.fast.service.IPublicPlatformService;
 import com.fast.system.log.FastLog;
 
@@ -24,7 +26,7 @@ public class PublicPlatformServiceImpl implements IPublicPlatformService, Serial
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MPublicplatformMapper mPublicplatformMapper;
+	MPublicplatformMapper publicplatformMapper;
 	
 	/**
 	 * 查询所有小程序
@@ -36,7 +38,7 @@ public class PublicPlatformServiceImpl implements IPublicPlatformService, Serial
 		try {
 			MPublicplatformExample example = new MPublicplatformExample();
 			example.setOrderByClause("code asc");
-			List<MPublicplatform> list = mPublicplatformMapper.selectByExample(example);
+			List<MPublicplatform> list = publicplatformMapper.selectByExample(example);
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {

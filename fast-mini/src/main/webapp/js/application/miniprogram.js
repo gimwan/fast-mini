@@ -18,15 +18,15 @@ common.bindVue = function() {
                 showEditBox(-1, null);
             },
             del: function () {
+            	let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
+    			let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
+            	if (id == null || id == undefined || $.trim(id) == "") {
+            		common.warn("请先选择要删除项");
+                    return false;
+				}
             	layer.confirm('确定删除？', {
             		btn: ['确定','取消'],
             		btn1 : function(index, layero) {
-            			let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
-            			let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
-                    	if (id == null || id == undefined || $.trim(id) == "") {
-                    		common.warn("请先选择要删除项");
-                            return false;
-        				}
         				var data = {};
         				data['id'] = id;
                     	common.showLoading();
@@ -141,6 +141,7 @@ function createElement(data) {
     let appid = "";
     let appsecret = "";
     let photourl = "";
+    let publicplatformid = "";
     let useflag = 1;
     let memo = "";
     if (data != null && data != undefined && data != "") {
@@ -150,6 +151,7 @@ function createElement(data) {
         appid = data.appid;
         appsecret = data.appsecret;
         photourl = data.photourl;
+        publicplatformid = data.publicplatformid;
         useflag = data.useflag;
         memo = data.memo;
     }
@@ -185,6 +187,16 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"name\">"+
 				                "<input type=\"text\" value=\""+name+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">公众号</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"departmentid\">"+
+				                "<input type=\"text\" data-id=\""+publicplatformid+"\" value=\""+publicplatformid+"\" " +
+				                		"data-url=\"./data/page?table=publicplatform\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"0\" key=\"0\">"+

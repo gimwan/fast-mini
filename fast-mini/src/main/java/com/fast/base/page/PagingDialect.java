@@ -1,7 +1,6 @@
 package com.fast.base.page;
 
 /**
- * BY csw 2014.04.16
  * 
  * 类似hibernate的Dialect,但只精简出分页部分
  */

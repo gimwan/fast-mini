@@ -2,6 +2,7 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MPattern;
 import com.fast.base.data.entity.MPatternExample;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -26,4 +27,5 @@ public interface MPatternMapper {
     int updateByPrimaryKeySelective(MPattern record);
 
     int updateByPrimaryKey(MPattern record);
+    
 }

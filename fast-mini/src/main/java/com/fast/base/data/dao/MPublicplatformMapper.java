@@ -2,6 +2,7 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MPublicplatform;
 import com.fast.base.data.entity.MPublicplatformExample;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -26,4 +27,5 @@ public interface MPublicplatformMapper {
     int updateByPrimaryKeySelective(MPublicplatform record);
 
     int updateByPrimaryKey(MPublicplatform record);
+    
 }

@@ -2,6 +2,7 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MColor;
 import com.fast.base.data.entity.MColorExample;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -26,4 +27,5 @@ public interface MColorMapper {
     int updateByPrimaryKeySelective(MColor record);
 
     int updateByPrimaryKey(MColor record);
+    
 }

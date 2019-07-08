@@ -18,15 +18,15 @@ common.bindVue = function() {
                 showEditBox(-1, null);
             },
             del: function () {
+            	var id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
+            	var deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
+            	if (id == null || id == undefined || $.trim(id) == "") {
+            		common.warn("请先选择要删除项");
+                    return false;
+				}
             	layer.confirm('确定删除？', {
             		btn: ['确定','取消'],
             		btn1 : function(index, layero) {
-                    	var id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
-                    	var deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
-                    	if (id == null || id == undefined || $.trim(id) == "") {
-                    		common.warn("请先选择要删除项");
-                            return false;
-        				}
         				var data = {};
         				data['id'] = id;
                     	common.showLoading();

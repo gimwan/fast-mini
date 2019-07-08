@@ -2,6 +2,7 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MDepartment;
 import com.fast.base.data.entity.MDepartmentExample;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -26,4 +27,5 @@ public interface MDepartmentMapper {
     int updateByPrimaryKeySelective(MDepartment record);
 
     int updateByPrimaryKey(MDepartment record);
+    
 }

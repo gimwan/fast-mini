@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MRoleMapper;
 import com.fast.base.data.entity.MRole;
 import com.fast.base.data.entity.MRoleExample;
+import com.fast.base.page.PagingView;
 import com.fast.service.IRoleService;
 import com.fast.system.log.FastLog;
 
@@ -24,7 +26,7 @@ public class RoleServiceImpl implements IRoleService, Serializable {
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MRoleMapper mRoleMapper;
+	MRoleMapper roleMapper;
 
 	@Override
 	public Result role() {
@@ -33,7 +35,7 @@ public class RoleServiceImpl implements IRoleService, Serializable {
 		try {
 			MRoleExample example = new MRoleExample();
 			example.setOrderByClause("code asc");
-			List<MRole> list = mRoleMapper.selectByExample(example);
+			List<MRole> list = roleMapper.selectByExample(example);
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {

@@ -134,27 +134,37 @@ document.onreadystatechange = function() {
     	$("body").on("click", ".edit-view .edit-box .popup input", function () {
     		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
     		$(this).addClass("popuped");
+    		let url = $(this).data("url");
     		let title = $(this).parent().parent().find(".edit-title .title .name").html();
-    		let selectOption = selectView(1);
-    		layer.open({
-    	        type: 1,
-    	        title: title,
-    	        //content: selectOption,
-    	        area: ['600px', '300px'],
-    	        btn: ['确定','取消'],
-    	        btn1: function (index, layero) {
-    	        	let id = $(layero).find(".layui-layer-content .selected").data("id");
-    	        	let name = $(layero).find(".layui-layer-content .selected .name").html();
-    	        	if (id != null && id != undefined && $.trim(id) != "") {
-    	        		$(".edit-view .edit-box .popup .popuped").attr("data-id",id);
-    	        		$(".edit-view .edit-box .popup .popuped").val(name);
-    	        		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
-					}
-    	        	layer.close(index);
-    	        },
-    	        success: function (layero, index) {
-    	        	$(layero).find(".layui-layer-content").append(selectOption);
-    	        }
+    		common.showLoading();
+    		api.load(url, 'post', null, function(result) {
+    			if (result.errcode == 0) {
+            		let selectOption = optionView(result.data.records);;
+            		layer.open({
+            	        type: 1,
+            	        title: "<label style='font-weight:600;'>"+title+"</label>",
+            	        //content: selectOption,
+            	        area: ['500px', '400px'],
+            	        btn: ['确定','取消'],
+            	        btn1: function (index, layero) {
+            	        	let id = $(layero).find(".layui-layer-content .selected").data("id");
+            	        	let name = $(layero).find(".layui-layer-content .selected .name").html();
+            	        	if (id != null && id != undefined && $.trim(id) != "") {
+            	        		$(".edit-view .edit-box .popup .popuped").attr("data-id",id);
+            	        		$(".edit-view .edit-box .popup .popuped").val(name);
+            	        		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
+        					}
+            	        	layer.close(index);
+            	        },
+            	        success: function (layero, index) {
+            	        	$(layero).find(".layui-layer-content").append(selectOption);
+            	        }
+            		});
+    			} else {
+    				common.error(result.message);
+				}
+    			
+        		common.closeLoading();
     		});
     	});
     	
@@ -178,15 +188,16 @@ document.onreadystatechange = function() {
     }
 }
 
-function selectView(data) {
+function optionView(data) {
 	let view = "<div class=\"popup-view\">" +
-					"<div class=\"popup-box\">" +
-						"<div class=\"popup-data\" data-id=\"1\">" +
-							"<span class=\"code\">001</span>" +
-							"<span class=\"name\">广州黄沙店</span>" +
-						"</div>" +
-					"</div>"
+					"<div class=\"popup-box\">";
+	for (var i = 0; i < data.length; i++) {
+		view += "<div class=\"popup-data\" data-id=\""+data[i].ID+"\">" +
+					"<span class=\"code\">"+data[i].Code+"</span>" +
+					"<span class=\"name\">"+data[i].Name+"</span>" +
 				"</div>";
+	}				
+	view += "</div></div>";
 	return view;
 }
 

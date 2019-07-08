@@ -49,12 +49,15 @@
     position: absolute;
     right: 5px;
     top: 8px;
-    color: gray;
+    color: #c2c2c2;
 }
 
 .popup-view .popup-box .popup-data {
 	display: table;
     width: 100%;
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+    border-color: #f2f2f2;
 }
 
 .popup-view .popup-box .popup-data span {

@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MUserMapper;
 import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MUserExample;
+import com.fast.base.page.PagingView;
 import com.fast.service.IUserService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
@@ -25,7 +27,7 @@ public class UserServiceImpl implements IUserService, Serializable {
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MUserMapper mUserMapper;
+	MUserMapper userMapper;
 	
 	/**
 	 * 查询所有用户
@@ -38,7 +40,7 @@ public class UserServiceImpl implements IUserService, Serializable {
 		try {
 			MUserExample example = new MUserExample();
 			example.setOrderByClause("code asc");
-			List<MUser> list = mUserMapper.selectByExample(example);
+			List<MUser> list = userMapper.selectByExample(example);
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {
@@ -70,7 +72,7 @@ public class UserServiceImpl implements IUserService, Serializable {
 			}
 			MUserExample mUserExample = new MUserExample();
 			mUserExample.createCriteria().andCodeEqualTo(code);
-			List<MUser> mUsersList = mUserMapper.selectByExample(mUserExample);
+			List<MUser> mUsersList = userMapper.selectByExample(mUserExample);
 			if (mUsersList.size() < 1) {
 				result.setMessage("用户名或密码错误");
 				return result;

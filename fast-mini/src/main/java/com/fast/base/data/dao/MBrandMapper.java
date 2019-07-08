@@ -2,6 +2,7 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MBrand;
 import com.fast.base.data.entity.MBrandExample;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -26,4 +27,5 @@ public interface MBrandMapper {
     int updateByPrimaryKeySelective(MBrand record);
 
     int updateByPrimaryKey(MBrand record);
+    
 }

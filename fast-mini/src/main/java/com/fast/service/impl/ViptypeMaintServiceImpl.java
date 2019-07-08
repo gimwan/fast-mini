@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,11 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MViptype;
+import com.fast.base.data.entity.MViptypeExample;
 import com.fast.service.IViptypeMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 会员等级
@@ -63,7 +66,23 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 					result.setMessage("新增失败");
 				}
 			}
-			
+			// 默认等级只能有一个
+			if (Common.isActive(result)) {
+				if (mViptype.getDefaultflag().intValue() == 1 && mViptype.getUseflag().intValue() == 1) {
+					MViptypeExample example = new MViptypeExample();
+					example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andDefaultflagEqualTo(Byte.valueOf("1")).andIdNotEqualTo(mViptype.getId());
+					List<MViptype> list = viptypeMapper.selectByExample(example);
+					if (list != null && list.size() > 0) {
+						for (int i = 0; i < list.size(); i++) {
+							MViptype record = list.get(i);
+							record.setDefaultflag(Byte.valueOf("0"));
+							record.setUpdatedtime(now);
+							viptypeMapper.updateByPrimaryKeySelective(record);
+						}
+					}
+					
+				}
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用ViptypeMaintServiceImpl.changeVipType报错：", e);

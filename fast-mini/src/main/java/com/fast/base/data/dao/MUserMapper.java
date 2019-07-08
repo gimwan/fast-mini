@@ -2,6 +2,7 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MUserExample;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -26,4 +27,5 @@ public interface MUserMapper {
     int updateByPrimaryKeySelective(MUser record);
 
     int updateByPrimaryKey(MUser record);
+    
 }

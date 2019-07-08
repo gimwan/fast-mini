@@ -194,7 +194,8 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">所属门店</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"departmentid\">"+
-				                "<input type=\"text\" data-id=\""+departmentid+"\" value=\""+departmentid+"\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+				                "<input type=\"text\" data-id=\""+departmentid+"\" value=\""+departmentid+"\" " +
+				                		"data-url=\"./data/page?table=department\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 				            "</div>"+
 				        "</div>"+

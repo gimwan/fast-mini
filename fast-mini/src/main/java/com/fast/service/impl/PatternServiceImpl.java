@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MPatternMapper;
 import com.fast.base.data.entity.MPattern;
 import com.fast.base.data.entity.MPatternExample;
+import com.fast.base.page.PagingView;
 import com.fast.service.IPatternService;
 import com.fast.system.log.FastLog;
 

@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
+import com.fast.base.page.PagingView;
 import com.fast.service.IViptypeService;
 import com.fast.system.log.FastLog;
 
@@ -24,7 +26,7 @@ public class ViptypeServiceImpl implements IViptypeService, Serializable {
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MViptypeMapper mViptypeMapper;
+	MViptypeMapper viptypeMapper;
 
 	/**
 	 * 查询所有会员等级
@@ -36,7 +38,7 @@ public class ViptypeServiceImpl implements IViptypeService, Serializable {
 		try {
 			MViptypeExample example = new MViptypeExample();
 			example.setOrderByClause("code asc");
-			List<MViptype> list = mViptypeMapper.selectByExample(example);
+			List<MViptype> list = viptypeMapper.selectByExample(example);
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {
