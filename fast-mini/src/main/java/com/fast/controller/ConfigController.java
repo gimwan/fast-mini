@@ -16,7 +16,7 @@ import com.fast.base.data.entity.MConfig;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IConfigMaintService;
 import com.fast.service.IConfigService;
-import com.fast.system.RedisCache;
+import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
 
@@ -77,10 +77,14 @@ public class ConfigController {
 		String r = "";
 		
 		try {
-			String sessionid = request.getSession().getId();
-			MUser user = (MUser) RedisCache.retake(sessionid);
+			Result result = new Result();
 			
-			Result result = iConfigMaintService.changeConfig(config, user);
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				result = iConfigMaintService.changeConfig(config, user);
+			} else {
+				result.setMessage("当前登入者已失效");
+			}
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

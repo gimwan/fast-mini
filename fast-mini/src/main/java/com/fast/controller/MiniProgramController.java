@@ -14,10 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fast.base.Result;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MUser;
-import com.fast.base.page.PagingView;
 import com.fast.service.IMiniProgramMaintService;
 import com.fast.service.IMiniProgramService;
-import com.fast.system.RedisCache;
 import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
@@ -79,10 +77,14 @@ public class MiniProgramController {
 		String r = "";
 		
 		try {
-			String sessionid = request.getSession().getId();
-			MUser user = (MUser) RedisCache.retake(sessionid);
+			Result result = new Result();
 			
-			Result result = iMiniProgramMaintService.changeMiniProgram(miniprogram, user);
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				result = iMiniProgramMaintService.changeMiniProgram(miniprogram, user);
+			} else {
+				result.setMessage("当前登入者已失效");
+			}
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

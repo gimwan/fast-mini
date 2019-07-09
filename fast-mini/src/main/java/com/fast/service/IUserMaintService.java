@@ -13,9 +13,10 @@ public interface IUserMaintService {
 	/**
 	 * 修改用户
 	 * @param user
+	 * @param currentUser  当前登入者
 	 * @return
 	 */
-	public Result changeUser(MUser user);
+	public Result changeUser(MUser user, MUser currentUser);
 	
 	/**
 	 * 删除用户

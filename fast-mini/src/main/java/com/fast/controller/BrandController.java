@@ -16,7 +16,7 @@ import com.fast.base.data.entity.MBrand;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IBrandMaintService;
 import com.fast.service.IBrandService;
-import com.fast.system.RedisCache;
+import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
 
@@ -77,10 +77,14 @@ public class BrandController {
 		String r = "";
 		
 		try {
-			String sessionid = request.getSession().getId();
-			MUser mUser = (MUser) RedisCache.retake(sessionid);
+			Result result = new Result();
 			
-			Result result = iBrandMaintService.changeBrand(brand, mUser);
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				result = iBrandMaintService.changeBrand(brand, user);
+			} else {
+				result.setMessage("当前登入者已失效");
+			}
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

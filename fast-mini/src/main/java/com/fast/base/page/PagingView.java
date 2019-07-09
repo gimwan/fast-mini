@@ -2,7 +2,6 @@ package com.fast.base.page;
 
 import java.util.List;
 
-@SuppressWarnings("unchecked")
 public class PagingView {
 
 	/*

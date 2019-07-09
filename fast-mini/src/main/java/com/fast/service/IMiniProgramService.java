@@ -1,7 +1,6 @@
 package com.fast.service;
 
 import com.fast.base.Result;
-import com.fast.base.page.PagingView;
 
 /**
  * 小程序

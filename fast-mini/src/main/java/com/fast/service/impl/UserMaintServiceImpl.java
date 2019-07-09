@@ -32,7 +32,7 @@ public class UserMaintServiceImpl implements IUserMaintService, Serializable {
 	IDataService iDataService;
 
 	@Override
-	public Result changeUser(MUser user) {
+	public Result changeUser(MUser user, MUser currentUser) {
 		Result result = new Result();
 
 		try {
@@ -42,7 +42,7 @@ public class UserMaintServiceImpl implements IUserMaintService, Serializable {
 			if (user.getId() != null) {
 				mUser = userMapper.selectByPrimaryKey(user.getId());
 				BeanUtil.copyPropertiesIgnoreNull(user, mUser);
-				mUser.setModifier(user.getName());
+				mUser.setModifier(currentUser.getName());
 				mUser.setModifytime(now);
 				int changeNum = userMapper.updateByPrimaryKeySelective(mUser);
 				if (changeNum > 0) {
@@ -54,7 +54,7 @@ public class UserMaintServiceImpl implements IUserMaintService, Serializable {
 				}
 			} else {
 				BeanUtil.copyPropertiesIgnoreNull(user, mUser);
-				mUser.setCreator(user.getName());
+				mUser.setCreator(currentUser.getName());
 				mUser.setCreatetime(now);
 				int key = userMapper.insertSelective(mUser);
 				if (key > 0) {

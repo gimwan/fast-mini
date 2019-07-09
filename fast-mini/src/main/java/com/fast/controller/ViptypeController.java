@@ -14,10 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fast.base.Result;
 import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MViptype;
-import com.fast.base.page.PagingView;
 import com.fast.service.IViptypeMaintService;
 import com.fast.service.IViptypeService;
-import com.fast.system.RedisCache;
 import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
@@ -79,10 +77,14 @@ public class ViptypeController {
 		String r = "";
 		
 		try {
-			String sessionid = request.getSession().getId();
-			MUser user = (MUser) RedisCache.retake(sessionid);
+			Result result = new Result();
 			
-			Result result = iViptypeMaintService.changeVipType(viptype, user);
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				result = iViptypeMaintService.changeVipType(viptype, user);
+			} else {
+				result.setMessage("当前登入者已失效");
+			}
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

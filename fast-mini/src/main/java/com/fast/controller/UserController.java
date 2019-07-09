@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
 import com.fast.base.data.entity.MUser;
-import com.fast.base.page.PagingView;
 import com.fast.service.IUserMaintService;
 import com.fast.service.IUserService;
 import com.fast.system.RedisCache;
@@ -78,18 +77,23 @@ public class UserController {
 		String r = "";
 		
 		try {
-			String sessionid = request.getSession().getId();
-			MUser mUser = (MUser) RedisCache.retake(sessionid);
+			Result result = new Result();
 			
-			Result result = iUserMaintService.changeUser(user);
+			MUser currentUser = Common.currentUser(request);
+			if (currentUser != null) {
+				result = iUserMaintService.changeUser(user, currentUser);
+			} else {
+				result.setMessage("当前登入者已失效");
+			}
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
 			
 			if (result.getErrcode().intValue() == 0) {
-				if (result.getId().intValue() == mUser.getId().intValue()) {
-					RedisCache.set(sessionid, result.getData());
+				if (result.getId().intValue() == currentUser.getId().intValue()) {
 					request.getSession().setAttribute("user",result.getData());
+					String sessionid = request.getSession().getId();
+					RedisCache.set(sessionid, result.getData());
 				}
 			}
 		} catch (Exception e) {

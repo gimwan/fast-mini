@@ -1,7 +1,6 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MUserMapper;
 import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MUserExample;
-import com.fast.base.page.PagingView;
 import com.fast.service.IUserService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
