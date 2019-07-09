@@ -22,7 +22,7 @@ function catchBoxValue() {
         	value = $(this).find('.selectItem .layui-this').attr("lay-value");
         }
         if (isPopup == "1") {
-        	value = $(this).find('.value').data("id");
+        	value = $(this).find('.value').attr("data-id");
         }
         
         if (value == null || value == undefined || $.trim(value) == "") {

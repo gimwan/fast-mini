@@ -20,6 +20,10 @@
 }
 
 .miniprogramPage .layui-table-view .layui-table-box tr .name {
+	min-width: 160px;
+}
+
+.miniprogramPage .layui-table-view .layui-table-box tr .publicplatform {
 	min-width: 180px;
 }
 

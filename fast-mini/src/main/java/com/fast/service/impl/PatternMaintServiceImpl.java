@@ -10,9 +10,11 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MPatternMapper;
 import com.fast.base.data.entity.MPattern;
 import com.fast.base.data.entity.MUser;
+import com.fast.service.IDataService;
 import com.fast.service.IPatternMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 版型
@@ -26,6 +28,9 @@ public class PatternMaintServiceImpl implements IPatternMaintService, Serializab
 	
 	@Autowired
 	MPatternMapper patternMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changePattern(MPattern pattern, MUser user) {
@@ -44,7 +49,6 @@ public class PatternMaintServiceImpl implements IPatternMaintService, Serializab
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mPattern.getId());
-					result.setData(mPattern);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -57,13 +61,18 @@ public class PatternMaintServiceImpl implements IPatternMaintService, Serializab
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mPattern.getId());
-					result.setData(mPattern);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
 				}
 			}
 			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("pattern", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
+				}
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用PatternMaintServiceImpl.changePattern报错：", e);

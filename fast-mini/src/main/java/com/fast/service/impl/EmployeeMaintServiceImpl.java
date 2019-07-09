@@ -10,9 +10,11 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MEmployeeMapper;
 import com.fast.base.data.entity.MEmployee;
 import com.fast.base.data.entity.MUser;
+import com.fast.service.IDataService;
 import com.fast.service.IEmployeeMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 员工管理
@@ -26,6 +28,9 @@ public class EmployeeMaintServiceImpl implements IEmployeeMaintService, Serializ
 	
 	@Autowired
 	MEmployeeMapper employeeMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changeEmployee(MEmployee employee, MUser user) {
@@ -44,7 +49,6 @@ public class EmployeeMaintServiceImpl implements IEmployeeMaintService, Serializ
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mEmployee.getId());
-					result.setData(mEmployee);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -57,13 +61,18 @@ public class EmployeeMaintServiceImpl implements IEmployeeMaintService, Serializ
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mEmployee.getId());
-					result.setData(mEmployee);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
 				}
 			}
 			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("employee", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
+				}
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用EmployeeMaintServiceImpl.changeEmployee报错：", e);

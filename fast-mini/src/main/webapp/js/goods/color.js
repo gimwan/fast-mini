@@ -68,9 +68,9 @@ common.bindVue = function() {
 
 function loadData() {
     common.showLoading();
-    api.load(basePath + 'color/color','post',{},function (result) {
+    api.load(basePath + 'data/list','post',{"table":"color"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data;
+            let data = result.data.records;
             if (data != null) {
                 for (let i = 0; i < data.length; i++) {
                     color.push(data[i]);

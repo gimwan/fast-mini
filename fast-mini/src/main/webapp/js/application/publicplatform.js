@@ -69,9 +69,9 @@ common.bindVue = function() {
 
 function loadData() {
     common.showLoading();
-    api.load(basePath + 'publicplatform/publicplatform','post',{},function (result) {
+    api.load(basePath + 'data/list','post',{"table":"publicplatform"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data;
+            let data = result.data.records;
             if (data != null) {
                 for (let i = 0; i < data.length; i++) {
                     publicplatform.push(data[i]);

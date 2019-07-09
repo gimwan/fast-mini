@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MUserMapper;
 import com.fast.base.data.entity.MUser;
+import com.fast.service.IDataService;
 import com.fast.service.IUserMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 用户管理
@@ -25,6 +27,9 @@ public class UserMaintServiceImpl implements IUserMaintService, Serializable {
 	
 	@Autowired
 	MUserMapper userMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changeUser(MUser user) {
@@ -43,7 +48,6 @@ public class UserMaintServiceImpl implements IUserMaintService, Serializable {
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mUser.getId());
-					result.setData(mUser);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -56,10 +60,16 @@ public class UserMaintServiceImpl implements IUserMaintService, Serializable {
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mUser.getId());
-					result.setData(mUser);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
+				}
+			}
+			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("user", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
 				}
 			}
 		} catch (Exception e) {

@@ -10,9 +10,11 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MSizeMapper;
 import com.fast.base.data.entity.MSize;
 import com.fast.base.data.entity.MUser;
+import com.fast.service.IDataService;
 import com.fast.service.ISizeMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 尺码
@@ -26,6 +28,9 @@ public class SizeMaintServiceImpl implements ISizeMaintService, Serializable {
 	
 	@Autowired
 	MSizeMapper sizeMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changeSize(MSize size, MUser user) {
@@ -44,7 +49,6 @@ public class SizeMaintServiceImpl implements ISizeMaintService, Serializable {
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mSize.getId());
-					result.setData(mSize);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -57,13 +61,18 @@ public class SizeMaintServiceImpl implements ISizeMaintService, Serializable {
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mSize.getId());
-					result.setData(mSize);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
 				}
 			}
 			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("size", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
+				}
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用SizeMaintServiceImpl.changeSize报错：", e);

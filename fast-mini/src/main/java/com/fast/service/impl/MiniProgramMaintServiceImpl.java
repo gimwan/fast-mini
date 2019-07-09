@@ -10,9 +10,11 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MMiniprogramMapper;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MUser;
+import com.fast.service.IDataService;
 import com.fast.service.IMiniProgramMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 小程序
@@ -26,6 +28,9 @@ public class MiniProgramMaintServiceImpl implements IMiniProgramMaintService, Se
 	
 	@Autowired
 	MMiniprogramMapper miniprogramMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changeMiniProgram(MMiniprogram miniprogram, MUser user) {
@@ -44,7 +49,6 @@ public class MiniProgramMaintServiceImpl implements IMiniProgramMaintService, Se
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mMiniprogram.getId());
-					result.setData(mMiniprogram);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -57,13 +61,18 @@ public class MiniProgramMaintServiceImpl implements IMiniProgramMaintService, Se
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mMiniprogram.getId());
-					result.setData(mMiniprogram);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
 				}
 			}
 			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("miniprogram", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
+				}
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用MiniProgramMaintServiceImpl.changeMiniProgram报错：", e);

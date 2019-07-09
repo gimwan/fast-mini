@@ -9,8 +9,11 @@ import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -284,6 +287,20 @@ public class CommonUtil {
 		}
 		DOMReader xmlReader = new DOMReader();
 		return (xmlReader.read(doc));
+	}
+	
+	public static List<LinkedHashMap<String, Object>> transformUpperCase(List<LinkedHashMap<String, Object>> list) {
+		List<LinkedHashMap<String, Object>> newList = new ArrayList<LinkedHashMap<String, Object>>();
+		for (int i = 0; i < list.size(); i++) {
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			Set<String> keySet = list.get(i).keySet();
+	        for (String key : keySet) {
+	            String newKey = key.toLowerCase();
+	            map.put(newKey, list.get(i).get(key));
+	        }
+	        newList.add(map);
+		}
+		return newList;
 	}
 
 }

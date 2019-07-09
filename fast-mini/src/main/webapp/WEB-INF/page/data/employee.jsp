@@ -44,6 +44,11 @@
 												<span>名称</span>
 											</div>
 										</th>
+										<th class="item department">
+											<div class="layui-table-cell">
+												<span>所属门店</span>
+											</div>
+										</th>
 										<th class="item value">
 											<div class="layui-table-cell">
 												<span>是否使用</span>
@@ -95,6 +100,9 @@
 										</td>
 										<td class="item name">
 											<div class="layui-table-cell laytable-cell-1-0-1">{{e.name}}</div>
+										</td>
+										<td class="item department">
+											<div class="layui-table-cell laytable-cell-1-0-1">{{e.department}}</div>
 										</td>
 										<td class="item value">
 											<div class="layui-table-cell laytable-cell-1-0-2">

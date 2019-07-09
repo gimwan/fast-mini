@@ -12,6 +12,7 @@ import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
+import com.fast.service.IDataService;
 import com.fast.service.IViptypeMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
@@ -29,6 +30,9 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 	
 	@Autowired
 	MViptypeMapper viptypeMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changeVipType(MViptype viptype, MUser user) {
@@ -47,7 +51,6 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mViptype.getId());
-					result.setData(mViptype);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -60,7 +63,6 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mViptype.getId());
-					result.setData(mViptype);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
@@ -81,6 +83,13 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 						}
 					}
 					
+				}
+			}
+			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("viptype", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
 				}
 			}
 		} catch (Exception e) {

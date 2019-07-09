@@ -137,7 +137,7 @@ document.onreadystatechange = function() {
     		let url = $(this).data("url");
     		let title = $(this).parent().parent().find(".edit-title .title .name").html();
     		common.showLoading();
-    		api.load(url, 'post', null, function(result) {
+    		api.load(url, 'post', {}, function(result) {
     			if (result.errcode == 0) {
             		let selectOption = optionView(result.data.records);;
             		layer.open({
@@ -192,9 +192,9 @@ function optionView(data) {
 	let view = "<div class=\"popup-view\">" +
 					"<div class=\"popup-box\">";
 	for (var i = 0; i < data.length; i++) {
-		view += "<div class=\"popup-data\" data-id=\""+data[i].ID+"\">" +
-					"<span class=\"code\">"+data[i].Code+"</span>" +
-					"<span class=\"name\">"+data[i].Name+"</span>" +
+		view += "<div class=\"popup-data\" data-id=\""+data[i].id+"\">" +
+					"<span class=\"code\">"+data[i].code+"</span>" +
+					"<span class=\"name\">"+data[i].name+"</span>" +
 				"</div>";
 	}				
 	view += "</div></div>";

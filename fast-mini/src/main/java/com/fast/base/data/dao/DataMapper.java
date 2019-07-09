@@ -10,5 +10,7 @@ import com.fast.base.page.PagingView;
 public interface DataMapper {
 	
 	List<LinkedHashMap<String, Object>> pageList(@Param("sql") String sql, @Param("page") PagingView page);
+	
+	List<LinkedHashMap<String, Object>> pageList(@Param("sql") String sql);
 
 }

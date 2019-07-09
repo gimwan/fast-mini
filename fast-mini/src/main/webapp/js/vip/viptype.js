@@ -68,9 +68,9 @@ common.bindVue = function() {
 
 function loadData() {
     common.showLoading();
-    api.load(basePath + 'viptype/viptype','post',{},function (result) {
+    api.load(basePath + 'data/list','post',{"table":"viptype"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data;
+            let data = result.data.records;
             if (data != null) {
                 for (let i = 0; i < data.length; i++) {
                     viptype.push(data[i]);
@@ -106,6 +106,13 @@ function showEditBox(idx,data) {
             api.load('./viptype/change','post',data, function(result) {
                 if (result.errcode == 0) {
                 	data = result.data;
+                	// 默认会员等级只能有一个
+                	let isDefault = data.defaultflag;
+                	if (isDefault == 1) {
+						for (var i = 0; i < viptype.length; i++) {
+							viptype[i].defaultflag = 0;
+						}
+					}
                 	if (idx < 0) {
                 		viptype.push(data);
 					} else {

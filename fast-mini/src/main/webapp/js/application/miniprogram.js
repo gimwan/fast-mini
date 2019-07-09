@@ -68,9 +68,9 @@ common.bindVue = function() {
 
 function loadData() {
     common.showLoading();
-    api.load(basePath + 'miniprogram/miniprogram','post',{},function (result) {
+    api.load(basePath + 'data/list','post',{"table":"miniprogram"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data;
+            let data = result.data.records;
             if (data != null) {
                 for (let i = 0; i < data.length; i++) {
                     miniprogram.push(data[i]);
@@ -142,6 +142,7 @@ function createElement(data) {
     let appsecret = "";
     let photourl = "";
     let publicplatformid = "";
+    let publicplatform = "";
     let useflag = 1;
     let memo = "";
     if (data != null && data != undefined && data != "") {
@@ -152,6 +153,7 @@ function createElement(data) {
         appsecret = data.appsecret;
         photourl = data.photourl;
         publicplatformid = data.publicplatformid;
+        publicplatform = data.publicplatform;
         useflag = data.useflag;
         memo = data.memo;
     }
@@ -194,7 +196,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">公众号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"departmentid\">"+
-				                "<input type=\"text\" data-id=\""+publicplatformid+"\" value=\""+publicplatformid+"\" " +
+				                "<input type=\"text\" data-id=\""+publicplatformid+"\" value=\""+publicplatform+"\" " +
 				                		"data-url=\"./data/page?table=publicplatform\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 				            "</div>"+

@@ -70,9 +70,9 @@ common.bindVue = function() {
 
 function loadData() {
     common.showLoading();
-    api.load(basePath + 'user/user','post',{},function (result) {
+    api.load(basePath + 'data/list','post',{"table":"user"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data;
+            let data = result.data.records;
             if (data != null) {
                 for (let i = 0; i < data.length; i++) {
                     user.push(data[i]);

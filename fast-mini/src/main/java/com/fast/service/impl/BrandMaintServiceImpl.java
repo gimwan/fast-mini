@@ -11,8 +11,10 @@ import com.fast.base.data.dao.MBrandMapper;
 import com.fast.base.data.entity.MBrand;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IBrandMaintService;
+import com.fast.service.IDataService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 品牌
@@ -26,6 +28,9 @@ public class BrandMaintServiceImpl implements IBrandMaintService, Serializable {
 	
 	@Autowired
 	MBrandMapper brandMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changeBrand(MBrand brand, MUser user) {
@@ -44,7 +49,6 @@ public class BrandMaintServiceImpl implements IBrandMaintService, Serializable {
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mBrand.getId());
-					result.setData(mBrand);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -57,13 +61,18 @@ public class BrandMaintServiceImpl implements IBrandMaintService, Serializable {
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mBrand.getId());
-					result.setData(mBrand);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
 				}
 			}
 			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("brand", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
+				}
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用BrandMaintServiceImpl.changeBrand报错：", e);

@@ -10,9 +10,11 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MPublicplatformMapper;
 import com.fast.base.data.entity.MPublicplatform;
 import com.fast.base.data.entity.MUser;
+import com.fast.service.IDataService;
 import com.fast.service.IPublicPlatformMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 公众号
@@ -26,6 +28,9 @@ private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
 	MPublicplatformMapper publicplatformMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changePublicplatform(MPublicplatform publicplatform, MUser user) {
@@ -44,7 +49,6 @@ private static final long serialVersionUID = 71148004875517941L;
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mPublicplatform.getId());
-					result.setData(mPublicplatform);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -57,13 +61,18 @@ private static final long serialVersionUID = 71148004875517941L;
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mPublicplatform.getId());
-					result.setData(mPublicplatform);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
 				}
 			}
 			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("publicplatform", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
+				}
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用PublicPlatformMaintServiceImpl.changePublicplatform报错：", e);

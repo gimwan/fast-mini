@@ -11,8 +11,10 @@ import com.fast.base.data.dao.MColorMapper;
 import com.fast.base.data.entity.MColor;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IColorMaintService;
+import com.fast.service.IDataService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 颜色
@@ -26,6 +28,9 @@ public class ColorMaintServiceImpl implements IColorMaintService, Serializable {
 	
 	@Autowired
 	MColorMapper colorMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changeColor(MColor color, MUser user) {
@@ -44,7 +49,6 @@ public class ColorMaintServiceImpl implements IColorMaintService, Serializable {
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mColor.getId());
-					result.setData(mColor);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -57,13 +61,18 @@ public class ColorMaintServiceImpl implements IColorMaintService, Serializable {
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mColor.getId());
-					result.setData(mColor);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
 				}
 			}
 			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("color", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
+				}
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用colorMaintServiceImpl.changecolor报错：", e);

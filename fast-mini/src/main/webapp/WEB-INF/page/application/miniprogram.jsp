@@ -44,6 +44,11 @@
 												<span>名称</span>
 											</div>
 										</th>
+										<th class="item publicplatform">
+											<div class="layui-table-cell">
+												<span>公众号</span>
+											</div>
+										</th>
 										<th class="item value">
 											<div class="layui-table-cell">
 												<span>是否使用</span>
@@ -95,6 +100,9 @@
 										</td>
 										<td class="item name">
 											<div class="layui-table-cell laytable-cell-1-0-1">{{m.name}}</div>
+										</td>
+										<td class="item publicplatform">
+											<div class="layui-table-cell laytable-cell-1-0-1">{{m.publicplatform}}</div>
 										</td>
 										<td class="item value">
 											<div class="layui-table-cell laytable-cell-1-0-2">

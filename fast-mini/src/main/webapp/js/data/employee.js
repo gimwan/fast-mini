@@ -68,9 +68,9 @@ common.bindVue = function() {
 
 function loadData() {
     common.showLoading();
-    api.load(basePath + 'employee/employee','post',{},function (result) {
+    api.load(basePath + 'data/list','post',{"table":"employee"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data;
+            let data = result.data.records;
             if (data != null) {
                 for (let i = 0; i < data.length; i++) {
                     employee.push(data[i]);
@@ -115,7 +115,6 @@ function showEditBox(idx,data) {
 	                        }
 	                    }
 					}
-                    
                     layer.close(index);
                     common.tips(result.message);
                 } else {
@@ -141,6 +140,7 @@ function createElement(data) {
     let sex = 1;
     let mobilephone = "";
     let departmentid = "";
+    let department = "";
     let photourl = "";
     let useflag = 1;
     let memo = "";
@@ -151,6 +151,7 @@ function createElement(data) {
         mobilephone = data.mobilephone;
         sex = data.sex;
         departmentid = data.departmentid;
+        department = data.department;
         photourl = data.photourl;
         useflag = data.useflag;
         memo = data.memo;
@@ -194,7 +195,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">所属门店</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"departmentid\">"+
-				                "<input type=\"text\" data-id=\""+departmentid+"\" value=\""+departmentid+"\" " +
+				                "<input type=\"text\" data-id=\""+departmentid+"\" value=\""+department+"\" " +
 				                		"data-url=\"./data/page?table=department\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 				            "</div>"+

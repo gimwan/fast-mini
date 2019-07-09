@@ -25,6 +25,10 @@
 }
 
 .employeePage .layui-table-view .layui-table-box tr .name {
+	min-width: 160px;
+}
+
+.employeePage .layui-table-view .layui-table-box tr .department {
 	min-width: 180px;
 }
 

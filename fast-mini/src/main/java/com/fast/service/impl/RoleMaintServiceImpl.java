@@ -10,9 +10,11 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MRoleMapper;
 import com.fast.base.data.entity.MRole;
 import com.fast.base.data.entity.MUser;
+import com.fast.service.IDataService;
 import com.fast.service.IRoleMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 角色管理
@@ -26,6 +28,9 @@ public class RoleMaintServiceImpl implements IRoleMaintService, Serializable {
 	
 	@Autowired
 	MRoleMapper roleMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result changeRole(MRole role, MUser user) {
@@ -44,7 +49,6 @@ public class RoleMaintServiceImpl implements IRoleMaintService, Serializable {
 				if (changeNum > 0) {
 					result.setErrcode(0);
 					result.setId(mRole.getId());
-					result.setData(mRole);
 					result.setMessage("保存成功");
 				} else {
 					result.setMessage("保存失败");
@@ -57,13 +61,18 @@ public class RoleMaintServiceImpl implements IRoleMaintService, Serializable {
 				if (key > 0) {
 					result.setErrcode(0);
 					result.setId(mRole.getId());
-					result.setData(mRole);
 					result.setMessage("新增成功");
 				} else {
 					result.setMessage("新增失败");
 				}
 			}
 			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("role", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
+				}
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用RoleMaintServiceImpl.changeRole报错：", e);
