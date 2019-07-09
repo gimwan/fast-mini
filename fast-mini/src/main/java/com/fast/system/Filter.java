@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fast.base.data.entity.MUser;
-
 public class Filter implements HandlerInterceptor {
 
 	@Override
