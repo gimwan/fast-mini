@@ -63,6 +63,12 @@ public class DataController {
 		return r;
 	}
 	
+	/**
+	 * 列表分页查询
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping("/list")
 	@ResponseBody
 	public String list(HttpServletRequest request, HttpServletResponse response) {
@@ -83,6 +89,31 @@ public class DataController {
 			
 			String tableName = "m_" + table;
 			Result result = iDataService.list(page, tableName);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 查询单条数据
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/one")
+	@ResponseBody
+	public String one(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String tableName = request.getParameter("table");
+			String id = request.getParameter("id");
+			Result result = iDataService.one(tableName, Integer.valueOf(id));
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
