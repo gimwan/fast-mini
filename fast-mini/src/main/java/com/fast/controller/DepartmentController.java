@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MDepartment;
+import com.fast.base.data.entity.MUser;
+import com.fast.service.IDepartmentMaintService;
 import com.fast.service.IDepartmentService;
+import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
 
@@ -27,6 +31,9 @@ public class DepartmentController {
 	
 	@Autowired
 	IDepartmentService iDepartmentService;
+	
+	@Autowired
+	IDepartmentMaintService iDepartmentMaintService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
@@ -47,6 +54,62 @@ public class DepartmentController {
 		
 		try {
 			Result result = iDepartmentService.department();
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 修改门店
+	 * @param request
+	 * @param response
+	 * @param department
+	 * @return
+	 */
+	@RequestMapping("/change")
+	@ResponseBody
+	public String change(HttpServletRequest request, HttpServletResponse response, MDepartment department) {
+		String r = "";
+		
+		try {
+			Result result = new Result();
+			
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				result = iDepartmentMaintService.changeDepartment(department, user);
+			} else {
+				result.setMessage("当前登入者已失效");
+			}
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 删除门店
+	 * @param request
+	 * @param response
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/delete")
+	@ResponseBody
+	public String delete(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			Result result = iDepartmentMaintService.deleteDepartment(Integer.valueOf(id));
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

@@ -24,7 +24,7 @@ public class RoleServiceImpl implements IRoleService, Serializable {
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MRoleMapper mRoleMapper;
+	MRoleMapper roleMapper;
 
 	@Override
 	public Result role() {
@@ -33,7 +33,7 @@ public class RoleServiceImpl implements IRoleService, Serializable {
 		try {
 			MRoleExample example = new MRoleExample();
 			example.setOrderByClause("code asc");
-			List<MRole> list = mRoleMapper.selectByExample(example);
+			List<MRole> list = roleMapper.selectByExample(example);
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {

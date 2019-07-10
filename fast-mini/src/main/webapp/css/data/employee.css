@@ -1,3 +1,11 @@
+.employeePage .operating {
+	margin: 0px 15px;
+}
+
+.employeePage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
 .employeePage .layui-table-view .layui-table-box .layui-table-header span {
 	font-weight: 600;
 }
@@ -11,7 +19,16 @@
     border-bottom-width: 1px;
 }
 
+.userPage .layui-table-view .layui-table-box tr .layui-nav-img {
+	width: 25px;
+    height: 25px;
+}
+
 .employeePage .layui-table-view .layui-table-box tr .name {
+	min-width: 160px;
+}
+
+.employeePage .layui-table-view .layui-table-box tr .department {
 	min-width: 180px;
 }
 
@@ -32,12 +49,3 @@
 	overflow-x: hidden;
 	height: 620px;
 }
-
-.edit-view {
-    padding: 15px;
-}
-
-.edit-view .edit-box .edit-item>div {
-    margin: 10px 0;
-}
-

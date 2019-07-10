@@ -6,8 +6,20 @@
 		<ul class="layui-tab-title">
 		    <li class="layui-this">用户管理</li>
 		</ul>
-	<div class="layui-tab-content"></div>
-	</div> 
+		<div class="layui-tab-content"></div>
+	</div>
+	
+	<div class="operating">
+		<div class="layui-btn-group">
+	        <button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add">
+	          <i class="layui-icon"></i>
+	        </button>
+	        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
+	          <i class="layui-icon"></i>
+	        </button>
+	     </div>
+	</div>
+	
 	<div class="layui-tab-item layui-show">
 		<div class="layui-main">
 			<div id="lay_preview">
@@ -30,6 +42,11 @@
 										<th class="item name">
 											<div class="layui-table-cell">
 												<span>名称</span>
+											</div>
+										</th>
+										<th class="item mobilephone">
+											<div class="layui-table-cell">
+												<span>手机号</span>
 											</div>
 										</th>
 										<th class="item value">
@@ -78,11 +95,14 @@
 										</td>
 										<td class="item code">
 											<div class="layui-table-cell laytable-cell-1-0-0">
-											<a href="'+javascript:void(0);" v-on:click="edit">{{u.code}}</a>
+											<a href="javascript:void(0);" v-on:click="edit">{{u.code}}</a>
 											</div>
 										</td>
 										<td class="item name">
 											<div class="layui-table-cell laytable-cell-1-0-1">{{u.name}}</div>
+										</td>
+										<td class="item mobilephone">
+											<div class="layui-table-cell laytable-cell-1-0-1">{{u.mobilephone}}</div>
 										</td>
 										<td class="item value">
 											<div class="layui-table-cell laytable-cell-1-0-2">
@@ -93,13 +113,13 @@
 											<div class="layui-table-cell laytable-cell-1-0-3">{{u.creator}}</div>
 										</td>
 										<td class="item createtime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{u.createtime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(u.createtime)}}</div>
 										</td>
 										<td class="item modifier">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{u.modifier}}</div>
 										</td>
 										<td class="item modifytime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{u.modifytime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(u.modifytime)}}</div>
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{u.memo}}</div>

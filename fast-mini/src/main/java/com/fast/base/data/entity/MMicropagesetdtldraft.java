@@ -5,7 +5,7 @@ public class MMicropagesetdtldraft {
 
     private Integer micropagesetid;
 
-    private Integer index;
+    private Integer showindex;
 
     private Integer first;
 
@@ -37,12 +37,12 @@ public class MMicropagesetdtldraft {
         this.micropagesetid = micropagesetid;
     }
 
-    public Integer getIndex() {
-        return index;
+    public Integer getShowindex() {
+        return showindex;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
+    public void setShowindex(Integer showindex) {
+        this.showindex = showindex;
     }
 
     public Integer getFirst() {

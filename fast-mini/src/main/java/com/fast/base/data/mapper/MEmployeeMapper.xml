@@ -82,7 +82,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MEmployee" >
+  <insert id="insert" parameterType="com.fast.base.data.entity.MEmployee" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_employee (ID, Code, Name, 
       Sex, PhotoUrl, DepartmentID, 
       MobilePhone, CreateTime, Creator, 
@@ -96,7 +96,7 @@
       #{useflag,jdbcType=TINYINT}, #{updatedtime,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MEmployee" >
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MEmployee" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_employee
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

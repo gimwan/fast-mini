@@ -1124,6 +1124,66 @@ public class MMicropageExample {
             addCriterion("VipView not between", value1, value2, "vipview");
             return (Criteria) this;
         }
+
+        public Criteria andPublicplatformidIsNull() {
+            addCriterion("PublicPlatformID is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidIsNotNull() {
+            addCriterion("PublicPlatformID is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidEqualTo(Integer value) {
+            addCriterion("PublicPlatformID =", value, "publicplatformid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidNotEqualTo(Integer value) {
+            addCriterion("PublicPlatformID <>", value, "publicplatformid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidGreaterThan(Integer value) {
+            addCriterion("PublicPlatformID >", value, "publicplatformid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("PublicPlatformID >=", value, "publicplatformid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidLessThan(Integer value) {
+            addCriterion("PublicPlatformID <", value, "publicplatformid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidLessThanOrEqualTo(Integer value) {
+            addCriterion("PublicPlatformID <=", value, "publicplatformid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidIn(List<Integer> values) {
+            addCriterion("PublicPlatformID in", values, "publicplatformid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidNotIn(List<Integer> values) {
+            addCriterion("PublicPlatformID not in", values, "publicplatformid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidBetween(Integer value1, Integer value2) {
+            addCriterion("PublicPlatformID between", value1, value2, "publicplatformid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicplatformidNotBetween(Integer value1, Integer value2) {
+            addCriterion("PublicPlatformID not between", value1, value2, "publicplatformid");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

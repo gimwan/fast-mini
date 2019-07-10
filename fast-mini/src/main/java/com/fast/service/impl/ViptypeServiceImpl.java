@@ -24,7 +24,7 @@ public class ViptypeServiceImpl implements IViptypeService, Serializable {
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MViptypeMapper mViptypeMapper;
+	MViptypeMapper viptypeMapper;
 
 	/**
 	 * 查询所有会员等级
@@ -36,7 +36,7 @@ public class ViptypeServiceImpl implements IViptypeService, Serializable {
 		try {
 			MViptypeExample example = new MViptypeExample();
 			example.setOrderByClause("code asc");
-			List<MViptype> list = mViptypeMapper.selectByExample(example);
+			List<MViptype> list = viptypeMapper.selectByExample(example);
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {

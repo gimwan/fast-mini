@@ -4,6 +4,8 @@ import com.fast.base.data.entity.MRegion;
 import com.fast.base.data.entity.MRegionExample;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Options;
+
 public interface MRegionMapper {
     int countByExample(MRegionExample example);
 
@@ -11,8 +13,10 @@ public interface MRegionMapper {
 
     int deleteByPrimaryKey(Integer id);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(MRegion record);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insertSelective(MRegion record);
 
     List<MRegion> selectByExample(MRegionExample example);

@@ -22,15 +22,37 @@ let menu = [
         link: '',
         sub: [
             {
-                name: '员工资料 ',
-                link: 'employee'
-            },
-            {
                 name: '门店资料',
                 link: 'department'
             },
             {
-                name: '商品资料',
+                name: '员工资料 ',
+                link: 'employee'
+            }
+        ]
+    },
+    {
+    	name: '商品管理 ',
+        link: '',
+        sub: [
+        	{
+                name: '颜色',
+                link: 'color'
+            },
+            {
+                name: '版型',
+                link: 'pattern'
+            },
+            {
+                name: '尺码',
+                link: 'size'
+            },
+            {
+                name: '品牌档案',
+                link: 'brand'
+            },
+            {
+                name: '商品档案',
                 link: ''
             }
         ]
@@ -99,8 +121,84 @@ document.onreadystatechange = function() {
 		});
     }
     if(document.readyState == "complete"){
-        
+    	// 表格选中
+    	$("body").on("click", ".layui-table-view .layui-table-box .layui-table-body table tr", function () {
+    		let isSelected = $(this).hasClass("selected");
+    		$(".layui-table-view .layui-table-box .layui-table-body table .selected").removeClass("selected");
+    		if (!isSelected) {
+    			$(this).addClass("selected");
+			}
+    	});
+    	
+    	// 弹窗选择
+    	$("body").on("click", ".edit-view .edit-box .popup input", function () {
+    		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
+    		$(this).addClass("popuped");
+    		let url = $(this).data("url");
+    		let title = $(this).parent().parent().find(".edit-title .title .name").html();
+    		common.showLoading();
+    		api.load(url, 'post', {}, function(result) {
+    			if (result.errcode == 0) {
+            		let selectOption = optionView(result.data.records);;
+            		layer.open({
+            	        type: 1,
+            	        title: "<label style='font-weight:600;'>"+title+"</label>",
+            	        //content: selectOption,
+            	        area: ['500px', '400px'],
+            	        btn: ['确定','取消'],
+            	        btn1: function (index, layero) {
+            	        	let id = $(layero).find(".layui-layer-content .selected").data("id");
+            	        	let name = $(layero).find(".layui-layer-content .selected .name").html();
+            	        	if (id != null && id != undefined && $.trim(id) != "") {
+            	        		$(".edit-view .edit-box .popup .popuped").attr("data-id",id);
+            	        		$(".edit-view .edit-box .popup .popuped").val(name);
+            	        		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
+        					}
+            	        	layer.close(index);
+            	        },
+            	        success: function (layero, index) {
+            	        	$(layero).find(".layui-layer-content").append(selectOption);
+            	        }
+            		});
+    			} else {
+    				common.error(result.message);
+				}
+    			
+        		common.closeLoading();
+    		});
+    	});
+    	
+    	$("body").on("click", ".popup-view .popup-box .popup-data", function () {
+    		let isSelected = $(this).hasClass("selected");
+    		$(this).parent().find(".selected").removeClass("selected");
+    		if (!isSelected) {
+    			$(this).addClass("selected");
+			}
+    	});
+    	
+    	// 弹窗双击选择数据
+    	$("body").on("dblclick", ".popup-view .popup-box .popup-data", function () {
+    		let id = $(this).data("id");
+    		let name = $(this).find(".name").html();
+    		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
+    		$(".edit-view .edit-box .popup .popuped").attr("data-id",id);
+    		$(".edit-view .edit-box .popup .popuped").val(name);
+    		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
+    	});
     }
+}
+
+function optionView(data) {
+	let view = "<div class=\"popup-view\">" +
+					"<div class=\"popup-box\">";
+	for (var i = 0; i < data.length; i++) {
+		view += "<div class=\"popup-data\" data-id=\""+data[i].id+"\">" +
+					"<span class=\"code\">"+data[i].code+"</span>" +
+					"<span class=\"name\">"+data[i].name+"</span>" +
+				"</div>";
+	}				
+	view += "</div></div>";
+	return view;
 }
 
 //定义一个标志位

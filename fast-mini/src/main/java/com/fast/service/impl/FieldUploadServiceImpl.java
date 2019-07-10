@@ -15,9 +15,11 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fast.base.Result;
 import com.fast.service.IFieldUploadService;
+import com.fast.system.log.FastLog;
 
 /**
  * 文件上传
@@ -39,14 +41,14 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 		
 		try {
 	        //获取文件需要上传到的路径
-			String path = request.getRealPath("/uploadimages") + "/";
+			String path = request.getRealPath("/uploadimages") + "\\";
 	        File dir = new File(path);
 	        if (!dir.exists()) {
 	            dir.mkdir();
 	        }
 	        System.out.println("path=" + path);
-	
-	        request.setCharacterEncoding("utf-8");  //设置编码
+	        //设置编码
+	        request.setCharacterEncoding("utf-8");
 	        //获得磁盘文件条目工厂
 	        DiskFileItemFactory factory = new DiskFileItemFactory();
 	
@@ -62,7 +64,8 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 	        factory.setSizeThreshold(1024 * 1024);
 	        //高水平的API文件上传处理
 	        ServletFileUpload upload = new ServletFileUpload(factory);
-        
+	        upload.setHeaderEncoding("UTF-8");
+	        
             List<FileItem> list = upload.parseRequest(request);
             FileItem picture = null;
             for (FileItem item : list) {
@@ -81,7 +84,7 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 
             //自定义上传图片的名字
             Date date = new Date();
-            String fileName = String.valueOf(date.getTime()) + ".png";
+            String fileName = String.valueOf(date.getTime()) + ".jpg";
             String destPath = path + fileName;
             System.out.println("destPath=" + destPath);
             
@@ -123,5 +126,39 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
         
         return result;
     }
+
+	@Override
+	public Result uploadFieldImage(HttpServletRequest request, MultipartFile file) {
+		Result result = new Result();
+		try {
+			//获取文件需要上传到的路径
+			String path = request.getRealPath("/uploadimages") + "\\";
+			String originalFieldName = file.getOriginalFilename();
+			String prefix = originalFieldName.substring(originalFieldName.lastIndexOf("."));
+			String fieldName = String.valueOf(new Date().getTime()) + prefix;
+			String filePath = path + fieldName;
+			System.out.println("filePath:"+filePath);
+			File desFile = new File(filePath);
+			if(!desFile.getParentFile().exists()){
+				desFile.mkdirs();
+			}
+			file.transferTo(desFile);
+			// 域名
+            String scheme = request.getScheme();
+            String serverName = request.getServerName();
+            int serverPort = request.getServerPort();
+            String contextPath = request.getContextPath();
+            String domain = scheme + "://" + serverName + ":" + serverPort + contextPath;
+			String imageUrls = domain + "/uploadimages/" + fieldName;
+			
+			result.setErrcode(0);
+            result.setData(imageUrls);
+            result.setMessage("上传成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			FastLog.error("调用FieldUploadServiceImpl.uploadFieldImage报错：", e);
+		}
+		return result;
+	}
 
 }

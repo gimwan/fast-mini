@@ -2,8 +2,6 @@ package com.fast.base.data.entity;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 public class MRole {
     private Integer id;
 
@@ -48,8 +46,7 @@ public class MRole {
     public void setName(String name) {
         this.name = name;
     }
-
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    
     public Date getCreatetime() {
         return createtime;
     }
@@ -65,8 +62,7 @@ public class MRole {
     public void setCreator(String creator) {
         this.creator = creator;
     }
-
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    
     public Date getModifytime() {
         return modifytime;
     }

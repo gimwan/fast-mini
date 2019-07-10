@@ -84,7 +84,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MPublicplatform" >
+  <insert id="insert" parameterType="com.fast.base.data.entity.MPublicplatform" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_publicplatform (ID, Code, Name, 
       AppID, AppSecret, PhotoUrl, 
       UseFlag, CreateTime, Creator, 
@@ -98,7 +98,7 @@
       #{memo,jdbcType=VARCHAR}, #{certpath,jdbcType=VARCHAR}, #{mchid,jdbcType=VARCHAR}, 
       #{mchkey,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MPublicplatform" >
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MPublicplatform" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_publicplatform
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

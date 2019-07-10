@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<link rel="stylesheet" href="css/system/role.css?r=87232">
+<link rel="stylesheet" href="css/system/role.css">
 <script type="text/javascript" src="js/system/role.js"></script>
 <div class="rolePage">
 	<div class="layui-tab layui-tab-brief nav-bar">
@@ -95,13 +95,13 @@
 											<div class="layui-table-cell laytable-cell-1-0-3">{{r.creator}}</div>
 										</td>
 										<td class="item createtime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{r.createtime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(r.createtime)}}</div>
 										</td>
 										<td class="item modifier">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{r.modifier}}</div>
 										</td>
 										<td class="item modifytime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{r.modifytime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(r.modifytime)}}</div>
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{r.memo}}</div>

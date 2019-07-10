@@ -24,7 +24,7 @@ public class PublicPlatformServiceImpl implements IPublicPlatformService, Serial
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MPublicplatformMapper mPublicplatformMapper;
+	MPublicplatformMapper publicplatformMapper;
 	
 	/**
 	 * 查询所有小程序
@@ -36,7 +36,7 @@ public class PublicPlatformServiceImpl implements IPublicPlatformService, Serial
 		try {
 			MPublicplatformExample example = new MPublicplatformExample();
 			example.setOrderByClause("code asc");
-			List<MPublicplatform> list = mPublicplatformMapper.selectByExample(example);
+			List<MPublicplatform> list = publicplatformMapper.selectByExample(example);
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {

@@ -224,63 +224,63 @@ public class MMicropagesetdtlExample {
             return (Criteria) this;
         }
 
-        public Criteria andIndexIsNull() {
-            addCriterion("Index is null");
+        public Criteria andShowindexIsNull() {
+            addCriterion("ShowIndex is null");
             return (Criteria) this;
         }
 
-        public Criteria andIndexIsNotNull() {
-            addCriterion("Index is not null");
+        public Criteria andShowindexIsNotNull() {
+            addCriterion("ShowIndex is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIndexEqualTo(Integer value) {
-            addCriterion("Index =", value, "index");
+        public Criteria andShowindexEqualTo(Integer value) {
+            addCriterion("ShowIndex =", value, "showindex");
             return (Criteria) this;
         }
 
-        public Criteria andIndexNotEqualTo(Integer value) {
-            addCriterion("Index <>", value, "index");
+        public Criteria andShowindexNotEqualTo(Integer value) {
+            addCriterion("ShowIndex <>", value, "showindex");
             return (Criteria) this;
         }
 
-        public Criteria andIndexGreaterThan(Integer value) {
-            addCriterion("Index >", value, "index");
+        public Criteria andShowindexGreaterThan(Integer value) {
+            addCriterion("ShowIndex >", value, "showindex");
             return (Criteria) this;
         }
 
-        public Criteria andIndexGreaterThanOrEqualTo(Integer value) {
-            addCriterion("Index >=", value, "index");
+        public Criteria andShowindexGreaterThanOrEqualTo(Integer value) {
+            addCriterion("ShowIndex >=", value, "showindex");
             return (Criteria) this;
         }
 
-        public Criteria andIndexLessThan(Integer value) {
-            addCriterion("Index <", value, "index");
+        public Criteria andShowindexLessThan(Integer value) {
+            addCriterion("ShowIndex <", value, "showindex");
             return (Criteria) this;
         }
 
-        public Criteria andIndexLessThanOrEqualTo(Integer value) {
-            addCriterion("Index <=", value, "index");
+        public Criteria andShowindexLessThanOrEqualTo(Integer value) {
+            addCriterion("ShowIndex <=", value, "showindex");
             return (Criteria) this;
         }
 
-        public Criteria andIndexIn(List<Integer> values) {
-            addCriterion("Index in", values, "index");
+        public Criteria andShowindexIn(List<Integer> values) {
+            addCriterion("ShowIndex in", values, "showindex");
             return (Criteria) this;
         }
 
-        public Criteria andIndexNotIn(List<Integer> values) {
-            addCriterion("Index not in", values, "index");
+        public Criteria andShowindexNotIn(List<Integer> values) {
+            addCriterion("ShowIndex not in", values, "showindex");
             return (Criteria) this;
         }
 
-        public Criteria andIndexBetween(Integer value1, Integer value2) {
-            addCriterion("Index between", value1, value2, "index");
+        public Criteria andShowindexBetween(Integer value1, Integer value2) {
+            addCriterion("ShowIndex between", value1, value2, "showindex");
             return (Criteria) this;
         }
 
-        public Criteria andIndexNotBetween(Integer value1, Integer value2) {
-            addCriterion("Index not between", value1, value2, "index");
+        public Criteria andShowindexNotBetween(Integer value1, Integer value2) {
+            addCriterion("ShowIndex not between", value1, value2, "showindex");
             return (Criteria) this;
         }
 

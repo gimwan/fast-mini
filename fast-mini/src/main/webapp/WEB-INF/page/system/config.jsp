@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<link rel="stylesheet" href="css/system/config.css?r=232132">
+<link rel="stylesheet" href="css/system/config.css">
 <script type="text/javascript" src="js/system/config.js"></script>
 <div class="configPage">
 	<div class="layui-tab layui-tab-brief nav-bar">
@@ -71,7 +71,7 @@
 											<div class="layui-table-cell laytable-cell-1-0-3">{{c.modifier}}</div>
 										</td>
 										<td class="item modifytime time-item">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{c.modifytime}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(c.modifytime)}}</div>
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{c.memo}}</div>

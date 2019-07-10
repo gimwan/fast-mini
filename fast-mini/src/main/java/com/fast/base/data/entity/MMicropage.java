@@ -35,6 +35,8 @@ public class MMicropage {
 
     private Long vipview;
 
+    private Integer publicplatformid;
+
     public Integer getId() {
         return id;
     }
@@ -161,5 +163,13 @@ public class MMicropage {
 
     public void setVipview(Long vipview) {
         this.vipview = vipview;
+    }
+
+    public Integer getPublicplatformid() {
+        return publicplatformid;
+    }
+
+    public void setPublicplatformid(Integer publicplatformid) {
+        this.publicplatformid = publicplatformid;
     }
 }

@@ -2,7 +2,10 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MUserExample;
+
 import java.util.List;
+
+import org.apache.ibatis.annotations.Options;
 
 public interface MUserMapper {
     long countByExample(MUserExample example);
@@ -11,8 +14,10 @@ public interface MUserMapper {
 
     int deleteByPrimaryKey(Integer id);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(MUser record);
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insertSelective(MUser record);
 
     List<MUser> selectByExample(MUserExample example);
@@ -22,4 +27,5 @@ public interface MUserMapper {
     int updateByPrimaryKeySelective(MUser record);
 
     int updateByPrimaryKey(MUser record);
+    
 }

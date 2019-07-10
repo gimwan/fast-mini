@@ -45,19 +45,3 @@
 	overflow-x: hidden;
 	height: 620px;
 }
-
-.edit-view {
-	padding: 15px;
-}
-
-.edit-view .edit-box .edit-item>div {
-	margin: 10px 0;
-}
-
-.edit-view .edit-box .layui-form .layui-form-item .layui-input-block {
-	margin-left: 0px;
-}
-
-.edit-view .edit-box .layui-form .layui-form-item .layui-input-block textarea {
-	resize: none;
-}

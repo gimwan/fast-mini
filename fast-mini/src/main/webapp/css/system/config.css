@@ -12,11 +12,11 @@
 }
 
 .configPage .layui-table-view .layui-table-box tr .name {
-	min-width: 180px;
+	min-width: 220px;
 }
 
 .configPage .layui-table-view .layui-table-box tr .value {
-	min-width: 200px;
+	min-width: 260px;
 }
 
 .configPage .layui-table-view .layui-table-box tr .memo {
@@ -36,12 +36,3 @@
 	overflow-x: hidden;
 	height: 658px;
 }
-
-.edit-view {
-    padding: 15px;
-}
-
-.edit-view .edit-box .edit-item>div {
-    margin: 10px 0;
-}
-

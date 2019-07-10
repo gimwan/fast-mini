@@ -18,7 +18,49 @@ common.bindVue = function() {
                 showEditBox(-1, null);
             },
             del: function () {
-                console.log('delete');
+            	let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
+            	let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
+            	if (id == null || id == undefined || $.trim(id) == "") {
+            		common.warn("请先选择要删除项");
+                    return false;
+				}
+            	layer.confirm('确定删除？', {
+            		btn: ['确定','取消'],
+            		btn1 : function(index, layero) {
+        				var data = {};
+        				data['id'] = id;
+                    	common.showLoading();
+                        api.load('./role/delete','post',data, function(result) {
+                            if (result.errcode == 0) {
+                            	role.splice(deleteIndex);
+                                
+                                common.tips(result.message);
+                            } else {
+                                common.error(result.message);
+                            }
+                            common.closeLoading();
+                        });
+            			
+            		}
+            	});
+            },
+            formatDate: function(jsonDate) {
+            	if (jsonDate == null || jsonDate == undefined || $.trim(jsonDate) == "") {
+					return '';
+				}
+				var year = jsonDate.year + 1900;
+				var month = jsonDate.month + 1;
+				var day = jsonDate.date;
+				// 如果得到的数字小于9要在前面加'0'
+				day = (day > 9) ? ("" + day) : ("0" + day);
+				month = (month > 9) ? ("" + month) : ("0" + month);
+				var hour = jsonDate.hours;
+				var minute = jsonDate.minutes;
+				var seconds = jsonDate.seconds;
+				hour = (hour > 9) ? ("" + hour) : ("0" + hour);
+				minute = (minute > 9) ? ("" + minute) : ("0" + minute);
+				seconds = (seconds > 9) ? ("" + seconds) : ("0" + seconds);
+				return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + seconds;
             }
         }
     });
@@ -27,9 +69,9 @@ common.bindVue = function() {
 
 function loadData() {
     common.showLoading();
-    api.load(basePath + 'role/role','post',{},function (result) {
+    api.load(basePath + 'data/list','post',{"table":"role"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data;
+            let data = result.data.records;
             if (data != null) {
                 for (let i = 0; i < data.length; i++) {
                     role.push(data[i]);
@@ -156,42 +198,4 @@ function showEditBox(idx,data) {
         }
         
     });
-}
-
-function catchBoxValue() {
-    let data = {};
-    let error = false;
-    $(".edit-view .edit-box .edit-item").each(function() {
-        let need = $(this).attr("need");
-        let title = $(this).find(".name").html();
-        let field = $(this).find(".edit-value").data("field");
-        let value = "";
-        let isRadio = $(this).attr("radio");
-        if (isRadio == "1") {
-        	value = $(this).find('input[type="radio"]:checked').val();
-		} else {
-			value = $(this).find(".value").val();
-		}
-        
-        if (value == null || value == undefined || $.trim(value) == "") {
-        	value = "";
-        }
-
-        let errorMsg;
-        if (need == 1) {
-            if (value == null || value == undefined || $.trim(value) == "") {
-                errorMsg = title + "不能为空";
-            }
-        }
-        if (errorMsg != null && errorMsg != undefined && $.trim(errorMsg) != "") {
-            error = true;
-            common.warn(errorMsg);
-            return false;
-        }
-        data[field] = value;
-    });
-    if (error) {
-        data = '';
-    }
-    return data;
 }

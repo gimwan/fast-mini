@@ -74,7 +74,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MConfig" >
+  <insert id="insert" parameterType="com.fast.base.data.entity.MConfig" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_config (ID, Code, Name, 
       Type, Value, Modifier, 
       Modifytime, UpdatedTime)
@@ -82,7 +82,7 @@
       #{type,jdbcType=TINYINT}, #{value,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, 
       #{modifytime,jdbcType=TIMESTAMP}, #{updatedtime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MConfig" >
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MConfig" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

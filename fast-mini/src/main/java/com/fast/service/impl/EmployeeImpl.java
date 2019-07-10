@@ -24,7 +24,7 @@ public class EmployeeImpl implements IEmployeeService, Serializable {
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MEmployeeMapper mEmployeeMapper;
+	MEmployeeMapper employeeMapper;
 
 	@Override
 	public Result employee() {
@@ -33,7 +33,7 @@ public class EmployeeImpl implements IEmployeeService, Serializable {
 		try {
 			MEmployeeExample example = new MEmployeeExample();
 			example.setOrderByClause("code asc");
-			List<MEmployee> list = mEmployeeMapper.selectByExample(example);
+			List<MEmployee> list = employeeMapper.selectByExample(example);
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {

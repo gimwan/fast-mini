@@ -25,7 +25,7 @@ public class MiniProgramServiceImpl implements IMiniProgramService, Serializable
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MMiniprogramMapper mMiniprogramMapper;
+	MMiniprogramMapper miniprogramMapper;
 	
 	/**
 	 * 查询所有小程序
@@ -37,7 +37,7 @@ public class MiniProgramServiceImpl implements IMiniProgramService, Serializable
 		try {
 			MMiniprogramExample example = new MMiniprogramExample();
 			example.setOrderByClause("code asc");
-			List<MMiniprogram> list = mMiniprogramMapper.selectByExample(example);
+			List<MMiniprogram> list = miniprogramMapper.selectByExample(example);
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {
@@ -60,9 +60,10 @@ public class MiniProgramServiceImpl implements IMiniProgramService, Serializable
 			
 			MMiniprogramExample example = new MMiniprogramExample();
 			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andAppidEqualTo(appid.trim());
-			List<MMiniprogram> list = mMiniprogramMapper.selectByExample(example);
+			List<MMiniprogram> list = miniprogramMapper.selectByExample(example);
 			if (list != null && list.size() > 0) {
 				result.setData(list.get(0));
+				result.setId(list.get(0).getId());
 				result.setErrcode(Integer.valueOf(0));
 			}
 		} catch (Exception e) {

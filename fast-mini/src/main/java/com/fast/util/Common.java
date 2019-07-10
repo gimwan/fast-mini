@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fast.base.Result;
+import com.fast.base.data.entity.MUser;
+import com.fast.system.RedisCache;
 
 public class Common {
 	/**
@@ -57,6 +59,21 @@ public class Common {
 		} else {
 			return false;
 		}
+	}
+	
+	public static MUser currentUser(HttpServletRequest request) {
+		MUser user = null;
+		
+		Object object = request.getSession().getAttribute("user");
+		if (object == null) {
+			String sessionid = request.getSession().getId();
+			object = RedisCache.retake(sessionid);
+		}
+		if (object != null) {
+			user = (MUser) object;
+		} 
+		
+		return user;
 	}
 
 	/**

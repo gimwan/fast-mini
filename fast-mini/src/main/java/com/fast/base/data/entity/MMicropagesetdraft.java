@@ -9,7 +9,7 @@ public class MMicropagesetdraft {
 
     private Integer kind;
 
-    private Integer index;
+    private Integer showindex;
 
     private Byte showname;
 
@@ -55,12 +55,12 @@ public class MMicropagesetdraft {
         this.kind = kind;
     }
 
-    public Integer getIndex() {
-        return index;
+    public Integer getShowindex() {
+        return showindex;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
+    public void setShowindex(Integer showindex) {
+        this.showindex = showindex;
     }
 
     public Byte getShowname() {

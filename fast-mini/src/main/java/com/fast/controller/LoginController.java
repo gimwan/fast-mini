@@ -48,9 +48,9 @@ public class LoginController {
 			r = jsonObject.toString();
 			
 			if (result.getErrcode().intValue() == 0) {
+				request.getSession().setAttribute("user",result.getData());
 				String sessionid = request.getSession().getId();
 				RedisCache.set(sessionid, result.getData());
-				//request.getSession().setAttribute("user",result.getData());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

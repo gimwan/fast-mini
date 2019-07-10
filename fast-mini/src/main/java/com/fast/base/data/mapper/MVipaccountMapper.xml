@@ -75,7 +75,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MVipaccount" >
+  <insert id="insert" parameterType="com.fast.base.data.entity.MVipaccount" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_vipaccount (ID, Point, Deposit, 
       Memo, CreateTime, Creator, 
       ModifyTime, Modifier, UpdatedTime
@@ -85,7 +85,7 @@
       #{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MVipaccount" >
+  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MVipaccount" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into m_vipaccount
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

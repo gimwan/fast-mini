@@ -60,13 +60,11 @@ let api = new Vue({
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                 },
                 data: Qs.stringify(params)
-            })
-                .then(function (response) {
-                    common.doFunction(fn, response.data);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            }).then(function (response) {
+                common.doFunction(fn, response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
         },
         ajaxLoad: function (url, method, params, fn) {
             $.ajax({

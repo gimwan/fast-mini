@@ -16,6 +16,8 @@
 <%@ include file="common/head.jsp"%>
 <link rel="stylesheet" href="css/home.css">
 <script type="text/javascript" src="js/home.js"></script>
+<link rel="stylesheet" href="css/common/editBox.css">
+<script type="text/javascript" src="js/common/editBox.js"></script>
 </head>
 <body class="layui-layout-body">
 	<div class="layui-layout layui-layout-admin">

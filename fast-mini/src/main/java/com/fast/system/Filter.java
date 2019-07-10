@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fast.base.data.entity.MUser;
-
 public class Filter implements HandlerInterceptor {
 
 	@Override
@@ -18,8 +16,13 @@ public class Filter implements HandlerInterceptor {
 		response.setContentType("text/html;charset=UTF-8");
 
 		String url = request.getSession().getServletContext().getContextPath();
-		String sessionid = request.getSession().getId();
-		MUser user = (MUser) RedisCache.retake(sessionid);
+		
+		Object user =  request.getSession().getAttribute("user");
+		if (user == null) {
+			String sessionid = request.getSession().getId();
+			user = RedisCache.retake(sessionid);
+		}
+		
 		if (user != null) {
 			return true;
 		} else {

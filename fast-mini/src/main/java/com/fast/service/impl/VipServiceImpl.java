@@ -1,7 +1,6 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +30,16 @@ public class VipServiceImpl implements IVipService, Serializable {
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MVipMapper mVipMapper;
+	MVipMapper vipMapper;
 	
 	@Autowired
-	MVipminiMapper mVipminiMapper;
+	MVipminiMapper vipminiMapper;
 	
 	@Autowired
 	IMiniProgramService iMiniProgramService;
 	
 	@Autowired
-	MVipaccountMapper mVipaccountMapper;
+	MVipaccountMapper vipaccountMapper;
 	
 	@Override
 	public Result queryVipByOpenid(String appid, String openid) {
@@ -57,11 +56,11 @@ public class VipServiceImpl implements IVipService, Serializable {
 			}			
 			MVipminiExample example = new MVipminiExample();
 			example.createCriteria().andOpenidEqualTo(openid).andMiniprogramidEqualTo(miniprogramid);
-			List<MVipmini> list = mVipminiMapper.selectByExample(example);
+			List<MVipmini> list = vipminiMapper.selectByExample(example);
 			if (list != null && list.size() > 0) {
 				Integer vipid = list.get(0).getVipid();
 				if (vipid != null) {
-					MVip vip = mVipMapper.selectByPrimaryKey(vipid);
+					MVip vip = vipMapper.selectByPrimaryKey(vipid);
 					if (vip != null && vip.getId() != null) {
 						result.setData(vip);
 						result.setId(vip.getId());
@@ -91,11 +90,11 @@ public class VipServiceImpl implements IVipService, Serializable {
 			}			
 			MVipminiExample example = new MVipminiExample();
 			example.createCriteria().andUnionidEqualTo(unionid).andMiniprogramidEqualTo(miniprogramid);
-			List<MVipmini> list = mVipminiMapper.selectByExample(example);
+			List<MVipmini> list = vipminiMapper.selectByExample(example);
 			if (list != null && list.size() > 0) {
 				Integer vipid = list.get(0).getVipid();
 				if (vipid != null) {
-					MVip vip = mVipMapper.selectByPrimaryKey(vipid);
+					MVip vip = vipMapper.selectByPrimaryKey(vipid);
 					if (vip != null && vip.getId() != null) {
 						result.setData(vip);
 						result.setId(vip.getId());
@@ -128,11 +127,11 @@ public class VipServiceImpl implements IVipService, Serializable {
 			// 使用openid查找会员			
 			MVipminiExample example = new MVipminiExample();
 			example.createCriteria().andOpenidEqualTo(openid).andMiniprogramidEqualTo(miniprogramid);
-			List<MVipmini> list = mVipminiMapper.selectByExample(example);
+			List<MVipmini> list = vipminiMapper.selectByExample(example);
 			if (list != null && list.size() > 0) {
 				Integer vipid = list.get(0).getVipid();
 				if (vipid != null) {
-					MVip vip = mVipMapper.selectByPrimaryKey(vipid);
+					MVip vip = vipMapper.selectByPrimaryKey(vipid);
 					if (vip != null && vip.getId() != null) {
 						result.setData(vip);
 						result.setId(vip.getId());
@@ -145,11 +144,11 @@ public class VipServiceImpl implements IVipService, Serializable {
 			if (!login) {
 				example = new MVipminiExample();
 				example.createCriteria().andUnionidEqualTo(unionid).andMiniprogramidEqualTo(miniprogramid);
-				list = mVipminiMapper.selectByExample(example);
+				list = vipminiMapper.selectByExample(example);
 				if (list != null && list.size() > 0) {
 					Integer vipid = list.get(0).getVipid();
 					if (vipid != null) {
-						MVip vip = mVipMapper.selectByPrimaryKey(vipid);
+						MVip vip = vipMapper.selectByPrimaryKey(vipid);
 						if (vip != null && vip.getId() != null) {
 							result.setData(vip);
 							result.setId(vip.getId());
@@ -175,7 +174,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 			if (Common.isActive(result)) {
 				MVip vip = (MVip) result.getData();
 				if (vip != null && vip.getId() != null) {
-					MVipaccount vipaccount = mVipaccountMapper.selectByPrimaryKey(vip.getId());
+					MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(vip.getId());
 					if (vipaccount != null && vipaccount.getId() != null) {
 						result.setData(vipaccount);
 						result.setId(vipaccount.getId());
