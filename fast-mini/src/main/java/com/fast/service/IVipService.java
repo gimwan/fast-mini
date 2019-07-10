@@ -10,6 +10,12 @@ import com.fast.base.Result;
 public interface IVipService {
 	
 	/**
+	 * 查询所有会员
+	 * @return
+	 */
+	public Result vip();
+	
+	/**
 	 * 根据openid查询会员
 	 * @param appid
 	 * @param openid

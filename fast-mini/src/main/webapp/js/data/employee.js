@@ -44,22 +44,8 @@ common.bindVue = function() {
             	});
             },
             formatDate: function(jsonDate) {
-            	if (jsonDate == null || jsonDate == undefined || $.trim(jsonDate) == "") {
-					return '';
-				}
-				var year = jsonDate.year + 1900;
-				var month = jsonDate.month + 1;
-				var day = jsonDate.date;
-				// 如果得到的数字小于9要在前面加'0'
-				day = (day > 9) ? ("" + day) : ("0" + day);
-				month = (month > 9) ? ("" + month) : ("0" + month);
-				var hour = jsonDate.hours;
-				var minute = jsonDate.minutes;
-				var seconds = jsonDate.seconds;
-				hour = (hour > 9) ? ("" + hour) : ("0" + hour);
-				minute = (minute > 9) ? ("" + minute) : ("0" + minute);
-				seconds = (seconds > 9) ? ("" + seconds) : ("0" + seconds);
-				return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + seconds;
+            	let date = common.formatDate(jsonDate);
+				return date;
             }
         }
     });
@@ -134,27 +120,25 @@ function showEditBox(idx,data) {
 }
 
 function createElement(data) {
-    let id = "";
-    let code = "";
-    let name = "";
-    let sex = 1;
-    let mobilephone = "";
-    let departmentid = "";
-    let department = "";
-    let photourl = "";
-    let useflag = 1;
-    let memo = "";
+	let d = {
+		id : "",
+	    code : "",
+	    name : "",
+	    sex : 1,
+	    mobilephone : "",
+	    departmentid : "",
+	    department : "",
+	    photourl : "",
+	    useflag : 1,
+	    memo : ""
+	};
+    
     if (data != null && data != undefined && data != "") {
-        id = data.id;
-        code = data.code;
-        name = data.name;
-        mobilephone = data.mobilephone;
-        sex = data.sex;
-        departmentid = data.departmentid;
-        department = data.department;
-        photourl = data.photourl;
-        useflag = data.useflag;
-        memo = data.memo;
+    	for (const key in data) {
+            if (d.hasOwnProperty(key)) {
+            	d[key] = data[key];
+            }
+        }
     }
 	let element = "<div class=\"edit-view\">"+
 				    "<div class=\"edit-box\">"+
@@ -163,7 +147,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">ID</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"id\">"+
-				                "<input type=\"text\" value=\""+id+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"text\" value=\""+d.d+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" image=\"1\" need=\"0\" key=\"0\">"+
@@ -171,7 +155,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">头像</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"photourl\">"+
-				                "<img src=\""+photourl+"\" class=\"layui-circle-img value\"/>"+
+				                "<img src=\""+d.photourl+"\" class=\"layui-circle-img value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -179,7 +163,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">编号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"code\">"+
-				                "<input type=\"text\" value=\""+code+"\" class=\"layui-input value focus\"/>"+
+				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -187,7 +171,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">名称</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"name\">"+
-				                "<input type=\"text\" value=\""+name+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\">"+
@@ -195,7 +179,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">所属门店</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"departmentid\">"+
-				                "<input type=\"text\" data-id=\""+departmentid+"\" value=\""+department+"\" " +
+				                "<input type=\"text\" data-id=\""+d.departmentid+"\" value=\""+d.department+"\" " +
 				                		"data-url=\"./data/page?table=department\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 				            "</div>"+
@@ -205,7 +189,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">手机号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"mobilephone\">"+
-				                "<input type=\"text\" value=\""+mobilephone+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"text\" value=\""+d.mobilephone+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
@@ -214,8 +198,8 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value layui-form-item\" data-field=\"sex\">"+
 				                "<div class=\"layui-input-block\">" +
-				                	"<input type=\"radio\" name=\"sex\" value=\"1\" title=\"男\" "+(sex==1?'checked':'')+" class=\"layui-input value\">" +
-				                	"<input type=\"radio\" name=\"sex\" value=\"2\" title=\"女\" "+(sex!=1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"sex\" value=\"1\" title=\"男\" "+(d.sex==1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"sex\" value=\"2\" title=\"女\" "+(d.sex!=1?'checked':'')+" class=\"layui-input value\">" +
 				                "</div>" +
 				            "</div>"+
 				        "</div>"+
@@ -225,8 +209,8 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value layui-form-item\" data-field=\"useflag\">"+
 				                "<div class=\"layui-input-block\">" +
-				                	"<input type=\"radio\" name=\"useflag\" value=\"1\" title=\"是\" "+(useflag==1?'checked':'')+" class=\"layui-input value\">" +
-				                	"<input type=\"radio\" name=\"useflag\" value=\"0\" title=\"否\" "+(useflag!=1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"useflag\" value=\"1\" title=\"是\" "+(d.useflag==1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"useflag\" value=\"0\" title=\"否\" "+(d.useflag!=1?'checked':'')+" class=\"layui-input value\">" +
 				                "</div>" +
 				            "</div>"+
 				        "</div>"+
@@ -236,7 +220,7 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value layui-form-item\" data-field=\"memo\">"+
 				                "<div class=\"layui-input-block\">" +
-				                	"<textarea name=\"memo\" class=\"layui-textarea value\">"+memo+"</textarea>" +
+				                	"<textarea name=\"memo\" class=\"layui-textarea value\">"+d.memo+"</textarea>" +
 				                "</div>" +
 				            "</div>"+
 				        "</div>"+

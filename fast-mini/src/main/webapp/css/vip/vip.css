@@ -1,0 +1,59 @@
+.vipPage .operating {
+	margin: 0px 15px;
+}
+
+.vipPage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
+.vipPage .layui-table-view .layui-table-box .layui-table-header span {
+	font-weight: 600;
+}
+
+.vipPage .layui-table-view .layui-table-box tr .item {
+	width: 100px;
+	min-width: 100px;
+	border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 1px;
+}
+
+.vipPage .layui-table-view .layui-table-box tr .layui-nav-img {
+	width: 25px;
+    height: 25px;
+}
+
+.vipPage .layui-table-view .layui-table-box tr .photourl {
+	min-width: 70px;
+}
+
+.vipPage .layui-table-view .layui-table-box tr .code {
+	min-width: 140px;
+}
+
+.vipPage .layui-table-view .layui-table-box tr .name {
+	min-width: 160px;
+}
+
+.vipPage .layui-table-view .layui-table-box tr .mobilephone {
+	min-width: 140px;
+}
+
+.vipPage .layui-table-view .layui-table-box tr .department {
+	min-width: 160px;
+}
+
+.vipPage .layui-table-view .layui-table-box tr .memo {
+	width: 100%;
+}
+
+.vipPage .layui-table-view .layui-table-box tr .time-item {
+	min-width: 200px;
+}
+
+.vipPage .layui-table-view .layui-table-box .vip-data {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 620px;
+}
