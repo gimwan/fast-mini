@@ -1,17 +1,17 @@
-let size = [];
-let sizeVm;
+let coupon = [];
+let couponVm;
 
 common.bindVue = function() {
-    sizeVm = new Vue({
-        el : ".sizePage",
+    couponVm = new Vue({
+        el : ".couponPage",
         data : {
-            size: size
+            coupon: coupon
         },
         methods : {
             edit: function(event) {
                 if (event) {
                     let index = $(event.target).parents("tr").data("index");
-                    showEditBox(index,size[index]);
+                    showEditBox(index,coupon[index]);
                 }
             },
             add: function () {
@@ -19,7 +19,7 @@ common.bindVue = function() {
             },
             del: function () {
     			let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
-            	let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
+    			let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
             	if (id == null || id == undefined || $.trim(id) == "") {
             		common.warn("请选择删除项");
                     return false;
@@ -30,9 +30,9 @@ common.bindVue = function() {
         				var data = {};
         				data['id'] = id;
                     	common.showLoading();
-                        api.load('./size/delete','post',data, function(result) {
+                        api.load('./coupon/delete','post',data, function(result) {
                             if (result.errcode == 0) {
-                            	size.splice(deleteIndex);
+                            	coupon.splice(deleteIndex);
                                 
                                 common.tips(result.message);
                             } else {
@@ -54,12 +54,12 @@ common.bindVue = function() {
 
 function loadData() {
     common.showLoading();
-    api.load(basePath + 'data/list','post',{"table":"size"},function (result) {
+    api.load(basePath + 'data/list','post',{"table":"coupon"},function (result) {
         if (result.errcode == 0) {
             let data = result.data.records;
             if (data != null) {
                 for (let i = 0; i < data.length; i++) {
-                    size.push(data[i]);
+                    coupon.push(data[i]);
                 }
             }
         } else {
@@ -69,14 +69,70 @@ function loadData() {
     });
 }
 
+function showEditBox(idx,data) {
+	let editDiv = createElement(data);
+	
+	let boxTitle = "<label style='font-weight:600;'>修改</label>";
+	if (idx < 0) {
+		boxTitle = "<label style='font-weight:600;'>新增</label>";
+	}
+    
+    layer.open({
+        type: 1,
+        title: boxTitle,
+        content: editDiv,
+        area: ['700px', '710px'],
+        btn: ['保存','取消'],
+        btn1: function (index, layero) {
+            let data = catchBoxValue();
+            if (data == '') {
+                return;
+            }
+            common.showLoading();
+            api.load('./coupon/change','post',data, function(result) {
+                if (result.errcode == 0) {
+                	data = result.data;
+                	if (idx < 0) {
+                		coupon.push(data);
+					} else {
+						for (const key in data) {
+	                        if (coupon[idx].hasOwnProperty(key)) {
+	                        	coupon[idx][key] = data[key];
+	                        }
+	                    }
+					}
+                    
+                    layer.close(index);
+                    common.tips(result.message);
+                } else {
+                    common.error(result.message);
+                }
+                common.closeLoading();
+            });
+        },
+        success: function () {
+        	// 重新刷新form
+        	layuiForm.render();
+            var val = $(".edit-view .focus").val();
+            $(".edit-view .focus").val("").focus().val(val);
+        }
+        
+    });
+}
+
 function createElement(data) {
-	let d = {
+    let d = {
 		id : "",
-		code : "",
-		name : "",
-		useflag : 1,
-		memo : ""
-	};
+	    code : "",
+	    name : "",
+	    amount : "",
+	    enableamount : "",
+	    limitquantity : "",
+	    totalquantity : "",
+	    effectivetime : "",
+	    useflag : 1,
+	    memo : ""
+    };
     if (data != null && data != undefined && data != "") {
     	for (const key in data) {
             if (d.hasOwnProperty(key)) {
@@ -110,6 +166,46 @@ function createElement(data) {
 				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">面值</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"amount\">"+
+				                "<input type=\"text\" value=\""+d.amount+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">启用金额</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"enableamount\">"+
+				                "<input type=\"text\" value=\""+d.enableamount+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">发放总数</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"totalquantity\">"+
+				                "<input type=\"text\" value=\""+d.totalquantity+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">每人限领</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"limitquantity\">"+
+				                "<input type=\"text\" value=\""+d.limitquantity+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">有效时长（天）</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"effectivetime\">"+
+				                "<input type=\"text\" value=\""+d.effectivetime+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">是否使用</label>：</span>"+
@@ -134,55 +230,4 @@ function createElement(data) {
 				    "</div>"+
 				"</div>";
 	return element;
-}
-
-function showEditBox(idx,data) {
-	let editDiv = createElement(data);
-	
-	let boxTitle = "<label style='font-weight:600;'>修改</label>";
-	if (idx < 0) {
-		boxTitle = "<label style='font-weight:600;'>新增</label>";
-	}
-    
-    layer.open({
-        type: 1,
-        title: boxTitle,
-        content: editDiv,
-        area: ['600px', '510px'],
-        btn: ['保存','取消'],
-        btn1: function (index, layero) {
-            let data = catchBoxValue();
-            if (data == '') {
-                return;
-            }
-            common.showLoading();
-            api.load('./size/change','post',data, function(result) {
-                if (result.errcode == 0) {
-                	data = result.data;
-                	if (idx < 0) {
-                		size.push(data);
-					} else {
-						for (const key in data) {
-	                        if (size[idx].hasOwnProperty(key)) {
-	                        	size[idx][key] = data[key];
-	                        }
-	                    }
-					}
-                    
-                    layer.close(index);
-                    common.tips(result.message);
-                } else {
-                    common.error(result.message);
-                }
-                common.closeLoading();
-            });
-        },
-        success: function () {
-        	// 重新刷新form
-        	layuiForm.render();
-            var val = $(".edit-view .focus").val();
-            $(".edit-view .focus").val("").focus().val(val);
-        }
-        
-    });
 }

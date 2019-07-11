@@ -30,3 +30,12 @@ a {
 .selected {
 	background-color: #f2f2f2;
 }
+
+.pageTable {
+	height: 570px;
+}
+
+.layPage {
+    width: 100%;
+    text-align: right;
+}
