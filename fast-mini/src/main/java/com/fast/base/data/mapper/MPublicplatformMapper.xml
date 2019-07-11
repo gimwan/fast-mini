@@ -1,290 +1,302 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.fast.base.data.dao.MPublicplatformMapper" >
-  <resultMap id="BaseResultMap" type="com.fast.base.data.entity.MPublicplatform" >
-    <id column="ID" property="id" jdbcType="INTEGER" />
-    <result column="Code" property="code" jdbcType="VARCHAR" />
-    <result column="Name" property="name" jdbcType="VARCHAR" />
-    <result column="AppID" property="appid" jdbcType="VARCHAR" />
-    <result column="AppSecret" property="appsecret" jdbcType="VARCHAR" />
-    <result column="PhotoUrl" property="photourl" jdbcType="VARCHAR" />
-    <result column="UseFlag" property="useflag" jdbcType="TINYINT" />
-    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="Creator" property="creator" jdbcType="VARCHAR" />
-    <result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
-    <result column="Modifier" property="modifier" jdbcType="VARCHAR" />
-    <result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
-    <result column="Memo" property="memo" jdbcType="VARCHAR" />
-    <result column="CertPath" property="certpath" jdbcType="VARCHAR" />
-    <result column="MchID" property="mchid" jdbcType="VARCHAR" />
-    <result column="MchKey" property="mchkey" jdbcType="VARCHAR" />
-    <result column="Body" property="body" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    ID, Code, Name, AppID, AppSecret, PhotoUrl, UseFlag, CreateTime, Creator, ModifyTime, 
-    Modifier, UpdatedTime, Memo, CertPath, MchID, MchKey, Body
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fast.base.data.entity.MPublicplatformExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    'false' as QUERYID,
-    <include refid="Base_Column_List" />
-    from m_publicplatform
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from m_publicplatform
-    where ID = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from m_publicplatform
-    where ID = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.fast.base.data.entity.MPublicplatformExample" >
-    delete from m_publicplatform
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MPublicplatform" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into m_publicplatform (ID, Code, Name, 
-      AppID, AppSecret, PhotoUrl, 
-      UseFlag, CreateTime, Creator, 
-      ModifyTime, Modifier, UpdatedTime, 
-      Memo, CertPath, MchID, 
-      MchKey, Body)
-    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{appid,jdbcType=VARCHAR}, #{appsecret,jdbcType=VARCHAR}, #{photourl,jdbcType=VARCHAR}, 
-      #{useflag,jdbcType=TINYINT}, #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
-      #{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP}, 
-      #{memo,jdbcType=VARCHAR}, #{certpath,jdbcType=VARCHAR}, #{mchid,jdbcType=VARCHAR}, 
-      #{mchkey,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MPublicplatform" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into m_publicplatform
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        ID,
-      </if>
-      <if test="code != null" >
-        Code,
-      </if>
-      <if test="name != null" >
-        Name,
-      </if>
-      <if test="appid != null" >
-        AppID,
-      </if>
-      <if test="appsecret != null" >
-        AppSecret,
-      </if>
-      <if test="photourl != null" >
-        PhotoUrl,
-      </if>
-      <if test="useflag != null" >
-        UseFlag,
-      </if>
-      <if test="createtime != null" >
-        CreateTime,
-      </if>
-      <if test="creator != null" >
-        Creator,
-      </if>
-      <if test="modifytime != null" >
-        ModifyTime,
-      </if>
-      <if test="modifier != null" >
-        Modifier,
-      </if>
-      <if test="updatedtime != null" >
-        UpdatedTime,
-      </if>
-      <if test="memo != null" >
-        Memo,
-      </if>
-      <if test="certpath != null" >
-        CertPath,
-      </if>
-      <if test="mchid != null" >
-        MchID,
-      </if>
-      <if test="mchkey != null" >
-        MchKey,
-      </if>
-      <if test="body != null" >
-        Body,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="appid != null" >
-        #{appid,jdbcType=VARCHAR},
-      </if>
-      <if test="appsecret != null" >
-        #{appsecret,jdbcType=VARCHAR},
-      </if>
-      <if test="photourl != null" >
-        #{photourl,jdbcType=VARCHAR},
-      </if>
-      <if test="useflag != null" >
-        #{useflag,jdbcType=TINYINT},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="creator != null" >
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifytime != null" >
-        #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifier != null" >
-        #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="updatedtime != null" >
-        #{updatedtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="memo != null" >
-        #{memo,jdbcType=VARCHAR},
-      </if>
-      <if test="certpath != null" >
-        #{certpath,jdbcType=VARCHAR},
-      </if>
-      <if test="mchid != null" >
-        #{mchid,jdbcType=VARCHAR},
-      </if>
-      <if test="mchkey != null" >
-        #{mchkey,jdbcType=VARCHAR},
-      </if>
-      <if test="body != null" >
-        #{body,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.fast.base.data.entity.MPublicplatformExample" resultType="java.lang.Integer" >
-    select count(*) from m_publicplatform
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MPublicplatform" >
-    update m_publicplatform
-    <set >
-      <if test="code != null" >
-        Code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        Name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="appid != null" >
-        AppID = #{appid,jdbcType=VARCHAR},
-      </if>
-      <if test="appsecret != null" >
-        AppSecret = #{appsecret,jdbcType=VARCHAR},
-      </if>
-      <if test="photourl != null" >
-        PhotoUrl = #{photourl,jdbcType=VARCHAR},
-      </if>
-      <if test="useflag != null" >
-        UseFlag = #{useflag,jdbcType=TINYINT},
-      </if>
-      <if test="createtime != null" >
-        CreateTime = #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="creator != null" >
-        Creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifytime != null" >
-        ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifier != null" >
-        Modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="updatedtime != null" >
-        UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="memo != null" >
-        Memo = #{memo,jdbcType=VARCHAR},
-      </if>
-      <if test="certpath != null" >
-        CertPath = #{certpath,jdbcType=VARCHAR},
-      </if>
-      <if test="mchid != null" >
-        MchID = #{mchid,jdbcType=VARCHAR},
-      </if>
-      <if test="mchkey != null" >
-        MchKey = #{mchkey,jdbcType=VARCHAR},
-      </if>
-      <if test="body != null" >
-        Body = #{body,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MPublicplatform" >
-    update m_publicplatform
-    set Code = #{code,jdbcType=VARCHAR},
-      Name = #{name,jdbcType=VARCHAR},
-      AppID = #{appid,jdbcType=VARCHAR},
-      AppSecret = #{appsecret,jdbcType=VARCHAR},
-      PhotoUrl = #{photourl,jdbcType=VARCHAR},
-      UseFlag = #{useflag,jdbcType=TINYINT},
-      CreateTime = #{createtime,jdbcType=TIMESTAMP},
-      Creator = #{creator,jdbcType=VARCHAR},
-      ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      Modifier = #{modifier,jdbcType=VARCHAR},
-      UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-      Memo = #{memo,jdbcType=VARCHAR},
-      CertPath = #{certpath,jdbcType=VARCHAR},
-      MchID = #{mchid,jdbcType=VARCHAR},
-      MchKey = #{mchkey,jdbcType=VARCHAR},
-      Body = #{body,jdbcType=VARCHAR}
-    where ID = #{id,jdbcType=INTEGER}
-  </update>
+<mapper namespace="com.fast.base.data.dao.MPublicplatformMapper">
+	<cache type="com.fast.system.RedisCache"/>
+	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MPublicplatform">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="Code" property="code" jdbcType="VARCHAR" />
+		<result column="Name" property="name" jdbcType="VARCHAR" />
+		<result column="AppID" property="appid" jdbcType="VARCHAR" />
+		<result column="AppSecret" property="appsecret" jdbcType="VARCHAR" />
+		<result column="PhotoUrl" property="photourl" jdbcType="VARCHAR" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="Creator" property="creator" jdbcType="VARCHAR" />
+		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+		<result column="CertPath" property="certpath" jdbcType="VARCHAR" />
+		<result column="MchID" property="mchid" jdbcType="VARCHAR" />
+		<result column="MchKey" property="mchkey" jdbcType="VARCHAR" />
+		<result column="Body" property="body" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ID, Code, Name, AppID, AppSecret, PhotoUrl, UseFlag, CreateTime, Creator,
+		ModifyTime,
+		Modifier, UpdatedTime, Memo, CertPath, MchID, MchKey, Body
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fast.base.data.entity.MPublicplatformExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		'false' as QUERYID,
+		<include refid="Base_Column_List" />
+		from m_publicplatform
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from m_publicplatform
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from m_publicplatform
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.fast.base.data.entity.MPublicplatformExample">
+		delete from m_publicplatform
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.fast.base.data.entity.MPublicplatform"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_publicplatform (ID, Code, Name,
+		AppID, AppSecret, PhotoUrl,
+		UseFlag, CreateTime, Creator,
+		ModifyTime, Modifier, UpdatedTime,
+		Memo, CertPath, MchID,
+		MchKey, Body)
+		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{appid,jdbcType=VARCHAR}, #{appsecret,jdbcType=VARCHAR}, #{photourl,jdbcType=VARCHAR},
+		#{useflag,jdbcType=TINYINT}, #{createtime,jdbcType=TIMESTAMP},
+		#{creator,jdbcType=VARCHAR},
+		#{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP},
+		#{memo,jdbcType=VARCHAR}, #{certpath,jdbcType=VARCHAR},
+		#{mchid,jdbcType=VARCHAR},
+		#{mchkey,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MPublicplatform"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_publicplatform
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="code != null">
+				Code,
+			</if>
+			<if test="name != null">
+				Name,
+			</if>
+			<if test="appid != null">
+				AppID,
+			</if>
+			<if test="appsecret != null">
+				AppSecret,
+			</if>
+			<if test="photourl != null">
+				PhotoUrl,
+			</if>
+			<if test="useflag != null">
+				UseFlag,
+			</if>
+			<if test="createtime != null">
+				CreateTime,
+			</if>
+			<if test="creator != null">
+				Creator,
+			</if>
+			<if test="modifytime != null">
+				ModifyTime,
+			</if>
+			<if test="modifier != null">
+				Modifier,
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime,
+			</if>
+			<if test="memo != null">
+				Memo,
+			</if>
+			<if test="certpath != null">
+				CertPath,
+			</if>
+			<if test="mchid != null">
+				MchID,
+			</if>
+			<if test="mchkey != null">
+				MchKey,
+			</if>
+			<if test="body != null">
+				Body,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="appid != null">
+				#{appid,jdbcType=VARCHAR},
+			</if>
+			<if test="appsecret != null">
+				#{appsecret,jdbcType=VARCHAR},
+			</if>
+			<if test="photourl != null">
+				#{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="useflag != null">
+				#{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				#{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="updatedtime != null">
+				#{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="certpath != null">
+				#{certpath,jdbcType=VARCHAR},
+			</if>
+			<if test="mchid != null">
+				#{mchid,jdbcType=VARCHAR},
+			</if>
+			<if test="mchkey != null">
+				#{mchkey,jdbcType=VARCHAR},
+			</if>
+			<if test="body != null">
+				#{body,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.fast.base.data.entity.MPublicplatformExample"
+		resultType="java.lang.Integer">
+		select count(*) from m_publicplatform
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MPublicplatform">
+		update m_publicplatform
+		<set>
+			<if test="code != null">
+				Code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				Name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="appid != null">
+				AppID = #{appid,jdbcType=VARCHAR},
+			</if>
+			<if test="appsecret != null">
+				AppSecret = #{appsecret,jdbcType=VARCHAR},
+			</if>
+			<if test="photourl != null">
+				PhotoUrl = #{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="useflag != null">
+				UseFlag = #{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="createtime != null">
+				CreateTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				Creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifier != null">
+				Modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				Memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="certpath != null">
+				CertPath = #{certpath,jdbcType=VARCHAR},
+			</if>
+			<if test="mchid != null">
+				MchID = #{mchid,jdbcType=VARCHAR},
+			</if>
+			<if test="mchkey != null">
+				MchKey = #{mchkey,jdbcType=VARCHAR},
+			</if>
+			<if test="body != null">
+				Body = #{body,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MPublicplatform">
+		update m_publicplatform
+		set Code = #{code,jdbcType=VARCHAR},
+		Name = #{name,jdbcType=VARCHAR},
+		AppID = #{appid,jdbcType=VARCHAR},
+		AppSecret = #{appsecret,jdbcType=VARCHAR},
+		PhotoUrl = #{photourl,jdbcType=VARCHAR},
+		UseFlag = #{useflag,jdbcType=TINYINT},
+		CreateTime = #{createtime,jdbcType=TIMESTAMP},
+		Creator = #{creator,jdbcType=VARCHAR},
+		ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
+		Modifier = #{modifier,jdbcType=VARCHAR},
+		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+		Memo = #{memo,jdbcType=VARCHAR},
+		CertPath = #{certpath,jdbcType=VARCHAR},
+		MchID = #{mchid,jdbcType=VARCHAR},
+		MchKey = #{mchkey,jdbcType=VARCHAR},
+		Body = #{body,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>

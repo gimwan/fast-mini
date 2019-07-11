@@ -69,12 +69,12 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			Date now = new Date();
 			vip = resetVip(vip, now);
 			// 默认会员类别
-			if (vip.getType() == null) {
+			if (vip.getTypeid() == null) {
 				MViptypeExample example = new MViptypeExample();
 				example.createCriteria().andDefaultflagEqualTo(Byte.valueOf("1"));
 				List<MViptype> list = mViptypeMapper.selectByExample(example);
 				if (list != null && list.size() > 0) {
-					vip.setType(list.get(0).getId());
+					vip.setTypeid(list.get(0).getId());
 				} else {
 					result.setMessage("无默认会员类别");
 					return result;
@@ -136,8 +136,8 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			if (Common.isEmpty(mVip.getCity())) {
 				mVip.setCity(vip.getCity());
 			}
-			if (Common.isEmpty(String.valueOf(mVip.getRecommender()))) {
-				mVip.setRecommender(vip.getRecommender());
+			if (Common.isEmpty(String.valueOf(mVip.getRecommenderid()))) {
+				mVip.setRecommenderid(vip.getRecommenderid());
 			}
 			if (Common.isEmpty(String.valueOf(mVip.getDepartmentid()))) {
 				mVip.setDepartmentid(vip.getDepartmentid());

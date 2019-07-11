@@ -1,8 +1,12 @@
 package com.fast.base.data.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class MPattern {
+public class MPattern implements Serializable {
+	
+	private static final long serialVersionUID = 71148004875517941L;
+	
     private Integer id;
 
     private String code;

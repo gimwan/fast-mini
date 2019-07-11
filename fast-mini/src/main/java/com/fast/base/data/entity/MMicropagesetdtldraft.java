@@ -1,6 +1,11 @@
 package com.fast.base.data.entity;
 
-public class MMicropagesetdtldraft {
+import java.io.Serializable;
+
+public class MMicropagesetdtldraft implements Serializable {
+	
+	private static final long serialVersionUID = 71148004875517941L;
+	
     private Integer id;
 
     private Integer micropagesetid;

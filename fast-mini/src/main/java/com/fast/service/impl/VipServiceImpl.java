@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +12,14 @@ import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.entity.MVip;
+import com.fast.base.data.entity.MVipExample;
 import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipmini;
 import com.fast.base.data.entity.MVipminiExample;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipService;
 import com.fast.system.log.FastLog;
+import com.fast.util.BeanUtil;
 import com.fast.util.Common;
 
 /**
@@ -40,6 +43,25 @@ public class VipServiceImpl implements IVipService, Serializable {
 	
 	@Autowired
 	MVipaccountMapper vipaccountMapper;
+	
+	@Override
+	public Result vip() {
+		Result result = new Result();
+
+		try {
+			MVipExample example = new MVipExample();
+			example.setOrderByClause("createtime desc");
+			List<MVip> list = vipMapper.selectByExample(example);
+			List<HashMap<String, Object>> data = BeanUtil.toMapList(list);
+			result.setErrcode(0);
+			result.setData(data);
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipServiceImpl.vip报错：", e);
+		}
+
+		return result;
+	}
 	
 	@Override
 	public Result queryVipByOpenid(String appid, String openid) {

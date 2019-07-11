@@ -1085,63 +1085,63 @@ public class MVipExample {
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderIsNull() {
-            addCriterion("Recommender is null");
+        public Criteria andRecommenderidIsNull() {
+            addCriterion("RecommenderID is null");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderIsNotNull() {
-            addCriterion("Recommender is not null");
+        public Criteria andRecommenderidIsNotNull() {
+            addCriterion("RecommenderID is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderEqualTo(Integer value) {
-            addCriterion("Recommender =", value, "recommender");
+        public Criteria andRecommenderidEqualTo(Integer value) {
+            addCriterion("RecommenderID =", value, "recommenderid");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderNotEqualTo(Integer value) {
-            addCriterion("Recommender <>", value, "recommender");
+        public Criteria andRecommenderidNotEqualTo(Integer value) {
+            addCriterion("RecommenderID <>", value, "recommenderid");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderGreaterThan(Integer value) {
-            addCriterion("Recommender >", value, "recommender");
+        public Criteria andRecommenderidGreaterThan(Integer value) {
+            addCriterion("RecommenderID >", value, "recommenderid");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderGreaterThanOrEqualTo(Integer value) {
-            addCriterion("Recommender >=", value, "recommender");
+        public Criteria andRecommenderidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("RecommenderID >=", value, "recommenderid");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderLessThan(Integer value) {
-            addCriterion("Recommender <", value, "recommender");
+        public Criteria andRecommenderidLessThan(Integer value) {
+            addCriterion("RecommenderID <", value, "recommenderid");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderLessThanOrEqualTo(Integer value) {
-            addCriterion("Recommender <=", value, "recommender");
+        public Criteria andRecommenderidLessThanOrEqualTo(Integer value) {
+            addCriterion("RecommenderID <=", value, "recommenderid");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderIn(List<Integer> values) {
-            addCriterion("Recommender in", values, "recommender");
+        public Criteria andRecommenderidIn(List<Integer> values) {
+            addCriterion("RecommenderID in", values, "recommenderid");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderNotIn(List<Integer> values) {
-            addCriterion("Recommender not in", values, "recommender");
+        public Criteria andRecommenderidNotIn(List<Integer> values) {
+            addCriterion("RecommenderID not in", values, "recommenderid");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderBetween(Integer value1, Integer value2) {
-            addCriterion("Recommender between", value1, value2, "recommender");
+        public Criteria andRecommenderidBetween(Integer value1, Integer value2) {
+            addCriterion("RecommenderID between", value1, value2, "recommenderid");
             return (Criteria) this;
         }
 
-        public Criteria andRecommenderNotBetween(Integer value1, Integer value2) {
-            addCriterion("Recommender not between", value1, value2, "recommender");
+        public Criteria andRecommenderidNotBetween(Integer value1, Integer value2) {
+            addCriterion("RecommenderID not between", value1, value2, "recommenderid");
             return (Criteria) this;
         }
 
@@ -1905,63 +1905,63 @@ public class MVipExample {
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNull() {
-            addCriterion("Type is null");
+        public Criteria andTypeidIsNull() {
+            addCriterion("TypeID is null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNotNull() {
-            addCriterion("Type is not null");
+        public Criteria andTypeidIsNotNull() {
+            addCriterion("TypeID is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeEqualTo(Integer value) {
-            addCriterion("Type =", value, "type");
+        public Criteria andTypeidEqualTo(Integer value) {
+            addCriterion("TypeID =", value, "typeid");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotEqualTo(Integer value) {
-            addCriterion("Type <>", value, "type");
+        public Criteria andTypeidNotEqualTo(Integer value) {
+            addCriterion("TypeID <>", value, "typeid");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThan(Integer value) {
-            addCriterion("Type >", value, "type");
+        public Criteria andTypeidGreaterThan(Integer value) {
+            addCriterion("TypeID >", value, "typeid");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("Type >=", value, "type");
+        public Criteria andTypeidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("TypeID >=", value, "typeid");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThan(Integer value) {
-            addCriterion("Type <", value, "type");
+        public Criteria andTypeidLessThan(Integer value) {
+            addCriterion("TypeID <", value, "typeid");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThanOrEqualTo(Integer value) {
-            addCriterion("Type <=", value, "type");
+        public Criteria andTypeidLessThanOrEqualTo(Integer value) {
+            addCriterion("TypeID <=", value, "typeid");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIn(List<Integer> values) {
-            addCriterion("Type in", values, "type");
+        public Criteria andTypeidIn(List<Integer> values) {
+            addCriterion("TypeID in", values, "typeid");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotIn(List<Integer> values) {
-            addCriterion("Type not in", values, "type");
+        public Criteria andTypeidNotIn(List<Integer> values) {
+            addCriterion("TypeID not in", values, "typeid");
             return (Criteria) this;
         }
 
-        public Criteria andTypeBetween(Integer value1, Integer value2) {
-            addCriterion("Type between", value1, value2, "type");
+        public Criteria andTypeidBetween(Integer value1, Integer value2) {
+            addCriterion("TypeID between", value1, value2, "typeid");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotBetween(Integer value1, Integer value2) {
-            addCriterion("Type not between", value1, value2, "type");
+        public Criteria andTypeidNotBetween(Integer value1, Integer value2) {
+            addCriterion("TypeID not between", value1, value2, "typeid");
             return (Criteria) this;
         }
     }

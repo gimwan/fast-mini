@@ -140,7 +140,7 @@ public class Vip extends MiniMaster {
 			if (Common.isEmpty(rcvipid)) {
 				rcvipid = null;
 			} else {
-				vip.setRecommender(Integer.valueOf(rcvipid));
+				vip.setRecommenderid(Integer.valueOf(rcvipid));
 			}			
 			if (Common.isEmpty(rcdepartmentid)) {
 				rcdepartmentid = null;

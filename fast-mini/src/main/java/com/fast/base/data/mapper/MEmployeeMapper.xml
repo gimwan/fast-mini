@@ -1,268 +1,280 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.fast.base.data.dao.MEmployeeMapper" >
-  <resultMap id="BaseResultMap" type="com.fast.base.data.entity.MEmployee" >
-    <id column="ID" property="id" jdbcType="INTEGER" />
-    <result column="Code" property="code" jdbcType="VARCHAR" />
-    <result column="Name" property="name" jdbcType="VARCHAR" />
-    <result column="Sex" property="sex" jdbcType="TINYINT" />
-    <result column="PhotoUrl" property="photourl" jdbcType="VARCHAR" />
-    <result column="DepartmentID" property="departmentid" jdbcType="INTEGER" />
-    <result column="MobilePhone" property="mobilephone" jdbcType="VARCHAR" />
-    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="Creator" property="creator" jdbcType="VARCHAR" />
-    <result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
-    <result column="Modifier" property="modifier" jdbcType="VARCHAR" />
-    <result column="UserID" property="userid" jdbcType="VARCHAR" />
-    <result column="UseFlag" property="useflag" jdbcType="TINYINT" />
-    <result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
-    <result column="Memo" property="memo" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    ID, Code, Name, Sex, PhotoUrl, DepartmentID, MobilePhone, CreateTime, Creator, ModifyTime, 
-    Modifier, UserID, UseFlag, UpdatedTime, Memo
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fast.base.data.entity.MEmployeeExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    'false' as QUERYID,
-    <include refid="Base_Column_List" />
-    from m_employee
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from m_employee
-    where ID = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from m_employee
-    where ID = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.fast.base.data.entity.MEmployeeExample" >
-    delete from m_employee
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MEmployee" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into m_employee (ID, Code, Name, 
-      Sex, PhotoUrl, DepartmentID, 
-      MobilePhone, CreateTime, Creator, 
-      ModifyTime, Modifier, UserID, 
-      UseFlag, UpdatedTime, Memo
-      )
-    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{sex,jdbcType=TINYINT}, #{photourl,jdbcType=VARCHAR}, #{departmentid,jdbcType=INTEGER}, 
-      #{mobilephone,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
-      #{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, 
-      #{useflag,jdbcType=TINYINT}, #{updatedtime,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MEmployee" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into m_employee
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        ID,
-      </if>
-      <if test="code != null" >
-        Code,
-      </if>
-      <if test="name != null" >
-        Name,
-      </if>
-      <if test="sex != null" >
-        Sex,
-      </if>
-      <if test="photourl != null" >
-        PhotoUrl,
-      </if>
-      <if test="departmentid != null" >
-        DepartmentID,
-      </if>
-      <if test="mobilephone != null" >
-        MobilePhone,
-      </if>
-      <if test="createtime != null" >
-        CreateTime,
-      </if>
-      <if test="creator != null" >
-        Creator,
-      </if>
-      <if test="modifytime != null" >
-        ModifyTime,
-      </if>
-      <if test="modifier != null" >
-        Modifier,
-      </if>
-      <if test="userid != null" >
-        UserID,
-      </if>
-      <if test="useflag != null" >
-        UseFlag,
-      </if>
-      <if test="updatedtime != null" >
-        UpdatedTime,
-      </if>
-      <if test="memo != null" >
-        Memo,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="sex != null" >
-        #{sex,jdbcType=TINYINT},
-      </if>
-      <if test="photourl != null" >
-        #{photourl,jdbcType=VARCHAR},
-      </if>
-      <if test="departmentid != null" >
-        #{departmentid,jdbcType=INTEGER},
-      </if>
-      <if test="mobilephone != null" >
-        #{mobilephone,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="creator != null" >
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifytime != null" >
-        #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifier != null" >
-        #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="userid != null" >
-        #{userid,jdbcType=VARCHAR},
-      </if>
-      <if test="useflag != null" >
-        #{useflag,jdbcType=TINYINT},
-      </if>
-      <if test="updatedtime != null" >
-        #{updatedtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="memo != null" >
-        #{memo,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.fast.base.data.entity.MEmployeeExample" resultType="java.lang.Integer" >
-    select count(*) from m_employee
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MEmployee" >
-    update m_employee
-    <set >
-      <if test="code != null" >
-        Code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        Name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="sex != null" >
-        Sex = #{sex,jdbcType=TINYINT},
-      </if>
-      <if test="photourl != null" >
-        PhotoUrl = #{photourl,jdbcType=VARCHAR},
-      </if>
-      <if test="departmentid != null" >
-        DepartmentID = #{departmentid,jdbcType=INTEGER},
-      </if>
-      <if test="mobilephone != null" >
-        MobilePhone = #{mobilephone,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        CreateTime = #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="creator != null" >
-        Creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifytime != null" >
-        ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifier != null" >
-        Modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="userid != null" >
-        UserID = #{userid,jdbcType=VARCHAR},
-      </if>
-      <if test="useflag != null" >
-        UseFlag = #{useflag,jdbcType=TINYINT},
-      </if>
-      <if test="updatedtime != null" >
-        UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="memo != null" >
-        Memo = #{memo,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MEmployee" >
-    update m_employee
-    set Code = #{code,jdbcType=VARCHAR},
-      Name = #{name,jdbcType=VARCHAR},
-      Sex = #{sex,jdbcType=TINYINT},
-      PhotoUrl = #{photourl,jdbcType=VARCHAR},
-      DepartmentID = #{departmentid,jdbcType=INTEGER},
-      MobilePhone = #{mobilephone,jdbcType=VARCHAR},
-      CreateTime = #{createtime,jdbcType=TIMESTAMP},
-      Creator = #{creator,jdbcType=VARCHAR},
-      ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      Modifier = #{modifier,jdbcType=VARCHAR},
-      UserID = #{userid,jdbcType=VARCHAR},
-      UseFlag = #{useflag,jdbcType=TINYINT},
-      UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-      Memo = #{memo,jdbcType=VARCHAR}
-    where ID = #{id,jdbcType=INTEGER}
-  </update>
+<mapper namespace="com.fast.base.data.dao.MEmployeeMapper">
+	<cache type="com.fast.system.RedisCache"/>
+	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MEmployee">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="Code" property="code" jdbcType="VARCHAR" />
+		<result column="Name" property="name" jdbcType="VARCHAR" />
+		<result column="Sex" property="sex" jdbcType="TINYINT" />
+		<result column="PhotoUrl" property="photourl" jdbcType="VARCHAR" />
+		<result column="DepartmentID" property="departmentid" jdbcType="INTEGER" />
+		<result column="MobilePhone" property="mobilephone" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="Creator" property="creator" jdbcType="VARCHAR" />
+		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="UserID" property="userid" jdbcType="VARCHAR" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ID, Code, Name, Sex, PhotoUrl, DepartmentID, MobilePhone, CreateTime,
+		Creator, ModifyTime,
+		Modifier, UserID, UseFlag, UpdatedTime, Memo
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fast.base.data.entity.MEmployeeExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		'false' as QUERYID,
+		<include refid="Base_Column_List" />
+		from m_employee
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from m_employee
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from m_employee
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.fast.base.data.entity.MEmployeeExample">
+		delete from m_employee
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.fast.base.data.entity.MEmployee"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_employee (ID, Code, Name,
+		Sex, PhotoUrl, DepartmentID,
+		MobilePhone, CreateTime, Creator,
+		ModifyTime, Modifier, UserID,
+		UseFlag, UpdatedTime, Memo
+		)
+		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{sex,jdbcType=TINYINT}, #{photourl,jdbcType=VARCHAR}, #{departmentid,jdbcType=INTEGER},
+		#{mobilephone,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
+		#{creator,jdbcType=VARCHAR},
+		#{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR},
+		#{useflag,jdbcType=TINYINT}, #{updatedtime,jdbcType=TIMESTAMP},
+		#{memo,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MEmployee"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_employee
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="code != null">
+				Code,
+			</if>
+			<if test="name != null">
+				Name,
+			</if>
+			<if test="sex != null">
+				Sex,
+			</if>
+			<if test="photourl != null">
+				PhotoUrl,
+			</if>
+			<if test="departmentid != null">
+				DepartmentID,
+			</if>
+			<if test="mobilephone != null">
+				MobilePhone,
+			</if>
+			<if test="createtime != null">
+				CreateTime,
+			</if>
+			<if test="creator != null">
+				Creator,
+			</if>
+			<if test="modifytime != null">
+				ModifyTime,
+			</if>
+			<if test="modifier != null">
+				Modifier,
+			</if>
+			<if test="userid != null">
+				UserID,
+			</if>
+			<if test="useflag != null">
+				UseFlag,
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime,
+			</if>
+			<if test="memo != null">
+				Memo,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=TINYINT},
+			</if>
+			<if test="photourl != null">
+				#{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="departmentid != null">
+				#{departmentid,jdbcType=INTEGER},
+			</if>
+			<if test="mobilephone != null">
+				#{mobilephone,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				#{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="useflag != null">
+				#{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="updatedtime != null">
+				#{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.fast.base.data.entity.MEmployeeExample"
+		resultType="java.lang.Integer">
+		select count(*) from m_employee
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MEmployee">
+		update m_employee
+		<set>
+			<if test="code != null">
+				Code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				Name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				Sex = #{sex,jdbcType=TINYINT},
+			</if>
+			<if test="photourl != null">
+				PhotoUrl = #{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="departmentid != null">
+				DepartmentID = #{departmentid,jdbcType=INTEGER},
+			</if>
+			<if test="mobilephone != null">
+				MobilePhone = #{mobilephone,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				CreateTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				Creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifier != null">
+				Modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				UserID = #{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="useflag != null">
+				UseFlag = #{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="memo != null">
+				Memo = #{memo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MEmployee">
+		update m_employee
+		set Code = #{code,jdbcType=VARCHAR},
+		Name = #{name,jdbcType=VARCHAR},
+		Sex = #{sex,jdbcType=TINYINT},
+		PhotoUrl = #{photourl,jdbcType=VARCHAR},
+		DepartmentID = #{departmentid,jdbcType=INTEGER},
+		MobilePhone = #{mobilephone,jdbcType=VARCHAR},
+		CreateTime = #{createtime,jdbcType=TIMESTAMP},
+		Creator = #{creator,jdbcType=VARCHAR},
+		ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
+		Modifier = #{modifier,jdbcType=VARCHAR},
+		UserID = #{userid,jdbcType=VARCHAR},
+		UseFlag = #{useflag,jdbcType=TINYINT},
+		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+		Memo = #{memo,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>

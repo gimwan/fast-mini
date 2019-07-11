@@ -1,8 +1,12 @@
 package com.fast.base.data.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class MVip {
+public class MVip implements Serializable {
+	
+	private static final long serialVersionUID = 71148004875517941L;
+	
     private Integer id;
 
     private String code;
@@ -33,7 +37,7 @@ public class MVip {
 
     private Integer departmentid;
 
-    private Integer recommender;
+    private Integer recommenderid;
 
     private Byte source;
 
@@ -59,7 +63,7 @@ public class MVip {
 
     private Byte useflag;
 
-    private Integer type;
+    private Integer typeid;
 
     public Integer getId() {
         return id;
@@ -181,12 +185,12 @@ public class MVip {
         this.departmentid = departmentid;
     }
 
-    public Integer getRecommender() {
-        return recommender;
+    public Integer getRecommenderid() {
+        return recommenderid;
     }
 
-    public void setRecommender(Integer recommender) {
-        this.recommender = recommender;
+    public void setRecommenderid(Integer recommenderid) {
+        this.recommenderid = recommenderid;
     }
 
     public Byte getSource() {
@@ -285,11 +289,11 @@ public class MVip {
         this.useflag = useflag;
     }
 
-    public Integer getType() {
-        return type;
+    public Integer getTypeid() {
+        return typeid;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setTypeid(Integer typeid) {
+        this.typeid = typeid;
     }
 }

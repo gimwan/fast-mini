@@ -2,7 +2,6 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MVip;
 import com.fast.base.data.entity.MVipExample;
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -27,5 +26,4 @@ public interface MVipMapper {
     int updateByPrimaryKeySelective(MVip record);
 
     int updateByPrimaryKey(MVip record);
-    
 }

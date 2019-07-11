@@ -67,7 +67,7 @@ let menu = [
             },
             {
                 name: '会员档案',
-                link: ''
+                link: 'vip'
             }
         ]
     },

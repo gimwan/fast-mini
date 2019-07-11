@@ -1,162 +1,171 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fast.base.data.dao.MVipminiMapper">
-  <resultMap id="BaseResultMap" type="com.fast.base.data.entity.MVipmini">
-    <id column="ID" jdbcType="INTEGER" property="id" />
-    <result column="MiniProgramID" jdbcType="INTEGER" property="miniprogramid" />
-    <result column="OpenID" jdbcType="VARCHAR" property="openid" />
-    <result column="UnionID" jdbcType="VARCHAR" property="unionid" />
-    <result column="VipID" jdbcType="INTEGER" property="vipid" />
-    <result column="UpdatedTime" jdbcType="TIMESTAMP" property="updatedtime" />
-  </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List">
-    ID, MiniProgramID, OpenID, UnionID, VipID, UpdatedTime
-  </sql>
-  <select id="selectByExample" parameterType="com.fast.base.data.entity.MVipminiExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    'false' as QUERYID,
-    <include refid="Base_Column_List" />
-    from m_vipmini
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from m_vipmini
-    where ID = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from m_vipmini
-    where ID = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.fast.base.data.entity.MVipminiExample">
-    delete from m_vipmini
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MVipmini" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into m_vipmini (ID, MiniProgramID, OpenID, 
-      UnionID, VipID, UpdatedTime
-      )
-    values (#{id,jdbcType=INTEGER}, #{miniprogramid,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, 
-      #{unionid,jdbcType=VARCHAR}, #{vipid,jdbcType=INTEGER}, #{updatedtime,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MVipmini" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    insert into m_vipmini
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        ID,
-      </if>
-      <if test="miniprogramid != null">
-        MiniProgramID,
-      </if>
-      <if test="openid != null">
-        OpenID,
-      </if>
-      <if test="unionid != null">
-        UnionID,
-      </if>
-      <if test="vipid != null">
-        VipID,
-      </if>
-      <if test="updatedtime != null">
-        UpdatedTime,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="miniprogramid != null">
-        #{miniprogramid,jdbcType=INTEGER},
-      </if>
-      <if test="openid != null">
-        #{openid,jdbcType=VARCHAR},
-      </if>
-      <if test="unionid != null">
-        #{unionid,jdbcType=VARCHAR},
-      </if>
-      <if test="vipid != null">
-        #{vipid,jdbcType=INTEGER},
-      </if>
-      <if test="updatedtime != null">
-        #{updatedtime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.fast.base.data.entity.MVipminiExample" resultType="java.lang.Long">
-    select count(*) from m_vipmini
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MVipmini">
-    update m_vipmini
-    <set>
-      <if test="miniprogramid != null">
-        MiniProgramID = #{miniprogramid,jdbcType=INTEGER},
-      </if>
-      <if test="openid != null">
-        OpenID = #{openid,jdbcType=VARCHAR},
-      </if>
-      <if test="unionid != null">
-        UnionID = #{unionid,jdbcType=VARCHAR},
-      </if>
-      <if test="vipid != null">
-        VipID = #{vipid,jdbcType=INTEGER},
-      </if>
-      <if test="updatedtime != null">
-        UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MVipmini">
-    update m_vipmini
-    set MiniProgramID = #{miniprogramid,jdbcType=INTEGER},
-      OpenID = #{openid,jdbcType=VARCHAR},
-      UnionID = #{unionid,jdbcType=VARCHAR},
-      VipID = #{vipid,jdbcType=INTEGER},
-      UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP}
-    where ID = #{id,jdbcType=INTEGER}
-  </update>
+	<cache type="com.fast.system.RedisCache"/>
+	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MVipmini">
+		<id column="ID" jdbcType="INTEGER" property="id" />
+		<result column="MiniProgramID" jdbcType="INTEGER" property="miniprogramid" />
+		<result column="OpenID" jdbcType="VARCHAR" property="openid" />
+		<result column="UnionID" jdbcType="VARCHAR" property="unionid" />
+		<result column="VipID" jdbcType="INTEGER" property="vipid" />
+		<result column="UpdatedTime" jdbcType="TIMESTAMP" property="updatedtime" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem"
+										open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ID, MiniProgramID, OpenID, UnionID, VipID, UpdatedTime
+	</sql>
+	<select id="selectByExample" parameterType="com.fast.base.data.entity.MVipminiExample"
+		resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		'false' as QUERYID,
+		<include refid="Base_Column_List" />
+		from m_vipmini
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from m_vipmini
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from m_vipmini
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.fast.base.data.entity.MVipminiExample">
+		delete from m_vipmini
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.fast.base.data.entity.MVipmini"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_vipmini (ID, MiniProgramID, OpenID,
+		UnionID, VipID, UpdatedTime
+		)
+		values (#{id,jdbcType=INTEGER}, #{miniprogramid,jdbcType=INTEGER},
+		#{openid,jdbcType=VARCHAR},
+		#{unionid,jdbcType=VARCHAR}, #{vipid,jdbcType=INTEGER}, #{updatedtime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MVipmini"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_vipmini
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="miniprogramid != null">
+				MiniProgramID,
+			</if>
+			<if test="openid != null">
+				OpenID,
+			</if>
+			<if test="unionid != null">
+				UnionID,
+			</if>
+			<if test="vipid != null">
+				VipID,
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="miniprogramid != null">
+				#{miniprogramid,jdbcType=INTEGER},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="unionid != null">
+				#{unionid,jdbcType=VARCHAR},
+			</if>
+			<if test="vipid != null">
+				#{vipid,jdbcType=INTEGER},
+			</if>
+			<if test="updatedtime != null">
+				#{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.fast.base.data.entity.MVipminiExample"
+		resultType="java.lang.Long">
+		select count(*) from m_vipmini
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MVipmini">
+		update m_vipmini
+		<set>
+			<if test="miniprogramid != null">
+				MiniProgramID = #{miniprogramid,jdbcType=INTEGER},
+			</if>
+			<if test="openid != null">
+				OpenID = #{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="unionid != null">
+				UnionID = #{unionid,jdbcType=VARCHAR},
+			</if>
+			<if test="vipid != null">
+				VipID = #{vipid,jdbcType=INTEGER},
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MVipmini">
+		update m_vipmini
+		set MiniProgramID = #{miniprogramid,jdbcType=INTEGER},
+		OpenID = #{openid,jdbcType=VARCHAR},
+		UnionID = #{unionid,jdbcType=VARCHAR},
+		VipID = #{vipid,jdbcType=INTEGER},
+		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>
