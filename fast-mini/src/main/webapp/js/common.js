@@ -2,13 +2,15 @@ let layer;
 let layuiElement;
 let layuiForm;
 let layuiUpload;
+let layPage ;
 let loadIndex;
 let basePath = $("base").attr("href");
 
-layui.use(['layer', 'element', 'form', 'upload'], function () {
+layui.use(['layer', 'element', 'form', 'upload', 'laypage'], function () {
     layer = layui.layer;
     layuiElement = layui.element;
     layuiForm = layui.form;
+    layPage = layui.laypage;
     layuiUpload = layui.upload;
 });
 

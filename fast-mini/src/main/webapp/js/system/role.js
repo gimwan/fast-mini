@@ -21,7 +21,7 @@ common.bindVue = function() {
             	let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
             	let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
             	if (id == null || id == undefined || $.trim(id) == "") {
-            		common.warn("请先选择要删除项");
+            		common.warn("请选择删除项");
                     return false;
 				}
             	layer.confirm('确定删除？', {

@@ -68,6 +68,10 @@ let menu = [
             {
                 name: '会员档案',
                 link: 'vip'
+            },
+            {
+                name: '优惠券',
+                link: 'coupon'
             }
         ]
     },
@@ -201,7 +205,39 @@ function optionView(data) {
 	return view;
 }
 
-//定义一个标志位
+let dataPage;
+function pageConfig(page, fn) {
+	let count = 15;
+	let limit = 15;
+	let pageNow = 1;
+	if (page != null && page != undefined) {
+		count = page.rowCount;
+		pageNow = page.pageNow;
+	}
+	if (pageNow == 1) {
+		dataPage = layPage;
+	}
+	
+	dataPage.render({
+		elem : 'layPage',
+		count : count,
+		limit : limit,
+		jump: function(obj){
+			if (!!fn) {
+                try {
+                    let func = eval(fn);
+                    if (func && typeof (func) == "function") {
+                        func();
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+		}
+	});
+}
+
+// 定义一个标志位
 let isShow = true;
 $('.kit-side-fold').click(function () {
     //选择出所有的span，并判断是不是hidden

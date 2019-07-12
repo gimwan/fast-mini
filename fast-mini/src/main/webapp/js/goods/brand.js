@@ -21,7 +21,7 @@ common.bindVue = function() {
     			let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
     			let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
             	if (id == null || id == undefined || $.trim(id) == "") {
-            		common.warn("请先选择要删除项");
+            		common.warn("请选择删除项");
                     return false;
 				}
             	layer.confirm('确定删除？', {
@@ -49,6 +49,7 @@ common.bindVue = function() {
             }
         }
     });
+    pageConfig();
     loadData();
 }
 
@@ -56,12 +57,16 @@ function loadData() {
     common.showLoading();
     api.load(basePath + 'data/list','post',{"table":"brand"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data.records;
-            if (data != null) {
-                for (let i = 0; i < data.length; i++) {
-                    brand.push(data[i]);
+        	let pageView = result.data;
+            let data = pageView.records;
+            brand.length = 0;
+            pageConfig(pageView, function() {
+            	if (data != null) {
+                    for (let i = 0; i < data.length; i++) {
+                        brand.push(data[i]);
+                    }
                 }
-            }
+			});
         } else {
             common.error('数据加载失败');
         }
