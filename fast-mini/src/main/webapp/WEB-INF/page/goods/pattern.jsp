@@ -6,7 +6,6 @@
 		<ul class="layui-tab-title">
 		    <li class="layui-this">版型</li>
 		</ul>
-		<div class="layui-tab-content"></div>
 	</div>
 	
 	<div class="operating">
@@ -73,7 +72,7 @@
 								</thead>
 							</table>
 						</div>
-						<div class="layui-table-body layui-table-main pattern-data" name="pattern-data">
+						<div class="layui-table-body layui-table-main pattern-data pageTable" name="pattern-data">
 							<table cellspacing="0" cellpadding="0" border="0"
 								class="layui-table">
 								<tbody>
@@ -112,6 +111,7 @@
 						</div>
 					</div>
 				</div>
+				<div class="layPage" id="layPage"></div>
 			</div>
 		</div>
 	</div>

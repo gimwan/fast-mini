@@ -6,7 +6,6 @@
 		<ul class="layui-tab-title">
 		    <li class="layui-this">门店资料</li>
 		</ul>
-		<div class="layui-tab-content"></div>
 	</div> 
 	
 	<div class="operating">
@@ -73,7 +72,7 @@
 								</thead>
 							</table>
 						</div>
-						<div class="layui-table-body layui-table-main department-data" name="department-data">
+						<div class="layui-table-body layui-table-main department-data pageTable" name="department-data">
 							<table cellspacing="0" cellpadding="0" border="0"
 								class="layui-table">
 								<tbody>
@@ -112,6 +111,7 @@
 						</div>
 					</div>
 				</div>
+				<div class="layPage" id="layPage"></div>
 			</div>
 		</div>
 	</div>

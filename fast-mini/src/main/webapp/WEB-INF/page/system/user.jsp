@@ -6,7 +6,6 @@
 		<ul class="layui-tab-title">
 		    <li class="layui-this">用户管理</li>
 		</ul>
-		<div class="layui-tab-content"></div>
 	</div>
 	
 	<div class="operating">
@@ -83,14 +82,14 @@
 								</thead>
 							</table>
 						</div>
-						<div class="layui-table-body layui-table-main user-data" name="user-data">
+						<div class="layui-table-body layui-table-main user-data pageTable" name="user-data">
 							<table cellspacing="0" cellpadding="0" border="0"
 								class="layui-table">
 								<tbody>
 									<tr v-bind:data-id="u.id" v-bind:data-index="index" class="" v-for="(u, index) in user">
 										<td class="item photourl">
 											<div class="layui-table-cell laytable-cell-1-0-0">
-												<img v-bind:src="u.photourl" class="layui-nav-img">
+												<img v-bind:src="u.photourl" onerror="defaultImg(this)" class="layui-nav-img circular">
 											</div>
 										</td>
 										<td class="item code">
@@ -130,6 +129,7 @@
 						</div>
 					</div>
 				</div>
+				<div class="layPage" id="layPage"></div>
 			</div>
 		</div>
 	</div>

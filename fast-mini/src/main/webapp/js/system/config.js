@@ -80,9 +80,7 @@ function showEditBox(idx,id,name,val) {
                 if (result.errcode == 0) {
                 	data = result.data;
                     for (const key in data) {
-                        if (config[idx].hasOwnProperty(key)) {
-                            config[idx][key] = data[key];
-                        }
+                    	config[idx][key] = data[key];
                     }
                     layer.close(index);
                     common.tips(result.message);

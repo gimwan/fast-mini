@@ -58,20 +58,34 @@ function loadData() {
     api.load(basePath + 'data/list','post',{"table":"brand"},function (result) {
         if (result.errcode == 0) {
         	let pageView = result.data;
-            let data = pageView.records;
-            brand.length = 0;
-            pageConfig(pageView, function() {
-            	if (data != null) {
-                    for (let i = 0; i < data.length; i++) {
-                        brand.push(data[i]);
-                    }
-                }
+        	setData(pageView);
+            pageConfig(pageView, function(pageno) {
+            	loadPageData(pageno);
 			});
         } else {
             common.error('数据加载失败');
         }
         common.closeLoading();
     });
+}
+
+function loadPageData(pageno) {
+	common.showLoading();
+	api.load(basePath + 'data/list','post',{"table":"brand","pageno":pageno},function (result) {
+		let pageView = result.data;
+		setData(pageView);
+		common.closeLoading();
+	});
+}
+
+function setData(pageView) {
+	let data = pageView.records;
+	brand.length = 0;
+	if (data != null) {
+        for (let i = 0; i < data.length; i++) {
+        	brand.push(data[i]);
+        }
+    }
 }
 
 function createElement(data) {
@@ -168,9 +182,7 @@ function showEditBox(idx,data) {
                 		brand.push(data);
 					} else {
 						for (const key in data) {
-	                        if (brand[idx].hasOwnProperty(key)) {
-	                        	brand[idx][key] = data[key];
-	                        }
+	                        brand[idx][key] = data[key];
 	                    }
 					}
                     

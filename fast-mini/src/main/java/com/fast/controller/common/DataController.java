@@ -82,7 +82,7 @@ public class DataController {
 				pageNo = "1";
 			}
 			if (Common.isEmpty(pageSize)) {
-				pageSize = "30";
+				pageSize = "15";
 			}
 			PagingView page = new PagingView(Integer.valueOf(pageNo));
 			page.setPageSize(Integer.valueOf(pageSize).intValue());

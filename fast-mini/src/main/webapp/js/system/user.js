@@ -58,17 +58,35 @@ function loadData() {
     common.showLoading();
     api.load(basePath + 'data/list','post',{"table":"user"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data.records;
-            if (data != null) {
-                for (let i = 0; i < data.length; i++) {
-                    user.push(data[i]);
-                }
-            }
+        	let pageView = result.data;
+        	setData(pageView);
+            pageConfig(pageView, function(pageno) {
+            	loadPageData(pageno);
+			});
         } else {
             common.error('数据加载失败');
         }
         common.closeLoading();
     });
+}
+
+function loadPageData(pageno) {
+	common.showLoading();
+	api.load(basePath + 'data/list','post',{"table":"user","pageno":pageno},function (result) {
+		let pageView = result.data;
+		setData(pageView);
+		common.closeLoading();
+	});
+}
+
+function setData(pageView) {
+	let data = pageView.records;
+	user.length = 0;
+	if (data != null) {
+        for (let i = 0; i < data.length; i++) {
+        	user.push(data[i]);
+        }
+    }
 }
 
 function showEditBox(idx,data) {
@@ -98,9 +116,7 @@ function showEditBox(idx,data) {
                 		user.push(data);
 					} else {
 						for (const key in data) {
-	                        if (user[idx].hasOwnProperty(key)) {
-	                        	user[idx][key] = data[key];
-	                        }
+	                        user[idx][key] = data[key];
 	                    }
 					}
                     
@@ -156,7 +172,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">头像</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"photourl\">"+
-				                "<img src=\""+d.photourl+"\" class=\"layui-circle-img value\"/>"+
+				                "<img src=\""+d.photourl+"\" onerror=\"defaultImg(this)\" class=\"layui-circle-img circular value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+

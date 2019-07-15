@@ -6,7 +6,6 @@
 		<ul class="layui-tab-title">
 		    <li class="layui-this">品牌档案</li>
 		</ul>
-		<div class="layui-tab-content"></div>
 	</div>
 	
 	<div class="operating">
