@@ -21,7 +21,90 @@
 		</div>
 		<div class="configurePanel middlePanel">
 			<div class="phoneBox">
-				<div class="editView"></div>
+				<div class="editView">
+					<div class="layui-carousel" id="test1" lay-filter="test1">
+						<div class="carouselBox" carousel-item="">
+							<div><img src="http://n.sinaimg.cn/front/700/w960h540/20190110/31WY-hrkkweh9859087.jpg"></div>
+						    <div><img src="https://wx2.sinaimg.cn/wap720/8c803935ly1fu3tsffel1j21120kun2u.jpg"></div>
+						    <div><img src="http://n.sinaimg.cn/sinacn15/570/w1849h1121/20180817/e807-hhvciiw7088691.jpg"></div>
+						    <div><img src="https://ss3.baidu.com/-fo3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=84ec943a20738bd4db21b431918a876c/f7246b600c338744b5a0c49b5f0fd9f9d62aa0f4.jpg"></div>
+						    <div><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563045387471&di=e28ab7e50b5edf792065259f77a35d9a&imgtype=0&src=http%3A%2F%2Fg.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F83025aafa40f4bfbb5163db50d4f78f0f6361808.jpg"></div>
+						    <div><img src="https://ss1.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=8ba24e57aeec08fa390015a769ef3d4d/b17eca8065380cd7ed824805af44ad34588281be.jpg"></div>
+						    <div><img src="https://ss0.baidu.com/-Po3dSag_xI4khGko9WTAnF6hhy/image/h%3D300/sign=8b41ea430d3b5bb5a1d726fe06d2d523/a6efce1b9d16fdfa0c242d06ba8f8c5495ee7b8a.jpg"></div>
+						</div>
+					</div>
+					
+					<div class="layui-search">
+						<i class="layui-icon layui-icon-search"> </i>
+						<input class="layui-input" placeholder="搜索" disabled="disabled"/>
+					</div>
+					
+					<div class="layui-navigation">
+						<div class="navigation-img-box">
+							<img alt="" src="https://wx2.sinaimg.cn/wap720/8c803935ly1fu3tsffel1j21120kun2u.jpg" onerror="defaultImg(this)">
+						</div>
+						<div class="navigation-img-box">
+							<img alt="" src="https://next.fuxi.com/images/microformfiles/2019-07-14-18-233426.jpg" onerror="defaultImg(this)">
+						</div>
+						<div class="navigation-img-box">
+							<img alt="" src="http://n.sinaimg.cn/front/700/w960h540/20190110/31WY-hrkkweh9859087.jpg" onerror="defaultImg(this)">
+						</div>
+						<div class="navigation-img-box">
+							<img alt="" src="http://n.sinaimg.cn/sinacn15/570/w1849h1121/20180817/e807-hhvciiw7088691.jpg" onerror="defaultImg(this)">
+						</div>
+					</div>
+					
+					<div class="layui-blank"></div>
+					
+					<div class="layui-notice">
+						<div class="notice">公告213456</div>
+					</div>
+					
+					<div class="layui-blank"></div>
+					
+					<div class="layui-title">
+						<div class="title">栏目标题</div>
+						<i class="layui-icon layui-icon-right"></i>
+					</div>
+					
+					<div class="layui-blank"></div>
+					
+					<div class="layui-group">
+						<div class="group-title">
+							<div class="tab">tab1</div>
+							<div class="tab">tab2</div>
+							<div class="tab">tab3</div>
+							<div class="tab">tab4</div>
+						</div>
+						<div class="group-list">
+							<div class="goods">
+								<div class="goodsimg">
+									<img alt="" src="" onerror="defaultImg(this)">
+								</div>
+								<div class="goodsinfo">
+									<div class="">商品名称</div>
+									<div class="">¥199.00</div>
+								</div>
+							</div><div class="goods">
+								<div class="goodsimg">
+									<img alt="" src="https://next.fuxi.com/images/microformfiles/2019-07-14-18-233426.jpg" onerror="defaultImg(this)">
+								</div>
+								<div class="goodsinfo">
+									<div class="">商品名称商品名称商品名称商品名称商品名称</div>
+									<div class="">¥199.00</div>
+								</div>
+							</div><div class="goods">
+								<div class="goodsimg">
+									<img alt="" src="https://wx2.sinaimg.cn/wap720/8c803935ly1fu3tsffel1j21120kun2u.jpg" onerror="defaultImg(this)">
+								</div>
+								<div class="goodsinfo">
+									<div class="">商品名称</div>
+									<div class="">¥199.00</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="configurePanel rightPanel">

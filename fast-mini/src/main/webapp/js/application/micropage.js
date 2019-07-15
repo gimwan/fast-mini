@@ -84,4 +84,45 @@ common.bindVue = function() {
     });
     // 重新刷新form
     layuiForm.render();
+    
+    // 初始化轮播
+    configCarousel();
+    
+    // 界面元素选中
+    chooseView();
+}
+
+function configCarousel() {
+	var index = 0;
+	$(".carouselBox div").each(function(index) {
+		let color = "";
+		if (index == 0) {
+			color = "red";
+		} else if (index == 1) {
+			color = "blue";
+		} else if (index == 2) {
+			color = "green";
+		} else if (index == 3) {
+			color = "pink";
+		} else if (index == 4) {
+			color = "gray";
+		}
+		$(this).css("bakground-color",color);
+		index++;
+	});
+	let thisCarousel = layCarousel;
+	thisCarousel.render({
+		elem : '#test1',
+		arrow : 'none',
+		width : '100%',
+		height : '160px',
+		indicator : 'inside'
+	});
+}
+
+function chooseView() {
+	$("body").on("click", ".microPage .configureView .middlePanel .editView>div", function() {
+		$(".microPage .configureView .middlePanel .editView>div").removeClass("choose-view");
+		$(this).addClass("choose-view");
+	});
 }

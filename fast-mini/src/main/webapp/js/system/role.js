@@ -57,17 +57,35 @@ function loadData() {
     common.showLoading();
     api.load(basePath + 'data/list','post',{"table":"role"},function (result) {
         if (result.errcode == 0) {
-            let data = result.data.records;
-            if (data != null) {
-                for (let i = 0; i < data.length; i++) {
-                    role.push(data[i]);
-                }
-            }
+        	let pageView = result.data;
+        	setData(pageView);
+            pageConfig(pageView, function(pageno) {
+            	loadPageData(pageno);
+			});
         } else {
             common.error('数据加载失败');
         }
         common.closeLoading();
     });
+}
+
+function loadPageData(pageno) {
+	common.showLoading();
+	api.load(basePath + 'data/list','post',{"table":"role","pageno":pageno},function (result) {
+		let pageView = result.data;
+		setData(pageView);
+		common.closeLoading();
+	});
+}
+
+function setData(pageView) {
+	let data = pageView.records;
+	role.length = 0;
+	if (data != null) {
+        for (let i = 0; i < data.length; i++) {
+        	role.push(data[i]);
+        }
+    }
 }
 
 function createElement(data) {
@@ -164,9 +182,7 @@ function showEditBox(idx,data) {
                 		role.push(data);
 					} else {
 						for (const key in data) {
-	                        if (role[idx].hasOwnProperty(key)) {
-	                        	role[idx][key] = data[key];
-	                        }
+	                        role[idx][key] = data[key];
 	                    }
 					}
                     

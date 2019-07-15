@@ -172,6 +172,7 @@ document.onreadystatechange = function() {
     		});
     	});
     	
+    	// 弹窗数据选中
     	$("body").on("click", ".popup-view .popup-box .popup-data", function () {
     		let isSelected = $(this).hasClass("selected");
     		$(this).parent().find(".selected").removeClass("selected");
@@ -189,7 +190,27 @@ document.onreadystatechange = function() {
     		$(".edit-view .edit-box .popup .popuped").val(name);
     		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
     	});
+    	
+    	// 图片加载失败显示默认图
+    	$("body").on("error", "img", function () {
+    		if ($(this).hasClass("circular")) {
+    			$(this).attr("src", "images/head.png");
+			} else {
+				$(this).attr("src", "images/default.png");
+			}
+    	});
+    	$("img").bind("error",function () {
+    		console.log("img error");
+    	});
     }
+}
+
+function defaultImg(obj) {
+	if ($(obj).hasClass("circular")) {
+		$(obj).attr("src", "images/head.png");
+	} else {
+		$(obj).attr("src", "images/default.png");
+	}
 }
 
 function optionView(data) {
@@ -207,7 +228,7 @@ function optionView(data) {
 
 let dataPage;
 function pageConfig(page, fn) {
-	let count = 15;
+	let count = 1;
 	let limit = 15;
 	let pageNow = 1;
 	if (page != null && page != undefined) {
@@ -216,31 +237,32 @@ function pageConfig(page, fn) {
 	}
 	if (pageNow == 1) {
 		dataPage = layPage;
+		dataPage.render({
+			elem : 'layPage',
+			count : count,
+			limit : limit,
+			jump : function(obj, first) {
+				if(!first){
+					if (!!fn) {
+						try {
+							let func = eval(fn);
+							if (func && typeof (func) == "function") {
+								func(obj.curr);
+							}
+						} catch (e) {
+							console.log(e);
+						}
+					}
+				}
+			}
+		});
 	}
-	
-	dataPage.render({
-		elem : 'layPage',
-		count : count,
-		limit : limit,
-		jump: function(obj){
-			if (!!fn) {
-                try {
-                    let func = eval(fn);
-                    if (func && typeof (func) == "function") {
-                        func();
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-		}
-	});
 }
 
 // 定义一个标志位
 let isShow = true;
 $('.kit-side-fold').click(function () {
-    //选择出所有的span，并判断是不是hidden
+    // 选择出所有的span，并判断是不是hidden
     $('.layui-nav-item span').each(function () {
         if ($(this).is(':hidden')) {
             $(this).show();

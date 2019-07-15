@@ -27,15 +27,31 @@ a {
     display: table-cell;
 }
 
+.layui-table-cell {
+	height: auto;
+}
+
+.operating {
+	padding-top: 10px;
+}
+
 .selected {
 	background-color: #f2f2f2;
 }
 
 .pageTable {
-	height: 570px;
+	height: 580px;
 }
 
 .layPage {
     width: 100%;
     text-align: right;
+}
+
+.layui-carousel-ind ul {
+	background-color: rgba(0,0,0,0);
+}
+
+.layui-carousel-ind ul:hover {
+	background-color: rgba(0,0,0,0);
 }

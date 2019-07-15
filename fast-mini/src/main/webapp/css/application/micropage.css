@@ -1,145 +1,307 @@
 .microPage .configureView {
-    display: table;
-    /*width: 100%;*/
+	display: table;
+	/*width: 100%;*/
 }
 
 .microPage .configureView .configurePanel {
-    display: table-cell;
-    vertical-align: top;
-    text-align: center;
+	display: table-cell;
+	vertical-align: top;
+	text-align: center;
+}
+
+.choose-view {
+	border: 2px;
+	border-color: #009688;
+	border-style: solid;
 }
 
 /**************** left ****************/
-
 .microPage .configureView .leftPanel {
-    width: 400px;
-    text-align: right;
+	width: 400px;
+	text-align: right;
 }
 
 .microPage .configureView .leftPanel .itemBox {
-    width: 400px;
-    display: inline-block;
+	width: 400px;
+	display: inline-block;
 }
 
 .microPage .configureView .leftPanel .itemBox .item {
-    display: inline-block;
-    text-align: center;
-    margin: 0px 5px;
-    cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	margin: 0px 5px;
+	cursor: pointer;
 }
 
 .microPage .configureView .leftPanel .itemBox .item .itemImg {
-    width: 120px;
-    display: block;
+	width: 120px;
+	display: block;
 }
 
 .microPage .configureView .leftPanel .itemBox .item .itemName {
-    margin: 10px;
+	margin: 10px;
 }
 
 /**************** middle ****************/
-
 .microPage .configureView .middlePanel {
-    padding: 0px 50px;
-    width: 332px;
+	padding: 0px 50px;
+	width: 332px;
 }
 
 .microPage .configureView .middlePanel .phoneBox {
-    background: url(../../images/miniprogram.png) no-repeat center center;
-    width: 332px;
-    height: 666px;
-    min-width: 332px;
-    min-height: 666px;
-    display: inline-block;
-    text-align: center;
+	background: url(../../images/miniprogram.png) no-repeat center center;
+	width: 332px;
+	height: 666px;
+	min-width: 332px;
+	min-height: 666px;
+	display: inline-block;
+	text-align: center;
 }
 
 .microPage .configureView .middlePanel .phoneBox .editView {
-    display: inline-block;
-    margin-top: 98px;
-    width: 322px;
-    height: 519px;
-    overflow: hidden;
+	display: inline-block;
+	margin-top: 98px;
+	width: 322px;
+	height: 519px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.microPage .configureView .middlePanel .phoneBox .editView::-webkit-scrollbar
+	{
+	width: 0px;
+}
+
+.layui-blank {
+	height: 5px;
+}
+
+.layui-search {
+	padding: 5px;
+	position: relative;
+}
+
+.layui-search i {
+	position: absolute;
+	left: 10px;
+	top: 12px;
+	color: grey;
+}
+
+.layui-search input {
+	padding-left: 26px;
+	height: 30px;
+}
+
+.layui-navigation {
+	display: table;
+	width: 100%;
+	height: 80px;
+}
+
+.layui-navigation>div {
+	display: table-cell;
+	width: 25%;
+	vertical-align: middle;
+}
+
+.layui-navigation>div img {
+	width: 80px;
+	height: 80px;
+	display: block;
+}
+
+.layui-notice .notice {
+	height: 30px;
+	line-height: 30px;
+	text-align: left;
+	padding: 0px 5px;
+	background: #FFFFFF;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.layui-title {
+	position: relative;
+}
+
+.layui-title .title {
+	line-height: 30px;
+	text-align: left;
+	background: #FFFFFF;
+	padding-left: 5px;
+}
+
+.layui-title i {
+	position: absolute;
+	top: 6px;
+	right: 0px;
+	color: grey;
+}
+
+.layui-group .group-title {
+	display: table;
+	width: 100%;
+	background: #FFFFFF;
+	line-height: 30px;
+}
+
+.layui-group .group-title>div {
+	display: table-cell;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.layui-group .group-title>div:first-child {
+	border-bottom: 2px;
+	border-bottom-color: #009688;
+	border-bottom-style: solid;
+}
+
+.layui-group .group-list {
+	text-align: left;
+	width: 100%;
+}
+
+.layui-group .group-list>div {
+	width: 153px;
+	display: inline-block;
+	background: #FFFFFF;
+	text-align: center;
+}
+
+.layui-group .group-list>div:nth-child(1) {
+	margin: 5px 2.5px 2.5px 5px;
+}
+
+.layui-group .group-list>div:nth-child(2) {
+	margin: 5px 5px 2.5px 2.5px;
+}
+
+.layui-group .group-list>div:nth-child(3) {
+	margin: 2.5px 2.5px 5px 5px;
+}
+
+.layui-group .group-list>div:nth-child(4) {
+	margin: 2.5px 5px 5px 2.5px;
+}
+
+.layui-group .group-list .goods .goodsimg {
+	display: inline-block;
+}
+
+.layui-group .group-list .goods .goodsimg img {
+	display: block;
+	width: 150px;
+	height: 150px;
+	object-fit: contain;
+}
+
+.layui-group .group-list .goods .goodsinfo>div {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	text-align: left;
+}
+
+.layui-group .group-list .goods .goodsinfo>div:nth-child(1) {
+	padding: 5px 5px 2.5px 5px;
+}
+
+.layui-group .group-list .goods .goodsinfo>div:nth-child(2) {
+	padding: 2.5px 5px 5px 5px;
 }
 
 /**************** right ****************/
-
 .microPage .configureView .rightPanel {
-    text-align: left;
-    width: 400px;
+	text-align: left;
+	width: 400px;
 }
 
 .microPage .configureView .rightPanel .editBox .editItem .selectTitle {
-    margin: 10px 0px 0px 0px;
-    text-align: left;
-    padding: 0px 10px;
-    width: 100%;
+	margin: 10px 0px 0px 0px;
+	text-align: left;
+	padding: 0px 10px;
+	width: 100%;
 }
 
-.microPage .configureView .rightPanel .editBox .editItem .selectItem:first-child .selectTitle {
-    margin: 0px;
+.microPage .configureView .rightPanel .editBox .editItem .selectItem:first-child .selectTitle
+	{
+	margin: 0px;
 }
 
 .microPage .configureView .rightPanel .editBox .editItem .selectBox {
-    margin-left: 10px;
-    margin-top: 10px;
+	margin-left: 10px;
+	margin-top: 10px;
 }
 
 .microPage .configureView .rightPanel .editBox .editItem .layTableCell {
-    vertical-align: top;
+	vertical-align: top;
 }
 
-.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag {
-    width: 150px;
-    padding: 0px;
-    /* height: 100px;
+.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag
+	{
+	width: 150px;
+	padding: 0px;
+	/* height: 100px;
     min-width: 100px;
     min-height: 100px; */
 }
 
-.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .layui-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .layui-icon
+	{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
-.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .dragImg {
+.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .dragImg
+	{
 	width: 100%;
 	display: block;
 }
 
-.microPage .configureView .rightPanel .editBox .uploadField .layui-form .layui-form-item {
-    margin-bottom: 0px;
+.microPage .configureView .rightPanel .editBox .uploadField .layui-form .layui-form-item
+	{
+	margin-bottom: 0px;
 }
 
 .microPage .configureView .rightPanel .editBox .editItem .blockTitle {
-    text-align: left;
-    padding-left: 0px;
-    width: 100%;
+	text-align: left;
+	padding-left: 0px;
+	width: 100%;
 }
 
 .microPage .configureView .rightPanel .editBox .editItem .blockInput {
-    display: block;
-    margin-left: 0px;
+	display: block;
+	margin-left: 0px;
 }
 
-.microPage .configureView .rightPanel .editBox .editItem .blockInput input {
-    width: 360px;
+.microPage .configureView .rightPanel .editBox .editItem .blockInput input
+	{
+	width: 360px;
 }
 
-.microPage .configureView .rightPanel .editBox .editItem .selectBlock input {
-    width: 360px;
+.microPage .configureView .rightPanel .editBox .editItem .selectBlock input
+	{
+	width: 360px;
 }
 
-.microPage .configureView .rightPanel .editBox .editItem .selectBlock .selectTitle {
-    padding-left: 0px;
+.microPage .configureView .rightPanel .editBox .editItem .selectBlock .selectTitle
+	{
+	padding-left: 0px;
 }
 
-.microPage .configureView .rightPanel .editBox .editItem .selectBlock .selectBox {
-    margin-left: 0px;
+.microPage .configureView .rightPanel .editBox .editItem .selectBlock .selectBox
+	{
+	margin-left: 0px;
 }
 
-.microPage .configureView .rightPanel .editBox .editItem .cascadeSelect input {
-    width: 178px;
+.microPage .configureView .rightPanel .editBox .editItem .cascadeSelect input
+	{
+	width: 178px;
 }
