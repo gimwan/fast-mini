@@ -52,8 +52,16 @@ let menu = [
                 link: 'brand'
             },
             {
+                name: '分类',
+                link: 'category'
+            },
+            {
+                name: '分组',
+                link: 'grouping'
+            },
+            {
                 name: '商品档案',
-                link: ''
+                link: 'goods'
             }
         ]
     },

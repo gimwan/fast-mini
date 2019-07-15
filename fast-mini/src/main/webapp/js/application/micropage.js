@@ -47,6 +47,8 @@ let item = [
 ]
 
 let microPageItemVm;
+let microPageVm;
+let microPageSetVm;
 let uploadInst ;
 
 common.bindVue = function() {
@@ -82,41 +84,55 @@ common.bindVue = function() {
 	    	console.log(index);
 	    }
     });
+	
+	loadData();
+	
     // 重新刷新form
     layuiForm.render();
-    
-    // 初始化轮播
-    configCarousel();
     
     // 界面元素选中
     chooseView();
 }
 
+function loadData() {
+    common.showLoading();
+    api.load(basePath + 'micropage/data','post',{"pageid":"1"},function (result) {
+        if (result.errcode == 0) {
+        	let pageData = result.data;
+        	if (pageData != null) {
+        		let microPage = pageData.micropage;
+        		let setData = pageData.setdata;
+            	console.log(microPage);
+            	console.log(setData);
+            	microPageSetVm = new Vue({
+                    el : ".phoneBox",
+                    data : {
+                    	setdata: setData
+                    }
+                });
+			}
+        	
+        } else {
+            common.error('数据加载失败');
+        }
+        
+        // 初始化轮播
+        configCarousel();
+        common.closeLoading();
+    });
+}
+
 function configCarousel() {
-	var index = 0;
-	$(".carouselBox div").each(function(index) {
-		let color = "";
-		if (index == 0) {
-			color = "red";
-		} else if (index == 1) {
-			color = "blue";
-		} else if (index == 2) {
-			color = "green";
-		} else if (index == 3) {
-			color = "pink";
-		} else if (index == 4) {
-			color = "gray";
-		}
-		$(this).css("bakground-color",color);
-		index++;
-	});
-	let thisCarousel = layCarousel;
-	thisCarousel.render({
-		elem : '#test1',
-		arrow : 'none',
-		width : '100%',
-		height : '160px',
-		indicator : 'inside'
+	$(".middlePanel .editView .layui-carousel").each(function() {
+		var id = $(this).attr("id");
+		let thisCarousel = layCarousel;
+		thisCarousel.render({
+			elem : '#'+id,
+			arrow : 'none',
+			width : '100%',
+			height : '160px',
+			indicator : 'inside'
+		});
 	});
 }
 

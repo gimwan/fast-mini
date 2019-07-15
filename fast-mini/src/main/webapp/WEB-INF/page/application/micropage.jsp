@@ -22,7 +22,96 @@
 		<div class="configurePanel middlePanel">
 			<div class="phoneBox">
 				<div class="editView">
-					<div class="layui-carousel" id="test1" lay-filter="test1">
+					<div v-for="(d, index) in setdata" v-bind:data-index="index" class="setItem">
+						<div class="layui-carousel" v-bind:data-index="index" v-bind:id="'carouselView'+index" v-bind:lay-filter="'carouselView'+index" v-if="d.kind == 1">
+							<div class="carouselBox" carousel-item="">
+								<div v-for="(dt, index) in d.detail"><img v-bind:src="dt.photourl" onerror="defaultImg(this)"></div>
+							</div>
+						</div>
+						<div class="layui-search" v-if="d.kind == 2">
+							<i class="layui-icon layui-icon-search"> </i>
+							<input class="layui-input" placeholder="搜索" disabled="disabled"/>
+						</div>
+						<div class="layui-navigation" v-if="d.kind == 3">
+							<div class="navigation-img-box" v-for="(dt, index) in d.detail">
+								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)">
+							</div>
+						</div>
+						<div class="layui-notice" v-if="d.kind == 4">
+							<div class="notice">{{d.detail[0].text}}</div>
+						</div>
+						<div class="layui-title" v-if="d.kind == 5">
+							<div class="title">{{d.detail[0].text}}</div>
+							<i class="layui-icon layui-icon-right"></i>
+						</div>
+						<div class="layui-blank" v-if="d.kind == 6"></div>
+						<div class="layui-group" v-if="d.kind == 7">
+							<div class="group-title" v-if="d.detail.length > 1">
+								<div class="tab" v-for="(dt, index) in d.detail">{{dt.grouping}}</div>
+							</div>
+							<div class="group-list">
+								<div class="goods">
+									<div class="goodsimg">
+										<img alt="" src="" onerror="defaultImg(this)">
+									</div>
+									<div class="goodsinfo">
+										<div class="">商品名称</div>
+										<div class="">¥199.00</div>
+									</div>
+								</div><div class="goods">
+									<div class="goodsimg">
+										<img alt="" src="https://next.fuxi.com/images/microformfiles/2019-07-14-18-233426.jpg" onerror="defaultImg(this)">
+									</div>
+									<div class="goodsinfo">
+										<div class="">商品名称商品名称商品名称商品名称商品名称</div>
+										<div class="">¥199.00</div>
+									</div>
+								</div><div class="goods">
+									<div class="goodsimg">
+										<img alt="" src="https://wx2.sinaimg.cn/wap720/8c803935ly1fu3tsffel1j21120kun2u.jpg" onerror="defaultImg(this)">
+									</div>
+									<div class="goodsinfo">
+										<div class="">商品名称</div>
+										<div class="">¥199.00</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="layui-classify" v-if="d.kind == 8">
+							<div class="classify-title" v-if="d.detail.length > 1">
+								<div class="tab" v-for="(dt, index) in d.detail">{{dt.category}}</div>
+							</div>
+							<div class="classify-list">
+								<div class="goods">
+									<div class="goodsimg">
+										<img alt="" src="" onerror="defaultImg(this)">
+									</div>
+									<div class="goodsinfo">
+										<div class="">商品名称</div>
+										<div class="">¥199.00</div>
+									</div>
+								</div><div class="goods">
+									<div class="goodsimg">
+										<img alt="" src="https://next.fuxi.com/images/microformfiles/2019-07-14-18-233426.jpg" onerror="defaultImg(this)">
+									</div>
+									<div class="goodsinfo">
+										<div class="">商品名称商品名称商品名称商品名称商品名称</div>
+										<div class="">¥199.00</div>
+									</div>
+								</div><div class="goods">
+									<div class="goodsimg">
+										<img alt="" src="https://wx2.sinaimg.cn/wap720/8c803935ly1fu3tsffel1j21120kun2u.jpg" onerror="defaultImg(this)">
+									</div>
+									<div class="goodsinfo">
+										<div class="">商品名称</div>
+										<div class="">¥199.00</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- <div class="layui-carousel" id="carouselView" lay-filter="carouselView">
 						<div class="carouselBox" carousel-item="">
 							<div><img src="http://n.sinaimg.cn/front/700/w960h540/20190110/31WY-hrkkweh9859087.jpg"></div>
 						    <div><img src="https://wx2.sinaimg.cn/wap720/8c803935ly1fu3tsffel1j21120kun2u.jpg"></div>
@@ -103,7 +192,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>

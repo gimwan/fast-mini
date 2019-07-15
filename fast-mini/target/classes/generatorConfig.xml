@@ -17,7 +17,16 @@
 		<javaClientGenerator targetPackage="com.fast.base.data.dao"
 			targetProject="fast-mini" type="XMLMAPPER" />
         
-        <table tableName="m_vipcoupon" enableCountByExample="true"
+        <table tableName="m_goods" enableCountByExample="true"
+			enableUpdateByExample="false" enableDeleteByExample="true"
+			enableSelectByExample="true" selectByExampleQueryId="false" />
+		<table tableName="m_goodsdtl" enableCountByExample="true"
+			enableUpdateByExample="false" enableDeleteByExample="true"
+			enableSelectByExample="true" selectByExampleQueryId="false" />
+		<table tableName="m_goodscategory" enableCountByExample="true"
+			enableUpdateByExample="false" enableDeleteByExample="true"
+			enableSelectByExample="true" selectByExampleQueryId="false" />
+		<table tableName="m_goodsgrouping" enableCountByExample="true"
 			enableUpdateByExample="false" enableDeleteByExample="true"
 			enableSelectByExample="true" selectByExampleQueryId="false" />
 	</context>

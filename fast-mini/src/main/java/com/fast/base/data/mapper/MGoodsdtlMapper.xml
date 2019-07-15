@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fast.base.data.dao.MGoodsdtlMapper">
+	<cache type="com.fast.system.RedisCache" />
+	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MGoodsdtl">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="GoodsID" property="goodsid" jdbcType="INTEGER" />
+		<result column="Type" property="type" jdbcType="TINYINT" />
+		<result column="PhotoUrl" property="photourl" jdbcType="VARCHAR" />
+		<result column="ShowIndex" property="showindex" jdbcType="INTEGER" />
+		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ID, GoodsID, Type, PhotoUrl, ShowIndex, UpdatedTime, UseFlag
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fast.base.data.entity.MGoodsdtlExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		'false' as QUERYID,
+		<include refid="Base_Column_List" />
+		from m_goodsdtl
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from m_goodsdtl
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from m_goodsdtl
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.fast.base.data.entity.MGoodsdtlExample">
+		delete from m_goodsdtl
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.fast.base.data.entity.MGoodsdtl"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_goodsdtl (ID, GoodsID, Type,
+		PhotoUrl, ShowIndex, UpdatedTime,
+		UseFlag)
+		values (#{id,jdbcType=INTEGER}, #{goodsid,jdbcType=INTEGER},
+		#{type,jdbcType=TINYINT},
+		#{photourl,jdbcType=VARCHAR}, #{showindex,jdbcType=INTEGER}, #{updatedtime,jdbcType=TIMESTAMP},
+		#{useflag,jdbcType=TINYINT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MGoodsdtl"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_goodsdtl
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="goodsid != null">
+				GoodsID,
+			</if>
+			<if test="type != null">
+				Type,
+			</if>
+			<if test="photourl != null">
+				PhotoUrl,
+			</if>
+			<if test="showindex != null">
+				ShowIndex,
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime,
+			</if>
+			<if test="useflag != null">
+				UseFlag,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="goodsid != null">
+				#{goodsid,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=TINYINT},
+			</if>
+			<if test="photourl != null">
+				#{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="showindex != null">
+				#{showindex,jdbcType=INTEGER},
+			</if>
+			<if test="updatedtime != null">
+				#{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useflag != null">
+				#{useflag,jdbcType=TINYINT},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.fast.base.data.entity.MGoodsdtlExample"
+		resultType="java.lang.Integer">
+		select count(*) from m_goodsdtl
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MGoodsdtl">
+		update m_goodsdtl
+		<set>
+			<if test="goodsid != null">
+				GoodsID = #{goodsid,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				Type = #{type,jdbcType=TINYINT},
+			</if>
+			<if test="photourl != null">
+				PhotoUrl = #{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="showindex != null">
+				ShowIndex = #{showindex,jdbcType=INTEGER},
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useflag != null">
+				UseFlag = #{useflag,jdbcType=TINYINT},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MGoodsdtl">
+		update m_goodsdtl
+		set GoodsID = #{goodsid,jdbcType=INTEGER},
+		Type = #{type,jdbcType=TINYINT},
+		PhotoUrl = #{photourl,jdbcType=VARCHAR},
+		ShowIndex = #{showindex,jdbcType=INTEGER},
+		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+		UseFlag = #{useflag,jdbcType=TINYINT}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>
