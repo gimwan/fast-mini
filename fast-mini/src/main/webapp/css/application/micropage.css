@@ -72,6 +72,12 @@
 	width: 0px;
 }
 
+.layui-carousel img {
+	width: 100%;
+	object-fit: cover;
+    max-height: 160px;
+}
+
 .layui-blank {
 	height: 5px;
 }
@@ -103,12 +109,13 @@
 	display: table-cell;
 	width: 25%;
 	vertical-align: middle;
+	    text-align: center;
 }
 
 .layui-navigation>div img {
 	width: 80px;
 	height: 80px;
-	display: block;
+	display: inline-block;
 }
 
 .layui-notice .notice {
@@ -140,14 +147,14 @@
 	color: grey;
 }
 
-.layui-group .group-title {
+.layui-group .group-title,.layui-classify .classify-title {
 	display: table;
 	width: 100%;
 	background: #FFFFFF;
 	line-height: 30px;
 }
 
-.layui-group .group-title>div {
+.layui-group .group-title>div,.layui-classify .classify-title>div {
 	display: table-cell;
 	text-align: center;
 	overflow: hidden;
@@ -155,63 +162,63 @@
 	white-space: nowrap;
 }
 
-.layui-group .group-title>div:first-child {
+.layui-group .group-title>div:first-child,.layui-classify .classify-title>div:first-child {
 	border-bottom: 2px;
 	border-bottom-color: #009688;
 	border-bottom-style: solid;
 }
 
-.layui-group .group-list {
+.layui-group .group-list,.layui-classify .classify-list {
 	text-align: left;
 	width: 100%;
 }
 
-.layui-group .group-list>div {
+.layui-group .group-list>div,.layui-classify .classify-list>div {
 	width: 153px;
 	display: inline-block;
 	background: #FFFFFF;
 	text-align: center;
 }
 
-.layui-group .group-list>div:nth-child(1) {
+.layui-group .group-list>div:nth-child(1),.layui-classify .classify-list>div:nth-child(1) {
 	margin: 5px 2.5px 2.5px 5px;
 }
 
-.layui-group .group-list>div:nth-child(2) {
+.layui-group .group-list>div:nth-child(2),.layui-classify .classify-list>div:nth-child(2) {
 	margin: 5px 5px 2.5px 2.5px;
 }
 
-.layui-group .group-list>div:nth-child(3) {
+.layui-group .group-list>div:nth-child(3),.layui-classify .classify-list>div:nth-child(3) {
 	margin: 2.5px 2.5px 5px 5px;
 }
 
-.layui-group .group-list>div:nth-child(4) {
+.layui-group .group-list>div:nth-child(4),.layui-classify .classify-list>div:nth-child(4) {
 	margin: 2.5px 5px 5px 2.5px;
 }
 
-.layui-group .group-list .goods .goodsimg {
+.layui-group .group-list .goods .goodsimg,.layui-classify .classify-list .goods .goodsimg {
 	display: inline-block;
 }
 
-.layui-group .group-list .goods .goodsimg img {
+.layui-group .group-list .goods .goodsimg img,.layui-classify .classify-list .goods .goodsimg img {
 	display: block;
 	width: 150px;
 	height: 150px;
 	object-fit: contain;
 }
 
-.layui-group .group-list .goods .goodsinfo>div {
+.layui-group .group-list .goods .goodsinfo>div,.layui-classify .classify-list .goods .goodsinfo>div {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	text-align: left;
 }
 
-.layui-group .group-list .goods .goodsinfo>div:nth-child(1) {
+.layui-group .group-list .goods .goodsinfo>div:nth-child(1),.layui-classify .classify-list .goods .goodsinfo>div:nth-child(1) {
 	padding: 5px 5px 2.5px 5px;
 }
 
-.layui-group .group-list .goods .goodsinfo>div:nth-child(2) {
+.layui-group .group-list .goods .goodsinfo>div:nth-child(2),.layui-classify .classify-list .goods .goodsinfo>div:nth-child(2) {
 	padding: 2.5px 5px 5px 5px;
 }
 
