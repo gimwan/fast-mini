@@ -49,7 +49,11 @@ let item = [
 let microPageItemVm;
 let microPageVm;
 let microPageSetVm;
+let microPageEditVm;
 let uploadInst ;
+let microPage;
+let setData;
+let editData;
 
 common.bindVue = function() {
 	console.log('micropage');
@@ -65,25 +69,6 @@ common.bindVue = function() {
 			}
         }
     });
-	uploadInst = layuiUpload.render({
-	    elem: '.layui-upload-drag',
-	    url: './upload/field/image',
-	    size: 1024,
-	    multiple: false,
-	    done: function(res, index, upload){
-	    	// 上传完毕回调
-	    	console.log(res);
-	    	console.log(index);
-	    	var item = this.item;
-	    	$(item).html('<img alt="" src="'+res.data+'" class="dragImg">');
-	    	console.log(item);
-	    },
-	    error: function(res, index){
-	    	// 请求异常回调
-	    	console.log(res);
-	    	console.log(index);
-	    }
-    });
 	
 	loadData();
 	
@@ -92,6 +77,9 @@ common.bindVue = function() {
     
     // 界面元素选中
     chooseView();
+    
+    // 删除图片显示
+    showDeleteIcon();
 }
 
 function loadData() {
@@ -100,14 +88,19 @@ function loadData() {
         if (result.errcode == 0) {
         	let pageData = result.data;
         	if (pageData != null) {
-        		let microPage = pageData.micropage;
-        		let setData = pageData.setdata;
-            	console.log(microPage);
-            	console.log(setData);
+        		microPage = pageData.micropage;
+        		setData = pageData.setdata;
+        		editData = pageData.setdata;
             	microPageSetVm = new Vue({
                     el : ".phoneBox",
                     data : {
                     	setdata: setData
+                    }
+                });
+            	microPageEditVm = new Vue({
+                    el : ".editBox",
+                    data : {
+                    	editdata: setData
                     }
                 });
 			}
@@ -118,7 +111,33 @@ function loadData() {
         
         // 初始化轮播
         configCarousel();
+        // 初始化文件上传
+        configUploadInst();
+        // 重新刷新form
+        layuiForm.render();
+        
         common.closeLoading();
+    });
+}
+
+function configUploadInst() {
+	uploadInst = layuiUpload.render({
+	    elem: '.layui-upload-drag',
+	    url: './upload/field/image',
+	    size: 1024,
+	    multiple: false,
+	    done: function(res, index, upload){
+	    	// 上传完毕回调
+	    	var item = this.item;
+	    	var index = $(item).parents(".editItem").data("index");
+	    	var detailIndex = $(item).parent().data("index");
+	    	setData[index].detail[detailIndex].photourl = res.data;
+	    },
+	    error: function(res, index){
+	    	// 请求异常回调
+	    	console.log(res);
+	    	console.log(index);
+	    }
     });
 }
 
@@ -137,8 +156,33 @@ function configCarousel() {
 }
 
 function chooseView() {
-	$("body").on("click", ".microPage .configureView .middlePanel .editView>div", function() {
-		$(".microPage .configureView .middlePanel .editView>div").removeClass("choose-view");
-		$(this).addClass("choose-view");
+	$("body").on("click", ".microPage .configureView .middlePanel .editView .setItem", function() {
+		let index = $(this).data("index");
+		for (var i = 0; i < setData.length; i++) {
+			if (i == index) {
+				setData[i].choose = 1;
+			} else {
+				setData[i].choose = 0;
+			}
+		}
 	});
+}
+
+function showDeleteIcon() {
+	$("body").unbind("mouseover").on("mouseover", ".microPage .configureView .rightPanel .editBox .editItem .layui-upload-drag", function() {
+		$(this).children('.layui-icon-delete').show();
+	});
+	$("body").unbind("mouseout").on("mouseout", ".microPage .configureView .rightPanel .editBox .editItem .layui-upload-drag", function() {
+		$(this).children('.layui-icon-delete').hide();
+	});
+	$("body").on("click", ".microPage .configureView .rightPanel .editBox .editItem .layui-upload-drag .layui-icon-delete", function() {
+		console.log('click');
+		return;
+	});
+}
+
+function spellChange(obj) {
+	var index = $(obj).parents(".editItem").data("index");
+	var text = $(obj).val();
+	setData[index].detail[0].text = text;
 }
