@@ -50,7 +50,7 @@ function loadPageData(pageno) {
 
 function setData(pageView) {
 	let data = pageView.records;
-	vip.length = 0;
+	vip.splice(0, vip.length);
 	if (data != null) {
         for (let i = 0; i < data.length; i++) {
         	vip.push(data[i]);

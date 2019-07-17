@@ -83,8 +83,9 @@ common.bindVue = function() {
 }
 
 function loadData() {
+	let pageid = $(".microPage #pageid").val();
     common.showLoading();
-    api.load(basePath + 'micropage/data','post',{"pageid":"1"},function (result) {
+    api.load(basePath + 'micropage/data','post',{"pageid":pageid},function (result) {
         if (result.errcode == 0) {
         	let pageData = result.data;
         	if (pageData != null) {
@@ -169,15 +170,26 @@ function chooseView() {
 }
 
 function showDeleteIcon() {
-	$("body").unbind("mouseover").on("mouseover", ".microPage .configureView .rightPanel .editBox .editItem .layui-upload-drag", function() {
+	$("body").on("mouseover", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox,.middlePanel .phoneBox .editView .setItem", function() {
 		$(this).children('.layui-icon-delete').show();
 	});
-	$("body").unbind("mouseout").on("mouseout", ".microPage .configureView .rightPanel .editBox .editItem .layui-upload-drag", function() {
+	$("body").on("mouseout", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox,.middlePanel .phoneBox .editView .setItem", function() {
 		$(this).children('.layui-icon-delete').hide();
 	});
-	$("body").on("click", ".microPage .configureView .rightPanel .editBox .editItem .layui-upload-drag .layui-icon-delete", function() {
-		console.log('click');
-		return;
+	$("body").on("click", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox .layui-icon-delete", function(event) {
+		event.stopPropagation();
+		event.preventDefault();
+		var index = $(this).parents(".editItem").data("index");
+    	var detailIndex = $(this).parents(".ad").data("index");
+    	setData[index].detail[detailIndex].photourl = "";
+		return false;
+	});
+	$("body").on("click", ".middlePanel .phoneBox .editView .setItem .deleteIcon", function(event) {
+		event.stopPropagation();
+		event.preventDefault();
+		let index = $(this).parents(".setItem").data("index");
+		setData.splice(index, 1);
+		return false;
 	});
 }
 

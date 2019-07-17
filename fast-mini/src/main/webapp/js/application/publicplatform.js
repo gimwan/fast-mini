@@ -80,7 +80,7 @@ function loadPageData(pageno) {
 
 function setData(pageView) {
 	let data = pageView.records;
-	publicplatform.length = 0;
+	publicplatform.splice(0, publicplatform.length);
 	if (data != null) {
         for (let i = 0; i < data.length; i++) {
         	publicplatform.push(data[i]);

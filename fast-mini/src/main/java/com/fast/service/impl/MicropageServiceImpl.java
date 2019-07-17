@@ -24,12 +24,10 @@ import com.fast.base.data.entity.MGoodsgrouping;
 import com.fast.base.data.entity.MGoodsgroupingExample;
 import com.fast.base.data.entity.MMicropage;
 import com.fast.base.data.entity.MMicropageExample;
-import com.fast.base.data.entity.MMicropageset;
-import com.fast.base.data.entity.MMicropagesetExample;
-import com.fast.base.data.entity.MMicropagesetdtl;
-import com.fast.base.data.entity.MMicropagesetdtlExample;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MPublicplatform;
+import com.fast.base.page.PagingView;
+import com.fast.service.IDataService;
 import com.fast.service.IMicropageService;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IWechatService;
@@ -73,6 +71,34 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 	
 	@Autowired
 	MGoodsgroupingMapper goodsgroupingMapper;
+	
+	@Autowired
+	IDataService iDataService;
+	
+	@Override
+	public Result list(PagingView page, Integer publicPlatformID) {
+		Result result = new Result();
+
+		try {
+			page.setOrderBy("order by code,name");
+			String sql = "select * from m_micropage";
+			if (publicPlatformID != null && publicPlatformID.intValue() > 0) {
+				sql = sql + " where publicplatformid="+publicPlatformID;
+			}
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql, page);
+			list = CommonUtil.transformUpperCase(list);
+			list = iDataService.completeData(list, "micropage");
+			page.setRecords(list);
+			result.setErrcode(0);
+			result.setData(page);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用DataServiceImpl.pageList报错：", e);
+		}
+
+		return result;
+	}
 
 	@Override
 	public Result micropage(String appid, Integer pageid, String openid, String ip) {
@@ -111,58 +137,6 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 			}
 			
 			result = queryPageData(micropage.getId());
-			/*List<HashMap<String, Object>> microData = new ArrayList<>();
-			MMicropagesetExample example = new MMicropagesetExample();
-			example.createCriteria().andMicropageidEqualTo(micropage.getId());
-			example.setOrderByClause("showindex asc");
-			List<MMicropageset> list = micropagesetMapper.selectByExample(example);
-			if (list != null && list.size() > 0) {
-				List<Integer> idList = new ArrayList<>();
-				for (int i = 0; i < list.size(); i++) {
-					idList.add(list.get(i).getId());
-				}
-				MMicropagesetdtlExample dtlExample = new MMicropagesetdtlExample();
-				dtlExample.createCriteria().andMicropagesetidIn(idList);
-				dtlExample.setOrderByClause("showindex asc");
-				List<MMicropagesetdtl> dtlList = micropagesetdtlMapper.selectByExample(dtlExample);
-				
-				for (int i = 0; i < list.size(); i++) {
-					MMicropageset micropageset = list.get(i);
-					HashMap<String, Object> map = new HashMap<>();
-					map.put("id", micropageset.getId());
-					map.put("kind", micropageset.getKind());
-					map.put("index", micropageset.getShowindex());
-					map.put("showname", micropageset.getShowname());
-					map.put("showprice", micropageset.getShowprice());
-					map.put("imagestyle", micropageset.getImagestyle());
-					map.put("orderby", micropageset.getOrderby());
-					
-					List<HashMap<String, Object>> childsList = new ArrayList<>();
-					for (int j = 0; j < dtlList.size(); j++) {
-						MMicropagesetdtl micropagesetdtl = dtlList.get(j);
-						if (micropagesetdtl.getMicropagesetid().intValue() == micropageset.getId().intValue()) {
-							HashMap<String, Object> childMap = new HashMap<String, Object>();
-							childMap.put("id", micropagesetdtl.getId());
-							childMap.put("index", micropagesetdtl.getShowindex());
-							childMap.put("first", micropagesetdtl.getFirst());
-							childMap.put("second", micropagesetdtl.getSecond());
-							childMap.put("third", micropagesetdtl.getThird());
-							childMap.put("text", micropagesetdtl.getText());
-							childMap.put("photourl", micropagesetdtl.getPhotourl());
-							childMap.put("targetpath", micropagesetdtl.getTargetpath());
-							childMap.put("type", micropagesetdtl.getType());
-							childsList.add(childMap);
-						}
-					}
-					
-					map.put("childs", childsList);
-					
-					microData.add(map);
-				}
-			}*/
-			
-			//result.setErrcode(Integer.valueOf(0));
-			//result.setData(microData);
 			result.setId(micropage.getId());
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());

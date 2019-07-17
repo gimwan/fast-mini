@@ -65,10 +65,10 @@ public class Common {
 		MUser user = null;
 		
 		Object object = request.getSession().getAttribute("user");
-		if (object == null) {
+		/*if (object == null) {
 			String sessionid = request.getSession().getId();
 			object = RedisCache.retake(sessionid);
-		}
+		}*/
 		if (object != null) {
 			user = (MUser) object;
 		} 

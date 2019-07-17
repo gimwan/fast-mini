@@ -116,6 +116,7 @@
 	width: 80px;
 	height: 80px;
 	display: inline-block;
+	object-fit: contain;
 }
 
 .layui-notice .notice {
@@ -234,6 +235,11 @@
 
 .middlePanel .phoneBox .editView .setItem {
 	position: relative;
+	overflow: visible;
+}
+
+.middlePanel .phoneBox .editView .setItem .layui-group,.middlePanel .phoneBox .editView .setItem .layui-classify {
+	height: auto !important;
 }
 
 .middlePanel .phoneBox .editView .setItem .chooseBox {
@@ -257,6 +263,10 @@
 
 .microPage .configureView .rightPanel .editBox .editItem .ad {
 	padding-bottom: 10px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .uploadBox {
+	position: relative;
 }
 
 .microPage .configureView .rightPanel .editBox .editItem .selectTitle {
@@ -283,7 +293,9 @@
 .microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag
 	{
 	width: 150px;
+	height: 130px;
 	padding: 0px;
+	position: relative;
 }
 
 .microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag img
@@ -293,7 +305,7 @@
 	object-fit: contain;
 }
 
-.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .layui-icon
+.microPage .configureView .rightPanel .editBox .uploadField .layui-icon
 	{
 	position: absolute;
 	top: 50%;
@@ -301,21 +313,27 @@
 	transform: translate(-50%, -50%);
 }
 
-.microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .layui-icon-delete
+.microPage .configureView .rightPanel .editBox .uploadField .layui-icon-delete
 	{
+	position: absolute;
+	top: auto;
+	left: auto;
+	right: 0;
 	bottom: 0;
-    right: 0;
-    transform: none;
-    top: auto;
-    left: auto;
-    font-size: 25px;
-    color: grey;
-    display: none;
+	transform: none;
+	font-size: 25px;
+	color: grey;
+	display: none;
+	z-index: 99;
+	left: auto;
+	right: 0;
+	bottom: 0;
 }
 
-/* .microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .layui-icon-delete-show {
-	display: block;
-} */
+.microPage .configureView .rightPanel .editBox .uploadField .layui-icon-delete:hover
+	{
+	cursor: pointer;
+}
 
 .microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag .dragImg
 	{
@@ -370,4 +388,13 @@
 	border-style: solid;
 	z-index: 99;
 	display: block;
+}
+
+.middlePanel .phoneBox .editView .setItem .deleteIcon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 20px;
+	display: none;
+	z-index: 99;
 }
