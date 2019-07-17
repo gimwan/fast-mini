@@ -38,13 +38,20 @@
 
 	<!-- 配置日志拦截器 -->
 	<bean id="logInterceptor" class="com.fast.system.log.LogInterceptor"></bean>
-
 	<aop:config proxy-target-class="true">
 		<aop:aspect id="logAspectSYS" ref="logInterceptor">
 			<aop:around method="invoke"
 				pointcut="execution(public * com.fast.controller..*.*(..))" />
 		</aop:aspect>
 	</aop:config>
+	
+	<!-- 日志记录某个类中方法花费时间aop -->
+	<bean id="methodTimeAdvice" class="com.fast.system.MethodTimeActive"/>
+    <aop:config>  
+        <!-- Spring 2.0 可以用 AspectJ 的语法定义 Pointcut，这里自定义要拦截方法的包所在 -->  
+        <aop:advisor id="methodTimeLog" advice-ref="methodTimeAdvice" pointcut="execution(* com.fast.service.impl..*.*(..))"/>
+        <aop:advisor id="methodTimeLog2" advice-ref="methodTimeAdvice" pointcut="execution(* com.fast.controller..*.*(..))"/>
+    </aop:config>
 	
 	<!-- redis连接池配置-->
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
