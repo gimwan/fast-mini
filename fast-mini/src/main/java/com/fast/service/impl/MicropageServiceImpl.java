@@ -110,7 +110,8 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 				return result;
 			}
 			
-			List<HashMap<String, Object>> microData = new ArrayList<>();
+			result = queryPageData(micropage.getId());
+			/*List<HashMap<String, Object>> microData = new ArrayList<>();
 			MMicropagesetExample example = new MMicropagesetExample();
 			example.createCriteria().andMicropageidEqualTo(micropage.getId());
 			example.setOrderByClause("showindex asc");
@@ -158,10 +159,10 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 					
 					microData.add(map);
 				}
-			}
+			}*/
 			
-			result.setErrcode(Integer.valueOf(0));
-			result.setData(microData);
+			//result.setErrcode(Integer.valueOf(0));
+			//result.setData(microData);
 			result.setId(micropage.getId());
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
@@ -294,6 +295,12 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 							}
 						}
 						setMap.put("detail", dtlList);
+						
+						int choose = 0;
+						if (i == 0) {
+							choose = 1;
+						}
+						setMap.put("choose", choose);
 					}
 				} else {
 					setList = new ArrayList<>();

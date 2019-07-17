@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.base.Result;
 import com.fast.service.IMicropageService;
+import com.fast.util.Common;
 import com.fast.util.IpKit;
 import com.jfinal.kit.StrKit;
 
@@ -44,11 +45,11 @@ public class Micro extends MiniMaster {
 			String id = request.getParameter("id");
 			
 			Integer pageid = null;
-			if (id != null && !"".equals(id.trim())) {
+			if (!Common.isEmpty(id)) {
 				pageid = Integer.valueOf(id.trim());
 			}
 			
-			if (openid == null || "".equals(openid.trim())) {
+			if (Common.isEmpty(openid)) {
 				openid = "";
 			}
 			
