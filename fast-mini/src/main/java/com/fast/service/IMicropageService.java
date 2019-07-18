@@ -31,8 +31,9 @@ public interface IMicropageService {
 	/**
 	 * 获取微页面数据
 	 * @param pageID
+	 * @param isDraft
 	 * @return
 	 */
-	public Result queryPageData(Integer pageID);
+	public Result queryPageData(Integer pageID, boolean isDraft);
 
 }

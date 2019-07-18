@@ -1804,6 +1804,186 @@ public class MGoodsExample {
             addCriterion("Describe not between", value1, value2, "describe");
             return (Criteria) this;
         }
+
+        public Criteria andBigcategoryIsNull() {
+            addCriterion("BigCategory is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryIsNotNull() {
+            addCriterion("BigCategory is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryEqualTo(Integer value) {
+            addCriterion("BigCategory =", value, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryNotEqualTo(Integer value) {
+            addCriterion("BigCategory <>", value, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryGreaterThan(Integer value) {
+            addCriterion("BigCategory >", value, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryGreaterThanOrEqualTo(Integer value) {
+            addCriterion("BigCategory >=", value, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryLessThan(Integer value) {
+            addCriterion("BigCategory <", value, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryLessThanOrEqualTo(Integer value) {
+            addCriterion("BigCategory <=", value, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryIn(List<Integer> values) {
+            addCriterion("BigCategory in", values, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryNotIn(List<Integer> values) {
+            addCriterion("BigCategory not in", values, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryBetween(Integer value1, Integer value2) {
+            addCriterion("BigCategory between", value1, value2, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andBigcategoryNotBetween(Integer value1, Integer value2) {
+            addCriterion("BigCategory not between", value1, value2, "bigcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryIsNull() {
+            addCriterion("MiddleCategory is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryIsNotNull() {
+            addCriterion("MiddleCategory is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryEqualTo(Integer value) {
+            addCriterion("MiddleCategory =", value, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryNotEqualTo(Integer value) {
+            addCriterion("MiddleCategory <>", value, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryGreaterThan(Integer value) {
+            addCriterion("MiddleCategory >", value, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryGreaterThanOrEqualTo(Integer value) {
+            addCriterion("MiddleCategory >=", value, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryLessThan(Integer value) {
+            addCriterion("MiddleCategory <", value, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryLessThanOrEqualTo(Integer value) {
+            addCriterion("MiddleCategory <=", value, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryIn(List<Integer> values) {
+            addCriterion("MiddleCategory in", values, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryNotIn(List<Integer> values) {
+            addCriterion("MiddleCategory not in", values, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryBetween(Integer value1, Integer value2) {
+            addCriterion("MiddleCategory between", value1, value2, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiddlecategoryNotBetween(Integer value1, Integer value2) {
+            addCriterion("MiddleCategory not between", value1, value2, "middlecategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryIsNull() {
+            addCriterion("SmallCategory is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryIsNotNull() {
+            addCriterion("SmallCategory is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryEqualTo(Integer value) {
+            addCriterion("SmallCategory =", value, "smallcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryNotEqualTo(Integer value) {
+            addCriterion("SmallCategory <>", value, "smallcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryGreaterThan(Integer value) {
+            addCriterion("SmallCategory >", value, "smallcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryGreaterThanOrEqualTo(Integer value) {
+            addCriterion("SmallCategory >=", value, "smallcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryLessThan(Integer value) {
+            addCriterion("SmallCategory <", value, "smallcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryLessThanOrEqualTo(Integer value) {
+            addCriterion("SmallCategory <=", value, "smallcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryIn(List<Integer> values) {
+            addCriterion("SmallCategory in", values, "smallcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryNotIn(List<Integer> values) {
+            addCriterion("SmallCategory not in", values, "smallcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryBetween(Integer value1, Integer value2) {
+            addCriterion("SmallCategory between", value1, value2, "smallcategory");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmallcategoryNotBetween(Integer value1, Integer value2) {
+            addCriterion("SmallCategory not between", value1, value2, "smallcategory");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -12,16 +12,17 @@ import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.DataMapper;
+import com.fast.base.data.dao.MCouponMapper;
+import com.fast.base.data.dao.MGoodsMapper;
 import com.fast.base.data.dao.MGoodscategoryMapper;
 import com.fast.base.data.dao.MGoodsgroupingMapper;
 import com.fast.base.data.dao.MMicropageMapper;
 import com.fast.base.data.dao.MMicropagesetMapper;
 import com.fast.base.data.dao.MMicropagesetdtlMapper;
 import com.fast.base.data.dao.MPublicplatformMapper;
+import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodscategory;
-import com.fast.base.data.entity.MGoodscategoryExample;
 import com.fast.base.data.entity.MGoodsgrouping;
-import com.fast.base.data.entity.MGoodsgroupingExample;
 import com.fast.base.data.entity.MMicropage;
 import com.fast.base.data.entity.MMicropageExample;
 import com.fast.base.data.entity.MMiniprogram;
@@ -74,6 +75,12 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 	
 	@Autowired
 	IDataService iDataService;
+	
+	@Autowired
+	MGoodsMapper goodsMapper;
+	
+	@Autowired
+	MCouponMapper couponMapper;
 	
 	@Override
 	public Result list(PagingView page, Integer publicPlatformID) {
@@ -136,7 +143,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 				return result;
 			}
 			
-			result = queryPageData(micropage.getId());
+			result = queryPageData(micropage.getId(), false);
 			result.setId(micropage.getId());
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
@@ -147,7 +154,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 	}
 
 	@Override
-	public Result queryPageData(Integer pageID) {
+	public Result queryPageData(Integer pageID, boolean isDraft) {
 		Result result = new Result();
 
 		try {
@@ -169,7 +176,10 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 				map.put("publicplatformcode", publicPlatformCode);
 				dataMap.put("micropage", map);
 				
-				sql = "select * from m_micropagesetdraft where micropageid=" + pageID + " order by showindex";
+				sql = "select * from m_micropageset where micropageid=" + pageID + " order by showindex";
+				if (isDraft) {
+					sql = "select * from m_micropagesetdraft where micropageid=" + pageID + " order by showindex";
+				}
 				List<LinkedHashMap<String, Object>> setList = dataMapper.pageList(sql);
 				if (setList != null && setList.size() > 0) {
 					setList = CommonUtil.transformUpperCase(setList);
@@ -178,8 +188,12 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 					for (int i = 0; i < setList.size(); i++) {
 						setIDList.add(setList.get(i).get("id").toString().trim());
 					}
-					sql = "select * from m_micropagesetdtldraft where micropagesetid in (" + StringUtils.join(setIDList.toArray(), ",") + ") order by showindex";
-					List<LinkedHashMap<String, Object>> setDtlList = dataMapper.pageList(sql);					
+					sql = "select * from m_micropagesetdtl where micropagesetid in (" + StringUtils.join(setIDList.toArray(), ",") + ") order by showindex";
+					if (isDraft) {
+						sql = "select * from m_micropagesetdtldraft where micropagesetid in (" + StringUtils.join(setIDList.toArray(), ",") + ") order by showindex";
+					}
+					List<LinkedHashMap<String, Object>> setDtlList = dataMapper.pageList(sql);
+					/*
 					// 分组
 					List<Integer> groupIDList = new ArrayList<>();
 					// 分类
@@ -214,6 +228,35 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 						example.createCriteria().andIdIn(categoryIDList);
 						goodscategories = goodscategoryMapper.selectByExample(example);
 					}
+					List<MGoodscategory> bigCategories = new ArrayList<>();
+					List<MGoodscategory> middleCategories = new ArrayList<>();
+					List<MGoodscategory> smallCategories = new ArrayList<>();
+					for (int i = 0; i < goodscategories.size(); i++) {
+						if (goodscategories.get(i).getGrade().intValue() == 1) {
+							bigCategories.add(goodscategories.get(i));
+						} else if (goodscategories.get(i).getGrade().intValue() == 2) {
+							middleCategories.add(goodscategories.get(i));
+						} else if (goodscategories.get(i).getGrade().intValue() == 3) {
+							smallCategories.add(goodscategories.get(i));
+						}
+					}
+					
+					List<String> goodsidList = new ArrayList<>();
+					for (int i = 0; i < setList.size(); i++) {
+						String kind = setList.get(i).get("kind") == null ? "" : setList.get(i).get("kind").toString().trim();
+						if ("9".equals(kind)) {
+							String goodsid = setList.get(i).get("first") == null ? "" : setList.get(i).get("kind").toString().trim();
+							if (!Common.isEmpty(goodsid)) {
+								goodsidList.add(goodsid);
+							}
+						}
+					}
+					List<LinkedHashMap<String, Object>> goodsList = new ArrayList<>();
+					if (goodsidList.size() > 0) {
+						sql = "select * from m_goods where id in (" + StringUtils.join(goodsidList.toArray(), ",") + ") order by id";
+						goodsList = dataMapper.pageList(sql);
+						goodsList = CommonUtil.transformUpperCase(goodsList);
+					}*/
 					
 					for (int i = 0; i < setList.size(); i++) {
 						LinkedHashMap<String, Object> setMap = setList.get(i);
@@ -221,49 +264,93 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 						String kind = setMap.get("kind") == null ? "" : setMap.get("kind").toString().trim();
 						List<LinkedHashMap<String, Object>> dtlList = new ArrayList<>();
 						if (setDtlList != null && setDtlList.size() > 0) {
+							setDtlList = CommonUtil.transformUpperCase(setDtlList);
 							for (int j = 0; j < setDtlList.size(); j++) {
 								if (setMap.get("id").toString().trim().equals(setDtlList.get(j).get("micropagesetid").toString().trim())) {
 									String first = setDtlList.get(j).get("first") == null ? "" : setDtlList.get(j).get("first").toString().trim();
 									String second = setDtlList.get(j).get("second") == null ? "" : setDtlList.get(j).get("second").toString().trim();
 									String third = setDtlList.get(j).get("third") == null ? "" : setDtlList.get(j).get("third").toString().trim();
 									String grouping = "";
+									String goodsname = "";
+									long price = 0;
+									Integer point = 0;
+									Byte type = 1;
 									String category = "";
 									if (!Common.isEmpty(first)) {
 										// 分组
 										if ("7".equals(kind)) {
-											for (int k = 0; k < goodsgroupings.size(); k++) {
-												if (first.equals(goodsgroupings.get(k).getId().toString())) {
+											MGoodsgrouping goodsgrouping = goodsgroupingMapper.selectByPrimaryKey(Integer.valueOf(first));
+											if (goodsgrouping != null && goodsgrouping.getId() > 0) {
+												grouping = goodsgrouping.getName();
+											}
+											/*for (int k = 0; k < goodsgroupings.size(); k++) {
+												if (first.equals(goodsgroupings.get(k).getId().toString())) {	
 													grouping = goodsgroupings.get(k).getName();
 												}
-											}
+											}*/
 										}
 										// 分类
 										else if ("8".equals(kind)) {
 											if (!Common.isEmpty(third)) {
-												for (int k = 0; k < goodscategories.size(); k++) {
-													if (third.equals(goodscategories.get(k).getId().toString())) {
-														category = goodscategories.get(k).getName();
-													}
+												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(third));
+												if (goodscategory != null && goodscategory.getId() > 0) {
+													category = goodscategory.getName();
 												}
+												/*for (int k = 0; k < smallCategories.size(); k++) {
+													if (third.equals(smallCategories.get(k).getId().toString())) {
+														category = smallCategories.get(k).getName();
+													}
+												}*/
 											}
 											if (!Common.isEmpty(second) && Common.isEmpty(category)) {
-												for (int k = 0; k < goodscategories.size(); k++) {
-													if (second.equals(goodscategories.get(k).getId().toString())) {
-														category = goodscategories.get(k).getName();
-													}
+												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(second));
+												if (goodscategory != null && goodscategory.getId() > 0) {
+													category = goodscategory.getName();
 												}
+												/*for (int k = 0; k < middleCategories.size(); k++) {
+													if (second.equals(middleCategories.get(k).getId().toString())) {
+														category = middleCategories.get(k).getName();
+													}
+												}*/
 											}
 											if (!Common.isEmpty(first) && Common.isEmpty(category)) {
-												for (int k = 0; k < goodscategories.size(); k++) {
-													if (first.equals(goodscategories.get(k).getId().toString())) {
-														category = goodscategories.get(k).getName();
-													}
+												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(first));
+												if (goodscategory != null && goodscategory.getId() > 0) {
+													category = goodscategory.getName();
 												}
+												/*for (int k = 0; k < bigCategories.size(); k++) {
+													if (first.equals(bigCategories.get(k).getId().toString())) {
+														category = bigCategories.get(k).getName();
+													}
+												}*/
 											}
+										}
+										// 商品
+										else if ("9".equals(kind)) {
+											MGoods goods = goodsMapper.selectByPrimaryKey(Integer.valueOf(first));
+											if (goods != null && goods.getId() > 0) {
+												goodsname = goods.getName() == null ? "" : goods.getName();
+												price = goods.getPrice() == null ? 0 : goods.getPrice();
+												point = goods.getExchangepoint() == null ? 0 : goods.getExchangepoint();
+												type = goods.getKind() == null ? 1 : goods.getKind();
+												setDtlList.get(j).put("photourl", goods.getPhotourl() == null ? "" : goods.getPhotourl());
+											}
+											/*for (int k = 0; k < goodsList.size(); k++) {
+												if (first.equals(goodsList.get(k).get("id").toString())) {
+													goodsname = goodsList.get(k).get("name") == null ? "" : goodsList.get(k).get("name").toString();
+													price = goodsList.get(k).get("price") == null ? "0" : goodsList.get(k).get("price").toString();
+													point = goodsList.get(k).get("point") == null ? "0" : goodsList.get(k).get("point").toString();
+													type = goodsList.get(k).get("kind") == null ? "1" : goodsList.get(k).get("kind").toString();
+												}
+											}*/
 										}
 									}
 									setDtlList.get(j).put("grouping", grouping);
 									setDtlList.get(j).put("category", category);
+									setDtlList.get(j).put("goodsname", goodsname);
+									setDtlList.get(j).put("price", price);
+									setDtlList.get(j).put("point", point);
+									setDtlList.get(j).put("type", type);
 									dtlList.add(setDtlList.get(j));
 								}
 							}
