@@ -1,5 +1,8 @@
 package com.fast.service;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import com.fast.base.Result;
 import com.fast.base.page.PagingView;
 
@@ -28,5 +31,13 @@ public interface IDataService {
 	 * @return
 	 */
 	public Result one(String tableName, Integer id);
+	
+	/**
+	 * 补充数据
+	 * @param list
+	 * @param tableName
+	 * @return
+	 */
+	public List<LinkedHashMap<String, Object>> completeData(List<LinkedHashMap<String, Object>> list, String tableName);
 
 }

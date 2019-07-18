@@ -1,6 +1,7 @@
 package com.fast.service;
 
 import com.fast.base.Result;
+import com.fast.base.page.PagingView;
 
 /**
  * 微页面
@@ -8,6 +9,14 @@ import com.fast.base.Result;
  *
  */
 public interface IMicropageService {
+	
+	/**
+	 * 获取指定公众号的微页面
+	 * @param page
+	 * @param publicPlatformID  公众号id
+	 * @return
+	 */
+	public Result list(PagingView page, Integer publicPlatformID);
 	
 	/**
 	 * 获取微页面数据

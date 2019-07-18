@@ -21,30 +21,30 @@
 		<div class="configurePanel middlePanel">
 			<div class="phoneBox">
 				<div class="editView">
-					<div v-for="(d, index) in setdata" v-bind:data-index="index" class="setItem">
+					<div v-for="(d, index) in setdata" v-bind:data-index="index" class="setItem" v-bind:key="d.id">
 						<div class="layui-carousel" v-bind:data-index="index" v-bind:id="'carouselView'+index" v-bind:lay-filter="'carouselView'+index" v-if="d.kind == 1">
 							<div class="carouselBox" carousel-item="">
 								<div v-for="(dt, index) in d.detail"><img v-bind:src="dt.photourl" onerror="defaultImg(this)"></div>
 							</div>
 						</div>
-						<div class="layui-search" v-if="d.kind == 2">
+						<div class="layui-search" v-else-if="d.kind == 2">
 							<i class="layui-icon layui-icon-search"> </i>
 							<input class="layui-input" placeholder="搜索" disabled="disabled"/>
 						</div>
-						<div class="layui-navigation" v-if="d.kind == 3">
+						<div class="layui-navigation" v-else-if="d.kind == 3">
 							<div class="navigation-img-box" v-for="(dt, index) in d.detail">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)">
 							</div>
 						</div>
-						<div class="layui-notice" v-if="d.kind == 4">
+						<div class="layui-notice" v-else-if="d.kind == 4">
 							<div class="notice">{{d.detail[0].text}}</div>
 						</div>
-						<div class="layui-title" v-if="d.kind == 5">
+						<div class="layui-title" v-else-if="d.kind == 5">
 							<div class="title">{{d.detail[0].text}}</div>
 							<i class="layui-icon layui-icon-right"></i>
 						</div>
-						<div class="layui-blank" v-if="d.kind == 6"></div>
-						<div class="layui-group" v-if="d.kind == 7">
+						<div class="layui-blank" v-else-if="d.kind == 6"></div>
+						<div class="layui-group" v-else-if="d.kind == 7">
 							<div class="group-title" v-if="d.detail.length > 1">
 								<div class="tab" v-for="(dt, index) in d.detail">{{dt.grouping}}</div>
 							</div>
@@ -76,7 +76,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="layui-classify" v-if="d.kind == 8">
+						<div class="layui-classify" v-else-if="d.kind == 8">
 							<div class="classify-title" v-if="d.detail.length > 1">
 								<div class="tab" v-for="(dt, index) in d.detail">{{dt.category}}</div>
 							</div>
@@ -109,17 +109,20 @@
 							</div>
 						</div>
 						<div class="chooseBox" v-bind:class="d.choose == 1 ? 'choose-view' : ''"></div>
+						<i class="layui-icon layui-icon-delete deleteIcon"></i>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="configurePanel rightPanel">
 			<div class="editBox">
-				<div class="editItem" v-for="(e, index) in editdata" v-bind:data-index="index">
+				<div class="editItem" v-for="(e, index) in editdata" v-bind:data-index="index" v-bind:key="e.id">
 					<div class="layTable uploadField ad" v-if="e.kind == 1 && e.choose == 1" v-for="(dt, i in e.detail" v-bind:data-index="i">
-						<div class="layui-upload-drag layTableCell">
-							<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
-							<i class="layui-icon" v-else></i>
+						<div class="uploadBox">
+							<div class="layui-upload-drag layTableCell">
+								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
+								<i class="layui-icon" v-else></i>
+							</div>
 							<i class="layui-icon layui-icon-delete"></i>
 						</div>
 						<form class="layui-form layTableCell" action="">
@@ -310,4 +313,5 @@
 			</div>
 		</div>
 	</div>
+	<input type="hidden" id="pageid" value="${pageid}">
 </div>
