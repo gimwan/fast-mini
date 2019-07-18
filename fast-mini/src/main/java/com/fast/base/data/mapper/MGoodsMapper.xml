@@ -1,445 +1,465 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.fast.base.data.dao.MGoodsMapper" >
-  <resultMap id="BaseResultMap" type="com.fast.base.data.entity.MGoods" >
-    <id column="ID" property="id" jdbcType="INTEGER" />
-    <result column="Code" property="code" jdbcType="VARCHAR" />
-    <result column="Name" property="name" jdbcType="VARCHAR" />
-    <result column="BrandID" property="brandid" jdbcType="INTEGER" />
-    <result column="Kind" property="kind" jdbcType="TINYINT" />
-    <result column="PurchasePrice" property="purchaseprice" jdbcType="DECIMAL" />
-    <result column="BasePrice" property="baseprice" jdbcType="DECIMAL" />
-    <result column="Price" property="price" jdbcType="DECIMAL" />
-    <result column="ShowColor" property="showcolor" jdbcType="TINYINT" />
-    <result column="ShowPattern" property="showpattern" jdbcType="TINYINT" />
-    <result column="ShowSize" property="showsize" jdbcType="TINYINT" />
-    <result column="ShipType" property="shiptype" jdbcType="TINYINT" />
-    <result column="OnSale" property="onsale" jdbcType="TINYINT" />
-    <result column="OnlyShow" property="onlyshow" jdbcType="TINYINT" />
-    <result column="PhotoUrl" property="photourl" jdbcType="VARCHAR" />
-    <result column="ExchangePoint" property="exchangepoint" jdbcType="INTEGER" />
-    <result column="OnSaleTime" property="onsaletime" jdbcType="TIMESTAMP" />
-    <result column="OnSaleer" property="onsaleer" jdbcType="VARCHAR" />
-    <result column="PointTimes" property="pointtimes" jdbcType="DECIMAL" />
-    <result column="Memo" property="memo" jdbcType="VARCHAR" />
-    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="Creator" property="creator" jdbcType="VARCHAR" />
-    <result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
-    <result column="Modifier" property="modifier" jdbcType="VARCHAR" />
-    <result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
-    <result column="UseFlag" property="useflag" jdbcType="TINYINT" />
-    <result column="Describe" property="describe" jdbcType="VARCHAR" />
-    <result column="BigCategory" property="bigcategory" jdbcType="INTEGER" />
-    <result column="MiddleCategory" property="middlecategory" jdbcType="INTEGER" />
-    <result column="SmallCategory" property="smallcategory" jdbcType="INTEGER" />
-  </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    ID, Code, Name, BrandID, Kind, PurchasePrice, BasePrice, Price, ShowColor, ShowPattern, 
-    ShowSize, ShipType, OnSale, OnlyShow, PhotoUrl, ExchangePoint, OnSaleTime, OnSaleer, 
-    PointTimes, Memo, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime, UseFlag, 
-    Describe, BigCategory, MiddleCategory, SmallCategory
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.fast.base.data.entity.MGoodsExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    'false' as QUERYID,
-    <include refid="Base_Column_List" />
-    from m_goods
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from m_goods
-    where ID = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from m_goods
-    where ID = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.fast.base.data.entity.MGoodsExample" >
-    delete from m_goods
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.fast.base.data.entity.MGoods" >
-    insert into m_goods (ID, Code, Name, 
-      BrandID, Kind, PurchasePrice, 
-      BasePrice, Price, ShowColor, 
-      ShowPattern, ShowSize, ShipType, 
-      OnSale, OnlyShow, PhotoUrl, 
-      ExchangePoint, OnSaleTime, OnSaleer, 
-      PointTimes, Memo, CreateTime, 
-      Creator, ModifyTime, Modifier, 
-      UpdatedTime, UseFlag, Describe, 
-      BigCategory, MiddleCategory, SmallCategory
-      )
-    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{brandid,jdbcType=INTEGER}, #{kind,jdbcType=TINYINT}, #{purchaseprice,jdbcType=DECIMAL}, 
-      #{baseprice,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{showcolor,jdbcType=TINYINT}, 
-      #{showpattern,jdbcType=TINYINT}, #{showsize,jdbcType=TINYINT}, #{shiptype,jdbcType=TINYINT}, 
-      #{onsale,jdbcType=TINYINT}, #{onlyshow,jdbcType=TINYINT}, #{photourl,jdbcType=VARCHAR}, 
-      #{exchangepoint,jdbcType=INTEGER}, #{onsaletime,jdbcType=TIMESTAMP}, #{onsaleer,jdbcType=VARCHAR}, 
-      #{pointtimes,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
-      #{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, 
-      #{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}, #{describe,jdbcType=VARCHAR}, 
-      #{bigcategory,jdbcType=INTEGER}, #{middlecategory,jdbcType=INTEGER}, #{smallcategory,jdbcType=INTEGER}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.fast.base.data.entity.MGoods" >
-    insert into m_goods
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        ID,
-      </if>
-      <if test="code != null" >
-        Code,
-      </if>
-      <if test="name != null" >
-        Name,
-      </if>
-      <if test="brandid != null" >
-        BrandID,
-      </if>
-      <if test="kind != null" >
-        Kind,
-      </if>
-      <if test="purchaseprice != null" >
-        PurchasePrice,
-      </if>
-      <if test="baseprice != null" >
-        BasePrice,
-      </if>
-      <if test="price != null" >
-        Price,
-      </if>
-      <if test="showcolor != null" >
-        ShowColor,
-      </if>
-      <if test="showpattern != null" >
-        ShowPattern,
-      </if>
-      <if test="showsize != null" >
-        ShowSize,
-      </if>
-      <if test="shiptype != null" >
-        ShipType,
-      </if>
-      <if test="onsale != null" >
-        OnSale,
-      </if>
-      <if test="onlyshow != null" >
-        OnlyShow,
-      </if>
-      <if test="photourl != null" >
-        PhotoUrl,
-      </if>
-      <if test="exchangepoint != null" >
-        ExchangePoint,
-      </if>
-      <if test="onsaletime != null" >
-        OnSaleTime,
-      </if>
-      <if test="onsaleer != null" >
-        OnSaleer,
-      </if>
-      <if test="pointtimes != null" >
-        PointTimes,
-      </if>
-      <if test="memo != null" >
-        Memo,
-      </if>
-      <if test="createtime != null" >
-        CreateTime,
-      </if>
-      <if test="creator != null" >
-        Creator,
-      </if>
-      <if test="modifytime != null" >
-        ModifyTime,
-      </if>
-      <if test="modifier != null" >
-        Modifier,
-      </if>
-      <if test="updatedtime != null" >
-        UpdatedTime,
-      </if>
-      <if test="useflag != null" >
-        UseFlag,
-      </if>
-      <if test="describe != null" >
-        Describe,
-      </if>
-      <if test="bigcategory != null" >
-        BigCategory,
-      </if>
-      <if test="middlecategory != null" >
-        MiddleCategory,
-      </if>
-      <if test="smallcategory != null" >
-        SmallCategory,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="brandid != null" >
-        #{brandid,jdbcType=INTEGER},
-      </if>
-      <if test="kind != null" >
-        #{kind,jdbcType=TINYINT},
-      </if>
-      <if test="purchaseprice != null" >
-        #{purchaseprice,jdbcType=DECIMAL},
-      </if>
-      <if test="baseprice != null" >
-        #{baseprice,jdbcType=DECIMAL},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="showcolor != null" >
-        #{showcolor,jdbcType=TINYINT},
-      </if>
-      <if test="showpattern != null" >
-        #{showpattern,jdbcType=TINYINT},
-      </if>
-      <if test="showsize != null" >
-        #{showsize,jdbcType=TINYINT},
-      </if>
-      <if test="shiptype != null" >
-        #{shiptype,jdbcType=TINYINT},
-      </if>
-      <if test="onsale != null" >
-        #{onsale,jdbcType=TINYINT},
-      </if>
-      <if test="onlyshow != null" >
-        #{onlyshow,jdbcType=TINYINT},
-      </if>
-      <if test="photourl != null" >
-        #{photourl,jdbcType=VARCHAR},
-      </if>
-      <if test="exchangepoint != null" >
-        #{exchangepoint,jdbcType=INTEGER},
-      </if>
-      <if test="onsaletime != null" >
-        #{onsaletime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="onsaleer != null" >
-        #{onsaleer,jdbcType=VARCHAR},
-      </if>
-      <if test="pointtimes != null" >
-        #{pointtimes,jdbcType=DECIMAL},
-      </if>
-      <if test="memo != null" >
-        #{memo,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="creator != null" >
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifytime != null" >
-        #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifier != null" >
-        #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="updatedtime != null" >
-        #{updatedtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="useflag != null" >
-        #{useflag,jdbcType=TINYINT},
-      </if>
-      <if test="describe != null" >
-        #{describe,jdbcType=VARCHAR},
-      </if>
-      <if test="bigcategory != null" >
-        #{bigcategory,jdbcType=INTEGER},
-      </if>
-      <if test="middlecategory != null" >
-        #{middlecategory,jdbcType=INTEGER},
-      </if>
-      <if test="smallcategory != null" >
-        #{smallcategory,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.fast.base.data.entity.MGoodsExample" resultType="java.lang.Integer" >
-    select count(*) from m_goods
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MGoods" >
-    update m_goods
-    <set >
-      <if test="code != null" >
-        Code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        Name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="brandid != null" >
-        BrandID = #{brandid,jdbcType=INTEGER},
-      </if>
-      <if test="kind != null" >
-        Kind = #{kind,jdbcType=TINYINT},
-      </if>
-      <if test="purchaseprice != null" >
-        PurchasePrice = #{purchaseprice,jdbcType=DECIMAL},
-      </if>
-      <if test="baseprice != null" >
-        BasePrice = #{baseprice,jdbcType=DECIMAL},
-      </if>
-      <if test="price != null" >
-        Price = #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="showcolor != null" >
-        ShowColor = #{showcolor,jdbcType=TINYINT},
-      </if>
-      <if test="showpattern != null" >
-        ShowPattern = #{showpattern,jdbcType=TINYINT},
-      </if>
-      <if test="showsize != null" >
-        ShowSize = #{showsize,jdbcType=TINYINT},
-      </if>
-      <if test="shiptype != null" >
-        ShipType = #{shiptype,jdbcType=TINYINT},
-      </if>
-      <if test="onsale != null" >
-        OnSale = #{onsale,jdbcType=TINYINT},
-      </if>
-      <if test="onlyshow != null" >
-        OnlyShow = #{onlyshow,jdbcType=TINYINT},
-      </if>
-      <if test="photourl != null" >
-        PhotoUrl = #{photourl,jdbcType=VARCHAR},
-      </if>
-      <if test="exchangepoint != null" >
-        ExchangePoint = #{exchangepoint,jdbcType=INTEGER},
-      </if>
-      <if test="onsaletime != null" >
-        OnSaleTime = #{onsaletime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="onsaleer != null" >
-        OnSaleer = #{onsaleer,jdbcType=VARCHAR},
-      </if>
-      <if test="pointtimes != null" >
-        PointTimes = #{pointtimes,jdbcType=DECIMAL},
-      </if>
-      <if test="memo != null" >
-        Memo = #{memo,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        CreateTime = #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="creator != null" >
-        Creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifytime != null" >
-        ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifier != null" >
-        Modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="updatedtime != null" >
-        UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="useflag != null" >
-        UseFlag = #{useflag,jdbcType=TINYINT},
-      </if>
-      <if test="describe != null" >
-        Describe = #{describe,jdbcType=VARCHAR},
-      </if>
-      <if test="bigcategory != null" >
-        BigCategory = #{bigcategory,jdbcType=INTEGER},
-      </if>
-      <if test="middlecategory != null" >
-        MiddleCategory = #{middlecategory,jdbcType=INTEGER},
-      </if>
-      <if test="smallcategory != null" >
-        SmallCategory = #{smallcategory,jdbcType=INTEGER},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MGoods" >
-    update m_goods
-    set Code = #{code,jdbcType=VARCHAR},
-      Name = #{name,jdbcType=VARCHAR},
-      BrandID = #{brandid,jdbcType=INTEGER},
-      Kind = #{kind,jdbcType=TINYINT},
-      PurchasePrice = #{purchaseprice,jdbcType=DECIMAL},
-      BasePrice = #{baseprice,jdbcType=DECIMAL},
-      Price = #{price,jdbcType=DECIMAL},
-      ShowColor = #{showcolor,jdbcType=TINYINT},
-      ShowPattern = #{showpattern,jdbcType=TINYINT},
-      ShowSize = #{showsize,jdbcType=TINYINT},
-      ShipType = #{shiptype,jdbcType=TINYINT},
-      OnSale = #{onsale,jdbcType=TINYINT},
-      OnlyShow = #{onlyshow,jdbcType=TINYINT},
-      PhotoUrl = #{photourl,jdbcType=VARCHAR},
-      ExchangePoint = #{exchangepoint,jdbcType=INTEGER},
-      OnSaleTime = #{onsaletime,jdbcType=TIMESTAMP},
-      OnSaleer = #{onsaleer,jdbcType=VARCHAR},
-      PointTimes = #{pointtimes,jdbcType=DECIMAL},
-      Memo = #{memo,jdbcType=VARCHAR},
-      CreateTime = #{createtime,jdbcType=TIMESTAMP},
-      Creator = #{creator,jdbcType=VARCHAR},
-      ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      Modifier = #{modifier,jdbcType=VARCHAR},
-      UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-      UseFlag = #{useflag,jdbcType=TINYINT},
-      Describe = #{describe,jdbcType=VARCHAR},
-      BigCategory = #{bigcategory,jdbcType=INTEGER},
-      MiddleCategory = #{middlecategory,jdbcType=INTEGER},
-      SmallCategory = #{smallcategory,jdbcType=INTEGER}
-    where ID = #{id,jdbcType=INTEGER}
-  </update>
+<mapper namespace="com.fast.base.data.dao.MGoodsMapper">
+	<cache type="com.fast.system.RedisCache" />
+	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MGoods">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="Code" property="code" jdbcType="VARCHAR" />
+		<result column="Name" property="name" jdbcType="VARCHAR" />
+		<result column="BrandID" property="brandid" jdbcType="INTEGER" />
+		<result column="Kind" property="kind" jdbcType="TINYINT" />
+		<result column="PurchasePrice" property="purchaseprice"
+			jdbcType="DECIMAL" />
+		<result column="BasePrice" property="baseprice" jdbcType="DECIMAL" />
+		<result column="Price" property="price" jdbcType="DECIMAL" />
+		<result column="ShowColor" property="showcolor" jdbcType="TINYINT" />
+		<result column="ShowPattern" property="showpattern" jdbcType="TINYINT" />
+		<result column="ShowSize" property="showsize" jdbcType="TINYINT" />
+		<result column="ShipType" property="shiptype" jdbcType="TINYINT" />
+		<result column="OnSale" property="onsale" jdbcType="TINYINT" />
+		<result column="OnlyShow" property="onlyshow" jdbcType="TINYINT" />
+		<result column="PhotoUrl" property="photourl" jdbcType="VARCHAR" />
+		<result column="ExchangePoint" property="exchangepoint"
+			jdbcType="INTEGER" />
+		<result column="OnSaleTime" property="onsaletime" jdbcType="TIMESTAMP" />
+		<result column="OnSaleer" property="onsaleer" jdbcType="VARCHAR" />
+		<result column="PointTimes" property="pointtimes" jdbcType="DECIMAL" />
+		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="Creator" property="creator" jdbcType="VARCHAR" />
+		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+		<result column="Describe" property="describe" jdbcType="VARCHAR" />
+		<result column="BigCategory" property="bigcategory" jdbcType="INTEGER" />
+		<result column="MiddleCategory" property="middlecategory"
+			jdbcType="INTEGER" />
+		<result column="SmallCategory" property="smallcategory"
+			jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ID, Code, Name, BrandID, Kind, PurchasePrice, BasePrice, Price,
+		ShowColor, ShowPattern,
+		ShowSize, ShipType, OnSale, OnlyShow, PhotoUrl, ExchangePoint, OnSaleTime,
+		OnSaleer,
+		PointTimes, Memo, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime,
+		UseFlag,
+		Describe, BigCategory, MiddleCategory, SmallCategory
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fast.base.data.entity.MGoodsExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		'false' as QUERYID,
+		<include refid="Base_Column_List" />
+		from m_goods
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from m_goods
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from m_goods
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.fast.base.data.entity.MGoodsExample">
+		delete from m_goods
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.fast.base.data.entity.MGoods"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_goods (ID, Code, Name,
+		BrandID, Kind, PurchasePrice,
+		BasePrice, Price, ShowColor,
+		ShowPattern, ShowSize, ShipType,
+		OnSale, OnlyShow, PhotoUrl,
+		ExchangePoint, OnSaleTime, OnSaleer,
+		PointTimes, Memo, CreateTime,
+		Creator, ModifyTime, Modifier,
+		UpdatedTime, UseFlag, Describe,
+		BigCategory, MiddleCategory, SmallCategory
+		)
+		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{brandid,jdbcType=INTEGER}, #{kind,jdbcType=TINYINT}, #{purchaseprice,jdbcType=DECIMAL},
+		#{baseprice,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL},
+		#{showcolor,jdbcType=TINYINT},
+		#{showpattern,jdbcType=TINYINT}, #{showsize,jdbcType=TINYINT}, #{shiptype,jdbcType=TINYINT},
+		#{onsale,jdbcType=TINYINT}, #{onlyshow,jdbcType=TINYINT},
+		#{photourl,jdbcType=VARCHAR},
+		#{exchangepoint,jdbcType=INTEGER}, #{onsaletime,jdbcType=TIMESTAMP}, #{onsaleer,jdbcType=VARCHAR},
+		#{pointtimes,jdbcType=DECIMAL}, #{memo,jdbcType=VARCHAR},
+		#{createtime,jdbcType=TIMESTAMP},
+		#{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
+		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT},
+		#{describe,jdbcType=VARCHAR},
+		#{bigcategory,jdbcType=INTEGER}, #{middlecategory,jdbcType=INTEGER}, #{smallcategory,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MGoods"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_goods
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="code != null">
+				Code,
+			</if>
+			<if test="name != null">
+				Name,
+			</if>
+			<if test="brandid != null">
+				BrandID,
+			</if>
+			<if test="kind != null">
+				Kind,
+			</if>
+			<if test="purchaseprice != null">
+				PurchasePrice,
+			</if>
+			<if test="baseprice != null">
+				BasePrice,
+			</if>
+			<if test="price != null">
+				Price,
+			</if>
+			<if test="showcolor != null">
+				ShowColor,
+			</if>
+			<if test="showpattern != null">
+				ShowPattern,
+			</if>
+			<if test="showsize != null">
+				ShowSize,
+			</if>
+			<if test="shiptype != null">
+				ShipType,
+			</if>
+			<if test="onsale != null">
+				OnSale,
+			</if>
+			<if test="onlyshow != null">
+				OnlyShow,
+			</if>
+			<if test="photourl != null">
+				PhotoUrl,
+			</if>
+			<if test="exchangepoint != null">
+				ExchangePoint,
+			</if>
+			<if test="onsaletime != null">
+				OnSaleTime,
+			</if>
+			<if test="onsaleer != null">
+				OnSaleer,
+			</if>
+			<if test="pointtimes != null">
+				PointTimes,
+			</if>
+			<if test="memo != null">
+				Memo,
+			</if>
+			<if test="createtime != null">
+				CreateTime,
+			</if>
+			<if test="creator != null">
+				Creator,
+			</if>
+			<if test="modifytime != null">
+				ModifyTime,
+			</if>
+			<if test="modifier != null">
+				Modifier,
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime,
+			</if>
+			<if test="useflag != null">
+				UseFlag,
+			</if>
+			<if test="describe != null">
+				Describe,
+			</if>
+			<if test="bigcategory != null">
+				BigCategory,
+			</if>
+			<if test="middlecategory != null">
+				MiddleCategory,
+			</if>
+			<if test="smallcategory != null">
+				SmallCategory,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="brandid != null">
+				#{brandid,jdbcType=INTEGER},
+			</if>
+			<if test="kind != null">
+				#{kind,jdbcType=TINYINT},
+			</if>
+			<if test="purchaseprice != null">
+				#{purchaseprice,jdbcType=DECIMAL},
+			</if>
+			<if test="baseprice != null">
+				#{baseprice,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="showcolor != null">
+				#{showcolor,jdbcType=TINYINT},
+			</if>
+			<if test="showpattern != null">
+				#{showpattern,jdbcType=TINYINT},
+			</if>
+			<if test="showsize != null">
+				#{showsize,jdbcType=TINYINT},
+			</if>
+			<if test="shiptype != null">
+				#{shiptype,jdbcType=TINYINT},
+			</if>
+			<if test="onsale != null">
+				#{onsale,jdbcType=TINYINT},
+			</if>
+			<if test="onlyshow != null">
+				#{onlyshow,jdbcType=TINYINT},
+			</if>
+			<if test="photourl != null">
+				#{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="exchangepoint != null">
+				#{exchangepoint,jdbcType=INTEGER},
+			</if>
+			<if test="onsaletime != null">
+				#{onsaletime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="onsaleer != null">
+				#{onsaleer,jdbcType=VARCHAR},
+			</if>
+			<if test="pointtimes != null">
+				#{pointtimes,jdbcType=DECIMAL},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				#{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="updatedtime != null">
+				#{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useflag != null">
+				#{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="describe != null">
+				#{describe,jdbcType=VARCHAR},
+			</if>
+			<if test="bigcategory != null">
+				#{bigcategory,jdbcType=INTEGER},
+			</if>
+			<if test="middlecategory != null">
+				#{middlecategory,jdbcType=INTEGER},
+			</if>
+			<if test="smallcategory != null">
+				#{smallcategory,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.fast.base.data.entity.MGoodsExample"
+		resultType="java.lang.Integer">
+		select count(*) from m_goods
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MGoods">
+		update m_goods
+		<set>
+			<if test="code != null">
+				Code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				Name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="brandid != null">
+				BrandID = #{brandid,jdbcType=INTEGER},
+			</if>
+			<if test="kind != null">
+				Kind = #{kind,jdbcType=TINYINT},
+			</if>
+			<if test="purchaseprice != null">
+				PurchasePrice = #{purchaseprice,jdbcType=DECIMAL},
+			</if>
+			<if test="baseprice != null">
+				BasePrice = #{baseprice,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null">
+				Price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="showcolor != null">
+				ShowColor = #{showcolor,jdbcType=TINYINT},
+			</if>
+			<if test="showpattern != null">
+				ShowPattern = #{showpattern,jdbcType=TINYINT},
+			</if>
+			<if test="showsize != null">
+				ShowSize = #{showsize,jdbcType=TINYINT},
+			</if>
+			<if test="shiptype != null">
+				ShipType = #{shiptype,jdbcType=TINYINT},
+			</if>
+			<if test="onsale != null">
+				OnSale = #{onsale,jdbcType=TINYINT},
+			</if>
+			<if test="onlyshow != null">
+				OnlyShow = #{onlyshow,jdbcType=TINYINT},
+			</if>
+			<if test="photourl != null">
+				PhotoUrl = #{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="exchangepoint != null">
+				ExchangePoint = #{exchangepoint,jdbcType=INTEGER},
+			</if>
+			<if test="onsaletime != null">
+				OnSaleTime = #{onsaletime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="onsaleer != null">
+				OnSaleer = #{onsaleer,jdbcType=VARCHAR},
+			</if>
+			<if test="pointtimes != null">
+				PointTimes = #{pointtimes,jdbcType=DECIMAL},
+			</if>
+			<if test="memo != null">
+				Memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				CreateTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				Creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifier != null">
+				Modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useflag != null">
+				UseFlag = #{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="describe != null">
+				Describe = #{describe,jdbcType=VARCHAR},
+			</if>
+			<if test="bigcategory != null">
+				BigCategory = #{bigcategory,jdbcType=INTEGER},
+			</if>
+			<if test="middlecategory != null">
+				MiddleCategory = #{middlecategory,jdbcType=INTEGER},
+			</if>
+			<if test="smallcategory != null">
+				SmallCategory = #{smallcategory,jdbcType=INTEGER},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MGoods">
+		update m_goods
+		set Code = #{code,jdbcType=VARCHAR},
+		Name = #{name,jdbcType=VARCHAR},
+		BrandID = #{brandid,jdbcType=INTEGER},
+		Kind = #{kind,jdbcType=TINYINT},
+		PurchasePrice = #{purchaseprice,jdbcType=DECIMAL},
+		BasePrice = #{baseprice,jdbcType=DECIMAL},
+		Price = #{price,jdbcType=DECIMAL},
+		ShowColor = #{showcolor,jdbcType=TINYINT},
+		ShowPattern = #{showpattern,jdbcType=TINYINT},
+		ShowSize = #{showsize,jdbcType=TINYINT},
+		ShipType = #{shiptype,jdbcType=TINYINT},
+		OnSale = #{onsale,jdbcType=TINYINT},
+		OnlyShow = #{onlyshow,jdbcType=TINYINT},
+		PhotoUrl = #{photourl,jdbcType=VARCHAR},
+		ExchangePoint = #{exchangepoint,jdbcType=INTEGER},
+		OnSaleTime = #{onsaletime,jdbcType=TIMESTAMP},
+		OnSaleer = #{onsaleer,jdbcType=VARCHAR},
+		PointTimes = #{pointtimes,jdbcType=DECIMAL},
+		Memo = #{memo,jdbcType=VARCHAR},
+		CreateTime = #{createtime,jdbcType=TIMESTAMP},
+		Creator = #{creator,jdbcType=VARCHAR},
+		ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
+		Modifier = #{modifier,jdbcType=VARCHAR},
+		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+		UseFlag = #{useflag,jdbcType=TINYINT},
+		Describe = #{describe,jdbcType=VARCHAR},
+		BigCategory = #{bigcategory,jdbcType=INTEGER},
+		MiddleCategory = #{middlecategory,jdbcType=INTEGER},
+		SmallCategory = #{smallcategory,jdbcType=INTEGER}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>
