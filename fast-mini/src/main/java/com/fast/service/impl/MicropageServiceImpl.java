@@ -276,6 +276,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 									Integer point = 0;
 									Byte type = 1;
 									String category = "";
+									List<LinkedHashMap<String, Object>> subList = new ArrayList<>();
 									if (!Common.isEmpty(first)) {
 										// 分组
 										if ("7".equals(kind)) {
@@ -295,6 +296,20 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(third));
 												if (goodscategory != null && goodscategory.getId() > 0) {
 													category = goodscategory.getName();
+													sql = "select top 4 * from m_goods where smallcategory="+third+" order by id";
+													List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
+													goodsList = CommonUtil.transformUpperCase(goodsList);
+													for (int k = 0; k < goodsList.size(); k++) {
+														LinkedHashMap<String, Object> goodsMap = goodsList.get(k);
+														LinkedHashMap<String, Object> newMap = new LinkedHashMap<>();
+														newMap.put("id", goodsMap.get("id"));
+														newMap.put("name", goodsMap.get("name") == null ? "" : goodsMap.get("name"));
+														newMap.put("photourl", goodsMap.get("photourl") == null ? "" : goodsMap.get("photourl"));
+														newMap.put("price", goodsMap.get("price") == null ? 0 : goodsMap.get("price"));
+														newMap.put("point", goodsMap.get("exchangepoint") == null ? 0 : goodsMap.get("exchangepoint"));
+														newMap.put("kind", goodsMap.get("kind") == null ? 1 : goodsMap.get("kind"));
+														subList.add(newMap);
+													}
 												}
 												/*for (int k = 0; k < smallCategories.size(); k++) {
 													if (third.equals(smallCategories.get(k).getId().toString())) {
@@ -306,6 +321,20 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(second));
 												if (goodscategory != null && goodscategory.getId() > 0) {
 													category = goodscategory.getName();
+													sql = "select top 4 * from m_goods where middlecategory="+second+" order by id";
+													List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
+													goodsList = CommonUtil.transformUpperCase(goodsList);
+													for (int k = 0; k < goodsList.size(); k++) {
+														LinkedHashMap<String, Object> goodsMap = goodsList.get(k);
+														LinkedHashMap<String, Object> newMap = new LinkedHashMap<>();
+														newMap.put("id", goodsMap.get("id"));
+														newMap.put("name", goodsMap.get("name") == null ? "" : goodsMap.get("name"));
+														newMap.put("photourl", goodsMap.get("photourl") == null ? "" : goodsMap.get("photourl"));
+														newMap.put("price", goodsMap.get("price") == null ? 0 : goodsMap.get("price"));
+														newMap.put("point", goodsMap.get("exchangepoint") == null ? 0 : goodsMap.get("exchangepoint"));
+														newMap.put("kind", goodsMap.get("kind") == null ? 1 : goodsMap.get("kind"));
+														subList.add(newMap);
+													}
 												}
 												/*for (int k = 0; k < middleCategories.size(); k++) {
 													if (second.equals(middleCategories.get(k).getId().toString())) {
@@ -317,6 +346,20 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(first));
 												if (goodscategory != null && goodscategory.getId() > 0) {
 													category = goodscategory.getName();
+													sql = "select top 4 * from m_goods where bigcategory="+first+" order by id";
+													List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
+													goodsList = CommonUtil.transformUpperCase(goodsList);
+													for (int k = 0; k < goodsList.size(); k++) {
+														LinkedHashMap<String, Object> goodsMap = goodsList.get(k);
+														LinkedHashMap<String, Object> newMap = new LinkedHashMap<>();
+														newMap.put("id", goodsMap.get("id"));
+														newMap.put("name", goodsMap.get("name") == null ? "" : goodsMap.get("name"));
+														newMap.put("photourl", goodsMap.get("photourl") == null ? "" : goodsMap.get("photourl"));
+														newMap.put("price", goodsMap.get("price") == null ? 0 : goodsMap.get("price"));
+														newMap.put("point", goodsMap.get("exchangepoint") == null ? 0 : goodsMap.get("exchangepoint"));
+														newMap.put("kind", goodsMap.get("kind") == null ? 1 : goodsMap.get("kind"));
+														subList.add(newMap);
+													}
 												}
 												/*for (int k = 0; k < bigCategories.size(); k++) {
 													if (first.equals(bigCategories.get(k).getId().toString())) {
@@ -351,6 +394,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 									setDtlList.get(j).put("price", price);
 									setDtlList.get(j).put("point", point);
 									setDtlList.get(j).put("type", type);
+									setDtlList.get(j).put("list", subList);
 									dtlList.add(setDtlList.get(j));
 								}
 							}

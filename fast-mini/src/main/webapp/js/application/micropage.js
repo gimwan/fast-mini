@@ -53,7 +53,6 @@ let microPageEditVm;
 let uploadInst ;
 let microPage;
 let setData;
-let editData;
 
 common.bindVue = function() {
 	console.log('micropage');
@@ -91,7 +90,7 @@ function loadData() {
         	if (pageData != null) {
         		microPage = pageData.micropage;
         		setData = pageData.setdata;
-        		editData = pageData.setdata;
+        		console.log(setData);
             	microPageSetVm = new Vue({
                     el : ".phoneBox",
                     data : {
