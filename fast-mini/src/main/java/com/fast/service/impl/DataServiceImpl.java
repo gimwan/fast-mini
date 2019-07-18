@@ -10,12 +10,18 @@ import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.DataMapper;
+import com.fast.base.data.dao.MBrandMapper;
 import com.fast.base.data.dao.MDepartmentMapper;
+import com.fast.base.data.dao.MGoodscategoryMapper;
 import com.fast.base.data.dao.MPublicplatformMapper;
 import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MViptypeMapper;
+import com.fast.base.data.entity.MBrand;
+import com.fast.base.data.entity.MBrandExample;
 import com.fast.base.data.entity.MDepartment;
 import com.fast.base.data.entity.MDepartmentExample;
+import com.fast.base.data.entity.MGoodscategory;
+import com.fast.base.data.entity.MGoodscategoryExample;
 import com.fast.base.data.entity.MPublicplatform;
 import com.fast.base.data.entity.MPublicplatformExample;
 import com.fast.base.data.entity.MVip;
@@ -47,6 +53,12 @@ public class DataServiceImpl implements IDataService, Serializable {
 	
 	@Autowired
 	MVipMapper vipMapper;
+	
+	@Autowired
+	MBrandMapper brandMapper;
+	
+	@Autowired
+	MGoodscategoryMapper goodscategoryMapper;
 
 	@Override
 	public Result pageList(PagingView page, String tableName) {
@@ -234,6 +246,72 @@ public class DataServiceImpl implements IDataService, Serializable {
 				}
 				if ("".equals(list.get(i).get("recommender").toString())) {
 					list.get(i).put("recommenderid", "");
+				}
+			}
+		}
+		else if ("goods".equals(tableName)) {
+			List<Integer> brandidList = new ArrayList<>();
+			List<Integer> categoryidList = new ArrayList<>();
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).put("brand", "");
+				if (!Common.isEmpty(String.valueOf(list.get(i).get("brandid")))) {
+					brandidList.add(Integer.valueOf(list.get(i).get("brandid").toString()));
+				} else {
+					list.get(i).put("brandid", "");
+				}
+				list.get(i).put("bigcategoryname", "");
+				if (!Common.isEmpty(String.valueOf(list.get(i).get("bigcategory")))) {
+					categoryidList.add(Integer.valueOf(list.get(i).get("bigcategory").toString()));
+				} else {
+					list.get(i).put("bigcategory", "");
+				}
+				list.get(i).put("middlecategoryname", "");
+				if (!Common.isEmpty(String.valueOf(list.get(i).get("middlecategory")))) {
+					categoryidList.add(Integer.valueOf(list.get(i).get("middlecategory").toString()));
+				} else {
+					list.get(i).put("middlecategory", "");
+				}
+				list.get(i).put("smallcategoryname", "");
+				if (!Common.isEmpty(String.valueOf(list.get(i).get("smallcategory")))) {
+					categoryidList.add(Integer.valueOf(list.get(i).get("smallcategory").toString()));
+				} else {
+					list.get(i).put("smallcategory", "");
+				}
+			}
+			if (brandidList.size() > 0) {
+				MBrandExample example = new MBrandExample();
+				example.createCriteria().andIdIn(brandidList);
+				List<MBrand> data = brandMapper.selectByExample(example);
+				if (data != null && data.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						for (int j = 0; j < data.size(); j++) {
+							if (list.get(i).get("brandid").toString().equals(data.get(j).getId().toString())) {
+								list.get(i).put("brand", data.get(j).getName());
+								break;
+							}
+						}
+					}
+				}
+			}
+			if (categoryidList.size() > 0) {
+				MGoodscategoryExample example = new MGoodscategoryExample();
+				example.createCriteria().andIdIn(categoryidList);
+				List<MGoodscategory> data = goodscategoryMapper.selectByExample(example);
+				if (data != null && data.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						for (int j = 0; j < data.size(); j++) {
+							if (data.get(j).getGrade().intValue() == 1 && list.get(i).get("bigcategory").toString().equals(data.get(j).getId().toString())) {
+								list.get(i).put("bigcategoryname", data.get(j).getName());
+								break;
+							} else if (data.get(j).getGrade().intValue() == 2 && list.get(i).get("middlecategory").toString().equals(data.get(j).getId().toString())) {
+								list.get(i).put("middlecategoryname", data.get(j).getName());
+								break;
+							} else if (data.get(j).getGrade().intValue() == 3 && list.get(i).get("smallcategory").toString().equals(data.get(j).getId().toString())) {
+								list.get(i).put("smallcategoryname", data.get(j).getName());
+								break;
+							}
+						}
+					}
 				}
 			}
 		}

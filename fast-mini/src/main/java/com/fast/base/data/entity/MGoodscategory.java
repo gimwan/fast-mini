@@ -31,6 +31,8 @@ public class MGoodscategory implements Serializable {
 
     private String memo;
 
+    private Integer parentid;
+
     public Integer getId() {
         return id;
     }
@@ -125,5 +127,13 @@ public class MGoodscategory implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public Integer getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(Integer parentid) {
+        this.parentid = parentid;
     }
 }
