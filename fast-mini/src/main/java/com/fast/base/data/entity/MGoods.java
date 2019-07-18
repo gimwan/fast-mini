@@ -61,6 +61,12 @@ public class MGoods implements Serializable {
 
     private String describe;
 
+    private Integer bigcategory;
+
+    private Integer middlecategory;
+
+    private Integer smallcategory;
+
     public Integer getId() {
         return id;
     }
@@ -275,5 +281,29 @@ public class MGoods implements Serializable {
 
     public void setDescribe(String describe) {
         this.describe = describe;
+    }
+
+    public Integer getBigcategory() {
+        return bigcategory;
+    }
+
+    public void setBigcategory(Integer bigcategory) {
+        this.bigcategory = bigcategory;
+    }
+
+    public Integer getMiddlecategory() {
+        return middlecategory;
+    }
+
+    public void setMiddlecategory(Integer middlecategory) {
+        this.middlecategory = middlecategory;
+    }
+
+    public Integer getSmallcategory() {
+        return smallcategory;
+    }
+
+    public void setSmallcategory(Integer smallcategory) {
+        this.smallcategory = smallcategory;
     }
 }
