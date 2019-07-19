@@ -1,44 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MGoodsMapper">
 	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MGoods">
-		<id column="ID" jdbcType="INTEGER" property="id" />
-		<result column="Code" jdbcType="VARCHAR" property="code" />
-		<result column="Name" jdbcType="VARCHAR" property="name" />
-		<result column="BrandID" jdbcType="INTEGER" property="brandid" />
-		<result column="Kind" jdbcType="TINYINT" property="kind" />
-		<result column="PurchasePrice" jdbcType="DECIMAL" property="purchaseprice" />
-		<result column="BasePrice" jdbcType="DECIMAL" property="baseprice" />
-		<result column="Price" jdbcType="DECIMAL" property="price" />
-		<result column="ShowColor" jdbcType="TINYINT" property="showcolor" />
-		<result column="ShowPattern" jdbcType="TINYINT" property="showpattern" />
-		<result column="ShowSize" jdbcType="TINYINT" property="showsize" />
-		<result column="ShipType" jdbcType="TINYINT" property="shiptype" />
-		<result column="OnSale" jdbcType="TINYINT" property="onsale" />
-		<result column="OnlyShow" jdbcType="TINYINT" property="onlyshow" />
-		<result column="PhotoUrl" jdbcType="VARCHAR" property="photourl" />
-		<result column="ExchangePoint" jdbcType="INTEGER" property="exchangepoint" />
-		<result column="OnSaleTime" jdbcType="TIMESTAMP" property="onsaletime" />
-		<result column="OnSaleer" jdbcType="VARCHAR" property="onsaleer" />
-		<result column="PointTimes" jdbcType="DECIMAL" property="pointtimes" />
-		<result column="Memo" jdbcType="VARCHAR" property="memo" />
-		<result column="CreateTime" jdbcType="TIMESTAMP" property="createtime" />
-		<result column="Creator" jdbcType="VARCHAR" property="creator" />
-		<result column="ModifyTime" jdbcType="TIMESTAMP" property="modifytime" />
-		<result column="Modifier" jdbcType="VARCHAR" property="modifier" />
-		<result column="UpdatedTime" jdbcType="TIMESTAMP" property="updatedtime" />
-		<result column="UseFlag" jdbcType="TINYINT" property="useflag" />
-		<result column="Describe" jdbcType="VARCHAR" property="describe" />
-		<result column="BigCategory" jdbcType="INTEGER" property="bigcategory" />
-		<result column="MiddleCategory" jdbcType="INTEGER" property="middlecategory" />
-		<result column="SmallCategory" jdbcType="INTEGER" property="smallcategory" />
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="Code" property="code" jdbcType="VARCHAR" />
+		<result column="Name" property="name" jdbcType="VARCHAR" />
+		<result column="BrandID" property="brandid" jdbcType="INTEGER" />
+		<result column="Kind" property="kind" jdbcType="TINYINT" />
+		<result column="PurchasePrice" property="purchaseprice"
+			jdbcType="DECIMAL" />
+		<result column="BasePrice" property="baseprice" jdbcType="DECIMAL" />
+		<result column="Price" property="price" jdbcType="DECIMAL" />
+		<result column="ShowColor" property="showcolor" jdbcType="TINYINT" />
+		<result column="ShowPattern" property="showpattern" jdbcType="TINYINT" />
+		<result column="ShowSize" property="showsize" jdbcType="TINYINT" />
+		<result column="ShipType" property="shiptype" jdbcType="TINYINT" />
+		<result column="OnSale" property="onsale" jdbcType="TINYINT" />
+		<result column="OnlyShow" property="onlyshow" jdbcType="TINYINT" />
+		<result column="PhotoUrl" property="photourl" jdbcType="VARCHAR" />
+		<result column="ExchangePoint" property="exchangepoint"
+			jdbcType="INTEGER" />
+		<result column="OnSaleTime" property="onsaletime" jdbcType="TIMESTAMP" />
+		<result column="OnSaleer" property="onsaleer" jdbcType="VARCHAR" />
+		<result column="PointTimes" property="pointtimes" jdbcType="DECIMAL" />
+		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="Creator" property="creator" jdbcType="VARCHAR" />
+		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+		<result column="Describe" property="describe" jdbcType="VARCHAR" />
+		<result column="BigCategory" property="bigcategory" jdbcType="INTEGER" />
+		<result column="MiddleCategory" property="middlecategory"
+			jdbcType="INTEGER" />
+		<result column="SmallCategory" property="smallcategory"
+			jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
 			<foreach collection="oredCriteria" item="criteria" separator="or">
 				<if test="criteria.valid">
-					<trim prefix="(" prefixOverrides="and" suffix=")">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
 						<foreach collection="criteria.criteria" item="criterion">
 							<choose>
 								<when test="criterion.noValue">
@@ -53,8 +57,8 @@
 								</when>
 								<when test="criterion.listValue">
 									and ${criterion.condition}
-									<foreach close=")" collection="criterion.value" item="listItem"
-										open="(" separator=",">
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
 										#{listItem}
 									</foreach>
 								</when>
@@ -74,8 +78,8 @@
 		UseFlag,
 		Describe, BigCategory, MiddleCategory, SmallCategory
 	</sql>
-	<select id="selectByExample" parameterType="com.fast.base.data.entity.MGoodsExample"
-		resultMap="BaseResultMap">
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fast.base.data.entity.MGoodsExample">
 		select
 		<if test="distinct">
 			distinct
@@ -90,8 +94,8 @@
 			order by ${orderByClause}
 		</if>
 	</select>
-	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
-		resultMap="BaseResultMap">
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
 		from m_goods
@@ -326,7 +330,7 @@
 		</trim>
 	</insert>
 	<select id="countByExample" parameterType="com.fast.base.data.entity.MGoodsExample"
-		resultType="java.lang.Long">
+		resultType="java.lang.Integer">
 		select count(*) from m_goods
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />

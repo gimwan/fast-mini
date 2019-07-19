@@ -291,14 +291,16 @@ public class CommonUtil {
 	
 	public static List<LinkedHashMap<String, Object>> transformUpperCase(List<LinkedHashMap<String, Object>> list) {
 		List<LinkedHashMap<String, Object>> newList = new ArrayList<LinkedHashMap<String, Object>>();
-		for (int i = 0; i < list.size(); i++) {
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			Set<String> keySet = list.get(i).keySet();
-	        for (String key : keySet) {
-	            String newKey = key.toLowerCase();
-	            map.put(newKey, list.get(i).get(key));
-	        }
-	        newList.add(map);
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				Set<String> keySet = list.get(i).keySet();
+		        for (String key : keySet) {
+		            String newKey = key.toLowerCase();
+		            map.put(newKey, list.get(i).get(key));
+		        }
+		        newList.add(map);
+			}
 		}
 		return newList;
 	}

@@ -164,7 +164,7 @@ public class MicropageController {
 				JSONObject jsonObject = JSONObject.fromObject(result);
 				return jsonObject.toString();
 			}
-			Result result = iMicropageService.queryPageData(Integer.valueOf(pageid.trim()));
+			Result result = iMicropageService.queryPageData(Integer.valueOf(pageid.trim()), true);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
