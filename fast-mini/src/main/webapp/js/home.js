@@ -48,7 +48,7 @@ let menu = [
                 link: 'size'
             },
             {
-                name: '品牌档案',
+                name: '品牌',
                 link: 'brand'
             },
             {
@@ -60,7 +60,7 @@ let menu = [
                 link: 'grouping'
             },
             {
-                name: '商品档案',
+                name: '商品',
                 link: 'goods'
             }
         ]
@@ -197,6 +197,63 @@ document.onreadystatechange = function() {
     		$(".edit-view .edit-box .popup .popuped").attr("data-id",id);
     		$(".edit-view .edit-box .popup .popuped").val(name);
     		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
+    	});
+    	
+    	// 弹窗选择（级联）
+    	$("body").on("click", ".edit-view .edit-box .cascade input", function () {
+    		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
+    		$(this).addClass("cascadeed");
+    		let url = $(this).data("url");
+    		let title = $(this).parent().parent().find(".edit-title .title .name").html();
+    		common.showLoading();
+    		api.load(url, 'post', {}, function(result) {
+    			if (result.errcode == 0) {
+            		let selectOption = optionView(result.data.records);;
+            		layer.open({
+            	        type: 1,
+            	        title: "<label style='font-weight:600;'>"+title+"</label>",
+            	        //content: selectOption,
+            	        area: ['500px', '400px'],
+            	        btn: ['确定','取消'],
+            	        btn1: function (index, layero) {
+            	        	let id = $(layero).find(".layui-layer-content .selected").data("id");
+            	        	let name = $(layero).find(".layui-layer-content .selected .name").html();
+            	        	if (id != null && id != undefined && $.trim(id) != "") {
+            	        		$(".edit-view .edit-box .cascade .cascadeed").attr("data-id",id);
+            	        		$(".edit-view .edit-box .cascade .cascadeed").val(name);
+            	        		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
+        					}
+            	        	layer.close(index);
+            	        },
+            	        success: function (layero, index) {
+            	        	$(layero).find(".layui-layer-content").append(selectOption);
+            	        }
+            		});
+    			} else {
+    				common.error(result.message);
+				}
+    			
+        		common.closeLoading();
+    		});
+    	});
+    	
+    	// 弹窗数据选中（级联）
+    	$("body").on("click", ".cascade-view .cascade-box .cascade-data", function () {
+    		let isSelected = $(this).hasClass("selected");
+    		$(this).parent().find(".selected").removeClass("selected");
+    		if (!isSelected) {
+    			$(this).addClass("selected");
+			}
+    	});
+    	
+    	// 弹窗双击选择数据（级联）
+    	$("body").on("dblclick", ".popup-view .popup-box .popup-data", function () {
+    		let id = $(this).data("id");
+    		let name = $(this).find(".name").html();
+    		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
+    		$(".edit-view .edit-box .cascade .cascadeed").attr("data-id",id);
+    		$(".edit-view .edit-box .cascade .cascadeed").val(name);
+    		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
     	});
     	
     	// 图片加载失败显示默认图
