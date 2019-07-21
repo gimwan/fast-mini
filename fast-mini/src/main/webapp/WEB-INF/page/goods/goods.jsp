@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/goods/goods.css">
 <script type="text/javascript" src="js/goods/goods.js"></script>
 <div class="goodsPage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">商品</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>商品管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>商品</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">
@@ -13,9 +15,9 @@
 	        <button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add">
 	          <i class="layui-icon"></i>
 	        </button>
-	        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
+	        <!-- <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
 	          <i class="layui-icon"></i>
-	        </button>
+	        </button> -->
 	     </div>
 	</div>
 	
@@ -28,6 +30,11 @@
 							<table cellspacing="0" cellpadding="0" border="0" class="layui-table">
 								<thead>
 									<tr>
+										<th class="item photourl">
+											<div class="layui-table-cell">
+												<span>缩略图</span>
+											</div>
+										</th>
 										<th class="item code" data-minwidth="100">
 											<div class="layui-table-cell">
 												<span>编号</span>
@@ -73,6 +80,11 @@
 												<span>备注</span>
 											</div>
 										</th>
+										<th class="item operationbtn">
+											<div class="layui-table-cell">
+												<span>操作</span>
+											</div>
+										</th>
 									</tr>
 								</thead>
 							</table>
@@ -82,6 +94,11 @@
 								class="layui-table">
 								<tbody>
 									<tr v-bind:data-id="g.id" v-bind:data-index="index" class="" v-for="(g, index) in goods">
+										<td class="item photourl">
+											<div class="layui-table-cell laytable-cell-1-0-0">
+												<img v-bind:src="g.photourl" onerror="defaultImg(this)" class="layui-nav-img">
+											</div>
+										</td>
 										<td class="item code">
 											<div class="layui-table-cell laytable-cell-1-0-0">
 											<a href="javascript:void(0);" v-on:click="edit">{{g.code}}</a>
@@ -114,6 +131,22 @@
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{g.memo}}</div>
+										</td>
+										<td class="item operationbtn">
+											<div class="layui-btn-group">
+												<button class="layui-btn layui-btn-normal layui-btn-radius layui-btn-xs image" title="图片" v-on:click="image">
+													图片
+												</button>
+												<button class="layui-btn layui-btn-warm layui-btn-radius layui-btn-xs onsale" title="上架" v-on:click="onsale" v-if="g.onsale==1">
+													上架
+												</button>
+												<button class="layui-btn layui-btn-radius layui-btn-xs onsale" title="上架" v-on:click="unsale" v-if="g.onsale!=1">
+													下架
+												</button>
+												<button class="layui-btn layui-btn-danger layui-btn-radius layui-btn-xs del" title="删除" v-on:click="del">
+													删除
+												</button>
+											</div>
 										</td>
 									</tr>
 								</tbody>

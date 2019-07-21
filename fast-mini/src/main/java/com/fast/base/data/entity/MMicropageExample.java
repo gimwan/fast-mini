@@ -1184,6 +1184,66 @@ public class MMicropageExample {
             addCriterion("PublicPlatformID not between", value1, value2, "publicplatformid");
             return (Criteria) this;
         }
+
+        public Criteria andMiniprogramidIsNull() {
+            addCriterion("MiniProgramID is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidIsNotNull() {
+            addCriterion("MiniProgramID is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidEqualTo(Integer value) {
+            addCriterion("MiniProgramID =", value, "miniprogramid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidNotEqualTo(Integer value) {
+            addCriterion("MiniProgramID <>", value, "miniprogramid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidGreaterThan(Integer value) {
+            addCriterion("MiniProgramID >", value, "miniprogramid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("MiniProgramID >=", value, "miniprogramid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidLessThan(Integer value) {
+            addCriterion("MiniProgramID <", value, "miniprogramid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidLessThanOrEqualTo(Integer value) {
+            addCriterion("MiniProgramID <=", value, "miniprogramid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidIn(List<Integer> values) {
+            addCriterion("MiniProgramID in", values, "miniprogramid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidNotIn(List<Integer> values) {
+            addCriterion("MiniProgramID not in", values, "miniprogramid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidBetween(Integer value1, Integer value2) {
+            addCriterion("MiniProgramID between", value1, value2, "miniprogramid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMiniprogramidNotBetween(Integer value1, Integer value2) {
+            addCriterion("MiniProgramID not between", value1, value2, "miniprogramid");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

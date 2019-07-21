@@ -19,6 +19,14 @@
 	border-bottom-width: 1px;
 }
 
+.goodsPage .layui-table-view .layui-table-box tr .photourl {
+	min-width: 80px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .photourl img {
+	border-radius: unset;
+}
+
 .goodsPage .layui-table-view .layui-table-box tr .name {
 	min-width: 180px;
 }
@@ -29,6 +37,10 @@
 
 .goodsPage .layui-table-view .layui-table-box tr .memo {
 	width: 100%;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .operationbtn {
+	min-width: 150px;
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .creator, .goodsPage .layui-table-view .layui-table-box tr .modifier
@@ -42,5 +54,13 @@
 
 .goodsPage .layui-table-view .layui-table-box .goods-data {
 	overflow-y: auto;
-	overflow-x: hidden;
+	/* overflow-x: hidden; */
+}
+
+.operationbtn .layui-icon {
+	margin-right: 0px;
+}
+
+.operationbtn .layui-btn-group .layui-btn {
+	margin-right: 4px !important;
 }

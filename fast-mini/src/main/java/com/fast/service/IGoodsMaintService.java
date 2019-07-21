@@ -25,5 +25,14 @@ public interface IGoodsMaintService {
 	 * @return
 	 */
 	public Result deleteGoods(Integer id);
+	
+	/**
+	 * 上下架
+	 * @param user
+	 * @param id
+	 * @param onsale
+	 * @return
+	 */
+	public Result onsaleGoods(MUser user, Integer id, Integer onsale);
 
 }

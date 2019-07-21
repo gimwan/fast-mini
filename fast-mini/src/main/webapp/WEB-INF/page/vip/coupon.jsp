@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/vip/coupon.css">
 <script type="text/javascript" src="js/vip/coupon.js"></script>
 <div class="couponPage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">优惠券</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>会员管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>优惠券</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">

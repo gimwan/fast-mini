@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/goods/size.css">
 <script type="text/javascript" src="js/goods/size.js"></script>
 <div class="sizePage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">尺码</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>商品管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>尺码</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">

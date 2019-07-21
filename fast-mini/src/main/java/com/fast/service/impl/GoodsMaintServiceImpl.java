@@ -101,4 +101,30 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 		return result;
 	}
 
+	@Override
+	public Result onsaleGoods(MUser user, Integer id, Integer onsale) {
+		Result result = new Result();
+
+		try {
+			MGoods goods = goodsMapper.selectByPrimaryKey(id);
+			if (goods != null && goods.getId() != null) {
+				goods.setOnsale(onsale.byteValue());
+				goods.setOnsaleer(user.getName());
+				goods.setOnsaletime(new Date());
+				goodsMapper.updateByPrimaryKeySelective(goods);
+				
+				result.setErrcode(0);
+				result.setMessage("上架成功");
+				if (onsale.intValue() < 1) {
+					result.setMessage("下架成功");
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsMaintServiceImpl.onsaleGoods报错：", e);
+		}
+
+		return result;
+	}
+
 }

@@ -36,6 +36,24 @@
 	color: gray;
 }
 
+.layui-form-item .layui-form-checkbox[lay-skin=primary] {
+	margin-top: 0px;
+}
+
+.layui-form-radio {
+	margin-top: 0px;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-upload-drag {
+	padding: 0px;
+	border: 0px;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-upload-drag img {
+	width: 150px;
+	height: 150px;
+}
+
 /********************popup*************************/
 
 .edit-view .edit-box .popup .edit-value {

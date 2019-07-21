@@ -2,11 +2,12 @@
 <link rel="stylesheet" href="css/goods/color.css">
 <script type="text/javascript" src="js/goods/color.js"></script>
 <div class="colorPage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">颜色</li>
-		</ul>
-		<!-- <div class="layui-tab-content"></div> -->
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>商品管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>颜色</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">

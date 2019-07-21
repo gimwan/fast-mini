@@ -1,5 +1,6 @@
 let goods = [];
 let goodsVm;
+let uploadInst;
 
 common.bindVue = function() {
     goodsVm = new Vue({
@@ -17,32 +18,88 @@ common.bindVue = function() {
             add: function () {
                 showEditBox(-1, null);
             },
-            del: function () {
-            	let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
-            	let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
-            	if (id == null || id == undefined || $.trim(id) == "") {
-            		common.warn("请选择删除项");
-                    return false;
-				}
-            	layer.confirm('确定删除？', {
-            		btn: ['确定','取消'],
-            		btn1 : function(index, layero) {
-        				var data = {};
-        				data['id'] = id;
-                    	common.showLoading();
-                        api.load('./goods/delete','post',data, function(result) {
-                            if (result.errcode == 0) {
-                            	goods.splice(deleteIndex);
-                                
-                                common.tips(result.message);
-                            } else {
-                                common.error(result.message);
-                            }
-                            common.closeLoading();
-                        });
-            			
-            		}
-            	});
+            onsale: function() {
+            	if (event) {
+                    let id = $(event.target).parents("tr").data("id");
+                    let index = $(event.target).parents("tr").data("index");
+                    layer.confirm('确定上架？', {
+                		btn: ['确定','取消'],
+                		btn1 : function(index, layero) {
+            				var data = {};
+            				data['id'] = id;
+            				data['onsale'] = 1;
+                        	common.showLoading();
+                            api.load('./goods/onsale','post',data, function(result) {
+                                if (result.errcode == 0) {
+                                	goods[index].onsale = 1;
+                                    
+                                    common.tips(result.message);
+                                } else {
+                                    common.error(result.message);
+                                }
+                                common.closeLoading();
+                            });
+                			
+                		}
+                	});
+                }
+			},
+			unsale: function() {
+            	if (event) {
+                    let id = $(event.target).parents("tr").data("id");
+                    let index = $(event.target).parents("tr").data("index");
+                    layer.confirm('确定下架？', {
+                		btn: ['确定','取消'],
+                		btn1 : function(index, layero) {
+            				var data = {};
+            				data['id'] = id;
+            				data['onsale'] = 0;
+                        	common.showLoading();
+                            api.load('./goods/onsale','post',data, function(result) {
+                                if (result.errcode == 0) {
+                                	goods[index].onsale = 0;
+                                    
+                                    common.tips(result.message);
+                                } else {
+                                    common.error(result.message);
+                                }
+                                common.closeLoading();
+                            });
+                			
+                		}
+                	});
+                }
+			},
+			image: function(event) {
+				if (event) {
+                    let id = $(event.target).parents("tr").data("id");
+                    console.log(id);
+                }
+			},
+            del: function (event) {
+            	if (event) {
+                    let id = $(event.target).parents("tr").data("id");
+                    let deleteIndex = $(event.target).parents("tr").data("index");
+                    layer.confirm('确定删除？', {
+                		btn: ['确定','取消'],
+                		btn1 : function(index, layero) {
+            				var data = {};
+            				data['id'] = id;
+                        	common.showLoading();
+                            api.load('./goods/delete','post',data, function(result) {
+                                if (result.errcode == 0) {
+                                	goods.splice(deleteIndex);
+                                    
+                                    common.tips(result.message);
+                                } else {
+                                    common.error(result.message);
+                                }
+                                common.closeLoading();
+                            });
+                			
+                		}
+                	});
+                }
             },
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);
@@ -101,7 +158,16 @@ function createElement(data) {
 		middlecategoryname : "",
 		smallcategory : "",
 		smallcategoryname : "",
+		purchaseprice : 0,
+		baseprice : 0,
+		price : 0,
+		onlyshow : 0,
+		showcolor : 1,
+		showpattern : 1,
+		showsize : 1,
+		photourl : "",
 		useflag : 1,
+		describe: "",
 		memo : ""
 	};
     if (data != null && data != undefined && data != "") {
@@ -154,19 +220,78 @@ function createElement(data) {
 				            "<div class=\"cascade-value\">" +
 					            "<div class=\"edit-value\" data-field=\"bigcategory\">"+
 					                "<input type=\"text\" data-id=\""+d.bigcategory+"\" value=\""+d.bigcategoryname+"\" " +
-					                		"data-url=\"./goodscategory/list?grade=1\" grade=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                		"data-url=\"./goodscategory/list?grade=1\" data-grade=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 					            "</div>"+
 					            "<div class=\"edit-value\" data-field=\"middlecategory\">"+
 					                "<input type=\"text\" data-id=\""+d.middlecategory+"\" value=\""+d.middlecategoryname+"\" " +
-					                		"data-url=\"./goodscategory/list?grade=2\" grade=\"2\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                		"data-url=\"./goodscategory/list?grade=2\" data-grade=\"2\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 					            "</div>"+
 					            "<div class=\"edit-value\" data-field=\"smallcategory\">"+
 					                "<input type=\"text\" data-id=\""+d.smallcategory+"\" value=\""+d.smallcategoryname+"\" " +
-					                		"data-url=\"./goodscategory/list?grade=3\" grade=\"3\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                		"data-url=\"./goodscategory/list?grade=3\" data-grade=\"3\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 					            "</div>" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" money=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">采购价</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"purchaseprice\">"+
+				                "<input type=\"text\" value=\""+d.purchaseprice+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" money=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">标准价</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"baseprice\">"+
+				                "<input type=\"text\" value=\""+d.baseprice+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" money=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">零售价</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"price\">"+
+				                "<input type=\"text\" value=\""+d.price+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item layui-form\" checkbox=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">规格展示</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value layui-form-item\" data-field=\"onlyshow\">"+
+				                "<div class=\"layui-input-block\">" +
+				                	"<input type=\"checkbox\" name=\"showcolor\" value=\"1\" title=\"颜色\" "+(d.showcolor==1?'checked':'')+" lay-skin=\"primary\" class=\"layui-input value\">" +
+				                	"<input type=\"checkbox\" name=\"showpattern\" value=\"1\" title=\"版型\" "+(d.showpattern==1?'checked':'')+" lay-skin=\"primary\" class=\"layui-input value\">" +
+				                	"<input type=\"checkbox\" name=\"showsize\" value=\"1\" title=\"尺码\" "+(d.showsize==1?'checked':'')+" lay-skin=\"primary\" class=\"layui-input value\">" +
+				                "</div>" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">仅限展示</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value layui-form-item\" data-field=\"onlyshow\">"+
+				                "<div class=\"layui-input-block\">" +
+				                	"<input type=\"radio\" name=\"onlyshow\" value=\"1\" title=\"是\" "+(d.onlyshow==1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"onlyshow\" value=\"0\" title=\"否\" "+(d.onlyshow!=1?'checked':'')+" class=\"layui-input value\">" +
+				                "</div>" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item layui-form\" uploadfile=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">缩略图</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value layui-form-item\" data-field=\"photourl\">"+
+				                "<div class=\"uploadField\">" +
+				                	"<div class=\"layui-upload-drag\">" +
+				                		"<img src=\""+d.photourl+"\" onerror=\"defaultImg(this)\" class=\"value\">" +
+				                	"</div>" +
+				                "</div>" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
@@ -177,6 +302,16 @@ function createElement(data) {
 				                "<div class=\"layui-input-block\">" +
 				                	"<input type=\"radio\" name=\"useflag\" value=\"1\" title=\"是\" "+(d.useflag==1?'checked':'')+" class=\"layui-input value\">" +
 				                	"<input type=\"radio\" name=\"useflag\" value=\"0\" title=\"否\" "+(d.useflag!=1?'checked':'')+" class=\"layui-input value\">" +
+				                "</div>" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item layui-form\" textarea=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">描述</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value layui-form-item\" data-field=\"describe\">"+
+				                "<div class=\"layui-input-block\">" +
+				                	"<textarea name=\"describe\" class=\"layui-textarea value\">"+d.describe+"</textarea>" +
 				                "</div>" +
 				            "</div>"+
 				        "</div>"+
@@ -237,9 +372,30 @@ function showEditBox(idx,data) {
         success: function () {
         	// 重新刷新form
         	layuiForm.render();
+        	// 初始化图片上传组件
+        	configUploadInst();
             var val = $(".edit-view .focus").val();
             $(".edit-view .focus").val("").focus().val(val);
         }
         
+    });
+}
+
+function configUploadInst() {
+	uploadInst = layuiUpload.render({
+	    elem: '.layui-upload-drag',
+	    url: './upload/field/goodsthumbnail',
+	    size: 500,
+	    multiple: false,
+	    done: function(res, index, upload){
+	    	// 上传完毕回调
+	    	var item = this.item;
+	    	$(item).find("img").attr("src",res.data);
+	    },
+	    error: function(res, index){
+	    	// 请求异常回调
+	    	console.log(res);
+	    	console.log(index);
+	    }
     });
 }

@@ -2,7 +2,6 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MMicropage;
 import com.fast.base.data.entity.MMicropageExample;
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -27,5 +26,4 @@ public interface MMicropageMapper {
     int updateByPrimaryKeySelective(MMicropage record);
 
     int updateByPrimaryKey(MMicropage record);
-    
 }

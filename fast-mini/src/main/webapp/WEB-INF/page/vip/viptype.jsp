@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/vip/viptype.css">
 <script type="text/javascript" src="js/vip/viptype.js"></script>
 <div class="viptypePage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">会员等级</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>会员管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>等级</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">

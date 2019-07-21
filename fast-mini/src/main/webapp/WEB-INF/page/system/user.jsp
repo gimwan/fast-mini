@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/system/user.css">
 <script type="text/javascript" src="js/system/user.js"></script>
 <div class="userPage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">用户管理</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>系统管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>用户</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">

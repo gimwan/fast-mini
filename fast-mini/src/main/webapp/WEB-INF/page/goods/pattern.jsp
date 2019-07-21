@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/goods/pattern.css">
 <script type="text/javascript" src="js/goods/pattern.js"></script>
 <div class="patternPage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">版型</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>商品管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>版型</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">

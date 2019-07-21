@@ -66,5 +66,29 @@ public class FieldUploadController {
 		
 		return r;
 	}
+	
+	/**
+	 * 商品缩略图
+	 * @param request
+	 * @param response
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping("/field/goodsthumbnail")
+	@ResponseBody
+	public String goodsthumbnail(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) {
+		String r = "";
+		
+		try {
+			Result result = iFieldUploadService.uploadGoodsThumbnail(request, file);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
 
 }

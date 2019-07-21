@@ -119,4 +119,35 @@ public class GoodsController {
 		
 		return r;
 	}
+	
+	/**
+	 * 上下架
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/onsale")
+	@ResponseBody
+	public String onsale(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			Result result = new Result();
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				String id = request.getParameter("id");
+				String onsale = request.getParameter("onsale");
+				result = iGoodsMaintService.onsaleGoods(user, Integer.valueOf(id.trim()), Integer.valueOf(onsale.trim()));
+			} else {
+				result.setMessage("当前登入者已失效");
+			}
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
 }

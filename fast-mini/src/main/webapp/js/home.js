@@ -4,15 +4,15 @@ let menu = [
         link: '',
         sub: [
             {
-                name: '系统参数',
+                name: '参数',
                 link: 'config'
             },
             {
-                name: '角色管理',
+                name: '角色',
                 link: 'role'
             },
             {
-                name: '用户管理',
+                name: '用户',
                 link: 'user'
             }
         ]
@@ -22,11 +22,11 @@ let menu = [
         link: '',
         sub: [
             {
-                name: '门店资料',
+                name: '门店',
                 link: 'department'
             },
             {
-                name: '员工资料 ',
+                name: '员工 ',
                 link: 'employee'
             }
         ]
@@ -70,11 +70,11 @@ let menu = [
         link: '',
         sub: [
             {
-                name: '会员等级 ',
+                name: '等级',
                 link: 'viptype'
             },
             {
-                name: '会员档案',
+                name: '会员',
                 link: 'vip'
             },
             {
@@ -201,10 +201,21 @@ document.onreadystatechange = function() {
     	
     	// 弹窗选择（级联）
     	$("body").on("click", ".edit-view .edit-box .cascade input", function () {
+    		let grade = $(this).data("grade");
+    		let title = "大类";
+    		if (grade == 2) {
+    			title = "中类";
+			} else if (grade == 3) {
+				title = "小类";
+			}
+    		let parentMsg = checkParentChoose($(this));
+    		if (parentMsg != null && parentMsg != undefined && $.trim(parentMsg) != "") {
+				common.warn(parentMsg);
+				return false;
+			}
     		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
     		$(this).addClass("cascadeed");
-    		let url = $(this).data("url");
-    		let title = $(this).parent().parent().find(".edit-title .title .name").html();
+    		let url = $(this).attr("data-url");
     		common.showLoading();
     		api.load(url, 'post', {}, function(result) {
     			if (result.errcode == 0) {
@@ -216,13 +227,15 @@ document.onreadystatechange = function() {
             	        area: ['500px', '400px'],
             	        btn: ['确定','取消'],
             	        btn1: function (index, layero) {
-            	        	let id = $(layero).find(".layui-layer-content .selected").data("id");
+            	        	let id = $(layero).find(".layui-layer-content .selected").attr("data-id");
             	        	let name = $(layero).find(".layui-layer-content .selected .name").html();
             	        	if (id != null && id != undefined && $.trim(id) != "") {
             	        		$(".edit-view .edit-box .cascade .cascadeed").attr("data-id",id);
             	        		$(".edit-view .edit-box .cascade .cascadeed").val(name);
+            	        		checkCascade($(".edit-view .edit-box .cascade .cascadeed"));            	        		
             	        		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
         					}
+            	        	changeCascadeUrl();
             	        	layer.close(index);
             	        },
             	        success: function (layero, index) {
@@ -237,15 +250,6 @@ document.onreadystatechange = function() {
     		});
     	});
     	
-    	// 弹窗数据选中（级联）
-    	$("body").on("click", ".cascade-view .cascade-box .cascade-data", function () {
-    		let isSelected = $(this).hasClass("selected");
-    		$(this).parent().find(".selected").removeClass("selected");
-    		if (!isSelected) {
-    			$(this).addClass("selected");
-			}
-    	});
-    	
     	// 弹窗双击选择数据（级联）
     	$("body").on("dblclick", ".popup-view .popup-box .popup-data", function () {
     		let id = $(this).data("id");
@@ -253,7 +257,9 @@ document.onreadystatechange = function() {
     		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
     		$(".edit-view .edit-box .cascade .cascadeed").attr("data-id",id);
     		$(".edit-view .edit-box .cascade .cascadeed").val(name);
+    		checkCascade($(".edit-view .edit-box .cascade .cascadeed"));
     		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
+    		changeCascadeUrl();
     	});
     	
     	// 图片加载失败显示默认图
@@ -268,6 +274,70 @@ document.onreadystatechange = function() {
     		console.log("img error");
     	});
     }
+}
+
+function checkCascade(obj) {
+	let grade = $(obj).attr("data-grade");
+	$(obj).parents(".cascade-value").find(".edit-value").each(function() {
+		let thisGrade = $(this).find(".value").attr("data-grade");
+		if (thisGrade > grade) {
+			$(this).find(".value").attr("data-id", "");
+			$(this).find(".value").val("");
+		}
+	});
+}
+
+function checkParentChoose(obj) {
+	var msg = "";
+	let grade = $(obj).data("grade");
+	$(obj).parents(".cascade-value").find(".edit-value").each(function() {
+		let thisGrade = $(this).find(".value").attr("data-grade");
+		if (thisGrade < grade) {
+			var id = $(this).find(".value").attr("data-id");
+			if (id == null || id == undefined || $.trim(id) == "") {
+				if (thisGrade == 1) {
+					msg = "请先选择大类";
+				} else if (thisGrade == 2) {
+					msg = "请先选择中类";
+				}
+				return false;
+			}
+		}
+	});
+	return msg;
+}
+
+function changeCascadeUrl() {
+	let bigCategoryID = "";
+	let middleCategoryID = "";
+	let smallCategoryID = "";
+	$(".edit-view .edit-box .cascade input").each(function() {
+		let grade = $(this).attr("data-grade");
+		if (grade == 1) {
+			bigCategoryID = $(this).attr("data-id");
+		} else if (grade == 2) {
+			middleCategoryID = $(this).attr("data-id");
+		} else if (grade == 3) {
+			smallCategoryID = $(this).attr("data-id");
+		}
+	});
+	
+	$(".edit-view .edit-box .cascade input").each(function() {
+		let grade = $(this).attr("data-grade");
+		if (grade == 2) {
+			if (bigCategoryID != null && bigCategoryID != undefined && $.trim(bigCategoryID) != "") {
+				$(this).attr("data-url","./goodscategory/list?grade=2&parentid="+$.trim(bigCategoryID));
+			} else {
+				$(this).attr("data-url","./goodscategory/list?grade=2");
+			}
+		} else if (grade == 3) {
+			if (middleCategoryID != null && middleCategoryID != undefined && $.trim(middleCategoryID) != "") {
+				$(this).attr("data-url","./goodscategory/list?grade=3&parentid="+$.trim(middleCategoryID));
+			} else {
+				$(this).attr("data-url","./goodscategory/list?grade=3");
+			}
+		}
+	});
 }
 
 function defaultImg(obj) {

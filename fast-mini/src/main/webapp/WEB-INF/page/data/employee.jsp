@@ -2,11 +2,13 @@
 <link rel="stylesheet" href="css/data/employee.css">
 <script type="text/javascript" src="js/data/employee.js"></script>
 <div class="employeePage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">员工资料</li>
-		</ul>
-	</div> 
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>资料管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>员工</cite></a>
+	  </div>
+	</div>
 	
 	<div class="operating">
 		<div class="layui-btn-group">
