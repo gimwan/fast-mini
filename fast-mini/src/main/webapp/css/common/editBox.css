@@ -1,5 +1,5 @@
 .edit-view {
-    padding: 15px;
+	padding: 15px;
 }
 
 .edit-view .edit-box {
@@ -7,7 +7,7 @@
 }
 
 .edit-view .edit-box .edit-item>div {
-    margin: 10px 0;
+	margin: 10px 0;
 }
 
 .edit-view .edit-box .edit-item .edit-value .value {
@@ -16,15 +16,16 @@
 
 .edit-view .edit-box .edit-item .layui-circle-img {
 	width: 100px;
-    height: 100px;
-    border-radius: 50%;
+	height: 100px;
+	border-radius: 50%;
 }
 
 .edit-view .edit-box .layui-form .layui-form-item .layui-input-block {
 	margin-left: 0px;
 }
 
-.edit-view .edit-box .layui-form .layui-form-item .layui-input-block textarea {
+.edit-view .edit-box .layui-form .layui-form-item .layui-input-block textarea
+	{
 	resize: none;
 }
 
@@ -32,7 +33,8 @@
 	width: 100%;
 }
 
-.edit-view .edit-box .layui-form .layui-form-item .selectBox .layui-unselect input {
+.edit-view .edit-box .layui-form .layui-form-item .selectBox .layui-unselect input
+	{
 	color: gray;
 }
 
@@ -49,13 +51,13 @@
 	border: 0px;
 }
 
-.edit-view .edit-box .layui-form .layui-form-item .layui-upload-drag img {
+.edit-view .edit-box .layui-form .layui-form-item .layui-upload-drag img
+	{
 	width: 150px;
 	height: 150px;
 }
 
 /********************popup*************************/
-
 .edit-view .edit-box .popup .edit-value {
 	position: relative;
 }
@@ -66,18 +68,18 @@
 
 .edit-view .edit-box .popup .layui-icon {
 	font-size: 20px;
-    position: absolute;
-    right: 5px;
-    top: 8px;
-    color: #c2c2c2;
+	position: absolute;
+	right: 5px;
+	top: 8px;
+	color: #c2c2c2;
 }
 
 .popup-view .popup-box .popup-data {
 	display: table;
-    width: 100%;
-    border-width: 0px 0px 1px 0px;
-    border-style: solid;
-    border-color: #f2f2f2;
+	width: 100%;
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+	border-color: #f2f2f2;
 }
 
 .popup-view .popup-box .popup-data span {
@@ -96,13 +98,12 @@
 }
 
 /********************cascade*************************/
-
 .edit-view .edit-box .cascade .cascade-value {
 	display: table;
 	width: calc(100% + 20px);
-    border-collapse: separate;
-    border-spacing: 10px 0px;
-    margin: 0px -10px;
+	border-collapse: separate;
+	border-spacing: 10px 0px;
+	margin: 0px -10px;
 }
 
 .edit-view .edit-box .cascade .edit-value {
@@ -116,18 +117,18 @@
 
 .edit-view .edit-box .cascade .layui-icon {
 	font-size: 20px;
-    position: absolute;
-    right: 5px;
-    top: 8px;
-    color: #c2c2c2;
+	position: absolute;
+	right: 5px;
+	top: 8px;
+	color: #c2c2c2;
 }
 
 .cascade-view .cascade-box .cascade-data {
 	display: table;
-    width: 100%;
-    border-width: 0px 0px 1px 0px;
-    border-style: solid;
-    border-color: #f2f2f2;
+	width: 100%;
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+	border-color: #f2f2f2;
 }
 
 .cascade-view .cascade-box .cascade-data span {
@@ -142,4 +143,35 @@
 
 .cascade-view .cascade-box .cascade-data .name {
 	text-align: right;
+}
+
+/*****************************images upload******************************/
+.images-view {
+	padding: 20px;
+}
+
+.images-view .titleView {
+	line-height: 30px;
+}
+
+.images-view .titleView .name {
+	font-weight: 600;
+}
+
+.images-view .imageView .layui-upload-drag {
+	width: 150px;
+	height: 150px;
+	padding: 0;
+	line-height: 150px;
+	vertical-align: middle;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.images-view .imageView .layui-upload-drag img {
+	width: 100%;
+	height: auto;
+	max-width: 150px;
+	max-height: 150px;
+	object-fit: contain;
 }

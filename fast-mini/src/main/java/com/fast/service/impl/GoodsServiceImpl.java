@@ -148,4 +148,24 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 		return result;
 	}
 
+	@Override
+	public Result goodsImages(Integer goodsid) {
+		Result result = new Result();
+
+		try {
+			String sql = "select * from m_goodsdtl where goodsid=" + goodsid + " order by showindex";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
+			}
+			result.setData(list);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsServiceImpl.goodsImages报错：", e);
+		}
+
+		return result;
+	}
+
 }

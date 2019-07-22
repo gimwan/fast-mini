@@ -37,5 +37,13 @@ public interface IFieldUploadService {
 	 * @return
 	 */
 	public Result uploadGoodsThumbnail(HttpServletRequest request, MultipartFile file);
+	
+	/**
+	 * 上传商品主图/细节图
+	 * @param request
+	 * @param file
+	 * @return
+	 */
+	public Result uploadGoodsDetail(HttpServletRequest request, MultipartFile file);
 
 }

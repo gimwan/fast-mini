@@ -15,9 +15,6 @@
 	        <button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add">
 	          <i class="layui-icon"></i>
 	        </button>
-	        <!-- <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
-	          <i class="layui-icon"></i>
-	        </button> -->
 	     </div>
 	</div>
 	
@@ -134,18 +131,21 @@
 										</td>
 										<td class="item operationbtn">
 											<div class="layui-btn-group">
-												<button class="layui-btn layui-btn-normal layui-btn-radius layui-btn-xs image" title="图片" v-on:click="image">
-													图片
-												</button>
-												<button class="layui-btn layui-btn-warm layui-btn-radius layui-btn-xs onsale" title="上架" v-on:click="onsale" v-if="g.onsale==1">
-													上架
-												</button>
-												<button class="layui-btn layui-btn-radius layui-btn-xs onsale" title="上架" v-on:click="unsale" v-if="g.onsale!=1">
-													下架
-												</button>
-												<button class="layui-btn layui-btn-danger layui-btn-radius layui-btn-xs del" title="删除" v-on:click="del">
-													删除
-												</button>
+												<button
+													class="layui-btn layui-btn-normal layui-btn-xs image"
+													title="图片" v-on:click="images">图片</button>
+												<button
+													class="layui-btn layui-btn-warm layui-btn-xs onsale"
+													title="上架" v-on:click="onsale" v-if="g.onsale!=1">上架</button>
+												<button
+													class="layui-btn layui-btn-xs onsale"
+													title="下架" v-on:click="unsale" v-if="g.onsale==1">下架</button>
+												<button
+													class="layui-btn layui-btn-primary layui-btn-xs sku"
+													title="SKU" v-on:click="sku" v-if="g.onsale!=1">SKU</button>
+												<button
+													class="layui-btn layui-btn-danger layui-btn-xs del"
+													title="删除" v-on:click="del" v-if="g.onsale!=1">删除</button>
 											</div>
 										</td>
 									</tr>

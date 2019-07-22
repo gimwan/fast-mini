@@ -40,7 +40,12 @@
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .operationbtn {
-	min-width: 150px;
+	min-width: 180px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .operationbtn .sku {
+	background-color: #5FB878;
+	color: #FFF;
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .creator, .goodsPage .layui-table-view .layui-table-box tr .modifier

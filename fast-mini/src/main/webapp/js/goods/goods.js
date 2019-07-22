@@ -2,6 +2,9 @@ let goods = [];
 let goodsVm;
 let uploadInst;
 
+/**
+ * vue初始页面
+ */
 common.bindVue = function() {
     goodsVm = new Vue({
         el : ".goodsPage",
@@ -9,73 +12,62 @@ common.bindVue = function() {
             goods: goods
         },
         methods : {
+        	/**
+        	 * 编辑
+        	 */
             edit: function(event) {
                 if (event) {
                     let index = $(event.target).parents("tr").data("index");
                     showEditBox(index,goods[index]);
                 }
             },
+            /**
+             * 新增
+             */
             add: function () {
                 showEditBox(-1, null);
             },
+            /**
+             * 上架
+             */
             onsale: function() {
             	if (event) {
                     let id = $(event.target).parents("tr").data("id");
                     let index = $(event.target).parents("tr").data("index");
-                    layer.confirm('确定上架？', {
-                		btn: ['确定','取消'],
-                		btn1 : function(index, layero) {
-            				var data = {};
-            				data['id'] = id;
-            				data['onsale'] = 1;
-                        	common.showLoading();
-                            api.load('./goods/onsale','post',data, function(result) {
-                                if (result.errcode == 0) {
-                                	goods[index].onsale = 1;
-                                    
-                                    common.tips(result.message);
-                                } else {
-                                    common.error(result.message);
-                                }
-                                common.closeLoading();
-                            });
-                			
-                		}
-                	});
+                    onSale(id, index, 1);
                 }
 			},
+			/**
+			 * 下架
+			 */
 			unsale: function() {
             	if (event) {
                     let id = $(event.target).parents("tr").data("id");
                     let index = $(event.target).parents("tr").data("index");
-                    layer.confirm('确定下架？', {
-                		btn: ['确定','取消'],
-                		btn1 : function(index, layero) {
-            				var data = {};
-            				data['id'] = id;
-            				data['onsale'] = 0;
-                        	common.showLoading();
-                            api.load('./goods/onsale','post',data, function(result) {
-                                if (result.errcode == 0) {
-                                	goods[index].onsale = 0;
-                                    
-                                    common.tips(result.message);
-                                } else {
-                                    common.error(result.message);
-                                }
-                                common.closeLoading();
-                            });
-                			
-                		}
-                	});
+                    onSale(id, index, 0);
                 }
 			},
-			image: function(event) {
+			/**
+			 * 图片
+			 */
+			images: function(event) {
 				if (event) {
                     let id = $(event.target).parents("tr").data("id");
-                    console.log(id);
+                    showImagesBox(id);
                 }
 			},
+			/**
+			 * sku
+			 */
+			sku: function(event) {
+				if (event) {
+					let id = $(event.target).parents("tr").data("id");
+					console.log(id);
+				}
+			},
+			/**
+			 * 删除
+			 */
             del: function (event) {
             	if (event) {
                     let id = $(event.target).parents("tr").data("id");
@@ -110,6 +102,44 @@ common.bindVue = function() {
     loadData();
 }
 
+/**
+ * 上下架
+ * @param id 商品id
+ * @param index 列表索引
+ * @param saleFlag 上下级标志
+ * @returns
+ */
+function onSale(id, idx, saleFlag) {
+	let msg = "确定下架？";
+	if (saleFlag == 1) {
+		msg = "确定上架？";
+	}
+	layer.confirm(msg, {
+		btn: ['确定','取消'],
+		btn1 : function(index, layero) {
+			var data = {};
+			data['id'] = id;
+			data['onsale'] = saleFlag;
+        	common.showLoading();
+            api.load('./goods/onsale','post',data, function(result) {
+                if (result.errcode == 0) {
+                	goods[idx].onsale = saleFlag;
+                    
+                    common.tips(result.message);
+                } else {
+                    common.error(result.message);
+                }
+                common.closeLoading();
+            });
+			
+		}
+	});
+}
+
+/**
+ * 加载数据
+ * @returns
+ */
 function loadData() {
     common.showLoading();
     api.load(basePath + 'data/list','post',{"table":"goods"},function (result) {
@@ -126,6 +156,11 @@ function loadData() {
     });
 }
 
+/**
+ * 分页数据
+ * @param pageno 页码
+ * @returns
+ */
 function loadPageData(pageno) {
 	common.showLoading();
 	api.load(basePath + 'data/list','post',{"table":"goods","pageno":pageno},function (result) {
@@ -135,6 +170,11 @@ function loadPageData(pageno) {
 	});
 }
 
+/**
+ * 设置数据
+ * @param pageView 分页类
+ * @returns
+ */
 function setData(pageView) {
 	let data = pageView.records;
 	goods.splice(0, goods.length);
@@ -145,6 +185,11 @@ function setData(pageView) {
     }
 }
 
+/**
+ * 新增/编辑页元素
+ * @param data 商品数据
+ * @returns
+ */
 function createElement(data) {
 	let d = {
 		id : "",
@@ -330,6 +375,12 @@ function createElement(data) {
 	return element;
 }
 
+/**
+ * 新增/编辑框
+ * @param idx
+ * @param data
+ * @returns
+ */
 function showEditBox(idx,data) {
 	let editDiv = createElement(data);
 	
@@ -360,7 +411,6 @@ function showEditBox(idx,data) {
 	                        goods[idx][key] = data[key];
 	                    }
 					}
-                    
                     layer.close(index);
                     common.tips(result.message);
                 } else {
@@ -372,15 +422,141 @@ function showEditBox(idx,data) {
         success: function () {
         	// 重新刷新form
         	layuiForm.render();
-        	// 初始化图片上传组件
+        	// 初始化图片上传
         	configUploadInst();
+        	// 焦点定焦
             var val = $(".edit-view .focus").val();
             $(".edit-view .focus").val("").focus().val(val);
         }
-        
     });
 }
 
+function showImagesBox(id) {
+	common.showLoading();
+	let da = {};
+	da.goodsid = id;
+    api.load('./goods/images','post', da, function(result) {
+    	if (result.errcode == 0) {
+    		let list = result.data;
+    		let imagesDiv = createImagesElement(list);
+    	    
+    	    layer.open({
+    	        type: 1,
+    	        title: "<label style='font-weight:600;'>图片</label>",
+    	        content: imagesDiv,
+    	        area: ['700px', '710px'],
+    	        btn: ['保存','取消'],
+    	        btn1: function (index, layero) {
+    	        	let images = catchImages(id);
+    	        	images = JSON.stringify(images);
+    	            let data = {};
+    	            data.images = escape(images);
+    	            common.showLoading();
+    	            api.load('./goods/images/save','post',data, function(result) {
+    	                if (result.errcode == 0) {
+    	                    layer.close(index);
+    	                    common.tips(result.message);
+    	                } else {
+    	                    common.error(result.message);
+    	                }
+    	                common.closeLoading();
+    	            });
+    	        },
+    	        success: function () {
+    	        	// 初始化图片上传
+    	        	configImageUploadInst();
+    	        }
+    	    });
+        } else {
+            common.error(result.message);
+        }
+        common.closeLoading();
+    });
+}
+
+function createImagesElement(list) {
+	let mainImages = "";
+	let subImages = "";
+	if (list != null) {
+		for (var i = 0; i < list.length; i++) {
+			if (list[i].type == 1) {
+				mainImages = mainImages + "<div class=\"layui-upload-drag image-item\" data-id=\""+list[i].id+"\">" +
+								        		"<img src=\""+list[i].photourl+"\" onerror=\"defaultImg(this)\" class=\"value\">" +
+								        	"</div>";
+			} else if (list[i].type == 2) {
+				subImages = subImages + "<div class=\"layui-upload-drag image-item\" data-id=\""+list[i].id+"\">" +
+							        		"<img src=\""+list[i].photourl+"\" onerror=\"defaultImg(this)\" class=\"value\">" +
+							        	"</div>";
+			}
+		}
+	}
+    let element = "<div class=\"images-view\">" +
+		    		"<div class=\"mainView\">" +
+		    			"<div class=\"titleView\"><span class=\"title\"><label class=\"name\">主图<label>：</span></div>" +
+		    			"<div class=\"imageView layui-form\" uploadfile=\"1\" key=\"0\">" +
+				            "<div class=\"imagesItem layui-form-item\" data-field=\"photourl\">" +
+				                "<div class=\"uploadField\">" +
+				                	mainImages + 
+				                	"<div class=\"layui-upload-drag addIcon\">" +
+				                		"<i class=\"layui-icon\">&#xe608;</i>" +
+				                	"</div>" +
+				                "</div>" +
+				            "</div>"+
+				        "</div>"+
+		    		"</div>" +
+		    		"<div class=\"subView\">" +
+		    			"<div class=\"titleView\"><span  class=\"title\"><label class=\"name\">细节图<label>：</span></div>" +
+		    			"<div class=\"imageView layui-form\" uploadfile=\"1\" key=\"0\">" +
+				            "<div class=\"imagesItem layui-form-item\" data-field=\"photourl\">" +
+				                "<div class=\"uploadField\">" +
+				                	subImages + 
+				                	"<div class=\"layui-upload-drag addIcon\">" +
+				                		"<i class=\"layui-icon\">&#xe608;</i>" +
+				                	"</div>" +
+				                "</div>" +
+				            "</div>"+
+				        "</div>"+
+		    		"</div>" +
+	    		"</div>";
+    
+    return element;
+}
+
+function catchImages(goodsid) {
+	let list = [];
+	// 主图
+	$(".images-view .mainView .imageView .image-item").each(function(i) {
+		let id = $(this).attr("data-id");
+		let imageUrl = $(this).find(".value").attr("src");
+		let data = {
+			id : id,
+			goodsid: goodsid,
+			type: 1,
+			photourl: imageUrl,
+			showindex: i
+		};
+		list.push(data);
+	});
+	// 细节图
+	$(".images-view .subView .imageView .image-item").each(function(i) {
+		let id = $(this).attr("data-id");
+		let imageUrl = $(this).find(".value").attr("src");
+		let data = {
+			id : id,
+			goodsid: goodsid,
+			type: 2,
+			photourl: imageUrl,
+			showindex: i
+		};
+		list.push(data);
+	});
+	return list;
+}
+
+/**
+ * 上传缩略图
+ * @returns
+ */
 function configUploadInst() {
 	uploadInst = layuiUpload.render({
 	    elem: '.layui-upload-drag',
@@ -391,6 +567,32 @@ function configUploadInst() {
 	    	// 上传完毕回调
 	    	var item = this.item;
 	    	$(item).find("img").attr("src",res.data);
+	    },
+	    error: function(res, index){
+	    	// 请求异常回调
+	    	console.log(res);
+	    	console.log(index);
+	    }
+    });
+}
+
+/**
+ * 上传主图/细节图
+ * @returns
+ */
+function configImageUploadInst() {
+	uploadInst = layuiUpload.render({
+	    elem: '.layui-upload-drag',
+	    url: './upload/field/goodsdtl',
+	    size: 500,
+	    multiple: false,
+	    done: function(res, index, upload){
+	    	// 上传完毕回调
+	    	var item = this.item;
+	    	let view = "<div class=\"layui-upload-drag image-item\" data-id=\"\">" +
+			    			"<img src=\""+res.data+"\" onerror=\"defaultImg(this)\" class=\"value\">" +
+			        	"</div>";
+	    	$(item).before(view);
 	    },
 	    error: function(res, index){
 	    	// 请求异常回调

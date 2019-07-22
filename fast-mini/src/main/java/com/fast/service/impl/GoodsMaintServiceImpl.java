@@ -1,20 +1,27 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MGoodsMapper;
+import com.fast.base.data.dao.MGoodsdtlMapper;
 import com.fast.base.data.entity.MGoods;
+import com.fast.base.data.entity.MGoodsdtl;
+import com.fast.base.data.entity.MGoodsdtlExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IGoodsMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
 import com.fast.util.Common;
+import com.fast.util.CommonUtil;
 
 /**
  * 商品
@@ -31,6 +38,9 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 	
 	@Autowired
 	IDataService iDataService;
+	
+	@Autowired
+	MGoodsdtlMapper goodsdtlMapper;
 
 	@Override
 	public Result changeGoods(MGoods goods, MUser user) {
@@ -122,6 +132,46 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用GoodsMaintServiceImpl.onsaleGoods报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result goodsImages(MUser user, String images) {
+		Result result = new Result();
+
+		try {
+			Date now = new Date();
+			Integer goodsid = 0;
+			List<Integer> deleteList = new ArrayList<>();
+			images = CommonUtil.unescape(images);
+			List<MGoodsdtl> goodsdtls = JSONObject.parseArray(images,  MGoodsdtl.class);
+			for (int i = 0; i < goodsdtls.size(); i++) {
+				MGoodsdtl goodsdtl = goodsdtls.get(i);
+				goodsdtl.setUpdatedtime(now);
+				goodsid = goodsdtl.getGoodsid();
+				if (goodsdtl.getId() != null && goodsdtl.getId() > 0) {
+					goodsdtlMapper.updateByPrimaryKeySelective(goodsdtl);
+				} else {
+					goodsdtlMapper.insertSelective(goodsdtl);
+				}
+				deleteList.add(goodsdtl.getId());
+			}
+			
+			MGoodsdtlExample example = new MGoodsdtlExample();
+			example.createCriteria().andGoodsidEqualTo(goodsid);
+			if (deleteList.size() > 0) {
+				example = new MGoodsdtlExample();
+				example.createCriteria().andGoodsidEqualTo(goodsid).andIdNotIn(deleteList);
+			}
+			goodsdtlMapper.deleteByExample(example);
+			result.setErrcode(Integer.valueOf(0));
+			result.setId(goodsid);
+			result.setMessage("保存成功");
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsMaintServiceImpl.goodsImages报错：", e);
 		}
 
 		return result;

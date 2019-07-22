@@ -193,5 +193,38 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 		}
 		return result;
 	}
+	
+	@Override
+	public Result uploadGoodsDetail(HttpServletRequest request, MultipartFile file) {
+		Result result = new Result();
+		try {
+			//获取文件需要上传到的路径
+			String path = request.getRealPath("/goodsdetail") + "\\";
+			String originalFieldName = file.getOriginalFilename();
+			String prefix = originalFieldName.substring(originalFieldName.lastIndexOf("."));
+			String fieldName = String.valueOf(new Date().getTime()) + prefix;
+			String filePath = path + fieldName;
+			File desFile = new File(filePath);
+			if(!desFile.getParentFile().exists()){
+				desFile.mkdirs();
+			}
+			file.transferTo(desFile);
+			// 域名
+            String scheme = request.getScheme();
+            String serverName = request.getServerName();
+            int serverPort = request.getServerPort();
+            String contextPath = request.getContextPath();
+            String domain = scheme + "://" + serverName + ":" + serverPort + contextPath;
+			String imageUrls = domain + "/goodsdetail/" + fieldName;
+			
+			result.setErrcode(0);
+            result.setData(imageUrls);
+            result.setMessage("上传成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			FastLog.error("调用FieldUploadServiceImpl.uploadGoodsDetail报错：", e);
+		}
+		return result;
+	}
 
 }

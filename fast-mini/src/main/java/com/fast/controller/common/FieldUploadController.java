@@ -90,5 +90,29 @@ public class FieldUploadController {
 		
 		return r;
 	}
+	
+	/**
+	 * 商品主图/细节图
+	 * @param request
+	 * @param response
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping("/field/goodsdtl")
+	@ResponseBody
+	public String goodsdtl(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) {
+		String r = "";
+		
+		try {
+			Result result = iFieldUploadService.uploadGoodsDetail(request, file);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
 
 }
