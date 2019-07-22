@@ -302,13 +302,12 @@ public class DataServiceImpl implements IDataService, Serializable {
 						for (int j = 0; j < data.size(); j++) {
 							if (data.get(j).getGrade().intValue() == 1 && list.get(i).get("bigcategory").toString().equals(data.get(j).getId().toString())) {
 								list.get(i).put("bigcategoryname", data.get(j).getName());
-								break;
-							} else if (data.get(j).getGrade().intValue() == 2 && list.get(i).get("middlecategory").toString().equals(data.get(j).getId().toString())) {
+							}
+							if (data.get(j).getGrade().intValue() == 2 && list.get(i).get("middlecategory").toString().equals(data.get(j).getId().toString())) {
 								list.get(i).put("middlecategoryname", data.get(j).getName());
-								break;
-							} else if (data.get(j).getGrade().intValue() == 3 && list.get(i).get("smallcategory").toString().equals(data.get(j).getId().toString())) {
+							}
+							if (data.get(j).getGrade().intValue() == 3 && list.get(i).get("smallcategory").toString().equals(data.get(j).getId().toString())) {
 								list.get(i).put("smallcategoryname", data.get(j).getName());
-								break;
 							}
 						}
 					}

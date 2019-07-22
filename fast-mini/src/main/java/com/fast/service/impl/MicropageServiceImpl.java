@@ -101,7 +101,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
-			FastLog.error("调用DataServiceImpl.pageList报错：", e);
+			FastLog.error("调用MicropageServiceImpl.list报错：", e);
 		}
 
 		return result;

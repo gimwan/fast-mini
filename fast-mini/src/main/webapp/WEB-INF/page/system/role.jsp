@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/system/role.css">
 <script type="text/javascript" src="js/system/role.js"></script>
 <div class="rolePage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">角色管理</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>系统管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>角色</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">

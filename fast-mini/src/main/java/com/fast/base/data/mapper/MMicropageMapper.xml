@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MMicropageMapper">
-	<cache type="com.fast.system.RedisCache"/>
+	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MMicropage">
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="Code" property="code" jdbcType="VARCHAR" />
@@ -20,6 +20,8 @@
 		<result column="PageView" property="pageview" jdbcType="DECIMAL" />
 		<result column="VipView" property="vipview" jdbcType="DECIMAL" />
 		<result column="PublicPlatformID" property="publicplatformid"
+			jdbcType="INTEGER" />
+		<result column="MiniProgramID" property="miniprogramid"
 			jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
@@ -57,7 +59,8 @@
 		ID, Code, Name, HomeFlag, Memo, UseFlag, CreateTime, Creator, ModifyTime,
 		Modifier,
 		UpdatedTime, PublishFlag, Publisher, PublishTime, PageView, VipView,
-		PublicPlatformID
+		PublicPlatformID,
+		MiniProgramID
 	</sql>
 	<select id="selectByExample" resultMap="BaseResultMap"
 		parameterType="com.fast.base.data.entity.MMicropageExample">
@@ -99,7 +102,8 @@
 		CreateTime, Creator, ModifyTime,
 		Modifier, UpdatedTime, PublishFlag,
 		Publisher, PublishTime, PageView,
-		VipView, PublicPlatformID)
+		VipView, PublicPlatformID, MiniProgramID
+		)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{homeflag,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR}, #{useflag,jdbcType=TINYINT},
@@ -108,7 +112,9 @@
 		#{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP}, #{publishflag,jdbcType=TINYINT},
 		#{publisher,jdbcType=VARCHAR}, #{publishtime,jdbcType=TIMESTAMP},
 		#{pageview,jdbcType=DECIMAL},
-		#{vipview,jdbcType=DECIMAL}, #{publicplatformid,jdbcType=INTEGER})
+		#{vipview,jdbcType=DECIMAL}, #{publicplatformid,jdbcType=INTEGER},
+		#{miniprogramid,jdbcType=INTEGER}
+		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MMicropage"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -165,6 +171,9 @@
 			<if test="publicplatformid != null">
 				PublicPlatformID,
 			</if>
+			<if test="miniprogramid != null">
+				MiniProgramID,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -217,6 +226,9 @@
 			</if>
 			<if test="publicplatformid != null">
 				#{publicplatformid,jdbcType=INTEGER},
+			</if>
+			<if test="miniprogramid != null">
+				#{miniprogramid,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -278,6 +290,9 @@
 			<if test="publicplatformid != null">
 				PublicPlatformID = #{publicplatformid,jdbcType=INTEGER},
 			</if>
+			<if test="miniprogramid != null">
+				MiniProgramID = #{miniprogramid,jdbcType=INTEGER},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -298,7 +313,8 @@
 		PublishTime = #{publishtime,jdbcType=TIMESTAMP},
 		PageView = #{pageview,jdbcType=DECIMAL},
 		VipView = #{vipview,jdbcType=DECIMAL},
-		PublicPlatformID = #{publicplatformid,jdbcType=INTEGER}
+		PublicPlatformID = #{publicplatformid,jdbcType=INTEGER},
+		MiniProgramID = #{miniprogramid,jdbcType=INTEGER}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

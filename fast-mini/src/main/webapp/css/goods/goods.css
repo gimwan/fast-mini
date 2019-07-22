@@ -1,0 +1,66 @@
+.goodsPage .operating {
+	margin: 0px 15px;
+}
+
+.goodsPage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
+.goodsPage .layui-table-view .layui-table-box .layui-table-header span {
+	font-weight: 600;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .item {
+	width: 100px;
+	min-width: 100px;
+	border-top-width: 0;
+	border-left-width: 0;
+	border-right-width: 0;
+	border-bottom-width: 1px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .photourl {
+	min-width: 80px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .photourl img {
+	border-radius: unset;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .name {
+	min-width: 180px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .value {
+	min-width: 200px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .memo {
+	width: 100%;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .operationbtn {
+	min-width: 150px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .creator, .goodsPage .layui-table-view .layui-table-box tr .modifier
+	{
+	min-width: 120px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .time-item {
+	min-width: 200px;
+}
+
+.goodsPage .layui-table-view .layui-table-box .goods-data {
+	overflow-y: auto;
+	/* overflow-x: hidden; */
+}
+
+.operationbtn .layui-icon {
+	margin-right: 0px;
+}
+
+.operationbtn .layui-btn-group .layui-btn {
+	margin-right: 4px !important;
+}

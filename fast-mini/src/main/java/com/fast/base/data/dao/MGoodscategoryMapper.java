@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Options;
 
 public interface MGoodscategoryMapper {
-    long countByExample(MGoodscategoryExample example);
+    int countByExample(MGoodscategoryExample example);
 
     int deleteByExample(MGoodscategoryExample example);
 

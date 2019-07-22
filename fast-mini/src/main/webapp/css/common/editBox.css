@@ -36,6 +36,26 @@
 	color: gray;
 }
 
+.layui-form-item .layui-form-checkbox[lay-skin=primary] {
+	margin-top: 0px;
+}
+
+.layui-form-radio {
+	margin-top: 0px;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-upload-drag {
+	padding: 0px;
+	border: 0px;
+}
+
+.edit-view .edit-box .layui-form .layui-form-item .layui-upload-drag img {
+	width: 150px;
+	height: 150px;
+}
+
+/********************popup*************************/
+
 .edit-view .edit-box .popup .edit-value {
 	position: relative;
 }
@@ -64,6 +84,7 @@
 	display: table-cell;
 	padding: 10px 20px;
 	width: 50%;
+	color: grey;
 }
 
 .popup-view .popup-box .popup-data .code {
@@ -71,5 +92,54 @@
 }
 
 .popup-view .popup-box .popup-data .name {
+	text-align: right;
+}
+
+/********************cascade*************************/
+
+.edit-view .edit-box .cascade .cascade-value {
+	display: table;
+	width: calc(100% + 20px);
+    border-collapse: separate;
+    border-spacing: 10px 0px;
+    margin: 0px -10px;
+}
+
+.edit-view .edit-box .cascade .edit-value {
+	position: relative;
+	display: table-cell;
+}
+
+.edit-view .edit-box .cascade input {
+	padding-right: 30px;
+}
+
+.edit-view .edit-box .cascade .layui-icon {
+	font-size: 20px;
+    position: absolute;
+    right: 5px;
+    top: 8px;
+    color: #c2c2c2;
+}
+
+.cascade-view .cascade-box .cascade-data {
+	display: table;
+    width: 100%;
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+    border-color: #f2f2f2;
+}
+
+.cascade-view .cascade-box .cascade-data span {
+	display: table-cell;
+	padding: 10px 20px;
+	width: 50%;
+}
+
+.cascade-view .cascade-box .cascade-data .code {
+	text-align: left;
+}
+
+.cascade-view .cascade-box .cascade-data .name {
 	text-align: right;
 }

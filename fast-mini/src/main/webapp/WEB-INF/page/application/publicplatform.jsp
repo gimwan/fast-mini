@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/application/publicplatform.css">
 <script type="text/javascript" src="js/application/publicplatform.js"></script>
 <div class="publicplatformPage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">公众号</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>应用管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>公众号</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">

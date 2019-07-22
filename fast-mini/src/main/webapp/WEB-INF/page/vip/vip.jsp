@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/vip/vip.css">
 <script type="text/javascript" src="js/vip/vip.js"></script>
 <div class="vipPage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">员工资料</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>会员管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>会员</cite></a>
+	  </div>
 	</div>
 	
 	<div class="layui-tab-item layui-show">

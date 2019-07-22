@@ -41,6 +41,8 @@ public class MMicropage implements Serializable {
 
     private Integer publicplatformid;
 
+    private Integer miniprogramid;
+
     public Integer getId() {
         return id;
     }
@@ -175,5 +177,13 @@ public class MMicropage implements Serializable {
 
     public void setPublicplatformid(Integer publicplatformid) {
         this.publicplatformid = publicplatformid;
+    }
+
+    public Integer getMiniprogramid() {
+        return miniprogramid;
+    }
+
+    public void setMiniprogramid(Integer miniprogramid) {
+        this.miniprogramid = miniprogramid;
     }
 }

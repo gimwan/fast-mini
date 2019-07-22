@@ -50,7 +50,7 @@ let microPageItemVm;
 let microPageVm;
 let microPageSetVm;
 let microPageEditVm;
-let uploadInst ;
+let uploadInst;
 let microPage;
 let setData;
 

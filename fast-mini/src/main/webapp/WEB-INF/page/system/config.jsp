@@ -2,12 +2,13 @@
 <link rel="stylesheet" href="css/system/config.css">
 <script type="text/javascript" src="js/system/config.js"></script>
 <div class="configPage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">系统参数</li>
-		</ul>
-	<div class="layui-tab-content"></div>
-	</div> 
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>系统管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>参数</cite></a>
+	  </div>
+	</div>
 	<div class="layui-tab-item layui-show">
 		<div class="layui-main">
 			<div id="lay_preview">

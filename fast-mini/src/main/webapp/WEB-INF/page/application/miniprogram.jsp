@@ -2,10 +2,12 @@
 <link rel="stylesheet" href="css/application/miniprogram.css">
 <script type="text/javascript" src="js/application/miniprogram.js"></script>
 <div class="miniprogramPage">
-	<div class="layui-tab layui-tab-brief nav-bar">
-		<ul class="layui-tab-title">
-		    <li class="layui-this">小程序</li>
-		</ul>
+	<div class="layui-card layadmin-header nav-bar">
+	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
+	    <a><cite>应用管理</cite></a>
+	    <span lay-separator="">/</span>
+	    <a><cite>小程序</cite></a>
+	  </div>
 	</div>
 	
 	<div class="operating">
