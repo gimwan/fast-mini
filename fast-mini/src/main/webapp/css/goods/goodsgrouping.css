@@ -1,0 +1,41 @@
+.goodsgroupingPage .operating {
+	margin: 0px 15px;
+}
+
+.goodsgroupingPage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
+.goodsgroupingPage .layui-table-view .layui-table-box .layui-table-header span {
+	font-weight: 600;
+}
+
+.goodsgroupingPage .layui-table-view .layui-table-box tr .item {
+	width: 100px;
+	min-width: 100px;
+	border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 1px;
+}
+
+.goodsgroupingPage .layui-table-view .layui-table-box tr .name {
+	min-width: 180px;
+}
+
+.goodsgroupingPage .layui-table-view .layui-table-box tr .memo {
+	width: 100%;
+}
+
+.goodsgroupingPage .layui-table-view .layui-table-box tr .creator,.goodsgroupingPage .layui-table-view .layui-table-box tr .modifier {
+	min-width: 120px;
+}
+
+.goodsgroupingPage .layui-table-view .layui-table-box tr .time-item {
+	min-width: 200px;
+}
+
+.goodsgroupingPage .layui-table-view .layui-table-box .goodsgrouping-data {
+	overflow-y: auto;
+	overflow-x: hidden;
+}

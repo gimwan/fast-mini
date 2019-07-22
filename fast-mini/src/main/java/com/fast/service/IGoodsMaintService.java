@@ -28,11 +28,21 @@ public interface IGoodsMaintService {
 	
 	/**
 	 * 上下架
-	 * @param user
-	 * @param id
-	 * @param onsale
+	 * @param user 操作者
+	 * @param id 商品id
+	 * @param onsale 上下架标志
 	 * @return
 	 */
 	public Result onsaleGoods(MUser user, Integer id, Integer onsale);
+	
+	/**
+	 * 商品主图/细节图
+	 * @param user 操作者
+	 * @param goodsid 商品id
+	 * @param images 图片集合字符串
+	 * @param groups 分组集合字符串
+	 * @return
+	 */
+	public Result goodsImages(MUser user, Integer goodsid, String images, String groups);
 
 }

@@ -27,7 +27,6 @@ function catchBoxValue() {
 				}
             	data[key] = isChecked;
 			});
-        	
 		}
         if (isImage == "1") {
         	value = $(this).find('img').attr("src");

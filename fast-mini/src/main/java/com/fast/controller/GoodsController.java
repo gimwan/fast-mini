@@ -150,4 +150,61 @@ public class GoodsController {
 		
 		return r;
 	}
+	
+	/**
+	 * 商品详细配置
+	 * @param request
+	 * @param response
+	 * @param goodsdtls
+	 * @return
+	 */
+	@RequestMapping("/info")
+	@ResponseBody
+	public String info(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String goodsid = request.getParameter("goodsid");
+			Result result = iGoodsService.goodsInfo(Integer.valueOf(goodsid.trim()));
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 商品详情
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/images/save")
+	@ResponseBody
+	public String saveimages(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			Result result = new Result();
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				String goodsid = request.getParameter("goodsid");
+				String images = request.getParameter("images");
+				String groups = request.getParameter("groups");
+				result = iGoodsMaintService.goodsImages(user, Integer.valueOf(goodsid.trim()), images, groups);
+			} else {
+				result.setMessage("当前登入者已失效");
+			}
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
 }

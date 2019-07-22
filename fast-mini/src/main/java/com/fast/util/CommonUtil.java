@@ -289,6 +289,11 @@ public class CommonUtil {
 		return (xmlReader.read(doc));
 	}
 	
+	/**
+	 * 将key转小写
+	 * @param list
+	 * @return
+	 */
 	public static List<LinkedHashMap<String, Object>> transformUpperCase(List<LinkedHashMap<String, Object>> list) {
 		List<LinkedHashMap<String, Object>> newList = new ArrayList<LinkedHashMap<String, Object>>();
 		if (list != null) {

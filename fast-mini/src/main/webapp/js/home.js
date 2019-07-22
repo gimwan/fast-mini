@@ -53,11 +53,11 @@ let menu = [
             },
             {
                 name: '分类',
-                link: 'category'
+                link: 'goodscategory'
             },
             {
                 name: '分组',
-                link: 'grouping'
+                link: 'goodsgrouping'
             },
             {
                 name: '商品',
@@ -143,8 +143,8 @@ document.onreadystatechange = function() {
     	});
     	
     	// 弹窗选择
-    	$("body").on("click", ".edit-view .edit-box .popup input", function () {
-    		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
+    	$("body").on("click", ".popup input", function () {
+    		$(".popup .popuped").removeClass("popuped");
     		$(this).addClass("popuped");
     		let url = $(this).data("url");
     		let title = $(this).parent().parent().find(".edit-title .title .name").html();
@@ -162,14 +162,21 @@ document.onreadystatechange = function() {
             	        	let id = $(layero).find(".layui-layer-content .selected").data("id");
             	        	let name = $(layero).find(".layui-layer-content .selected .name").html();
             	        	if (id != null && id != undefined && $.trim(id) != "") {
-            	        		$(".edit-view .edit-box .popup .popuped").attr("data-id",id);
-            	        		$(".edit-view .edit-box .popup .popuped").val(name);
-            	        		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
+            	        		$(".popup .popuped").attr("data-id",id);
+            	        		$(".popup .popuped").val(name);
+            	        		$(".popup .popuped").removeClass("popuped");
         					}
             	        	layer.close(index);
             	        },
+            	        btn2: function() {
+							this.cancel();
+						},
             	        success: function (layero, index) {
+            	        	$(layero).find(".layui-layer-content").addClass("isPopup");
             	        	$(layero).find(".layui-layer-content").append(selectOption);
+            	        },
+            	        cancel: function(){
+            	        	$(".popup .popuped").removeClass("popuped");
             	        }
             		});
     			} else {
@@ -191,12 +198,15 @@ document.onreadystatechange = function() {
     	
     	// 弹窗双击选择数据
     	$("body").on("dblclick", ".popup-view .popup-box .popup-data", function () {
-    		let id = $(this).data("id");
-    		let name = $(this).find(".name").html();
-    		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
-    		$(".edit-view .edit-box .popup .popuped").attr("data-id",id);
-    		$(".edit-view .edit-box .popup .popuped").val(name);
-    		$(".edit-view .edit-box .popup .popuped").removeClass("popuped");
+    		let isPopup = $(this).parents(".layui-layer-content").hasClass("isCisPopupascade");
+    		if (isPopup) {
+    			let id = $(this).data("id");
+        		let name = $(this).find(".name").html();
+        		$(".popup .popuped").attr("data-id",id);
+        		$(".popup .popuped").val(name);
+        		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
+        		$(".popup .popuped").removeClass("popuped");
+    		}
     	});
     	
     	// 弹窗选择（级联）
@@ -232,14 +242,21 @@ document.onreadystatechange = function() {
             	        	if (id != null && id != undefined && $.trim(id) != "") {
             	        		$(".edit-view .edit-box .cascade .cascadeed").attr("data-id",id);
             	        		$(".edit-view .edit-box .cascade .cascadeed").val(name);
-            	        		checkCascade($(".edit-view .edit-box .cascade .cascadeed"));            	        		
-            	        		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
+            	        		checkCascade($(".edit-view .edit-box .cascade .cascadeed"));
         					}
+            	        	$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
             	        	changeCascadeUrl();
             	        	layer.close(index);
             	        },
+            	        btn2: function() {
+							this.cancel();
+						},
             	        success: function (layero, index) {
+            	        	$(layero).find(".layui-layer-content").addClass("isCascade");
             	        	$(layero).find(".layui-layer-content").append(selectOption);
+            	        },
+            	        cancel: function(){
+            	        	$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
             	        }
             		});
     			} else {
@@ -252,14 +269,17 @@ document.onreadystatechange = function() {
     	
     	// 弹窗双击选择数据（级联）
     	$("body").on("dblclick", ".popup-view .popup-box .popup-data", function () {
-    		let id = $(this).data("id");
-    		let name = $(this).find(".name").html();
-    		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
-    		$(".edit-view .edit-box .cascade .cascadeed").attr("data-id",id);
-    		$(".edit-view .edit-box .cascade .cascadeed").val(name);
-    		checkCascade($(".edit-view .edit-box .cascade .cascadeed"));
-    		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
-    		changeCascadeUrl();
+    		let isCascade = $(this).parents(".layui-layer-content").hasClass("isCascade");
+    		if (isCascade) {
+    			let id = $(this).data("id");
+        		let name = $(this).find(".name").html();
+        		$(".edit-view .edit-box .cascade .cascadeed").attr("data-id",id);
+        		$(".edit-view .edit-box .cascade .cascadeed").val(name);
+        		checkCascade($(".edit-view .edit-box .cascade .cascadeed"));
+        		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
+        		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
+        		changeCascadeUrl();
+			}
     	});
     	
     	// 图片加载失败显示默认图

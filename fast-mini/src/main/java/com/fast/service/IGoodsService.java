@@ -23,5 +23,12 @@ public interface IGoodsService {
 	 * @return
 	 */
 	public Result goodsDetail(Integer id, String openid, String appid);
+	
+	/**
+	 * 商品主图/明细图
+	 * @param goodsid 商品id
+	 * @return
+	 */
+	public Result goodsInfo(Integer goodsid);
 
 }
