@@ -29,6 +29,13 @@ public interface IGoodsService {
 	 * @param goodsid 商品id
 	 * @return
 	 */
-	public Result goodsImages(Integer goodsid);
+	public Result goodsInfo(Integer goodsid);
+	
+	/**
+	 * 获取商品SKU
+	 * @param goodsid
+	 * @return
+	 */
+	public Result goodsSKU(Integer goodsid);
 
 }

@@ -12,48 +12,48 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
-import com.fast.base.data.entity.MPublicplatform;
+import com.fast.base.data.entity.MGoodsgrouping;
 import com.fast.base.data.entity.MUser;
-import com.fast.service.IPublicPlatformMaintService;
-import com.fast.service.IPublicPlatformService;
+import com.fast.service.IGoodsGroupingMaintService;
+import com.fast.service.IGoodsGroupingService;
 import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
 
 /**
- * 公众号
+ * 分组
  * @author J
  *
  */
-@RequestMapping(value = "/publicplatform", produces = "application/json; charset=utf-8")
+@RequestMapping(value = "/goodsgrouping", produces = "application/json; charset=utf-8")
 @Controller
-public class PublicPlatformController {
+public class GoodsGroupingController {
 	
 	@Autowired
-	IPublicPlatformService iPublicPlatformService;
+	IGoodsGroupingService iGoodsGroupingService;
 	
 	@Autowired
-	IPublicPlatformMaintService iPublicPlatformMaintService;
+	IGoodsGroupingMaintService iGoodsGroupingMaintService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		return new ModelAndView("application/publicplatform", map);
+		return new ModelAndView("goods/goodsgrouping", map);
 	}
 	
 	/**
-	 * 查询所有公众号
+	 * 查询所有分组
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/publicplatform")
+	@RequestMapping("/goodsgrouping")
 	@ResponseBody
-	public String publicplatform(HttpServletRequest request, HttpServletResponse response) {
+	public String goodsgrouping(HttpServletRequest request, HttpServletResponse response) {
 		String r = "";
 		
 		try {
-			Result result = iPublicPlatformService.publicplatform();
+			Result result = iGoodsGroupingService.goodsGrouping();
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
@@ -65,15 +65,15 @@ public class PublicPlatformController {
 	}
 	
 	/**
-	 * 修改公众号
+	 * 修改分组
 	 * @param request
 	 * @param response
-	 * @param publicplatform
+	 * @param user
 	 * @return
 	 */
 	@RequestMapping("/change")
 	@ResponseBody
-	public String change(HttpServletRequest request, HttpServletResponse response, MPublicplatform publicplatform) {
+	public String change(HttpServletRequest request, HttpServletResponse response, MGoodsgrouping goodsgrouping) {
 		String r = "";
 		
 		try {
@@ -81,7 +81,7 @@ public class PublicPlatformController {
 			
 			MUser user = Common.currentUser(request);
 			if (user != null) {
-				result = iPublicPlatformMaintService.changePublicplatform(publicplatform, user);
+				result = iGoodsGroupingMaintService.changeGoodsGrouping(goodsgrouping, user);
 			} else {
 				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
@@ -97,7 +97,7 @@ public class PublicPlatformController {
 	}
 	
 	/**
-	 * 删除公众号
+	 * 删除分组
 	 * @param request
 	 * @param response
 	 * @param id
@@ -110,7 +110,7 @@ public class PublicPlatformController {
 		
 		try {
 			String id = request.getParameter("id");
-			Result result = iPublicPlatformMaintService.deletePublicplatform(Integer.valueOf(id));
+			Result result = iGoodsGroupingMaintService.deleteGoodsGrouping(Integer.valueOf(id));
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

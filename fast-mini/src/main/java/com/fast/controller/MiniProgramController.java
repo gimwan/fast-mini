@@ -83,6 +83,7 @@ public class MiniProgramController {
 			if (user != null) {
 				result = iMiniProgramMaintService.changeMiniProgram(miniprogram, user);
 			} else {
+				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
 			}
 			

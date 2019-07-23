@@ -83,6 +83,7 @@ public class UserController {
 			if (currentUser != null) {
 				result = iUserMaintService.changeUser(user, currentUser);
 			} else {
+				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
 			}
 			

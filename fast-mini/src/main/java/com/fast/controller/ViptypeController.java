@@ -83,6 +83,7 @@ public class ViptypeController {
 			if (user != null) {
 				result = iViptypeMaintService.changeVipType(viptype, user);
 			} else {
+				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
 			}
 			

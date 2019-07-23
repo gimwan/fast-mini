@@ -45,6 +45,7 @@
 
 .goodsPage .layui-table-view .layui-table-box tr .operationbtn .sku {
 	background-color: #5FB878;
+	border-color: #5FB878;
 	color: #FFF;
 }
 

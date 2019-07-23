@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MGoodsMapper;
+import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodsExample;
 import com.fast.service.IDataService;
@@ -39,6 +40,9 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 	
 	@Autowired
 	IDataService iDataService;
+	
+	@Autowired
+	MGoodsskuMapper goodsskuMapper;
 
 	@Override
 	public Result goods() {
@@ -149,20 +153,51 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 	}
 
 	@Override
-	public Result goodsImages(Integer goodsid) {
+	public Result goodsInfo(Integer goodsid) {
 		Result result = new Result();
 
 		try {
+			HashMap<String, Object> map = new HashMap<>();
 			String sql = "select * from m_goodsdtl where goodsid=" + goodsid + " order by showindex";
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
 				list = CommonUtil.transformUpperCase(list);
 			}
-			result.setData(list);
+			map.put("images", list);
+			sql = "select a.*,case when b.id is not null then 1 else 0 end as checked,case when b.id is null then 0 else b.id end as checkedid "
+					+ "from m_goodsgrouping a "
+					+ "left join m_goodsingroup b on a.id=b.groupingid and b.goodsid="+goodsid+" "
+					+ "where a.useflag=1 "
+					+ "order by code";
+			list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
+			}
+			map.put("groups", list);
+			result.setData(map);
 			result.setErrcode(Integer.valueOf(0));
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用GoodsServiceImpl.goodsImages报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result goodsSKU(Integer goodsid) {
+		Result result = new Result();
+
+		try {
+			String sql = "select * from m_goodssku where goodsid=" + goodsid + " order by colorid,patternid,sizeid";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			list = CommonUtil.transformUpperCase(list);
+			list = iDataService.completeData(list, "goodssku");
+			result.setData(list);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsServiceImpl.goodsSKU报错：", e);
 		}
 
 		return result;

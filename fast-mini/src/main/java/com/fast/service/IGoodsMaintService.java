@@ -1,10 +1,7 @@
 package com.fast.service;
 
-import java.util.List;
-
 import com.fast.base.Result;
 import com.fast.base.data.entity.MGoods;
-import com.fast.base.data.entity.MGoodsdtl;
 import com.fast.base.data.entity.MUser;
 
 /**
@@ -41,9 +38,20 @@ public interface IGoodsMaintService {
 	/**
 	 * 商品主图/细节图
 	 * @param user 操作者
+	 * @param goodsid 商品id
 	 * @param images 图片集合字符串
+	 * @param groups 分组集合字符串
 	 * @return
 	 */
-	public Result goodsImages(MUser user, String images);
+	public Result goodsImages(MUser user, Integer goodsid, String images, String groups);
+	
+	/**
+	 * 保存商品sku信息
+	 * @param user
+	 * @param goodsid
+	 * @param skus
+	 * @return
+	 */
+	public Result saveGoodsSku(MUser user, Integer goodsid, String skus);
 
 }

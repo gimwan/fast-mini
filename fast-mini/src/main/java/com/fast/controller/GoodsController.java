@@ -1,7 +1,6 @@
 package com.fast.controller;
 
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
 import com.fast.base.data.entity.MGoods;
-import com.fast.base.data.entity.MGoodsdtl;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IGoodsMaintService;
 import com.fast.service.IGoodsService;
@@ -85,6 +83,7 @@ public class GoodsController {
 			if (user != null) {
 				result = iGoodsMaintService.changeGoods(goods, user);
 			} else {
+				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
 			}
 			
@@ -141,6 +140,7 @@ public class GoodsController {
 				String onsale = request.getParameter("onsale");
 				result = iGoodsMaintService.onsaleGoods(user, Integer.valueOf(id.trim()), Integer.valueOf(onsale.trim()));
 			} else {
+				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
 			}
 			
@@ -154,20 +154,20 @@ public class GoodsController {
 	}
 	
 	/**
-	 * 商品主图/明细图
+	 * 商品详细配置
 	 * @param request
 	 * @param response
 	 * @param goodsdtls
 	 * @return
 	 */
-	@RequestMapping("/images")
+	@RequestMapping("/info")
 	@ResponseBody
-	public String images(HttpServletRequest request, HttpServletResponse response) {
+	public String info(HttpServletRequest request, HttpServletResponse response) {
 		String r = "";
 		
 		try {
 			String goodsid = request.getParameter("goodsid");
-			Result result = iGoodsService.goodsImages(Integer.valueOf(goodsid.trim()));
+			Result result = iGoodsService.goodsInfo(Integer.valueOf(goodsid.trim()));
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
@@ -193,9 +193,68 @@ public class GoodsController {
 			Result result = new Result();
 			MUser user = Common.currentUser(request);
 			if (user != null) {
+				String goodsid = request.getParameter("goodsid");
 				String images = request.getParameter("images");
-				result = iGoodsMaintService.goodsImages(user, images);
+				String groups = request.getParameter("groups");
+				result = iGoodsMaintService.goodsImages(user, Integer.valueOf(goodsid.trim()), images, groups);
 			} else {
+				result.setErrcode(Integer.valueOf(88));
+				result.setMessage("当前登入者已失效");
+			}
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 获取商品sku信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/sku")
+	@ResponseBody
+	public String sku(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String goodsid = request.getParameter("goodsid");
+			Result result = iGoodsService.goodsSKU(Integer.valueOf(goodsid.trim()));
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 保存商品sku信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/sku/save")
+	@ResponseBody
+	public String savesku(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			Result result = new Result();
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				String goodsid = request.getParameter("goodsid");
+				String skus = request.getParameter("skus");
+				result = iGoodsMaintService.saveGoodsSku(user, Integer.valueOf(goodsid.trim()), skus);
+			} else {
+				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
 			}
 			

@@ -11,19 +11,28 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MBrandMapper;
+import com.fast.base.data.dao.MColorMapper;
 import com.fast.base.data.dao.MDepartmentMapper;
 import com.fast.base.data.dao.MGoodscategoryMapper;
+import com.fast.base.data.dao.MPatternMapper;
 import com.fast.base.data.dao.MPublicplatformMapper;
+import com.fast.base.data.dao.MSizeMapper;
 import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MBrand;
 import com.fast.base.data.entity.MBrandExample;
+import com.fast.base.data.entity.MColor;
+import com.fast.base.data.entity.MColorExample;
 import com.fast.base.data.entity.MDepartment;
 import com.fast.base.data.entity.MDepartmentExample;
 import com.fast.base.data.entity.MGoodscategory;
 import com.fast.base.data.entity.MGoodscategoryExample;
+import com.fast.base.data.entity.MPattern;
+import com.fast.base.data.entity.MPatternExample;
 import com.fast.base.data.entity.MPublicplatform;
 import com.fast.base.data.entity.MPublicplatformExample;
+import com.fast.base.data.entity.MSize;
+import com.fast.base.data.entity.MSizeExample;
 import com.fast.base.data.entity.MVip;
 import com.fast.base.data.entity.MVipExample;
 import com.fast.base.data.entity.MViptype;
@@ -59,6 +68,15 @@ public class DataServiceImpl implements IDataService, Serializable {
 	
 	@Autowired
 	MGoodscategoryMapper goodscategoryMapper;
+	
+	@Autowired
+	MColorMapper colorMapper;
+	
+	@Autowired
+	MPatternMapper patternMapper;
+	
+	@Autowired
+	MSizeMapper sizeMapper;
 
 	@Override
 	public Result pageList(PagingView page, String tableName) {
@@ -311,6 +329,100 @@ public class DataServiceImpl implements IDataService, Serializable {
 							}
 						}
 					}
+				}
+			}
+			for (int i = 0; i < list.size(); i++) {
+				if ("".equals(list.get(i).get("brand").toString())) {
+					list.get(i).put("brandid", "");
+				}
+				if ("".equals(list.get(i).get("bigcategoryname").toString())) {
+					list.get(i).put("bigcategory", "");
+				}
+				if ("".equals(list.get(i).get("middlecategoryname").toString())) {
+					list.get(i).put("middlecategory", "");
+				}
+				if ("".equals(list.get(i).get("smallcategoryname").toString())) {
+					list.get(i).put("smallcategory", "");
+				}
+			}
+		} else if ("goodssku".equals(tableName)) {
+			List<Integer> coloridList = new ArrayList<>();
+			List<Integer> patternidList = new ArrayList<>();
+			List<Integer> sizeidList = new ArrayList<>();
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).put("color", "");
+				if (!Common.isEmpty(String.valueOf(list.get(i).get("colorid")))) {
+					coloridList.add(Integer.valueOf(list.get(i).get("colorid").toString()));
+				} else {
+					list.get(i).put("colorid", "");
+				}
+				list.get(i).put("pattern", "");
+				if (!Common.isEmpty(String.valueOf(list.get(i).get("patternid")))) {
+					patternidList.add(Integer.valueOf(list.get(i).get("patternid").toString()));
+				} else {
+					list.get(i).put("patternid", "");
+				}
+				list.get(i).put("size", "");
+				if (!Common.isEmpty(String.valueOf(list.get(i).get("sizeid")))) {
+					sizeidList.add(Integer.valueOf(list.get(i).get("sizeid").toString()));
+				} else {
+					list.get(i).put("sizeid", "");
+				}
+			}
+			if (coloridList.size() > 0) {
+				MColorExample example = new MColorExample();
+				example.createCriteria().andIdIn(coloridList);
+				List<MColor> data = colorMapper.selectByExample(example);
+				if (data != null && data.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						for (int j = 0; j < data.size(); j++) {
+							if (list.get(i).get("colorid").toString().equals(data.get(j).getId().toString())) {
+								list.get(i).put("color", data.get(j).getName());
+								break;
+							}
+						}
+					}
+				}
+			}
+			if (patternidList.size() > 0) {
+				MPatternExample example = new MPatternExample();
+				example.createCriteria().andIdIn(patternidList);
+				List<MPattern> data = patternMapper.selectByExample(example);
+				if (data != null && data.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						for (int j = 0; j < data.size(); j++) {
+							if (list.get(i).get("patternid").toString().equals(data.get(j).getId().toString())) {
+								list.get(i).put("pattern", data.get(j).getName());
+								break;
+							}
+						}
+					}
+				}
+			}
+			if (sizeidList.size() > 0) {
+				MSizeExample example = new MSizeExample();
+				example.createCriteria().andIdIn(sizeidList);
+				List<MSize> data = sizeMapper.selectByExample(example);
+				if (data != null && data.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						for (int j = 0; j < data.size(); j++) {
+							if (list.get(i).get("sizeid").toString().equals(data.get(j).getId().toString())) {
+								list.get(i).put("size", data.get(j).getName());
+								break;
+							}
+						}
+					}
+				}
+			}
+			for (int i = 0; i < list.size(); i++) {
+				if ("".equals(list.get(i).get("color").toString())) {
+					list.get(i).put("colorid", "");
+				}
+				if ("".equals(list.get(i).get("pattern").toString())) {
+					list.get(i).put("patternid", "");
+				}
+				if ("".equals(list.get(i).get("size").toString())) {
+					list.get(i).put("sizeid", "");
 				}
 			}
 		}
