@@ -133,7 +133,7 @@
 											<div class="layui-btn-group">
 												<button
 													class="layui-btn layui-btn-normal layui-btn-xs image"
-													title="图片" v-on:click="images">详情</button>
+													title="详情" v-on:click="images">详情</button>
 												<button
 													class="layui-btn layui-btn-warm layui-btn-xs onsale"
 													title="上架" v-on:click="onsale" v-if="g.onsale!=1">上架</button>

@@ -92,7 +92,7 @@
 											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(o.createtime)}}</div>
 										</td>
 										<td class="item status">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{o.status==0?'已取消':(o.status==1?'未付款':(o.status==2?'未发货':(o.status==3?'未收货':(o.status==4?'已完成':''))))}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-3">{{o.status==0?'已取消':(o.status==1?'待付款':(o.status==2?'待发货':(o.status==3?'待收货':(o.status==4?'已完成':''))))}}</div>
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{o.memo}}</div>

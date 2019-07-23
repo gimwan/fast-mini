@@ -1,32 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MOrderdtlMapper">
 	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MOrderdtl">
-		<id column="ID" jdbcType="INTEGER" property="id" />
-		<result column="GoodsID" jdbcType="INTEGER" property="goodsid" />
-		<result column="ColorID" jdbcType="INTEGER" property="colorid" />
-		<result column="PatternID" jdbcType="INTEGER" property="patternid" />
-		<result column="SizeID" jdbcType="INTEGER" property="sizeid" />
-		<result column="Quantity" jdbcType="INTEGER" property="quantity" />
-		<result column="Price" jdbcType="DECIMAL" property="price" />
-		<result column="BasePrice" jdbcType="DECIMAL" property="baseprice" />
-		<result column="Amount" jdbcType="DECIMAL" property="amount" />
-		<result column="SalePrice" jdbcType="DECIMAL" property="saleprice" />
-		<result column="BaseAmount" jdbcType="DECIMAL" property="baseamount" />
-		<result column="SaleAmount" jdbcType="DECIMAL" property="saleamount" />
-		<result column="CreateTime" jdbcType="TIMESTAMP" property="createtime" />
-		<result column="Creator" jdbcType="VARCHAR" property="creator" />
-		<result column="ModifyTime" jdbcType="TIMESTAMP" property="modifytime" />
-		<result column="Modifier" jdbcType="VARCHAR" property="modifier" />
-		<result column="UpdatedTime" jdbcType="TIMESTAMP" property="updatedtime" />
-		<result column="UseFlag" jdbcType="TINYINT" property="useflag" />
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="GoodsID" property="goodsid" jdbcType="INTEGER" />
+		<result column="ColorID" property="colorid" jdbcType="INTEGER" />
+		<result column="PatternID" property="patternid" jdbcType="INTEGER" />
+		<result column="SizeID" property="sizeid" jdbcType="INTEGER" />
+		<result column="Quantity" property="quantity" jdbcType="INTEGER" />
+		<result column="Price" property="price" jdbcType="DECIMAL" />
+		<result column="BasePrice" property="baseprice" jdbcType="DECIMAL" />
+		<result column="Amount" property="amount" jdbcType="DECIMAL" />
+		<result column="SalePrice" property="saleprice" jdbcType="DECIMAL" />
+		<result column="BaseAmount" property="baseamount" jdbcType="DECIMAL" />
+		<result column="SaleAmount" property="saleamount" jdbcType="DECIMAL" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="Creator" property="creator" jdbcType="VARCHAR" />
+		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+		<result column="OrderID" property="orderid" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
 			<foreach collection="oredCriteria" item="criteria" separator="or">
 				<if test="criteria.valid">
-					<trim prefix="(" prefixOverrides="and" suffix=")">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
 						<foreach collection="criteria.criteria" item="criterion">
 							<choose>
 								<when test="criterion.noValue">
@@ -41,8 +42,8 @@
 								</when>
 								<when test="criterion.listValue">
 									and ${criterion.condition}
-									<foreach close=")" collection="criterion.value" item="listItem"
-										open="(" separator=",">
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
 										#{listItem}
 									</foreach>
 								</when>
@@ -57,10 +58,11 @@
 		ID, GoodsID, ColorID, PatternID, SizeID, Quantity, Price, BasePrice,
 		Amount, SalePrice,
 		BaseAmount, SaleAmount, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime,
-		UseFlag
+		UseFlag,
+		OrderID
 	</sql>
-	<select id="selectByExample" parameterType="com.fast.base.data.entity.MOrderdtlExample"
-		resultMap="BaseResultMap">
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fast.base.data.entity.MOrderdtlExample">
 		select
 		<if test="distinct">
 			distinct
@@ -75,8 +77,8 @@
 			order by ${orderByClause}
 		</if>
 	</select>
-	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
-		resultMap="BaseResultMap">
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
 		from m_orderdtl
@@ -99,8 +101,8 @@
 		Price, BasePrice, Amount,
 		SalePrice, BaseAmount, SaleAmount,
 		CreateTime, Creator, ModifyTime,
-		Modifier, UpdatedTime, UseFlag
-		)
+		Modifier, UpdatedTime, UseFlag,
+		OrderID)
 		values (#{id,jdbcType=INTEGER}, #{goodsid,jdbcType=INTEGER},
 		#{colorid,jdbcType=INTEGER},
 		#{patternid,jdbcType=INTEGER}, #{sizeid,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER},
@@ -109,8 +111,8 @@
 		#{saleprice,jdbcType=DECIMAL}, #{baseamount,jdbcType=DECIMAL}, #{saleamount,jdbcType=DECIMAL},
 		#{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
 		#{modifytime,jdbcType=TIMESTAMP},
-		#{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}
-		)
+		#{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT},
+		#{orderid,jdbcType=INTEGER})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MOrderdtl"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -170,6 +172,9 @@
 			<if test="useflag != null">
 				UseFlag,
 			</if>
+			<if test="orderid != null">
+				OrderID,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -226,10 +231,13 @@
 			<if test="useflag != null">
 				#{useflag,jdbcType=TINYINT},
 			</if>
+			<if test="orderid != null">
+				#{orderid,jdbcType=INTEGER},
+			</if>
 		</trim>
 	</insert>
 	<select id="countByExample" parameterType="com.fast.base.data.entity.MOrderdtlExample"
-		resultType="java.lang.Long">
+		resultType="java.lang.Integer">
 		select count(*) from m_orderdtl
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />
@@ -289,6 +297,9 @@
 			<if test="useflag != null">
 				UseFlag = #{useflag,jdbcType=TINYINT},
 			</if>
+			<if test="orderid != null">
+				OrderID = #{orderid,jdbcType=INTEGER},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -310,7 +321,8 @@
 		ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
 		Modifier = #{modifier,jdbcType=VARCHAR},
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-		UseFlag = #{useflag,jdbcType=TINYINT}
+		UseFlag = #{useflag,jdbcType=TINYINT},
+		OrderID = #{orderid,jdbcType=INTEGER}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

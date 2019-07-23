@@ -39,3 +39,108 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 }
+
+.edit-view .edit-box .edit-item {
+	width: 250px;
+	display: inline-block;
+}
+
+.edit-view .edit-box .edit-item>div {
+	display: inline-block;
+}
+
+.edit-view .edit-box .edit-item .edit-title {
+	width: 85px;
+	text-align: right;
+}
+
+.edit-view .edit-box .edit-item .edit-value {
+	text-align: left;
+}
+
+.edit-view .edit-box .address {
+	width: 500px;
+}
+
+.edit-view .edit-box .memo {
+	width: 100%;
+}
+
+.goods-table .price, .goods-table .quantity, .goods-table .amount {
+	width: 10%;
+}
+
+.goods-table .goodsimage {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	padding-right: 10px;
+	vertical-align: middle;
+}
+
+.goods-table .goodsimage img {
+	width: 50px;
+	object-fit: contain;
+	display: block;
+}
+
+.goods-table th {
+	font-weight: bold;
+}
+
+.goods-table td, .goods-table th {
+	border-width: 1px 0px;
+}
+
+.goods-table td:first-child, .goods-table th:first-child {
+	border-left-width: 1px;
+}
+
+.goods-table td:last-child, .goods-table th:last-child {
+	border-right-width: 1px;
+}
+
+.goods-table .goodscode, .goods-table .goodsname {
+	color: #333;
+}
+
+.goods-table .goodscolor, .goods-table .goodspattern, .goods-table .goodssize
+	{
+	color: #999999;
+}
+
+.goods-pay>div {
+	display: block;
+	text-align: right;
+	line-height: 22px;
+}
+
+.goods-pay .edit-item>div {
+	display: inline-block;
+}
+
+.goods-pay .edit-item .edit-title {
+	text-align: right;
+}
+
+.goods-pay .edit-item .edit-value {
+	width: 60px;
+	text-align: left;
+}
+
+.goods-pay .bold {
+	font-weight: bold;
+}
+
+.goods-pay .bold .value {
+	color: #FF5722;
+}
+
+.pay-info {
+	text-align: center;
+	border: 1px solid #e6e6e6;
+}
+
+.edit-view .pay-info .edit-item .edit-value .value {
+	color: #FF5722;
+}

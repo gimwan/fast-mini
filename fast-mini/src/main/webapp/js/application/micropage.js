@@ -63,7 +63,7 @@ common.bindVue = function() {
         },
         methods : {
         	addItem: function(event) {
-        		let index = $(event.currentTarget).data("index");
+        		let index = $(event.currentTarget).attr("data-index");
                 console.log(item[index]);
 			}
         }
@@ -129,8 +129,8 @@ function configUploadInst() {
 	    done: function(res, index, upload){
 	    	// 上传完毕回调
 	    	var item = this.item;
-	    	var index = $(item).parents(".editItem").data("index");
-	    	var detailIndex = $(item).parent().data("index");
+	    	var index = $(item).parents(".editItem").attr("data-index");
+	    	var detailIndex = $(item).parents(".uploadField ").attr("data-index");
 	    	setData[index].detail[detailIndex].photourl = res.data;
 	    },
 	    error: function(res, index){
@@ -157,7 +157,7 @@ function configCarousel() {
 
 function chooseView() {
 	$("body").on("click", ".microPage .configureView .middlePanel .editView .setItem", function() {
-		let index = $(this).data("index");
+		let index = $(this).attr("data-index");
 		for (var i = 0; i < setData.length; i++) {
 			if (i == index) {
 				setData[i].choose = 1;
@@ -178,22 +178,22 @@ function showDeleteIcon() {
 	$("body").on("click", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox .layui-icon-delete", function(event) {
 		event.stopPropagation();
 		event.preventDefault();
-		var index = $(this).parents(".editItem").data("index");
-    	var detailIndex = $(this).parents(".ad").data("index");
+		var index = $(this).parents(".editItem").attr("data-index");
+    	var detailIndex = $(this).parents(".ad").attr("data-index");
     	setData[index].detail[detailIndex].photourl = "";
 		return false;
 	});
 	$("body").on("click", ".middlePanel .phoneBox .editView .setItem .deleteIcon", function(event) {
 		event.stopPropagation();
 		event.preventDefault();
-		let index = $(this).parents(".setItem").data("index");
+		let index = $(this).parents(".setItem").attr("data-index");
 		setData.splice(index, 1);
 		return false;
 	});
 }
 
 function spellChange(obj) {
-	var index = $(obj).parents(".editItem").data("index");
+	var index = $(obj).parents(".editItem").attr("data-index");
 	var text = $(obj).val();
 	setData[index].detail[0].text = text;
 }

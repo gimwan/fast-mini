@@ -1,6 +1,7 @@
 package com.fast.base.data.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class MGoodssku implements Serializable {
@@ -21,7 +22,7 @@ public class MGoodssku implements Serializable {
 
     private Long quantity;
 
-    private Long price;
+    private BigDecimal price;
 
     private String ianumber;
 
@@ -97,11 +98,11 @@ public class MGoodssku implements Serializable {
         this.quantity = quantity;
     }
 
-    public Long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

@@ -1,5 +1,6 @@
 package com.fast.base.data.entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -235,52 +236,52 @@ public class MVipaccountExample {
             return (Criteria) this;
         }
 
-        public Criteria andDepositEqualTo(Long value) {
+        public Criteria andDepositEqualTo(BigDecimal value) {
             addCriterion("Deposit =", value, "deposit");
             return (Criteria) this;
         }
 
-        public Criteria andDepositNotEqualTo(Long value) {
+        public Criteria andDepositNotEqualTo(BigDecimal value) {
             addCriterion("Deposit <>", value, "deposit");
             return (Criteria) this;
         }
 
-        public Criteria andDepositGreaterThan(Long value) {
+        public Criteria andDepositGreaterThan(BigDecimal value) {
             addCriterion("Deposit >", value, "deposit");
             return (Criteria) this;
         }
 
-        public Criteria andDepositGreaterThanOrEqualTo(Long value) {
+        public Criteria andDepositGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("Deposit >=", value, "deposit");
             return (Criteria) this;
         }
 
-        public Criteria andDepositLessThan(Long value) {
+        public Criteria andDepositLessThan(BigDecimal value) {
             addCriterion("Deposit <", value, "deposit");
             return (Criteria) this;
         }
 
-        public Criteria andDepositLessThanOrEqualTo(Long value) {
+        public Criteria andDepositLessThanOrEqualTo(BigDecimal value) {
             addCriterion("Deposit <=", value, "deposit");
             return (Criteria) this;
         }
 
-        public Criteria andDepositIn(List<Long> values) {
+        public Criteria andDepositIn(List<BigDecimal> values) {
             addCriterion("Deposit in", values, "deposit");
             return (Criteria) this;
         }
 
-        public Criteria andDepositNotIn(List<Long> values) {
+        public Criteria andDepositNotIn(List<BigDecimal> values) {
             addCriterion("Deposit not in", values, "deposit");
             return (Criteria) this;
         }
 
-        public Criteria andDepositBetween(Long value1, Long value2) {
+        public Criteria andDepositBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("Deposit between", value1, value2, "deposit");
             return (Criteria) this;
         }
 
-        public Criteria andDepositNotBetween(Long value1, Long value2) {
+        public Criteria andDepositNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("Deposit not between", value1, value2, "deposit");
             return (Criteria) this;
         }
