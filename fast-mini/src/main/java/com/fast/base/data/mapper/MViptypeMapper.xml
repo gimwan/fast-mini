@@ -1,26 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fast.base.data.dao.MViptypeMapper">
-	<cache type="com.fast.system.RedisCache"/>
+	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MViptype">
-		<id column="ID" property="id" jdbcType="INTEGER" />
-		<result column="Code" property="code" jdbcType="VARCHAR" />
-		<result column="Name" property="name" jdbcType="VARCHAR" />
-		<result column="Grade" property="grade" jdbcType="INTEGER" />
-		<result column="DefaultFlag" property="defaultflag" jdbcType="TINYINT" />
-		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
-		<result column="Creator" property="creator" jdbcType="VARCHAR" />
-		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
-		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
-		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
-		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
-		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+		<id column="ID" jdbcType="INTEGER" property="id" />
+		<result column="Code" jdbcType="VARCHAR" property="code" />
+		<result column="Name" jdbcType="VARCHAR" property="name" />
+		<result column="Grade" jdbcType="INTEGER" property="grade" />
+		<result column="DefaultFlag" jdbcType="TINYINT" property="defaultflag" />
+		<result column="CreateTime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="Creator" jdbcType="VARCHAR" property="creator" />
+		<result column="ModifyTime" jdbcType="TIMESTAMP" property="modifytime" />
+		<result column="Modifier" jdbcType="VARCHAR" property="modifier" />
+		<result column="UpdatedTime" jdbcType="TIMESTAMP" property="updatedtime" />
+		<result column="UseFlag" jdbcType="TINYINT" property="useflag" />
+		<result column="Memo" jdbcType="VARCHAR" property="memo" />
+		<result column="Discount" jdbcType="DECIMAL" property="discount" />
+		<result column="BirthdayDiscount" jdbcType="DECIMAL" property="birthdaydiscount" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
 			<foreach collection="oredCriteria" item="criteria" separator="or">
 				<if test="criteria.valid">
-					<trim prefix="(" suffix=")" prefixOverrides="and">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
 						<foreach collection="criteria.criteria" item="criterion">
 							<choose>
 								<when test="criterion.noValue">
@@ -35,8 +37,8 @@
 								</when>
 								<when test="criterion.listValue">
 									and ${criterion.condition}
-									<foreach collection="criterion.value" item="listItem"
-										open="(" close=")" separator=",">
+									<foreach close=")" collection="criterion.value" item="listItem"
+										open="(" separator=",">
 										#{listItem}
 									</foreach>
 								</when>
@@ -50,10 +52,10 @@
 	<sql id="Base_Column_List">
 		ID, Code, Name, Grade, DefaultFlag, CreateTime, Creator, ModifyTime,
 		Modifier, UpdatedTime,
-		UseFlag, Memo
+		UseFlag, Memo, Discount, BirthdayDiscount
 	</sql>
-	<select id="selectByExample" resultMap="BaseResultMap"
-		parameterType="com.fast.base.data.entity.MViptypeExample">
+	<select id="selectByExample" parameterType="com.fast.base.data.entity.MViptypeExample"
+		resultMap="BaseResultMap">
 		select
 		<if test="distinct">
 			distinct
@@ -68,8 +70,8 @@
 			order by ${orderByClause}
 		</if>
 	</select>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from m_viptype
@@ -90,15 +92,15 @@
 		insert into m_viptype (ID, Code, Name,
 		Grade, DefaultFlag, CreateTime,
 		Creator, ModifyTime, Modifier,
-		UpdatedTime, UseFlag, Memo
-		)
+		UpdatedTime, UseFlag, Memo,
+		Discount, BirthdayDiscount)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{grade,jdbcType=INTEGER}, #{defaultflag,jdbcType=TINYINT}, #{createtime,jdbcType=TIMESTAMP},
 		#{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP},
 		#{modifier,jdbcType=VARCHAR},
-		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR}
-		)
+		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR},
+		#{discount,jdbcType=DECIMAL}, #{birthdaydiscount,jdbcType=DECIMAL})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MViptype"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -140,6 +142,12 @@
 			<if test="memo != null">
 				Memo,
 			</if>
+			<if test="discount != null">
+				Discount,
+			</if>
+			<if test="birthdaydiscount != null">
+				BirthdayDiscount,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -178,10 +186,16 @@
 			<if test="memo != null">
 				#{memo,jdbcType=VARCHAR},
 			</if>
+			<if test="discount != null">
+				#{discount,jdbcType=DECIMAL},
+			</if>
+			<if test="birthdaydiscount != null">
+				#{birthdaydiscount,jdbcType=DECIMAL},
+			</if>
 		</trim>
 	</insert>
 	<select id="countByExample" parameterType="com.fast.base.data.entity.MViptypeExample"
-		resultType="java.lang.Integer">
+		resultType="java.lang.Long">
 		select count(*) from m_viptype
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />
@@ -223,6 +237,12 @@
 			<if test="memo != null">
 				Memo = #{memo,jdbcType=VARCHAR},
 			</if>
+			<if test="discount != null">
+				Discount = #{discount,jdbcType=DECIMAL},
+			</if>
+			<if test="birthdaydiscount != null">
+				BirthdayDiscount = #{birthdaydiscount,jdbcType=DECIMAL},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -238,7 +258,9 @@
 		Modifier = #{modifier,jdbcType=VARCHAR},
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
 		UseFlag = #{useflag,jdbcType=TINYINT},
-		Memo = #{memo,jdbcType=VARCHAR}
+		Memo = #{memo,jdbcType=VARCHAR},
+		Discount = #{discount,jdbcType=DECIMAL},
+		BirthdayDiscount = #{birthdaydiscount,jdbcType=DECIMAL}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

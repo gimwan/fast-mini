@@ -149,6 +149,8 @@ function createElement(data) {
 	    code : "",
 	    name : "",
 	    grade : 1,
+	    discount : 1,
+	    birthdaydiscount : 1,
 	    defaultflag : 0,
 	    useflag : 1,
 	    memo : ""	
@@ -238,6 +240,22 @@ function createElement(data) {
 				                	"<input type=\"radio\" name=\"defaultflag\" value=\"1\" title=\"是\" "+(d.defaultflag==1?'checked':'')+" class=\"layui-input value\">" +
 				                	"<input type=\"radio\" name=\"defaultflag\" value=\"0\" title=\"否\" "+(d.defaultflag!=1?'checked':'')+" class=\"layui-input value\">" +
 				                "</div>" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">折扣</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"discount\">"+
+				                "<input type=\"text\" value=\""+d.discount+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">生日折扣</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"birthdaydiscount\">"+
+				                "<input type=\"text\" value=\""+d.birthdaydiscount+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+

@@ -84,6 +84,16 @@ let menu = [
         ]
     },
     {
+        name: '订单管理 ',
+        link: '',
+        sub: [
+            {
+                name: '订单',
+                link: 'order'
+            }
+        ]
+    },
+    {
         name: '应用管理 ',
         link: '',
         sub: [

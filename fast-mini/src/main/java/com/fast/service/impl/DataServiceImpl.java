@@ -122,311 +122,406 @@ public class DataServiceImpl implements IDataService, Serializable {
 	}
 	
 	@Override
-	public List<LinkedHashMap<String, Object>> completeData(List<LinkedHashMap<String, Object>> list, String tableName) {		
+	public List<LinkedHashMap<String, Object>> completeData(List<LinkedHashMap<String, Object>> list, String tableName) {
 		if ("employee".equals(tableName)) {
-			List<Integer> idList = new ArrayList<>();
-			for (int i = 0; i < list.size(); i++) {
-				list.get(i).put("department", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("departmentid")))) {
-					idList.add(Integer.valueOf(list.get(i).get("departmentid").toString()));
-				} else {
-					list.get(i).put("departmentid", "");
-				}
-			}
-			if (idList.size() > 0) {
-				MDepartmentExample example = new MDepartmentExample();
-				example.createCriteria().andIdIn(idList);
-				List<MDepartment> data = departmentMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (list.get(i).get("departmentid").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("department", data.get(j).getName());
-								break;
-							}
-						}
-					}
-				}
-			}
-			for (int i = 0; i < list.size(); i++) {
-				if ("".equals(list.get(i).get("department").toString())) {
-					list.get(i).put("departmentid", "");
-				}
-			}
+			list = completeEmployee(list);
 		}
 		else if ("miniprogram".equals(tableName)) {
-			List<Integer> idList = new ArrayList<>();
-			for (int i = 0; i < list.size(); i++) {
-				list.get(i).put("publicplatform", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("publicplatformid")))) {
-					idList.add(Integer.valueOf(list.get(i).get("publicplatformid").toString()));
-				} else {
-					list.get(i).put("publicplatformid", "");
-				}
-			}
-			if (idList.size() > 0) {
-				MPublicplatformExample example = new MPublicplatformExample();
-				example.createCriteria().andIdIn(idList);
-				List<MPublicplatform> data = publicplatformMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (list.get(i).get("publicplatformid").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("publicplatform", data.get(j).getName());
-								break;
-							}
-						}
-					}
-				}
-			}
-			for (int i = 0; i < list.size(); i++) {
-				if ("".equals(list.get(i).get("publicplatform").toString())) {
-					list.get(i).put("publicplatformid", "");
-				}
-			}
+			list = completeMiniprogram(list);
 		}
 		else if ("vip".equals(tableName)) {
-			List<Integer> idList = new ArrayList<>();
-			List<Integer> typeidList = new ArrayList<>();
-			List<Integer> recommenderidList = new ArrayList<>();
-			for (int i = 0; i < list.size(); i++) {
-				list.get(i).put("department", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("departmentid")))) {
-					idList.add(Integer.valueOf(list.get(i).get("departmentid").toString()));
-				} else {
-					list.get(i).put("departmentid", "");
-				}
-				list.get(i).put("type", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("typeid")))) {
-					typeidList.add(Integer.valueOf(list.get(i).get("typeid").toString()));
-				} else {
-					list.get(i).put("typeid", "");
-				}
-				list.get(i).put("recommender", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("recommenderid")))) {
-					recommenderidList.add(Integer.valueOf(list.get(i).get("recommenderid").toString()));
-				} else {
-					list.get(i).put("recommenderid", "");
-				}
-				
+			list = completeVip(list);
+		}
+		else if ("goods".equals(tableName)) {
+			list = completeGoods(list);
+		}
+		else if ("goodssku".equals(tableName)) {
+			list = completeGoodsSku(list);
+		}
+		else if ("order".equals(tableName)) {
+			list = completeOrder(list);
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * 补全employee
+	 * @param list
+	 * @return
+	 */
+	public List<LinkedHashMap<String, Object>> completeEmployee(List<LinkedHashMap<String, Object>> list) {
+		List<Integer> idList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).put("department", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("departmentid")))) {
+				idList.add(Integer.valueOf(list.get(i).get("departmentid").toString()));
+			} else {
+				list.get(i).put("departmentid", "");
 			}
-			if (idList.size() > 0) {
-				MDepartmentExample example = new MDepartmentExample();
-				example.createCriteria().andIdIn(idList);
-				List<MDepartment> data = departmentMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (list.get(i).get("departmentid").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("department", data.get(j).getName());
-								break;
-							}
+		}
+		if (idList.size() > 0) {
+			MDepartmentExample example = new MDepartmentExample();
+			example.createCriteria().andIdIn(idList);
+			List<MDepartment> data = departmentMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("departmentid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("department", data.get(j).getName());
+							break;
 						}
 					}
-				}
-			}
-			if (typeidList.size() > 0) {
-				MViptypeExample example = new MViptypeExample();
-				example.createCriteria().andIdIn(typeidList);
-				List<MViptype> data = viptypeMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (list.get(i).get("typeid").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("type", data.get(j).getName());
-								break;
-							}
-						}
-					}
-				}
-			}
-			if (recommenderidList.size() > 0) {
-				MVipExample example = new MVipExample();
-				example.createCriteria().andIdIn(recommenderidList);
-				List<MVip> data = vipMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (list.get(i).get("recommenderid").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("recommender", data.get(j).getName());
-								break;
-							}
-						}
-					}
-				}
-			}
-			for (int i = 0; i < list.size(); i++) {
-				if ("".equals(list.get(i).get("department").toString())) {
-					list.get(i).put("departmentid", "");
-				}
-				if ("".equals(list.get(i).get("type").toString())) {
-					list.get(i).put("typeid", "");
-				}
-				if ("".equals(list.get(i).get("recommender").toString())) {
-					list.get(i).put("recommenderid", "");
 				}
 			}
 		}
-		else if ("goods".equals(tableName)) {
-			List<Integer> brandidList = new ArrayList<>();
-			List<Integer> categoryidList = new ArrayList<>();
-			for (int i = 0; i < list.size(); i++) {
-				list.get(i).put("brand", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("brandid")))) {
-					brandidList.add(Integer.valueOf(list.get(i).get("brandid").toString()));
-				} else {
-					list.get(i).put("brandid", "");
-				}
-				list.get(i).put("bigcategoryname", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("bigcategory")))) {
-					categoryidList.add(Integer.valueOf(list.get(i).get("bigcategory").toString()));
-				} else {
-					list.get(i).put("bigcategory", "");
-				}
-				list.get(i).put("middlecategoryname", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("middlecategory")))) {
-					categoryidList.add(Integer.valueOf(list.get(i).get("middlecategory").toString()));
-				} else {
-					list.get(i).put("middlecategory", "");
-				}
-				list.get(i).put("smallcategoryname", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("smallcategory")))) {
-					categoryidList.add(Integer.valueOf(list.get(i).get("smallcategory").toString()));
-				} else {
-					list.get(i).put("smallcategory", "");
-				}
+		for (int i = 0; i < list.size(); i++) {
+			if ("".equals(list.get(i).get("department").toString())) {
+				list.get(i).put("departmentid", "");
 			}
-			if (brandidList.size() > 0) {
-				MBrandExample example = new MBrandExample();
-				example.createCriteria().andIdIn(brandidList);
-				List<MBrand> data = brandMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (list.get(i).get("brandid").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("brand", data.get(j).getName());
-								break;
-							}
+		}
+	
+		return list;
+	}
+	
+	/**
+	 * 补全miniprogram
+	 * @param list
+	 * @return
+	 */
+	public List<LinkedHashMap<String, Object>> completeMiniprogram(List<LinkedHashMap<String, Object>> list) {
+		List<Integer> idList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).put("publicplatform", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("publicplatformid")))) {
+				idList.add(Integer.valueOf(list.get(i).get("publicplatformid").toString()));
+			} else {
+				list.get(i).put("publicplatformid", "");
+			}
+		}
+		if (idList.size() > 0) {
+			MPublicplatformExample example = new MPublicplatformExample();
+			example.createCriteria().andIdIn(idList);
+			List<MPublicplatform> data = publicplatformMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("publicplatformid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("publicplatform", data.get(j).getName());
+							break;
 						}
 					}
 				}
 			}
-			if (categoryidList.size() > 0) {
-				MGoodscategoryExample example = new MGoodscategoryExample();
-				example.createCriteria().andIdIn(categoryidList);
-				List<MGoodscategory> data = goodscategoryMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (data.get(j).getGrade().intValue() == 1 && list.get(i).get("bigcategory").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("bigcategoryname", data.get(j).getName());
-							}
-							if (data.get(j).getGrade().intValue() == 2 && list.get(i).get("middlecategory").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("middlecategoryname", data.get(j).getName());
-							}
-							if (data.get(j).getGrade().intValue() == 3 && list.get(i).get("smallcategory").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("smallcategoryname", data.get(j).getName());
-							}
-						}
-					}
-				}
-			}
-			for (int i = 0; i < list.size(); i++) {
-				if ("".equals(list.get(i).get("brand").toString())) {
-					list.get(i).put("brandid", "");
-				}
-				if ("".equals(list.get(i).get("bigcategoryname").toString())) {
-					list.get(i).put("bigcategory", "");
-				}
-				if ("".equals(list.get(i).get("middlecategoryname").toString())) {
-					list.get(i).put("middlecategory", "");
-				}
-				if ("".equals(list.get(i).get("smallcategoryname").toString())) {
-					list.get(i).put("smallcategory", "");
-				}
-			}
-		} else if ("goodssku".equals(tableName)) {
-			List<Integer> coloridList = new ArrayList<>();
-			List<Integer> patternidList = new ArrayList<>();
-			List<Integer> sizeidList = new ArrayList<>();
-			for (int i = 0; i < list.size(); i++) {
-				list.get(i).put("color", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("colorid")))) {
-					coloridList.add(Integer.valueOf(list.get(i).get("colorid").toString()));
-				} else {
-					list.get(i).put("colorid", "");
-				}
-				list.get(i).put("pattern", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("patternid")))) {
-					patternidList.add(Integer.valueOf(list.get(i).get("patternid").toString()));
-				} else {
-					list.get(i).put("patternid", "");
-				}
-				list.get(i).put("size", "");
-				if (!Common.isEmpty(String.valueOf(list.get(i).get("sizeid")))) {
-					sizeidList.add(Integer.valueOf(list.get(i).get("sizeid").toString()));
-				} else {
-					list.get(i).put("sizeid", "");
-				}
-			}
-			if (coloridList.size() > 0) {
-				MColorExample example = new MColorExample();
-				example.createCriteria().andIdIn(coloridList);
-				List<MColor> data = colorMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (list.get(i).get("colorid").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("color", data.get(j).getName());
-								break;
-							}
-						}
-					}
-				}
-			}
-			if (patternidList.size() > 0) {
-				MPatternExample example = new MPatternExample();
-				example.createCriteria().andIdIn(patternidList);
-				List<MPattern> data = patternMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (list.get(i).get("patternid").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("pattern", data.get(j).getName());
-								break;
-							}
-						}
-					}
-				}
-			}
-			if (sizeidList.size() > 0) {
-				MSizeExample example = new MSizeExample();
-				example.createCriteria().andIdIn(sizeidList);
-				List<MSize> data = sizeMapper.selectByExample(example);
-				if (data != null && data.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						for (int j = 0; j < data.size(); j++) {
-							if (list.get(i).get("sizeid").toString().equals(data.get(j).getId().toString())) {
-								list.get(i).put("size", data.get(j).getName());
-								break;
-							}
-						}
-					}
-				}
-			}
-			for (int i = 0; i < list.size(); i++) {
-				if ("".equals(list.get(i).get("color").toString())) {
-					list.get(i).put("colorid", "");
-				}
-				if ("".equals(list.get(i).get("pattern").toString())) {
-					list.get(i).put("patternid", "");
-				}
-				if ("".equals(list.get(i).get("size").toString())) {
-					list.get(i).put("sizeid", "");
-				}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if ("".equals(list.get(i).get("publicplatform").toString())) {
+				list.get(i).put("publicplatformid", "");
 			}
 		}
 		
+		return list;
+	}
+	
+	/**
+	 * 补全vip
+	 * @param list
+	 * @return
+	 */
+	public List<LinkedHashMap<String, Object>> completeVip(List<LinkedHashMap<String, Object>> list) {
+		List<Integer> idList = new ArrayList<>();
+		List<Integer> typeidList = new ArrayList<>();
+		List<Integer> recommenderidList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).put("department", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("departmentid")))) {
+				idList.add(Integer.valueOf(list.get(i).get("departmentid").toString()));
+			} else {
+				list.get(i).put("departmentid", "");
+			}
+			list.get(i).put("type", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("typeid")))) {
+				typeidList.add(Integer.valueOf(list.get(i).get("typeid").toString()));
+			} else {
+				list.get(i).put("typeid", "");
+			}
+			list.get(i).put("recommender", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("recommenderid")))) {
+				recommenderidList.add(Integer.valueOf(list.get(i).get("recommenderid").toString()));
+			} else {
+				list.get(i).put("recommenderid", "");
+			}
+			
+		}
+		if (idList.size() > 0) {
+			MDepartmentExample example = new MDepartmentExample();
+			example.createCriteria().andIdIn(idList);
+			List<MDepartment> data = departmentMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("departmentid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("department", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (typeidList.size() > 0) {
+			MViptypeExample example = new MViptypeExample();
+			example.createCriteria().andIdIn(typeidList);
+			List<MViptype> data = viptypeMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("typeid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("type", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (recommenderidList.size() > 0) {
+			MVipExample example = new MVipExample();
+			example.createCriteria().andIdIn(recommenderidList);
+			List<MVip> data = vipMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("recommenderid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("recommender", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if ("".equals(list.get(i).get("department").toString())) {
+				list.get(i).put("departmentid", "");
+			}
+			if ("".equals(list.get(i).get("type").toString())) {
+				list.get(i).put("typeid", "");
+			}
+			if ("".equals(list.get(i).get("recommender").toString())) {
+				list.get(i).put("recommenderid", "");
+			}
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * 补全goods
+	 * @param list
+	 * @return
+	 */
+	public List<LinkedHashMap<String, Object>> completeGoods(List<LinkedHashMap<String, Object>> list) {
+		List<Integer> brandidList = new ArrayList<>();
+		List<Integer> categoryidList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).put("brand", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("brandid")))) {
+				brandidList.add(Integer.valueOf(list.get(i).get("brandid").toString()));
+			} else {
+				list.get(i).put("brandid", "");
+			}
+			list.get(i).put("bigcategoryname", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("bigcategory")))) {
+				categoryidList.add(Integer.valueOf(list.get(i).get("bigcategory").toString()));
+			} else {
+				list.get(i).put("bigcategory", "");
+			}
+			list.get(i).put("middlecategoryname", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("middlecategory")))) {
+				categoryidList.add(Integer.valueOf(list.get(i).get("middlecategory").toString()));
+			} else {
+				list.get(i).put("middlecategory", "");
+			}
+			list.get(i).put("smallcategoryname", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("smallcategory")))) {
+				categoryidList.add(Integer.valueOf(list.get(i).get("smallcategory").toString()));
+			} else {
+				list.get(i).put("smallcategory", "");
+			}
+		}
+		if (brandidList.size() > 0) {
+			MBrandExample example = new MBrandExample();
+			example.createCriteria().andIdIn(brandidList);
+			List<MBrand> data = brandMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("brandid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("brand", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (categoryidList.size() > 0) {
+			MGoodscategoryExample example = new MGoodscategoryExample();
+			example.createCriteria().andIdIn(categoryidList);
+			List<MGoodscategory> data = goodscategoryMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (data.get(j).getGrade().intValue() == 1 && list.get(i).get("bigcategory").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("bigcategoryname", data.get(j).getName());
+						}
+						if (data.get(j).getGrade().intValue() == 2 && list.get(i).get("middlecategory").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("middlecategoryname", data.get(j).getName());
+						}
+						if (data.get(j).getGrade().intValue() == 3 && list.get(i).get("smallcategory").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("smallcategoryname", data.get(j).getName());
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if ("".equals(list.get(i).get("brand").toString())) {
+				list.get(i).put("brandid", "");
+			}
+			if ("".equals(list.get(i).get("bigcategoryname").toString())) {
+				list.get(i).put("bigcategory", "");
+			}
+			if ("".equals(list.get(i).get("middlecategoryname").toString())) {
+				list.get(i).put("middlecategory", "");
+			}
+			if ("".equals(list.get(i).get("smallcategoryname").toString())) {
+				list.get(i).put("smallcategory", "");
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 补全goodssku
+	 * @param list
+	 * @return
+	 */
+	public List<LinkedHashMap<String, Object>> completeGoodsSku(List<LinkedHashMap<String, Object>> list) {
+		List<Integer> coloridList = new ArrayList<>();
+		List<Integer> patternidList = new ArrayList<>();
+		List<Integer> sizeidList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).put("color", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("colorid")))) {
+				coloridList.add(Integer.valueOf(list.get(i).get("colorid").toString()));
+			} else {
+				list.get(i).put("colorid", "");
+			}
+			list.get(i).put("pattern", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("patternid")))) {
+				patternidList.add(Integer.valueOf(list.get(i).get("patternid").toString()));
+			} else {
+				list.get(i).put("patternid", "");
+			}
+			list.get(i).put("size", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("sizeid")))) {
+				sizeidList.add(Integer.valueOf(list.get(i).get("sizeid").toString()));
+			} else {
+				list.get(i).put("sizeid", "");
+			}
+		}
+		if (coloridList.size() > 0) {
+			MColorExample example = new MColorExample();
+			example.createCriteria().andIdIn(coloridList);
+			List<MColor> data = colorMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("colorid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("color", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (patternidList.size() > 0) {
+			MPatternExample example = new MPatternExample();
+			example.createCriteria().andIdIn(patternidList);
+			List<MPattern> data = patternMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("patternid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("pattern", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (sizeidList.size() > 0) {
+			MSizeExample example = new MSizeExample();
+			example.createCriteria().andIdIn(sizeidList);
+			List<MSize> data = sizeMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("sizeid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("size", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if ("".equals(list.get(i).get("color").toString())) {
+				list.get(i).put("colorid", "");
+			}
+			if ("".equals(list.get(i).get("pattern").toString())) {
+				list.get(i).put("patternid", "");
+			}
+			if ("".equals(list.get(i).get("size").toString())) {
+				list.get(i).put("sizeid", "");
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 补全order
+	 * @param list
+	 * @return
+	 */
+	public List<LinkedHashMap<String, Object>> completeOrder(List<LinkedHashMap<String, Object>> list) {
+		List<Integer> vipidList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).put("vip", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("vipid")))) {
+				vipidList.add(Integer.valueOf(list.get(i).get("vipid").toString()));
+			} else {
+				list.get(i).put("vip", "");
+			}
+		}
+		if (vipidList.size() > 0) {
+			MVipExample example = new MVipExample();
+			example.createCriteria().andIdIn(vipidList);
+			List<MVip> data = vipMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("vipid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("vip", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if ("".equals(list.get(i).get("vip").toString())) {
+				list.get(i).put("vipid", "");
+			}
+		}
 		return list;
 	}
 	

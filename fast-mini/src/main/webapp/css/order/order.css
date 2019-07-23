@@ -1,0 +1,41 @@
+.orderPage .operating {
+	margin: 0px 15px;
+}
+
+.orderPage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
+.orderPage .layui-table-view .layui-table-box .layui-table-header span {
+	font-weight: 600;
+}
+
+.orderPage .layui-table-view .layui-table-box tr .item {
+	width: 100px;
+	min-width: 100px;
+	border-top-width: 0;
+	border-left-width: 0;
+	border-right-width: 0;
+	border-bottom-width: 1px;
+}
+
+.orderPage .layui-table-view .layui-table-box tr .no {
+	min-width: 140px;
+}
+
+.orderPage .layui-table-view .layui-table-box tr .vip {
+	min-width: 140px;
+}
+
+.orderPage .layui-table-view .layui-table-box tr .memo {
+	width: 100%;
+}
+
+.orderPage .layui-table-view .layui-table-box tr .time-item {
+	min-width: 200px;
+}
+
+.orderPage .layui-table-view .layui-table-box .order-data {
+	overflow-y: auto;
+	overflow-x: hidden;
+}

@@ -95,6 +95,9 @@ let api = new Vue({
                 },
                 data: Qs.stringify(params)
             }).then(function (response) {
+            	if (response.data.code == 88) {
+            		window.location.href = "/";
+				}
                 common.doFunction(fn, response.data);
             }).catch(function (error) {
                 console.log(error);
