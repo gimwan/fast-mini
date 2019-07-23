@@ -44,5 +44,14 @@ public interface IGoodsMaintService {
 	 * @return
 	 */
 	public Result goodsImages(MUser user, Integer goodsid, String images, String groups);
+	
+	/**
+	 * 保存商品sku信息
+	 * @param user
+	 * @param goodsid
+	 * @param skus
+	 * @return
+	 */
+	public Result saveGoodsSku(MUser user, Integer goodsid, String skus);
 
 }

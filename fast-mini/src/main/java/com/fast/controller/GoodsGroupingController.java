@@ -83,6 +83,7 @@ public class GoodsGroupingController {
 			if (user != null) {
 				result = iGoodsGroupingMaintService.changeGoodsGrouping(goodsgrouping, user);
 			} else {
+				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
 			}
 			

@@ -13,11 +13,14 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MGoodsMapper;
 import com.fast.base.data.dao.MGoodsdtlMapper;
 import com.fast.base.data.dao.MGoodsingroupMapper;
+import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodsdtl;
 import com.fast.base.data.entity.MGoodsdtlExample;
 import com.fast.base.data.entity.MGoodsingroup;
 import com.fast.base.data.entity.MGoodsingroupExample;
+import com.fast.base.data.entity.MGoodssku;
+import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IGoodsMaintService;
@@ -47,6 +50,9 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 	
 	@Autowired
 	MGoodsingroupMapper goodsingroupMapper;
+	
+	@Autowired
+	MGoodsskuMapper goodsskuMapper;
 
 	@Override
 	public Result changeGoods(MGoods goods, MUser user) {
@@ -202,6 +208,48 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用GoodsMaintServiceImpl.goodsImages报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result saveGoodsSku(MUser user, Integer goodsid, String skus) {
+		Result result = new Result();
+
+		try {
+			Date now = new Date();
+			skus = CommonUtil.unescape(skus);
+			List<MGoodssku> goodsskus = JSONObject.parseArray(skus,  MGoodssku.class);
+			
+			List<Integer> deleteList = new ArrayList<>();
+			for (int i = 0; i < goodsskus.size(); i++) {
+				MGoodssku goodssku = goodsskus.get(i);
+				goodssku.setUpdatedtime(now);
+				if (goodssku.getId() != null && goodssku.getId() > 0) {
+					goodssku.setModifier(user.getName());
+					goodssku.setModifytime(now);
+					goodsskuMapper.updateByPrimaryKeySelective(goodssku);
+				} else {
+					goodssku.setCreator(user.getName());
+					goodssku.setCreatetime(now);
+					goodsskuMapper.insertSelective(goodssku);
+				}
+				deleteList.add(goodssku.getId());
+			}
+			MGoodsskuExample example = new MGoodsskuExample();
+			example.createCriteria().andGoodsidEqualTo(goodsid);
+			if (deleteList.size() > 0) {
+				example = new MGoodsskuExample();
+				example.createCriteria().andGoodsidEqualTo(goodsid).andIdNotIn(deleteList);
+			}
+			goodsskuMapper.deleteByExample(example);
+			result.setErrcode(Integer.valueOf(0));
+			result.setId(goodsid);
+			result.setMessage("保存成功");
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsMaintServiceImpl.saveGoodsSku报错：", e);
 		}
 
 		return result;

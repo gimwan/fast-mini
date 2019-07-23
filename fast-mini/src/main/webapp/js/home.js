@@ -84,6 +84,16 @@ let menu = [
         ]
     },
     {
+        name: '订单管理 ',
+        link: '',
+        sub: [
+            {
+                name: '订单',
+                link: 'order'
+            }
+        ]
+    },
+    {
         name: '应用管理 ',
         link: '',
         sub: [
@@ -147,7 +157,7 @@ document.onreadystatechange = function() {
     		$(".popup .popuped").removeClass("popuped");
     		$(this).addClass("popuped");
     		let url = $(this).data("url");
-    		let title = $(this).parent().parent().find(".edit-title .title .name").html();
+    		let title = $(this).parent().parent().find(".edit-title .name").html();
     		common.showLoading();
     		api.load(url, 'post', {}, function(result) {
     			if (result.errcode == 0) {
@@ -198,7 +208,7 @@ document.onreadystatechange = function() {
     	
     	// 弹窗双击选择数据
     	$("body").on("dblclick", ".popup-view .popup-box .popup-data", function () {
-    		let isPopup = $(this).parents(".layui-layer-content").hasClass("isCisPopupascade");
+    		let isPopup = $(this).parents(".layui-layer-content").hasClass("isPopup");
     		if (isPopup) {
     			let id = $(this).data("id");
         		let name = $(this).find(".name").html();

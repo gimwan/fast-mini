@@ -30,5 +30,12 @@ public interface IGoodsService {
 	 * @return
 	 */
 	public Result goodsInfo(Integer goodsid);
+	
+	/**
+	 * 获取商品SKU
+	 * @param goodsid
+	 * @return
+	 */
+	public Result goodsSKU(Integer goodsid);
 
 }

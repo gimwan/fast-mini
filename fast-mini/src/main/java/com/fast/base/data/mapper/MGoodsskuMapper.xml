@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.fast.base.data.dao.MViptypeMapper">
+<mapper namespace="com.fast.base.data.dao.MGoodsskuMapper">
 	<cache type="com.fast.system.RedisCache" />
-	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MViptype">
+	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MGoodssku">
 		<id column="ID" jdbcType="INTEGER" property="id" />
-		<result column="Code" jdbcType="VARCHAR" property="code" />
-		<result column="Name" jdbcType="VARCHAR" property="name" />
-		<result column="Grade" jdbcType="INTEGER" property="grade" />
-		<result column="DefaultFlag" jdbcType="TINYINT" property="defaultflag" />
+		<result column="GoodsID" jdbcType="INTEGER" property="goodsid" />
+		<result column="ColorID" jdbcType="INTEGER" property="colorid" />
+		<result column="PatternID" jdbcType="INTEGER" property="patternid" />
+		<result column="SizeID" jdbcType="INTEGER" property="sizeid" />
+		<result column="Barcode" jdbcType="VARCHAR" property="barcode" />
+		<result column="Quantity" jdbcType="DECIMAL" property="quantity" />
+		<result column="Price" jdbcType="DECIMAL" property="price" />
+		<result column="IANumber" jdbcType="VARCHAR" property="ianumber" />
+		<result column="ExtBarcode" jdbcType="VARCHAR" property="extbarcode" />
+		<result column="Memo" jdbcType="VARCHAR" property="memo" />
 		<result column="CreateTime" jdbcType="TIMESTAMP" property="createtime" />
 		<result column="Creator" jdbcType="VARCHAR" property="creator" />
 		<result column="ModifyTime" jdbcType="TIMESTAMP" property="modifytime" />
 		<result column="Modifier" jdbcType="VARCHAR" property="modifier" />
 		<result column="UpdatedTime" jdbcType="TIMESTAMP" property="updatedtime" />
 		<result column="UseFlag" jdbcType="TINYINT" property="useflag" />
-		<result column="Memo" jdbcType="VARCHAR" property="memo" />
-		<result column="Discount" jdbcType="DECIMAL" property="discount" />
-		<result column="BirthdayDiscount" jdbcType="DECIMAL" property="birthdaydiscount" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -50,11 +53,11 @@
 		</where>
 	</sql>
 	<sql id="Base_Column_List">
-		ID, Code, Name, Grade, DefaultFlag, CreateTime, Creator, ModifyTime,
-		Modifier, UpdatedTime,
-		UseFlag, Memo, Discount, BirthdayDiscount
+		ID, GoodsID, ColorID, PatternID, SizeID, Barcode, Quantity, Price,
+		IANumber, ExtBarcode,
+		Memo, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime, UseFlag
 	</sql>
-	<select id="selectByExample" parameterType="com.fast.base.data.entity.MViptypeExample"
+	<select id="selectByExample" parameterType="com.fast.base.data.entity.MGoodsskuExample"
 		resultMap="BaseResultMap">
 		select
 		<if test="distinct">
@@ -62,7 +65,7 @@
 		</if>
 		'false' as QUERYID,
 		<include refid="Base_Column_List" />
-		from m_viptype
+		from m_goodssku
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />
 		</if>
@@ -74,52 +77,73 @@
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from m_viptype
+		from m_goodssku
 		where ID = #{id,jdbcType=INTEGER}
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from m_viptype
+		delete from m_goodssku
 		where ID = #{id,jdbcType=INTEGER}
 	</delete>
-	<delete id="deleteByExample" parameterType="com.fast.base.data.entity.MViptypeExample">
-		delete from m_viptype
+	<delete id="deleteByExample" parameterType="com.fast.base.data.entity.MGoodsskuExample">
+		delete from m_goodssku
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />
 		</if>
 	</delete>
-	<insert id="insert" parameterType="com.fast.base.data.entity.MViptype"
+	<insert id="insert" parameterType="com.fast.base.data.entity.MGoodssku"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into m_viptype (ID, Code, Name,
-		Grade, DefaultFlag, CreateTime,
+		insert into m_goodssku (ID, GoodsID, ColorID,
+		PatternID, SizeID, Barcode,
+		Quantity, Price, IANumber,
+		ExtBarcode, Memo, CreateTime,
 		Creator, ModifyTime, Modifier,
-		UpdatedTime, UseFlag, Memo,
-		Discount, BirthdayDiscount)
-		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
-		#{name,jdbcType=VARCHAR},
-		#{grade,jdbcType=INTEGER}, #{defaultflag,jdbcType=TINYINT}, #{createtime,jdbcType=TIMESTAMP},
+		UpdatedTime, UseFlag)
+		values (#{id,jdbcType=INTEGER}, #{goodsid,jdbcType=INTEGER},
+		#{colorid,jdbcType=INTEGER},
+		#{patternid,jdbcType=INTEGER}, #{sizeid,jdbcType=INTEGER}, #{barcode,jdbcType=VARCHAR},
+		#{quantity,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL},
+		#{ianumber,jdbcType=VARCHAR},
+		#{extbarcode,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
 		#{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP},
 		#{modifier,jdbcType=VARCHAR},
-		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR},
-		#{discount,jdbcType=DECIMAL}, #{birthdaydiscount,jdbcType=DECIMAL})
+		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT})
 	</insert>
-	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MViptype"
+	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MGoodssku"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into m_viptype
+		insert into m_goodssku
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				ID,
 			</if>
-			<if test="code != null">
-				Code,
+			<if test="goodsid != null">
+				GoodsID,
 			</if>
-			<if test="name != null">
-				Name,
+			<if test="colorid != null">
+				ColorID,
 			</if>
-			<if test="grade != null">
-				Grade,
+			<if test="patternid != null">
+				PatternID,
 			</if>
-			<if test="defaultflag != null">
-				DefaultFlag,
+			<if test="sizeid != null">
+				SizeID,
+			</if>
+			<if test="barcode != null">
+				Barcode,
+			</if>
+			<if test="quantity != null">
+				Quantity,
+			</if>
+			<if test="price != null">
+				Price,
+			</if>
+			<if test="ianumber != null">
+				IANumber,
+			</if>
+			<if test="extbarcode != null">
+				ExtBarcode,
+			</if>
+			<if test="memo != null">
+				Memo,
 			</if>
 			<if test="createtime != null">
 				CreateTime,
@@ -139,31 +163,40 @@
 			<if test="useflag != null">
 				UseFlag,
 			</if>
-			<if test="memo != null">
-				Memo,
-			</if>
-			<if test="discount != null">
-				Discount,
-			</if>
-			<if test="birthdaydiscount != null">
-				BirthdayDiscount,
-			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				#{id,jdbcType=INTEGER},
 			</if>
-			<if test="code != null">
-				#{code,jdbcType=VARCHAR},
+			<if test="goodsid != null">
+				#{goodsid,jdbcType=INTEGER},
 			</if>
-			<if test="name != null">
-				#{name,jdbcType=VARCHAR},
+			<if test="colorid != null">
+				#{colorid,jdbcType=INTEGER},
 			</if>
-			<if test="grade != null">
-				#{grade,jdbcType=INTEGER},
+			<if test="patternid != null">
+				#{patternid,jdbcType=INTEGER},
 			</if>
-			<if test="defaultflag != null">
-				#{defaultflag,jdbcType=TINYINT},
+			<if test="sizeid != null">
+				#{sizeid,jdbcType=INTEGER},
+			</if>
+			<if test="barcode != null">
+				#{barcode,jdbcType=VARCHAR},
+			</if>
+			<if test="quantity != null">
+				#{quantity,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="ianumber != null">
+				#{ianumber,jdbcType=VARCHAR},
+			</if>
+			<if test="extbarcode != null">
+				#{extbarcode,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
 			</if>
 			<if test="createtime != null">
 				#{createtime,jdbcType=TIMESTAMP},
@@ -183,38 +216,47 @@
 			<if test="useflag != null">
 				#{useflag,jdbcType=TINYINT},
 			</if>
-			<if test="memo != null">
-				#{memo,jdbcType=VARCHAR},
-			</if>
-			<if test="discount != null">
-				#{discount,jdbcType=DECIMAL},
-			</if>
-			<if test="birthdaydiscount != null">
-				#{birthdaydiscount,jdbcType=DECIMAL},
-			</if>
 		</trim>
 	</insert>
-	<select id="countByExample" parameterType="com.fast.base.data.entity.MViptypeExample"
+	<select id="countByExample" parameterType="com.fast.base.data.entity.MGoodsskuExample"
 		resultType="java.lang.Long">
-		select count(*) from m_viptype
+		select count(*) from m_goodssku
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />
 		</if>
 	</select>
-	<update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MViptype">
-		update m_viptype
+	<update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MGoodssku">
+		update m_goodssku
 		<set>
-			<if test="code != null">
-				Code = #{code,jdbcType=VARCHAR},
+			<if test="goodsid != null">
+				GoodsID = #{goodsid,jdbcType=INTEGER},
 			</if>
-			<if test="name != null">
-				Name = #{name,jdbcType=VARCHAR},
+			<if test="colorid != null">
+				ColorID = #{colorid,jdbcType=INTEGER},
 			</if>
-			<if test="grade != null">
-				Grade = #{grade,jdbcType=INTEGER},
+			<if test="patternid != null">
+				PatternID = #{patternid,jdbcType=INTEGER},
 			</if>
-			<if test="defaultflag != null">
-				DefaultFlag = #{defaultflag,jdbcType=TINYINT},
+			<if test="sizeid != null">
+				SizeID = #{sizeid,jdbcType=INTEGER},
+			</if>
+			<if test="barcode != null">
+				Barcode = #{barcode,jdbcType=VARCHAR},
+			</if>
+			<if test="quantity != null">
+				Quantity = #{quantity,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null">
+				Price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="ianumber != null">
+				IANumber = #{ianumber,jdbcType=VARCHAR},
+			</if>
+			<if test="extbarcode != null">
+				ExtBarcode = #{extbarcode,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				Memo = #{memo,jdbcType=VARCHAR},
 			</if>
 			<if test="createtime != null">
 				CreateTime = #{createtime,jdbcType=TIMESTAMP},
@@ -234,33 +276,27 @@
 			<if test="useflag != null">
 				UseFlag = #{useflag,jdbcType=TINYINT},
 			</if>
-			<if test="memo != null">
-				Memo = #{memo,jdbcType=VARCHAR},
-			</if>
-			<if test="discount != null">
-				Discount = #{discount,jdbcType=DECIMAL},
-			</if>
-			<if test="birthdaydiscount != null">
-				BirthdayDiscount = #{birthdaydiscount,jdbcType=DECIMAL},
-			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MViptype">
-		update m_viptype
-		set Code = #{code,jdbcType=VARCHAR},
-		Name = #{name,jdbcType=VARCHAR},
-		Grade = #{grade,jdbcType=INTEGER},
-		DefaultFlag = #{defaultflag,jdbcType=TINYINT},
+	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MGoodssku">
+		update m_goodssku
+		set GoodsID = #{goodsid,jdbcType=INTEGER},
+		ColorID = #{colorid,jdbcType=INTEGER},
+		PatternID = #{patternid,jdbcType=INTEGER},
+		SizeID = #{sizeid,jdbcType=INTEGER},
+		Barcode = #{barcode,jdbcType=VARCHAR},
+		Quantity = #{quantity,jdbcType=DECIMAL},
+		Price = #{price,jdbcType=DECIMAL},
+		IANumber = #{ianumber,jdbcType=VARCHAR},
+		ExtBarcode = #{extbarcode,jdbcType=VARCHAR},
+		Memo = #{memo,jdbcType=VARCHAR},
 		CreateTime = #{createtime,jdbcType=TIMESTAMP},
 		Creator = #{creator,jdbcType=VARCHAR},
 		ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
 		Modifier = #{modifier,jdbcType=VARCHAR},
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-		UseFlag = #{useflag,jdbcType=TINYINT},
-		Memo = #{memo,jdbcType=VARCHAR},
-		Discount = #{discount,jdbcType=DECIMAL},
-		BirthdayDiscount = #{birthdaydiscount,jdbcType=DECIMAL}
+		UseFlag = #{useflag,jdbcType=TINYINT}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

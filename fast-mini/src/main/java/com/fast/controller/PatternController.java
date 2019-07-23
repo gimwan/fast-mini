@@ -83,6 +83,7 @@ public class PatternController {
 			if (user != null) {
 				result = iPatternMaintService.changePattern(pattern, user);
 			} else {
+				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
 			}
 			

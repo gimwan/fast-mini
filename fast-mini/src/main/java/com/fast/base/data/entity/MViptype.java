@@ -1,6 +1,7 @@
 package com.fast.base.data.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class MViptype implements Serializable {
@@ -30,6 +31,10 @@ public class MViptype implements Serializable {
     private Byte useflag;
 
     private String memo;
+
+    private BigDecimal discount;
+
+    private BigDecimal birthdaydiscount;
 
     public Integer getId() {
         return id;
@@ -125,5 +130,21 @@ public class MViptype implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
+
+    public BigDecimal getBirthdaydiscount() {
+        return birthdaydiscount;
+    }
+
+    public void setBirthdaydiscount(BigDecimal birthdaydiscount) {
+        this.birthdaydiscount = birthdaydiscount;
     }
 }

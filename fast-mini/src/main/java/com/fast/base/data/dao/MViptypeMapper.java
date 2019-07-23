@@ -2,13 +2,12 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
 
 public interface MViptypeMapper {
-    int countByExample(MViptypeExample example);
+    long countByExample(MViptypeExample example);
 
     int deleteByExample(MViptypeExample example);
 
@@ -27,5 +26,4 @@ public interface MViptypeMapper {
     int updateByPrimaryKeySelective(MViptype record);
 
     int updateByPrimaryKey(MViptype record);
-    
 }

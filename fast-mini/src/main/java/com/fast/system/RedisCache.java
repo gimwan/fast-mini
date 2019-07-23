@@ -83,7 +83,7 @@ public class RedisCache implements Cache {
 				return redisTemplate.expire(key.toString(), 1, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("redis获取数据异常！");
+			logger.error("redis移除数据异常！");
 		}
 		return null;
 	}
@@ -168,7 +168,7 @@ public class RedisCache implements Cache {
 				redisTemplate.expire(key.toString(), 1, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("redis删除数据异常！");
+			logger.error("redis移除数据异常！");
 		}
 	}
 }

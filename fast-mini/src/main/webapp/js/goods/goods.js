@@ -609,7 +609,6 @@ function catchImages(goodsid) {
  */
 function catchGroups(goodsid) {
 	let list = [];
-	// 主图
 	$(".images-view .groupView input[type='checkbox']").each(function(i) {
 		if ($(this).is(":checked")) {
 			let id = $(this).attr("data-checkedid");
@@ -703,29 +702,29 @@ function configImageUploadInst() {
 }
 
 function showSKUBox(id) {
-	/*common.showLoading();
+	common.showLoading();
 	let da = {};
 	da.goodsid = id;
     api.load('./goods/sku','post', da, function(result) {
     	if (result.errcode == 0) {
-    		let datas = result.data;*/
-    		let skuDiv = createSKUElement();
+    		let datas = result.data;
+    		let skuDiv = createSKUElement(datas);
     	    
     	    layer.open({
     	        type: 1,
     	        title: "<label style='font-weight:600;'>SKU</label>",
     	        content: skuDiv,
-    	        area: ['800px', '600px'],
-    	        btn: ['保存','取消'],
+    	        area: ['900px', '600px'],
+    	        btn: ['保存','取消','添加'],
     	        btn1: function (index, layero) {
-    	        	let images = catchImages(id);
-    	        	let groups = catchGroups(id);
-    	        	images = JSON.stringify(images);
-    	        	groups = JSON.stringify(groups);
+    	        	let skudatas = catchSkuData(id);
+    	        	if ("error" == skudatas) {
+						return false;
+					}
+    	        	skudatas = JSON.stringify(skudatas);
     	            let data = {};
     	            data.goodsid = id;
-    	            data.images = escape(images);
-    	            data.groups = escape(groups);
+    	            data.skus = escape(skudatas);
     	            common.showLoading();
     	            api.load('./goods/sku/save','post',data, function(result) {
     	                if (result.errcode == 0) {
@@ -737,19 +736,59 @@ function showSKUBox(id) {
     	                common.closeLoading();
     	            });
     	        },
-    	        success: function () {
+    	        btn3: function() {
+    	        	addSKU();
+    	        	return false;
+				},
+    	        success: function (layero, index) {
     	        	// 重新刷新form
     	        	layuiForm.render();
+    	        	$(layero).find(".layui-layer-btn2").css({
+    	        		"float": "left",
+    	        		"background-color": "#009688",
+    	        		"color": "#FFFFFF"
+    	        	});
+    	        	$(layero).find("tbody").attr("data-goodsid",id);
     	        }
     	    });
-        /*} else {
+        } else {
             common.error(result.message);
         }
         common.closeLoading();
-    });*/
+    });
 }
 
 function createSKUElement(data) {
+	let tr = "";
+	
+	if (data != null) {
+		for (var i = 0; i < data.length; i++) {
+			tr = tr + "<tr data-id='"+data[i].id+"'>" +
+						"<td>" +
+							"<div class=\"popup\">" +
+								"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">颜色<span></div>" +
+								"<input type=\"text\" class=\"layui-input value color\" data-id=\""+data[i].colorid+"\" value=\""+data[i].color+"\" data-url=\"./data/page?table=color\" readonly=\"readonly\"/>" +
+							"</div>" +
+						"</td>" +
+						"<td>" +
+							"<div class=\"popup\">" +
+								"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">版型<span></div>" +
+								"<input type=\"text\" class=\"layui-input value pattern\" data-id=\""+data[i].patternid+"\" value=\""+data[i].pattern+"\" data-url=\"./data/page?table=pattern\" readonly=\"readonly\"/>" +
+							"</div>" +
+						"</td>" +
+						"<td>" +
+							"<div class=\"popup\">" +
+								"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">尺码<span></div>" +
+								"<input type=\"text\" class=\"layui-input value size\" data-id=\""+data[i].sizeid+"\" value=\""+data[i].size+"\" data-url=\"./data/page?table=size\" readonly=\"readonly\"/>" +
+							"</div>" +
+						"</td>" +
+						"<td><input type=\"text\" class=\"layui-input value barcode\" value=\""+(data[i].barcode==null?'':data[i].barcode)+"\"/></td>" +
+						"<td><input type=\"text\" class=\"layui-input value quantity\" value=\""+(data[i].quantity==null?'':data[i].quantity)+"\"/></td>" +
+						"<td class=\"operationBtn\"><i class=\"layui-icon layui-icon-delete\" onclick='deleteTr(this)'></i></td>" +
+					"</tr>";
+		}
+	}
+	
 	let element = "<div class=\"sku-view\">" +
 					"<div class=\"sku-box\">" +
 						"<div class=\"sku-table\">" +
@@ -766,26 +805,7 @@ function createSKUElement(data) {
 										"</tr>" +
 									"</thead>" +
 									"<tbody>" +
-										"<tr>" +
-											"<td>" +
-  												"<div class=\"popup\">" +
-  													"<input type=\"text\" class=\"layui-input value\" data-id=\"\" value=\"\" data-url=\"./data/page?table=color\" readonly=\"readonly\"/>" +
-  												"</div>" +
-					                		"</td>" +
-											"<td>" +
-												"<div class=\"popup\">" +
-													"<input type=\"text\" class=\"layui-input value\" data-id=\"\" value=\"\" data-url=\"./data/page?table=pattern\" readonly=\"readonly\"/>" +
-												"</div>" +
-											"</td>" +
-											"<td>" +
-												"<div class=\"popup\">" +
-													"<input type=\"text\" class=\"layui-input value\" data-id=\"\" value=\"\" data-url=\"./data/page?table=size\" readonly=\"readonly\"/>" +
-												"</div>" +
-											"</td>" +
-											"<td><input type=\"text\" class=\"layui-input\"/></td>" +
-											"<td><input type=\"text\" class=\"layui-input\"/></td>" +
-											"<td><i class=\"layui-icon layui-icon-delete\"></i></td>" +
-										"</tr>" +
+										tr +
 									"</tbody>" +
 								"</table>" +
 							"</div>" +
@@ -794,4 +814,92 @@ function createSKUElement(data) {
 				"</div>";
 	
 	return element;
+}
+
+function addSKU() {
+	let tr = "<tr data-id=''>" +
+				"<td>" +
+					"<div class=\"popup\">" +
+						"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">颜色<span></div>" +
+						"<input type=\"text\" class=\"layui-input value color\" data-id=\"\" value=\"\" data-url=\"./data/page?table=color&pagesize=100\" readonly=\"readonly\"/>" +
+					"</div>" +
+				"</td>" +
+				"<td>" +
+					"<div class=\"popup\">" +
+						"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">版型<span></div>" +
+						"<input type=\"text\" class=\"layui-input value pattern\" data-id=\"\" value=\"\" data-url=\"./data/page?table=pattern&pagesize=100\" readonly=\"readonly\"/>" +
+					"</div>" +
+				"</td>" +
+				"<td>" +
+					"<div class=\"popup\">" +
+						"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">尺码<span></div>" +
+						"<input type=\"text\" class=\"layui-input value size\" data-id=\"\" value=\"\" data-url=\"./data/page?table=size&pagesize=100\" readonly=\"readonly\"/>" +
+					"</div>" +
+				"</td>" +
+				"<td><input type=\"text\" class=\"layui-input value barcode\"/></td>" +
+				"<td><input type=\"text\" class=\"layui-input value quantity\"/></td>" +
+				"<td class=\"operationBtn\"><i class=\"layui-icon layui-icon-delete\" onclick='deleteTr(this)'></i></td>" +
+			"</tr>";
+	$(".sku-view .sku-table tbody").append(tr);
+}
+
+function deleteTr(obj) {
+	layer.confirm('确定删除？', {
+		btn: ['确定','取消'],
+		btn1 : function(index, layero) {
+			$(obj).parents("tr").remove();
+			layer.close(index);
+		}
+	});
+}
+
+function catchSkuData(goodsid) {
+	let list = [];
+	let errorMsg = "";
+	$(".sku-view .sku-table tbody tr").each(function(i) {		
+		let id = $(this).attr("data-id");
+		if (id == null || id == undefined || $.trim(id) == "" || $.trim(id) == 0) {
+			id = "";
+		}
+		
+		let colorid = $(this).find(".color").attr("data-id");
+		if (colorid == null || colorid == undefined || $.trim(colorid) == "" || $.trim(colorid) == 0) {
+			errorMsg = "请选择颜色";
+			return false;
+		}
+		let patternid = $(this).find(".pattern").attr("data-id");
+		if (patternid == null || patternid == undefined || $.trim(patternid) == "" || $.trim(patternid) == 0) {
+			errorMsg = "请选择版型";
+			return false;
+		}
+		let sizeid = $(this).find(".size").attr("data-id");
+		if (sizeid == null || sizeid == undefined || $.trim(sizeid) == "" || $.trim(sizeid) == 0) {
+			errorMsg = "请选择尺码";
+			return false;
+		}
+		let barcode = $(this).find(".barcode").val();
+		if (barcode == null || barcode == undefined || $.trim(barcode) == "" || $.trim(barcode) == 0) {
+			barcode = "";
+		}
+		let quantity = $(this).find(".quantity").val();
+		if (quantity == null || quantity == undefined || $.trim(quantity) == "" || $.trim(quantity) == 0) {
+			quantity = 0;
+		}
+		
+		let data = {
+			id : id,
+			goodsid: goodsid,
+			colorid: colorid,
+			patternid: patternid,
+			sizeid: sizeid,
+			barcode: barcode,
+			quantity: quantity,
+		};
+		list.push(data);
+	});
+	if (errorMsg != null && errorMsg != undefined && $.trim(errorMsg) != "") {
+		common.warn(errorMsg);
+		return "error";
+	}
+	return list;
 }
