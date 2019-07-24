@@ -280,5 +280,63 @@ public class Vip extends MiniMaster {
 		
 		return result;
 	}
+	
+	/**
+	 * 查询会员有效优惠券数量
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/couponqty")
+	@ResponseBody
+	public String couponqty(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			
+			r = iVipService.queryVipDeposit(appid, openid);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 查询会员储值、积分、优惠券数量
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/dpc")
+	@ResponseBody
+	public String dpc(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			
+			r = iVipService.queryVipDPC(appid, openid);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
 
 }

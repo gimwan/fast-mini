@@ -176,7 +176,7 @@ public class WechatServiceImpl implements IWechatService, Serializable {
 				unionid = jsonObject.getString("unionid");
 			}
 			
-			if (openid != null && !"".equals(openid.trim())) {
+			/*if (openid != null && !"".equals(openid.trim())) {
 				JSONObject jObject = new JSONObject();
 				
 				Object object = RedisCache.get(openid);
@@ -189,7 +189,7 @@ public class WechatServiceImpl implements IWechatService, Serializable {
 				jObject.put("unionid", unionid);
 
 				RedisCache.set(openid, jObject, Long.valueOf("600"));
-			}
+			}*/
 		} catch (Exception e) {
 			FastLog.error("调用WeChatServiceImpl.jscode2session报错：", e);
 		}

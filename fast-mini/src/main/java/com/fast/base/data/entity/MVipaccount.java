@@ -1,6 +1,7 @@
 package com.fast.base.data.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class MVipaccount implements Serializable {
@@ -11,7 +12,7 @@ public class MVipaccount implements Serializable {
 
     private Integer point;
 
-    private Long deposit;
+    private BigDecimal deposit;
 
     private String memo;
 
@@ -41,11 +42,11 @@ public class MVipaccount implements Serializable {
         this.point = point;
     }
 
-    public Long getDeposit() {
+    public BigDecimal getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(Long deposit) {
+    public void setDeposit(BigDecimal deposit) {
         this.deposit = deposit;
     }
 

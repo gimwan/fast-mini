@@ -1,6 +1,7 @@
 package com.fast.base.data.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class MOrderdtl implements Serializable {
@@ -19,17 +20,17 @@ public class MOrderdtl implements Serializable {
 
     private Integer quantity;
 
-    private Long price;
+    private BigDecimal price;
 
-    private Long baseprice;
+    private BigDecimal baseprice;
 
-    private Long amount;
+    private BigDecimal amount;
 
-    private Long saleprice;
+    private BigDecimal saleprice;
 
-    private Long baseamount;
+    private BigDecimal baseamount;
 
-    private Long saleamount;
+    private BigDecimal saleamount;
 
     private Date createtime;
 
@@ -42,6 +43,8 @@ public class MOrderdtl implements Serializable {
     private Date updatedtime;
 
     private Byte useflag;
+
+    private Integer orderid;
 
     public Integer getId() {
         return id;
@@ -91,51 +94,51 @@ public class MOrderdtl implements Serializable {
         this.quantity = quantity;
     }
 
-    public Long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public Long getBaseprice() {
+    public BigDecimal getBaseprice() {
         return baseprice;
     }
 
-    public void setBaseprice(Long baseprice) {
+    public void setBaseprice(BigDecimal baseprice) {
         this.baseprice = baseprice;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public Long getSaleprice() {
+    public BigDecimal getSaleprice() {
         return saleprice;
     }
 
-    public void setSaleprice(Long saleprice) {
+    public void setSaleprice(BigDecimal saleprice) {
         this.saleprice = saleprice;
     }
 
-    public Long getBaseamount() {
+    public BigDecimal getBaseamount() {
         return baseamount;
     }
 
-    public void setBaseamount(Long baseamount) {
+    public void setBaseamount(BigDecimal baseamount) {
         this.baseamount = baseamount;
     }
 
-    public Long getSaleamount() {
+    public BigDecimal getSaleamount() {
         return saleamount;
     }
 
-    public void setSaleamount(Long saleamount) {
+    public void setSaleamount(BigDecimal saleamount) {
         this.saleamount = saleamount;
     }
 
@@ -185,5 +188,13 @@ public class MOrderdtl implements Serializable {
 
     public void setUseflag(Byte useflag) {
         this.useflag = useflag;
+    }
+
+    public Integer getOrderid() {
+        return orderid;
+    }
+
+    public void setOrderid(Integer orderid) {
+        this.orderid = orderid;
     }
 }

@@ -1,6 +1,7 @@
 package com.fast.base.data.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class MOrder implements Serializable {
@@ -19,31 +20,31 @@ public class MOrder implements Serializable {
 
     private Integer quantity;
 
-    private Long amount;
+    private BigDecimal amount;
 
-    private Long baseamount;
+    private BigDecimal baseamount;
 
-    private Long saleamount;
+    private BigDecimal saleamount;
 
-    private Long discount;
+    private BigDecimal discount;
 
-    private Long discountmoney;
+    private BigDecimal discountmoney;
 
-    private Long deposit;
+    private BigDecimal deposit;
 
     private Integer point;
 
     private Integer pointrate;
 
-    private Long pointmoney;
+    private BigDecimal pointmoney;
 
     private Integer couponid;
 
-    private Long couponmoney;
+    private BigDecimal couponmoney;
 
-    private Long paymoney;
+    private BigDecimal paymoney;
 
-    private Long freight;
+    private BigDecimal freight;
 
     private Date paytime;
 
@@ -149,51 +150,51 @@ public class MOrder implements Serializable {
         this.quantity = quantity;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public Long getBaseamount() {
+    public BigDecimal getBaseamount() {
         return baseamount;
     }
 
-    public void setBaseamount(Long baseamount) {
+    public void setBaseamount(BigDecimal baseamount) {
         this.baseamount = baseamount;
     }
 
-    public Long getSaleamount() {
+    public BigDecimal getSaleamount() {
         return saleamount;
     }
 
-    public void setSaleamount(Long saleamount) {
+    public void setSaleamount(BigDecimal saleamount) {
         this.saleamount = saleamount;
     }
 
-    public Long getDiscount() {
+    public BigDecimal getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Long discount) {
+    public void setDiscount(BigDecimal discount) {
         this.discount = discount;
     }
 
-    public Long getDiscountmoney() {
+    public BigDecimal getDiscountmoney() {
         return discountmoney;
     }
 
-    public void setDiscountmoney(Long discountmoney) {
+    public void setDiscountmoney(BigDecimal discountmoney) {
         this.discountmoney = discountmoney;
     }
 
-    public Long getDeposit() {
+    public BigDecimal getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(Long deposit) {
+    public void setDeposit(BigDecimal deposit) {
         this.deposit = deposit;
     }
 
@@ -213,11 +214,11 @@ public class MOrder implements Serializable {
         this.pointrate = pointrate;
     }
 
-    public Long getPointmoney() {
+    public BigDecimal getPointmoney() {
         return pointmoney;
     }
 
-    public void setPointmoney(Long pointmoney) {
+    public void setPointmoney(BigDecimal pointmoney) {
         this.pointmoney = pointmoney;
     }
 
@@ -229,27 +230,27 @@ public class MOrder implements Serializable {
         this.couponid = couponid;
     }
 
-    public Long getCouponmoney() {
+    public BigDecimal getCouponmoney() {
         return couponmoney;
     }
 
-    public void setCouponmoney(Long couponmoney) {
+    public void setCouponmoney(BigDecimal couponmoney) {
         this.couponmoney = couponmoney;
     }
 
-    public Long getPaymoney() {
+    public BigDecimal getPaymoney() {
         return paymoney;
     }
 
-    public void setPaymoney(Long paymoney) {
+    public void setPaymoney(BigDecimal paymoney) {
         this.paymoney = paymoney;
     }
 
-    public Long getFreight() {
+    public BigDecimal getFreight() {
         return freight;
     }
 
-    public void setFreight(Long freight) {
+    public void setFreight(BigDecimal freight) {
         this.freight = freight;
     }
 

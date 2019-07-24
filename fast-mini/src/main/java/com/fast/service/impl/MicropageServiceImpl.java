@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -272,7 +273,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 									String third = setDtlList.get(j).get("third") == null ? "" : setDtlList.get(j).get("third").toString().trim();
 									String grouping = "";
 									String goodsname = "";
-									long price = 0;
+									BigDecimal price = BigDecimal.ZERO;
 									Integer point = 0;
 									Byte type = 1;
 									String category = "";
@@ -373,7 +374,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 											MGoods goods = goodsMapper.selectByPrimaryKey(Integer.valueOf(first));
 											if (goods != null && goods.getId() > 0) {
 												goodsname = goods.getName() == null ? "" : goods.getName();
-												price = goods.getPrice() == null ? 0 : goods.getPrice();
+												price = goods.getPrice() == null ? BigDecimal.ZERO : goods.getPrice();
 												point = goods.getExchangepoint() == null ? 0 : goods.getExchangepoint();
 												type = goods.getKind() == null ? 1 : goods.getKind();
 												setDtlList.get(j).put("photourl", goods.getPhotourl() == null ? "" : goods.getPhotourl());

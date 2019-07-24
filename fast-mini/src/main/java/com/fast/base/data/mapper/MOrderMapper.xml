@@ -1,66 +1,74 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MOrderMapper">
 	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MOrder">
-		<id column="ID" jdbcType="INTEGER" property="id" />
-		<result column="No" jdbcType="VARCHAR" property="no" />
-		<result column="Kind" jdbcType="INTEGER" property="kind" />
-		<result column="Source" jdbcType="INTEGER" property="source" />
-		<result column="VipID" jdbcType="INTEGER" property="vipid" />
-		<result column="Quantity" jdbcType="INTEGER" property="quantity" />
-		<result column="Amount" jdbcType="DECIMAL" property="amount" />
-		<result column="BaseAmount" jdbcType="DECIMAL" property="baseamount" />
-		<result column="SaleAmount" jdbcType="DECIMAL" property="saleamount" />
-		<result column="Discount" jdbcType="DECIMAL" property="discount" />
-		<result column="DiscountMoney" jdbcType="DECIMAL" property="discountmoney" />
-		<result column="Deposit" jdbcType="DECIMAL" property="deposit" />
-		<result column="Point" jdbcType="INTEGER" property="point" />
-		<result column="PointRate" jdbcType="INTEGER" property="pointrate" />
-		<result column="PointMoney" jdbcType="DECIMAL" property="pointmoney" />
-		<result column="CouponID" jdbcType="INTEGER" property="couponid" />
-		<result column="CouponMoney" jdbcType="DECIMAL" property="couponmoney" />
-		<result column="PayMoney" jdbcType="DECIMAL" property="paymoney" />
-		<result column="Freight" jdbcType="DECIMAL" property="freight" />
-		<result column="PayTime" jdbcType="TIMESTAMP" property="paytime" />
-		<result column="WechatPayNo" jdbcType="VARCHAR" property="wechatpayno" />
-		<result column="PayStatus" jdbcType="TINYINT" property="paystatus" />
-		<result column="DeliveryType" jdbcType="TINYINT" property="deliverytype" />
-		<result column="Receiver" jdbcType="VARCHAR" property="receiver" />
-		<result column="ReceiverPhone" jdbcType="VARCHAR" property="receiverphone" />
-		<result column="ReceiverProvince" jdbcType="VARCHAR" property="receiverprovince" />
-		<result column="ReceiverCity" jdbcType="VARCHAR" property="receivercity" />
-		<result column="ReceiverCounty" jdbcType="VARCHAR" property="receivercounty" />
-		<result column="LogisticsID" jdbcType="INTEGER" property="logisticsid" />
-		<result column="LogisticsNo" jdbcType="VARCHAR" property="logisticsno" />
-		<result column="DelivererDepartmentID" jdbcType="INTEGER"
-			property="delivererdepartmentid" />
-		<result column="Deliverer" jdbcType="VARCHAR" property="deliverer" />
-		<result column="DelivererTime" jdbcType="TIMESTAMP" property="deliverertime" />
-		<result column="ReceiverTime" jdbcType="TIMESTAMP" property="receivertime" />
-		<result column="Memo" jdbcType="VARCHAR" property="memo" />
-		<result column="Remark" jdbcType="VARCHAR" property="remark" />
-		<result column="CreateTime" jdbcType="TIMESTAMP" property="createtime" />
-		<result column="Creator" jdbcType="VARCHAR" property="creator" />
-		<result column="ModifyTime" jdbcType="TIMESTAMP" property="modifytime" />
-		<result column="Modifier" jdbcType="VARCHAR" property="modifier" />
-		<result column="UpdatedTime" jdbcType="TIMESTAMP" property="updatedtime" />
-		<result column="UseFlag" jdbcType="TINYINT" property="useflag" />
-		<result column="Status" jdbcType="TINYINT" property="status" />
-		<result column="MiniprogramID" jdbcType="INTEGER" property="miniprogramid" />
-		<result column="PublicplatformID" jdbcType="INTEGER" property="publicplatformid" />
-		<result column="RetuenPayStatus" jdbcType="TINYINT" property="retuenpaystatus" />
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="No" property="no" jdbcType="VARCHAR" />
+		<result column="Kind" property="kind" jdbcType="INTEGER" />
+		<result column="Source" property="source" jdbcType="INTEGER" />
+		<result column="VipID" property="vipid" jdbcType="INTEGER" />
+		<result column="Quantity" property="quantity" jdbcType="INTEGER" />
+		<result column="Amount" property="amount" jdbcType="DECIMAL" />
+		<result column="BaseAmount" property="baseamount" jdbcType="DECIMAL" />
+		<result column="SaleAmount" property="saleamount" jdbcType="DECIMAL" />
+		<result column="Discount" property="discount" jdbcType="DECIMAL" />
+		<result column="DiscountMoney" property="discountmoney"
+			jdbcType="DECIMAL" />
+		<result column="Deposit" property="deposit" jdbcType="DECIMAL" />
+		<result column="Point" property="point" jdbcType="INTEGER" />
+		<result column="PointRate" property="pointrate" jdbcType="INTEGER" />
+		<result column="PointMoney" property="pointmoney" jdbcType="DECIMAL" />
+		<result column="CouponID" property="couponid" jdbcType="INTEGER" />
+		<result column="CouponMoney" property="couponmoney" jdbcType="DECIMAL" />
+		<result column="PayMoney" property="paymoney" jdbcType="DECIMAL" />
+		<result column="Freight" property="freight" jdbcType="DECIMAL" />
+		<result column="PayTime" property="paytime" jdbcType="TIMESTAMP" />
+		<result column="WechatPayNo" property="wechatpayno" jdbcType="VARCHAR" />
+		<result column="PayStatus" property="paystatus" jdbcType="TINYINT" />
+		<result column="DeliveryType" property="deliverytype" jdbcType="TINYINT" />
+		<result column="Receiver" property="receiver" jdbcType="VARCHAR" />
+		<result column="ReceiverPhone" property="receiverphone"
+			jdbcType="VARCHAR" />
+		<result column="ReceiverProvince" property="receiverprovince"
+			jdbcType="VARCHAR" />
+		<result column="ReceiverCity" property="receivercity" jdbcType="VARCHAR" />
+		<result column="ReceiverCounty" property="receivercounty"
+			jdbcType="VARCHAR" />
+		<result column="LogisticsID" property="logisticsid" jdbcType="INTEGER" />
+		<result column="LogisticsNo" property="logisticsno" jdbcType="VARCHAR" />
+		<result column="DelivererDepartmentID" property="delivererdepartmentid"
+			jdbcType="INTEGER" />
+		<result column="Deliverer" property="deliverer" jdbcType="VARCHAR" />
+		<result column="DelivererTime" property="deliverertime"
+			jdbcType="TIMESTAMP" />
+		<result column="ReceiverTime" property="receivertime" jdbcType="TIMESTAMP" />
+		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+		<result column="Remark" property="remark" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="Creator" property="creator" jdbcType="VARCHAR" />
+		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+		<result column="Status" property="status" jdbcType="TINYINT" />
+		<result column="MiniprogramID" property="miniprogramid"
+			jdbcType="INTEGER" />
+		<result column="PublicplatformID" property="publicplatformid"
+			jdbcType="INTEGER" />
+		<result column="RetuenPayStatus" property="retuenpaystatus"
+			jdbcType="TINYINT" />
 	</resultMap>
-	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
-		type="com.fast.base.data.entity.MOrder">
-		<result column="ReceiverAddress" jdbcType="LONGVARCHAR"
-			property="receiveraddress" />
+	<resultMap id="ResultMapWithBLOBs" type="com.fast.base.data.entity.MOrder"
+		extends="BaseResultMap">
+		<result column="ReceiverAddress" property="receiveraddress"
+			jdbcType="LONGVARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
 			<foreach collection="oredCriteria" item="criteria" separator="or">
 				<if test="criteria.valid">
-					<trim prefix="(" prefixOverrides="and" suffix=")">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
 						<foreach collection="criteria.criteria" item="criterion">
 							<choose>
 								<when test="criterion.noValue">
@@ -75,8 +83,8 @@
 								</when>
 								<when test="criterion.listValue">
 									and ${criterion.condition}
-									<foreach close=")" collection="criterion.value" item="listItem"
-										open="(" separator=",">
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
 										#{listItem}
 									</foreach>
 								</when>
@@ -104,8 +112,8 @@
 	<sql id="Blob_Column_List">
 		ReceiverAddress
 	</sql>
-	<select id="selectByExampleWithBLOBs" parameterType="com.fast.base.data.entity.MOrderExample"
-		resultMap="ResultMapWithBLOBs">
+	<select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
+		parameterType="com.fast.base.data.entity.MOrderExample">
 		select
 		<if test="distinct">
 			distinct
@@ -122,8 +130,8 @@
 			order by ${orderByClause}
 		</if>
 	</select>
-	<select id="selectByExample" parameterType="com.fast.base.data.entity.MOrderExample"
-		resultMap="BaseResultMap">
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fast.base.data.entity.MOrderExample">
 		select
 		<if test="distinct">
 			distinct
@@ -138,8 +146,8 @@
 			order by ${orderByClause}
 		</if>
 	</select>
-	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
-		resultMap="ResultMapWithBLOBs">
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
 		,
@@ -494,7 +502,7 @@
 		</trim>
 	</insert>
 	<select id="countByExample" parameterType="com.fast.base.data.entity.MOrderExample"
-		resultType="java.lang.Long">
+		resultType="java.lang.Integer">
 		select count(*) from m_order
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />

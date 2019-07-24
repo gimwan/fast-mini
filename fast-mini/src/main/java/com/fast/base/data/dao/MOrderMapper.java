@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Options;
 
 public interface MOrderMapper {
-    long countByExample(MOrderExample example);
+    int countByExample(MOrderExample example);
 
     int deleteByExample(MOrderExample example);
 

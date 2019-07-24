@@ -56,5 +56,13 @@
 
 .microPage .layui-table-view .layui-table-box .micro-data {
 	overflow-y: auto;
-	overflow-x: hidden;
+	/* overflow-x: hidden; */
+}
+
+.operationbtn .layui-icon {
+	margin-right: 0px;
+}
+
+.operationbtn .layui-btn-group .layui-btn {
+	margin-right: 4px !important;
 }

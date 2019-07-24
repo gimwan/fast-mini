@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Options;
 
 public interface MGoodsskuMapper {
-    long countByExample(MGoodsskuExample example);
+    int countByExample(MGoodsskuExample example);
 
     int deleteByExample(MGoodsskuExample example);
 

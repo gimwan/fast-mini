@@ -496,10 +496,12 @@ public class DataServiceImpl implements IDataService, Serializable {
 		List<Integer> vipidList = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).put("vip", "");
+			list.get(i).put("vipphone", "");
 			if (!Common.isEmpty(String.valueOf(list.get(i).get("vipid")))) {
 				vipidList.add(Integer.valueOf(list.get(i).get("vipid").toString()));
 			} else {
 				list.get(i).put("vip", "");
+				list.get(i).put("vipphone", "");
 			}
 		}
 		if (vipidList.size() > 0) {
@@ -511,6 +513,7 @@ public class DataServiceImpl implements IDataService, Serializable {
 					for (int j = 0; j < data.size(); j++) {
 						if (list.get(i).get("vipid").toString().equals(data.get(j).getId().toString())) {
 							list.get(i).put("vip", data.get(j).getName());
+							list.get(i).put("vipphone", data.get(j).getMobilephone());
 							break;
 						}
 					}
@@ -521,7 +524,20 @@ public class DataServiceImpl implements IDataService, Serializable {
 			if ("".equals(list.get(i).get("vip").toString())) {
 				list.get(i).put("vipid", "");
 			}
+			// 明细
+			String detailSql = "select a.*,b.code,b.name,b.photourl,c.name as color,d.name as pattern,e.name as size "
+					+ "from m_orderdtl a "
+					+ "inner join m_goods b on a.goodsid=b.id "
+					+ "left join m_color c on a.colorid=c.id "
+					+ "left join m_pattern d on a.patternid=d.id "
+					+ "left join m_size e on a.sizeid=e.id "
+					+ "where a.orderid="+list.get(i).get("id").toString();
+			List<LinkedHashMap<String, Object>> dtlList = dataMapper.pageList(detailSql);
+			dtlList = CommonUtil.transformUpperCase(dtlList);
+			list.get(i).put("details", dtlList);
 		}
+		
+		
 		return list;
 	}
 	

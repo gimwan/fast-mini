@@ -1,6 +1,8 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,12 +12,17 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
+import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.dao.MVipminiMapper;
+import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MVip;
 import com.fast.base.data.entity.MVipExample;
 import com.fast.base.data.entity.MVipaccount;
+import com.fast.base.data.entity.MVipcoupon;
+import com.fast.base.data.entity.MVipcouponExample;
 import com.fast.base.data.entity.MVipmini;
 import com.fast.base.data.entity.MVipminiExample;
+import com.fast.base.data.entity.MViptype;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipService;
 import com.fast.system.log.FastLog;
@@ -43,6 +50,12 @@ public class VipServiceImpl implements IVipService, Serializable {
 	
 	@Autowired
 	MVipaccountMapper vipaccountMapper;
+	
+	@Autowired
+	MVipcouponMapper vipcouponMapper;
+	
+	@Autowired
+	MViptypeMapper viptypeMapper;
 	
 	@Override
 	public Result vip() {
@@ -84,7 +97,10 @@ public class VipServiceImpl implements IVipService, Serializable {
 				if (vipid != null) {
 					MVip vip = vipMapper.selectByPrimaryKey(vipid);
 					if (vip != null && vip.getId() != null) {
-						result.setData(vip);
+						HashMap<String, Object> map = BeanUtil.convertObjToMap(vip);
+						MViptype viptype = viptypeMapper.selectByPrimaryKey(vip.getTypeid());
+						map.put("type", viptype.getName());
+						result.setData(map);
 						result.setId(vip.getId());
 						result.setErrcode(Integer.valueOf(0));
 					}
@@ -242,7 +258,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 			if (Common.isActive(result)) {
 				MVipaccount vipaccount = (MVipaccount) result.getData();
 				if (vipaccount != null && vipaccount.getId() != null) {
-					Long deposit = vipaccount.getDeposit() == null ? 0 : vipaccount.getDeposit();
+					BigDecimal deposit = vipaccount.getDeposit() == null ? BigDecimal.ZERO : vipaccount.getDeposit();
 					result.setData(deposit);
 					result.setId(vipaccount.getId());
 					result.setErrcode(Integer.valueOf(0));
@@ -251,6 +267,58 @@ public class VipServiceImpl implements IVipService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用VipServiceImpl.queryVipDeposit报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryVipCouponNumber(String appid, String openid) {
+		Result result = new Result();
+		try {
+			Result r = queryVipByOpenid(appid, openid);
+			if (Common.isActive(r)) {
+				Date now = new Date();
+				MVipcouponExample example = new MVipcouponExample();
+				example.createCriteria().andUseflagEqualTo(Byte.valueOf("0")).andVipidEqualTo(r.getId()).andBegintimeLessThanOrEqualTo(now).andEndtimeGreaterThan(now);
+				List<MVipcoupon> list = vipcouponMapper.selectByExample(example);
+				
+				result.setData(list.size());
+				result.setId(r.getId());
+				result.setErrcode(Integer.valueOf(0));
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipServiceImpl.queryVipCouponNumber报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryVipDPC(String appid, String openid) {
+		Result result = new Result();
+		try {
+			Result r = queryVipByOpenid(appid, openid);
+			if (Common.isActive(r)) {
+				Date now = new Date();
+				HashMap<String, Object> map = new HashMap<>();
+				MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(r.getId());
+				map.put("point", vipaccount.getPoint() == null ? 0 : vipaccount.getPoint());
+				map.put("deposit", vipaccount.getDeposit() == null ? BigDecimal.ZERO : vipaccount.getDeposit());
+				
+				MVipcouponExample example = new MVipcouponExample();
+				example.createCriteria().andUseflagEqualTo(Byte.valueOf("0")).andVipidEqualTo(r.getId()).andBegintimeLessThanOrEqualTo(now).andEndtimeGreaterThan(now);
+				List<MVipcoupon> list = vipcouponMapper.selectByExample(example);
+				map.put("coupon", list == null ? 0 : list.size());
+				
+				result.setData(map);
+				result.setId(r.getId());
+				result.setErrcode(Integer.valueOf(0));
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipServiceImpl.queryVipDPC报错：", e);
 		}
 
 		return result;

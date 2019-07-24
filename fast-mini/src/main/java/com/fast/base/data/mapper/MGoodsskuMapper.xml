@@ -1,31 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MGoodsskuMapper">
 	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MGoodssku">
-		<id column="ID" jdbcType="INTEGER" property="id" />
-		<result column="GoodsID" jdbcType="INTEGER" property="goodsid" />
-		<result column="ColorID" jdbcType="INTEGER" property="colorid" />
-		<result column="PatternID" jdbcType="INTEGER" property="patternid" />
-		<result column="SizeID" jdbcType="INTEGER" property="sizeid" />
-		<result column="Barcode" jdbcType="VARCHAR" property="barcode" />
-		<result column="Quantity" jdbcType="DECIMAL" property="quantity" />
-		<result column="Price" jdbcType="DECIMAL" property="price" />
-		<result column="IANumber" jdbcType="VARCHAR" property="ianumber" />
-		<result column="ExtBarcode" jdbcType="VARCHAR" property="extbarcode" />
-		<result column="Memo" jdbcType="VARCHAR" property="memo" />
-		<result column="CreateTime" jdbcType="TIMESTAMP" property="createtime" />
-		<result column="Creator" jdbcType="VARCHAR" property="creator" />
-		<result column="ModifyTime" jdbcType="TIMESTAMP" property="modifytime" />
-		<result column="Modifier" jdbcType="VARCHAR" property="modifier" />
-		<result column="UpdatedTime" jdbcType="TIMESTAMP" property="updatedtime" />
-		<result column="UseFlag" jdbcType="TINYINT" property="useflag" />
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="GoodsID" property="goodsid" jdbcType="INTEGER" />
+		<result column="ColorID" property="colorid" jdbcType="INTEGER" />
+		<result column="PatternID" property="patternid" jdbcType="INTEGER" />
+		<result column="SizeID" property="sizeid" jdbcType="INTEGER" />
+		<result column="Barcode" property="barcode" jdbcType="VARCHAR" />
+		<result column="Quantity" property="quantity" jdbcType="DECIMAL" />
+		<result column="Price" property="price" jdbcType="DECIMAL" />
+		<result column="IANumber" property="ianumber" jdbcType="VARCHAR" />
+		<result column="ExtBarcode" property="extbarcode" jdbcType="VARCHAR" />
+		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="Creator" property="creator" jdbcType="VARCHAR" />
+		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
 			<foreach collection="oredCriteria" item="criteria" separator="or">
 				<if test="criteria.valid">
-					<trim prefix="(" prefixOverrides="and" suffix=")">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
 						<foreach collection="criteria.criteria" item="criterion">
 							<choose>
 								<when test="criterion.noValue">
@@ -40,8 +40,8 @@
 								</when>
 								<when test="criterion.listValue">
 									and ${criterion.condition}
-									<foreach close=")" collection="criterion.value" item="listItem"
-										open="(" separator=",">
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
 										#{listItem}
 									</foreach>
 								</when>
@@ -57,8 +57,8 @@
 		IANumber, ExtBarcode,
 		Memo, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime, UseFlag
 	</sql>
-	<select id="selectByExample" parameterType="com.fast.base.data.entity.MGoodsskuExample"
-		resultMap="BaseResultMap">
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fast.base.data.entity.MGoodsskuExample">
 		select
 		<if test="distinct">
 			distinct
@@ -73,8 +73,8 @@
 			order by ${orderByClause}
 		</if>
 	</select>
-	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
-		resultMap="BaseResultMap">
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List" />
 		from m_goodssku
@@ -219,7 +219,7 @@
 		</trim>
 	</insert>
 	<select id="countByExample" parameterType="com.fast.base.data.entity.MGoodsskuExample"
-		resultType="java.lang.Long">
+		resultType="java.lang.Integer">
 		select count(*) from m_goodssku
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />

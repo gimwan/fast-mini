@@ -65,5 +65,20 @@ public interface IVipService {
 	 * @return
 	 */
 	public Result queryVipDeposit(String appid, String openid);
+	
+	/**
+	 * 查询会员优惠券数量
+	 * @param appid
+	 * @param openid
+	 * @return
+	 */
+	public Result queryVipCouponNumber(String appid, String openid);
 
+	/**
+	 * 查询会员储值、积分、优惠券数量
+	 * @param appid
+	 * @param openid
+	 * @return
+	 */
+	public Result queryVipDPC(String appid, String openid);
 }

@@ -31,7 +31,7 @@ common.bindVue = function() {
             /**
              * 上架
              */
-            onsale: function() {
+            onsale: function(event) {
             	if (event) {
                     let id = $(event.target).parents("tr").data("id");
                     let index = $(event.target).parents("tr").data("index");
@@ -41,7 +41,7 @@ common.bindVue = function() {
 			/**
 			 * 下架
 			 */
-			unsale: function() {
+			unsale: function(event) {
             	if (event) {
                     let id = $(event.target).parents("tr").data("id");
                     let index = $(event.target).parents("tr").data("index");

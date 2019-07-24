@@ -2,7 +2,6 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipaccountExample;
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -27,5 +26,4 @@ public interface MVipaccountMapper {
     int updateByPrimaryKeySelective(MVipaccount record);
 
     int updateByPrimaryKey(MVipaccount record);
-    
 }

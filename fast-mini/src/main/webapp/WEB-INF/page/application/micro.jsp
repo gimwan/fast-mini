@@ -16,14 +16,14 @@
 				v-on:click="add">
 				<i class="layui-icon"></i>
 			</button>
-			<button class="layui-btn layui-btn-sm del" title="删除"
+			<!-- <button class="layui-btn layui-btn-sm del" title="删除"
 				v-on:click="del">
 				<i class="layui-icon"></i>
 			</button>
 			<button class="layui-btn layui-btn-sm set" title="配置"
 				v-on:click="set">
 				<i class="layui-icon">&#xe716;</i>
-			</button>
+			</button> -->
 		</div>
 	     
 	     <div class="selectView publicPlatform" >
@@ -105,6 +105,11 @@
 												<span>备注</span>
 											</div>
 										</th>
+										<th class="item operationbtn">
+											<div class="layui-table-cell">
+												<span>操作</span>
+											</div>
+										</th>
 									</tr>
 								</thead>
 							</table>
@@ -146,6 +151,16 @@
 										</td>
 										<td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{m.memo}}</div>
+										</td>
+										<td class="item operationbtn">
+											<div class="layui-btn-group">
+												<button
+													class="layui-btn layui-btn-normal layui-btn-xs image"
+													title="配置" v-on:click="set">配置</button>
+												<button
+													class="layui-btn layui-btn-danger layui-btn-xs del"
+													title="删除" v-on:click="del">删除</button>
+											</div>
 										</td>
 									</tr>
 								</tbody>

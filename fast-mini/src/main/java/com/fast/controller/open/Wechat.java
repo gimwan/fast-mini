@@ -63,13 +63,7 @@ public class Wechat extends MiniMaster {
 		JSONObject jsonObject = new JSONObject();
 		
 		try {
-			String openid = request.getParameter("openid");
-			Object ob = RedisCache.get(openid);
-			JSONObject jObject = new JSONObject();
-			if (ob != null) {
-				jObject = JSONObject.fromObject(ob.toString());
-			}
-			String sessionKey = jObject.getString("session_key");
+			String sessionKey = request.getParameter("session_key");
 			String ivData = request.getParameter("iv");
 			String encrypData = request.getParameter("encrypteddata");
 			

@@ -1,6 +1,7 @@
 package com.fast.base.data.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class MGoods implements Serializable {
@@ -17,11 +18,11 @@ public class MGoods implements Serializable {
 
     private Byte kind;
 
-    private Long purchaseprice;
+    private BigDecimal purchaseprice;
 
-    private Long baseprice;
+    private BigDecimal baseprice;
 
-    private Long price;
+    private BigDecimal price;
 
     private Byte showcolor;
 
@@ -43,7 +44,7 @@ public class MGoods implements Serializable {
 
     private String onsaleer;
 
-    private Long pointtimes;
+    private BigDecimal pointtimes;
 
     private String memo;
 
@@ -107,27 +108,27 @@ public class MGoods implements Serializable {
         this.kind = kind;
     }
 
-    public Long getPurchaseprice() {
+    public BigDecimal getPurchaseprice() {
         return purchaseprice;
     }
 
-    public void setPurchaseprice(Long purchaseprice) {
+    public void setPurchaseprice(BigDecimal purchaseprice) {
         this.purchaseprice = purchaseprice;
     }
 
-    public Long getBaseprice() {
+    public BigDecimal getBaseprice() {
         return baseprice;
     }
 
-    public void setBaseprice(Long baseprice) {
+    public void setBaseprice(BigDecimal baseprice) {
         this.baseprice = baseprice;
     }
 
-    public Long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -211,11 +212,11 @@ public class MGoods implements Serializable {
         this.onsaleer = onsaleer;
     }
 
-    public Long getPointtimes() {
+    public BigDecimal getPointtimes() {
         return pointtimes;
     }
 
-    public void setPointtimes(Long pointtimes) {
+    public void setPointtimes(BigDecimal pointtimes) {
         this.pointtimes = pointtimes;
     }
 
