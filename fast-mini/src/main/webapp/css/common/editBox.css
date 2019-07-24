@@ -101,7 +101,7 @@
 }
 
 /********************cascade*************************/
-.edit-view .edit-box .cascade .cascade-value {
+.cascade .cascade-value {
 	display: table;
 	width: calc(100% + 20px);
 	border-collapse: separate;
@@ -109,16 +109,16 @@
 	margin: 0px -10px;
 }
 
-.edit-view .edit-box .cascade .edit-value {
+.cascade .edit-value {
 	position: relative;
 	display: table-cell;
 }
 
-.edit-view .edit-box .cascade input {
+.cascade input {
 	padding-right: 30px;
 }
 
-.edit-view .edit-box .cascade .layui-icon {
+.cascade .layui-icon {
 	font-size: 20px;
 	position: absolute;
 	right: 5px;
@@ -126,7 +126,7 @@
 	color: #c2c2c2;
 }
 
-.cascade-view .cascade-box .cascade-data {
+.cascade .cascade-data {
 	display: table;
 	width: 100%;
 	border-width: 0px 0px 1px 0px;
@@ -134,17 +134,17 @@
 	border-color: #f2f2f2;
 }
 
-.cascade-view .cascade-box .cascade-data span {
+.cascade .cascade-data span {
 	display: table-cell;
 	padding: 10px 20px;
 	width: 50%;
 }
 
-.cascade-view .cascade-box .cascade-data .code {
+.cascade .cascade-data .code {
 	text-align: left;
 }
 
-.cascade-view .cascade-box .cascade-data .name {
+.cascade .cascade-data .name {
 	text-align: right;
 }
 

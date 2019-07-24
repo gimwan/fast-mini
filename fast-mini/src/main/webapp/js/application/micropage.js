@@ -53,6 +53,7 @@ let microPageEditVm;
 let uploadInst;
 let microPage;
 let setData;
+let editData;
 
 common.bindVue = function() {
 	console.log('micropage');
@@ -90,7 +91,7 @@ function loadData() {
         	if (pageData != null) {
         		microPage = pageData.micropage;
         		setData = pageData.setdata;
-        		console.log(setData);
+        		editData = pageData.setdata;
             	microPageSetVm = new Vue({
                     el : ".phoneBox",
                     data : {
@@ -100,28 +101,37 @@ function loadData() {
             	microPageEditVm = new Vue({
                     el : ".editBox",
                     data : {
-                    	editdata: setData
+                    	editdata: editData
                     }
                 });
 			}
-        	
+        	setTimeout(() => {
+        		$(".middlePanel .phoneBox .editView").css("display","inline-block");
+        		$(".rightPanel .editBox").css("display","inline-block");
+			}, 300);
         } else {
             common.error('数据加载失败');
         }
         
-        // 初始化轮播
         configCarousel();
-        // 初始化文件上传
         configUploadInst();
-        // 重新刷新form
         layuiForm.render();
         
         common.closeLoading();
     });
 }
 
+function configAssembly() {
+	setTimeout(() => {
+		layCarousel.render();
+	    layuiUpload.render();
+	    configUploadInst();
+	    layuiForm.render();
+	}, 500);
+}
+
 function configUploadInst() {
-	uploadInst = layuiUpload.render({
+	layuiUpload.render({
 	    elem: '.layui-upload-drag',
 	    url: './upload/field/image',
 	    size: 1024,
@@ -132,11 +142,14 @@ function configUploadInst() {
 	    	var index = $(item).parents(".editItem").attr("data-index");
 	    	var detailIndex = $(item).parents(".uploadField ").attr("data-index");
 	    	setData[index].detail[detailIndex].photourl = res.data;
+	    	editData[index].detail[detailIndex].photourl = res.data;
+	    	configAssembly();
 	    },
 	    error: function(res, index){
 	    	// 请求异常回调
 	    	console.log(res);
 	    	console.log(index);
+	    	configAssembly();
 	    }
     });
 }
@@ -144,8 +157,7 @@ function configUploadInst() {
 function configCarousel() {
 	$(".middlePanel .editView .layui-carousel").each(function() {
 		var id = $(this).attr("id");
-		let thisCarousel = layCarousel;
-		thisCarousel.render({
+		layCarousel.render({
 			elem : '#'+id,
 			arrow : 'none',
 			width : '100%',
@@ -156,38 +168,46 @@ function configCarousel() {
 }
 
 function chooseView() {
-	$("body").on("click", ".microPage .configureView .middlePanel .editView .setItem", function() {
+	$(".layui-layer-page").on("click", ".microPage .configureView .middlePanel .editView .setItem", function() {
 		let index = $(this).attr("data-index");
 		for (var i = 0; i < setData.length; i++) {
 			if (i == index) {
 				setData[i].choose = 1;
+				editData[i].choose = 1;
 			} else {
 				setData[i].choose = 0;
+				editData[i].choose = 0;
 			}
 		}
+		
+		configAssembly();
 	});
 }
 
 function showDeleteIcon() {
-	$("body").on("mouseover", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox,.middlePanel .phoneBox .editView .setItem", function() {
+	$(".layui-layer-page").on("mouseover", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox,.middlePanel .phoneBox .editView .setItem", function() {
 		$(this).children('.layui-icon-delete').show();
 	});
-	$("body").on("mouseout", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox,.middlePanel .phoneBox .editView .setItem", function() {
+	$(".layui-layer-page").on("mouseout", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox,.middlePanel .phoneBox .editView .setItem", function() {
 		$(this).children('.layui-icon-delete').hide();
 	});
-	$("body").on("click", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox .layui-icon-delete", function(event) {
+	$(".layui-layer-page").on("click", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox .layui-icon-delete", function(event) {
 		event.stopPropagation();
 		event.preventDefault();
 		var index = $(this).parents(".editItem").attr("data-index");
     	var detailIndex = $(this).parents(".ad").attr("data-index");
     	setData[index].detail[detailIndex].photourl = "";
+    	editData[index].detail[detailIndex].photourl = "";
+    	configAssembly();
 		return false;
 	});
-	$("body").on("click", ".middlePanel .phoneBox .editView .setItem .deleteIcon", function(event) {
+	$(".layui-layer-page").on("click", ".middlePanel .phoneBox .editView .setItem .deleteIcon", function(event) {
 		event.stopPropagation();
 		event.preventDefault();
 		let index = $(this).parents(".setItem").attr("data-index");
 		setData.splice(index, 1);
+		editData.splice(index, 1);
+		configAssembly();
 		return false;
 	});
 }
@@ -196,4 +216,47 @@ function spellChange(obj) {
 	var index = $(obj).parents(".editItem").attr("data-index");
 	var text = $(obj).val();
 	setData[index].detail[0].text = text;
+	editData[index].detail[0].text = text;
 }
+
+function saveTargetPath(obj) {
+	let pidx = $(obj).attr("data-pindex");
+	let idx = $(obj).attr("data-index");
+	setData[pidx].detail[idx].targetpath = $(obj).val();
+}
+
+function saveMicropage(obj) {
+	let pidx = $(obj).attr("data-pindex");
+	let idx = $(obj).attr("data-index");
+	setData[pidx].detail[idx].targetpath = $(obj).attr("data-id");
+}
+
+function saveGrouping(obj) {
+	let pidx = $(obj).attr("data-pindex");
+	let idx = $(obj).attr("data-index");
+	setData[pidx].detail[idx].targetpath = $(obj).attr("data-id");
+}
+
+function saveFirst(obj) {
+	let pidx = $(obj).attr("data-pindex");
+	let idx = $(obj).attr("data-index");
+	setData[pidx].detail[idx].first = $(obj).attr("data-id");
+}
+
+function saveSecond(obj) {
+	let pidx = $(obj).attr("data-pindex");
+	let idx = $(obj).attr("data-index");
+	setData[pidx].detail[idx].second = $(obj).attr("data-id");
+}
+
+function saveThird(obj) {
+	let pidx = $(obj).attr("data-pindex");
+	let idx = $(obj).attr("data-index");
+	setData[pidx].detail[idx].third = $(obj).attr("data-id");
+}
+
+layuiForm.on('select(linkType)', function(data) {
+	let pidx = $(data.elem).attr("data-pindex");
+	let idx = $(data.elem).attr("data-index");
+	setData[pidx].detail[idx].type = data.value;
+});
