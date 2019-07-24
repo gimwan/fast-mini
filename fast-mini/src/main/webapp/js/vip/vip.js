@@ -70,7 +70,7 @@ function showEditBox(idx,data) {
         type: 1,
         title: boxTitle,
         content: editDiv,
-        area: ['700px', '710px'],
+        area: ['700px', '720px'],
         btn: ['关闭'],
         success: function () {
         	// 重新刷新form
@@ -105,6 +105,8 @@ function createElement(data) {
 		recommenderid : "",
 		source : "",
 		registtime : "",
+		deposit : 0,
+		point : 0,
 		memo : ""
 	};
     if (data != null && data != undefined && data != "") {
@@ -137,7 +139,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">编号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"code\">"+
-				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\" disabled=\"disabled\"/>"+
+				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -145,7 +147,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">名称</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"name\">"+
-				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\" disabled=\"disabled\"/>"+
+				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -153,7 +155,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">手机号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"mobilephone\">"+
-				                "<input type=\"text\" value=\""+d.mobilephone+"\" class=\"layui-input value\" disabled=\"disabled\"/>"+
+				                "<input type=\"text\" value=\""+d.mobilephone+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\">"+
@@ -161,9 +163,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">所属门店</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"departmentid\">"+
-				                "<input type=\"text\" data-id=\""+d.departmentid+"\" value=\""+d.department+"\" " +
-				                		"data-url=\"./data/page?table=department\" class=\"layui-input value\" readonly=\"readonly\" disabled=\"disabled\"/>" +
-				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
+				                "<input type=\"text\" value=\""+d.department+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\">"+
@@ -171,9 +171,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">类别</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"typeid\">"+
-				                "<input type=\"text\" data-id=\""+d.typeid+"\" value=\""+d.type+"\" " +
-				                		"data-url=\"./data/page?table=viptype\" class=\"layui-input value\" readonly=\"readonly\" disabled=\"disabled\"/>" +
-				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
+				                "<input type=\"text\" value=\""+d.type+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" select=\"1\" need=\"1\" key=\"0\">"+
@@ -181,30 +179,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">性别</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"sex\">"+
-				                "<form class=\"layui-form\" action=\"\">" +
-				                	"<div class=\"layui-form-item\">" +
-				                		"<div class=\"selectItem\">" +
-				                			"<div class=\"layui-input-inline selectBox\">" +
-				                				"<select>" +
-				                					"<option value=\"0\" "+(d.sex == 0 ? 'selected' : '')+">未知</option>" +
-				                					"<option value=\"1\" "+(d.sex == 1 ? 'selected' : '')+">男</option>" +
-				                					"<option value=\"2\" "+(d.sex == 2 ? 'selected' : '')+">女</option>" +
-				                				"</select>" +
-				                				"<div class=\"layui-unselect layui-form-select\">" +
-				                					"<div class=\"layui-select-title\">" +
-				                						"<input type=\"text\" placeholder=\"请选择\" value=\""+d.sex+"\" class=\"layui-input layui-unselect value\"/> " +
-				                						"<i class=\"layui-edge\"></i>" +
-				                					"</div>" +
-				                					"<dl class=\"layui-anim layui-anim-upbit\">" +
-					                					"<dd lay-value=\"0\" class=\"\">未知</dd>" +
-					                					"<dd lay-value=\"1\" class=\"\">男</dd>" +
-					                					"<dd lay-value=\"2\" class=\"\">女</dd>" +
-				                					"</dl>" +
-				                				"</div>" +
-				                			"</div>" +
-				                		"</div>"+
-				                	"</div>"+
-				                "</form>"+
+				            	"<input type=\"text\" value=\""+(d.sex==1?'男':(d.sex==2?'女':'未知'))+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -212,7 +187,15 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">生日</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"birthday\">"+
-				                "<input type=\"text\" value=\""+common.formatDay(d.birthday)+"\" class=\"layui-input value\" disabled=\"disabled\"/>"+
+				                "<input type=\"text\" value=\""+common.formatDay(d.birthday)+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">地区</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"birthday\">"+
+				                "<input type=\"text\" value=\""+d.province+' '+d.city+' '+d.county+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -220,7 +203,23 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">注册时间</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"registtime\">"+
-				                "<input type=\"text\" value=\""+common.formatDate(d.registtime)+"\" class=\"layui-input value\" disabled=\"disabled\"/>"+
+				                "<input type=\"text\" value=\""+common.formatDay(d.registtime)+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">积分</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"point\">"+
+				                "<input type=\"text\" value=\""+d.point+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">储值</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"deposit\">"+
+				                "<input type=\"text\" value=\""+d.deposit+"\" class=\"layui-input value\" disabled=\"disabled\" />" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" textarea=\"1\" key=\"0\">"+

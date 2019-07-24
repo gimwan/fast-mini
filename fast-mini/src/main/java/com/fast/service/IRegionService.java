@@ -1,6 +1,7 @@
 package com.fast.service;
 
 import com.fast.base.Result;
+import com.fast.base.page.PagingView;
 
 /**
  * 省市区
@@ -14,5 +15,14 @@ public interface IRegionService {
 	 * @return
 	 */
 	public Result region();
+	
+	/**
+	 * 按分类查询地区
+	 * @param page
+	 * @param type
+	 * @param parentID
+	 * @return
+	 */
+	public Result list(PagingView page, Integer type, Integer parentID);
 
 }

@@ -154,6 +154,7 @@ document.onreadystatechange = function() {
     	
     	// 弹窗选择
     	$("body").on("click", ".popup input", function () {
+    		let region = $(this).attr("region");
     		$(".popup .popuped").removeClass("popuped");
     		$(this).addClass("popuped");
     		let url = $(this).data("url");
@@ -161,7 +162,7 @@ document.onreadystatechange = function() {
     		common.showLoading();
     		api.load(url, 'post', {}, function(result) {
     			if (result.errcode == 0) {
-            		let selectOption = optionView(result.data.records);;
+            		let selectOption = optionView(result.data.records,region);;
             		layer.open({
             	        type: 1,
             	        title: "<label style='font-weight:600;'>"+title+"</label>",
@@ -221,12 +222,21 @@ document.onreadystatechange = function() {
     	
     	// 弹窗选择（级联）
     	$("body").on("click", ".edit-view .edit-box .cascade input", function () {
-    		let grade = $(this).data("grade");
+    		let grade = $(this).attr("data-grade");
+    		let region = $(this).attr("region");
     		let title = "大类";
     		if (grade == 2) {
     			title = "中类";
 			} else if (grade == 3) {
 				title = "小类";
+			}
+    		if (region == 1) {
+    			title = "省份";
+        		if (grade == 2) {
+        			title = "城市";
+    			} else if (grade == 3) {
+    				title = "区县";
+    			}
 			}
     		let parentMsg = checkParentChoose($(this));
     		if (parentMsg != null && parentMsg != undefined && $.trim(parentMsg) != "") {
@@ -239,7 +249,7 @@ document.onreadystatechange = function() {
     		common.showLoading();
     		api.load(url, 'post', {}, function(result) {
     			if (result.errcode == 0) {
-            		let selectOption = optionView(result.data.records);;
+            		let selectOption = optionView(result.data.records,region);;
             		layer.open({
             	        type: 1,
             	        title: "<label style='font-weight:600;'>"+title+"</label>",
@@ -354,17 +364,30 @@ function changeCascadeUrl() {
 	
 	$(".edit-view .edit-box .cascade input").each(function() {
 		let grade = $(this).attr("data-grade");
+		let region = $(this).attr("region");
 		if (grade == 2) {
 			if (bigCategoryID != null && bigCategoryID != undefined && $.trim(bigCategoryID) != "") {
-				$(this).attr("data-url","./goodscategory/list?grade=2&parentid="+$.trim(bigCategoryID));
+				$(this).attr("data-url","./goodscategory/list?grade=2&pagesize=100&parentid="+$.trim(bigCategoryID));
+				if (region == 1) {
+					$(this).attr("data-url","./region/list?grade=2&pagesize=100&parentid="+$.trim(bigCategoryID));
+				}
 			} else {
-				$(this).attr("data-url","./goodscategory/list?grade=2");
+				$(this).attr("data-url","./goodscategory/list?grade=2&pagesize=100");
+				if (region == 1) {
+					$(this).attr("data-url","./region/list?grade=2&pagesize=100");
+				}
 			}
 		} else if (grade == 3) {
 			if (middleCategoryID != null && middleCategoryID != undefined && $.trim(middleCategoryID) != "") {
-				$(this).attr("data-url","./goodscategory/list?grade=3&parentid="+$.trim(middleCategoryID));
+				$(this).attr("data-url","./goodscategory/list?grade=3&pagesize=100&parentid="+$.trim(middleCategoryID));
+				if (region == 1) {
+					$(this).attr("data-url","./region/list?grade=3&pagesize=100&parentid="+$.trim(middleCategoryID));
+				}				
 			} else {
-				$(this).attr("data-url","./goodscategory/list?grade=3");
+				$(this).attr("data-url","./goodscategory/list?grade=3&pagesize=100");
+				if (region == 1) {
+					$(this).attr("data-url","./region/list?grade=3&pagesize=100");
+				}
 			}
 		}
 	});
@@ -378,14 +401,18 @@ function defaultImg(obj) {
 	}
 }
 
-function optionView(data) {
+function optionView(data,region) {
 	let view = "<div class=\"popup-view\">" +
 					"<div class=\"popup-box\">";
 	for (var i = 0; i < data.length; i++) {
-		view += "<div class=\"popup-data\" data-id=\""+data[i].id+"\">" +
-					"<span class=\"code\">"+data[i].code+"</span>" +
-					"<span class=\"name\">"+data[i].name+"</span>" +
-				"</div>";
+		view += "<div class=\"popup-data\" data-id=\""+data[i].id+"\">";
+		if (region == 1) {
+			view += "<span class=\"code\">"+data[i].id+"</span>";
+		} else {
+			view += "<span class=\"code\">"+data[i].code+"</span>";
+		}
+		view += "<span class=\"name\">"+data[i].name+"</span>" +
+			"</div>";
 	}				
 	view += "</div></div>";
 	return view;
