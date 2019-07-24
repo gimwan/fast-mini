@@ -99,7 +99,7 @@ function showEditBox(idx,data) {
         type: 1,
         title: boxTitle,
         content: editDiv,
-        area: ['700px', '710px'],
+        area: ['700px', '720px'],
         btn: ['保存','取消'],
         btn1: function (index, layero) {
             let data = catchBoxValue();

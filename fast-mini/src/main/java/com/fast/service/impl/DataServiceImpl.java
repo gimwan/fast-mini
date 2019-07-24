@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.fast.base.data.dao.MPatternMapper;
 import com.fast.base.data.dao.MPublicplatformMapper;
 import com.fast.base.data.dao.MSizeMapper;
 import com.fast.base.data.dao.MVipMapper;
+import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MBrand;
 import com.fast.base.data.entity.MBrandExample;
@@ -35,6 +37,8 @@ import com.fast.base.data.entity.MSize;
 import com.fast.base.data.entity.MSizeExample;
 import com.fast.base.data.entity.MVip;
 import com.fast.base.data.entity.MVipExample;
+import com.fast.base.data.entity.MVipaccount;
+import com.fast.base.data.entity.MVipaccountExample;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
 import com.fast.base.page.PagingView;
@@ -62,6 +66,9 @@ public class DataServiceImpl implements IDataService, Serializable {
 	
 	@Autowired
 	MVipMapper vipMapper;
+	
+	@Autowired
+	MVipaccountMapper vipaccountMapper;
 	
 	@Autowired
 	MBrandMapper brandMapper;
@@ -140,6 +147,9 @@ public class DataServiceImpl implements IDataService, Serializable {
 		}
 		else if ("order".equals(tableName)) {
 			list = completeOrder(list);
+		}
+		else if ("department".endsWith(tableName)) {
+			list = completeDepartment(list);
 		}
 		
 		return list;
@@ -230,12 +240,13 @@ public class DataServiceImpl implements IDataService, Serializable {
 	 */
 	public List<LinkedHashMap<String, Object>> completeVip(List<LinkedHashMap<String, Object>> list) {
 		List<Integer> idList = new ArrayList<>();
+		List<Integer> departmentidList = new ArrayList<>();
 		List<Integer> typeidList = new ArrayList<>();
 		List<Integer> recommenderidList = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).put("department", "");
 			if (!Common.isEmpty(String.valueOf(list.get(i).get("departmentid")))) {
-				idList.add(Integer.valueOf(list.get(i).get("departmentid").toString()));
+				departmentidList.add(Integer.valueOf(list.get(i).get("departmentid").toString()));
 			} else {
 				list.get(i).put("departmentid", "");
 			}
@@ -251,11 +262,29 @@ public class DataServiceImpl implements IDataService, Serializable {
 			} else {
 				list.get(i).put("recommenderid", "");
 			}
-			
+			idList.add(Integer.valueOf(list.get(i).get("id").toString()));
+			list.get(i).put("deposit", BigDecimal.ZERO);
+			list.get(i).put("point", 0);
 		}
 		if (idList.size() > 0) {
-			MDepartmentExample example = new MDepartmentExample();
+			MVipaccountExample example = new MVipaccountExample();
 			example.createCriteria().andIdIn(idList);
+			List<MVipaccount> data = vipaccountMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("id").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("deposit", data.get(j).getDeposit()==null?BigDecimal.ZERO:data.get(j).getDeposit());
+							list.get(i).put("point", data.get(j).getPoint()==null?0:data.get(j).getPoint());
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (departmentidList.size() > 0) {
+			MDepartmentExample example = new MDepartmentExample();
+			example.createCriteria().andIdIn(departmentidList);
 			List<MDepartment> data = departmentMapper.selectByExample(example);
 			if (data != null && data.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
@@ -537,6 +566,11 @@ public class DataServiceImpl implements IDataService, Serializable {
 			list.get(i).put("details", dtlList);
 		}
 		
+		
+		return list;
+	}
+	
+	public List<LinkedHashMap<String, Object>> completeDepartment(List<LinkedHashMap<String, Object>> list) {
 		
 		return list;
 	}

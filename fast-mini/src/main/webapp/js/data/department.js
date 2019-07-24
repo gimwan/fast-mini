@@ -99,7 +99,7 @@ function showEditBox(idx,data) {
         type: 1,
         title: boxTitle,
         content: editDiv,
-        area: ['700px', '710px'],
+        area: ['700px', '720px'],
         btn: ['保存','取消'],
         btn1: function (index, layero) {
             let data = catchBoxValue();
@@ -143,6 +143,12 @@ function createElement(data) {
 	    code : "",
 	    name : "",
 	    contacts : "",
+	    provinceid : "",
+	    province : "",
+	    cityid : "",
+	    city : "",
+	    countyid : "",
+	    county : "",
 	    phone : "",
 	    address : "",
 	    useflag : 1,
@@ -195,6 +201,28 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"phone\">"+
 				                "<input type=\"text\" value=\""+d.phone+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item cascade\" cascade=\"1\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">地区</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"cascade-value\">" +
+					            "<div class=\"edit-value\" data-field=\"provinceid\">"+
+					                "<input type=\"text\" data-id=\""+d.provinceid+"\" value=\""+d.province+"\" " +
+					                		"data-url=\"./region/list?grade=1&pagesize=100\" data-grade=\"1\" region=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
+					            "</div>"+
+					            "<div class=\"edit-value\" data-field=\"cityid\">"+
+					                "<input type=\"text\" data-id=\""+d.cityid+"\" value=\""+d.city+"\" " +
+					                		"data-url=\"./region/list?grade=2&pagesize=100\" data-grade=\"2\" region=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
+					            "</div>"+
+					            "<div class=\"edit-value\" data-field=\"countyid\">"+
+					                "<input type=\"text\" data-id=\""+d.countyid+"\" value=\""+d.county+"\" " +
+					                		"data-url=\"./region/list?grade=3&pagesize=100\" data-grade=\"3\" region=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
+					            "</div>" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"0\" key=\"0\">"+

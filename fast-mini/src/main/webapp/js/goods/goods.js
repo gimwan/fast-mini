@@ -276,17 +276,17 @@ function createElement(data) {
 				            "<div class=\"cascade-value\">" +
 					            "<div class=\"edit-value\" data-field=\"bigcategory\">"+
 					                "<input type=\"text\" data-id=\""+d.bigcategory+"\" value=\""+d.bigcategoryname+"\" " +
-					                		"data-url=\"./goodscategory/list?grade=1\" data-grade=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                		"data-url=\"./goodscategory/list?grade=1&pagesize=100\" data-grade=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 					            "</div>"+
 					            "<div class=\"edit-value\" data-field=\"middlecategory\">"+
 					                "<input type=\"text\" data-id=\""+d.middlecategory+"\" value=\""+d.middlecategoryname+"\" " +
-					                		"data-url=\"./goodscategory/list?grade=2\" data-grade=\"2\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                		"data-url=\"./goodscategory/list?grade=2&pagesize=100\" data-grade=\"2\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 					            "</div>"+
 					            "<div class=\"edit-value\" data-field=\"smallcategory\">"+
 					                "<input type=\"text\" data-id=\""+d.smallcategory+"\" value=\""+d.smallcategoryname+"\" " +
-					                		"data-url=\"./goodscategory/list?grade=3\" data-grade=\"3\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                		"data-url=\"./goodscategory/list?grade=3&pagesize=100\" data-grade=\"3\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 					            "</div>" +
 				            "</div>"+

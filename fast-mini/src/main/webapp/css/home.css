@@ -1,31 +1,50 @@
 body {
 	font-size: 14px;
-    font-family: Microsoft YaHei;
+	font-family: Microsoft YaHei;
+}
+
+.layui-layer-content::-webkit-scrollbar {
+	width: 8px;
+	height: 2px;
+	background: #F0F0F0;
+	border-radius: 10px;
+}
+
+.layui-layer-content::-webkit-scrollbar-thumb {
+	display: block;
+	width: 8px;
+	margin: 0 auto;
+	border-radius: 10px;
+	background: #e2e2e2;
+}
+
+.layui-layer .layui-layer-btn {
+	border-top: 1px solid #eee;
 }
 
 .system-name {
-    font-weight: 800;
+	font-weight: 800;
 }
 
 a {
-    color: #01AAED;
+	color: #01AAED;
 }
 
 .home {
-    overflow: auto;
+	overflow: auto;
 }
 
 .home .nav-bar {
-    margin: 6px 15px;
-    line-height: 30px;
+	margin: 6px 15px;
+	line-height: 30px;
 }
 
 .layTable {
-    display: table;
+	display: table;
 }
 
 .layTableCell {
-    display: table-cell;
+	display: table-cell;
 }
 
 .layui-table-cell {
@@ -45,14 +64,14 @@ a {
 }
 
 .layPage {
-    width: 100%;
-    text-align: right;
+	width: 100%;
+	text-align: right;
 }
 
 .layui-carousel-ind ul {
-	background-color: rgba(0,0,0,0);
+	background-color: rgba(0, 0, 0, 0);
 }
 
 .layui-carousel-ind ul:hover {
-	background-color: rgba(0,0,0,0);
+	background-color: rgba(0, 0, 0, 0);
 }

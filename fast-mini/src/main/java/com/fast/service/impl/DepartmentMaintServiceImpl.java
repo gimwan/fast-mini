@@ -1,14 +1,19 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MDepartmentMapper;
+import com.fast.base.data.dao.MRegionMapper;
 import com.fast.base.data.entity.MDepartment;
+import com.fast.base.data.entity.MRegion;
+import com.fast.base.data.entity.MRegionExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IDepartmentMaintService;
@@ -31,6 +36,9 @@ public class DepartmentMaintServiceImpl implements IDepartmentMaintService, Seri
 	
 	@Autowired
 	IDataService iDataService;
+	
+	@Autowired
+	MRegionMapper regionMapper;
 
 	@Override
 	public Result changeDepartment(MDepartment department, MUser user) {
@@ -40,6 +48,7 @@ public class DepartmentMaintServiceImpl implements IDepartmentMaintService, Seri
 			Date now = new Date();
 			MDepartment mDepartment = new MDepartment();
 			department.setUpdatedtime(now);
+			department = completeData(department);
 			if (department.getId() != null) {
 				mDepartment = departmentMapper.selectByPrimaryKey(department.getId());
 				BeanUtil.copyPropertiesIgnoreNull(department, mDepartment);
@@ -80,6 +89,38 @@ public class DepartmentMaintServiceImpl implements IDepartmentMaintService, Seri
 		}
 
 		return result;
+	}
+	
+	public MDepartment completeData(MDepartment department) {
+		List<Integer> idList = new ArrayList<Integer>();
+		if (department.getProvinceid() != null) {
+			idList.add(department.getProvinceid());
+		}
+		if (department.getCityid() != null) {
+			idList.add(department.getCityid());
+		}
+		if (department.getCountyid() != null) {
+			idList.add(department.getCountyid());
+		}
+		if (idList != null && idList.size() > 0) {
+			MRegionExample example = new MRegionExample();
+			example.createCriteria().andIdIn(idList);
+			List<MRegion> list = regionMapper.selectByExample(example);
+			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					if (list.get(i).getId().intValue() == department.getProvinceid().intValue()) {
+						department.setProvince(list.get(i).getName());
+					}
+					if (list.get(i).getId().intValue() == department.getCityid().intValue()) {
+						department.setCity(list.get(i).getName());
+					}
+					if (list.get(i).getId().intValue() == department.getCountyid().intValue()) {
+						department.setCounty(list.get(i).getName());
+					}
+				}
+			}
+		}
+		return department;
 	}
 
 	@Override
