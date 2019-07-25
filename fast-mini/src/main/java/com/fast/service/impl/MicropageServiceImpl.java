@@ -23,6 +23,7 @@ import com.fast.base.data.dao.MMicropagesetdtlMapper;
 import com.fast.base.data.dao.MPublicplatformMapper;
 import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodscategory;
+import com.fast.base.data.entity.MGoodscategoryExample;
 import com.fast.base.data.entity.MGoodsgrouping;
 import com.fast.base.data.entity.MMicropage;
 import com.fast.base.data.entity.MMicropageExample;
@@ -277,6 +278,9 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 									Integer point = 0;
 									Byte type = 1;
 									String category = "";
+									String categoryone = "";
+									String categorytwo = "";
+									String categorythree = "";
 									List<LinkedHashMap<String, Object>> subList = new ArrayList<>();
 									if (!Common.isEmpty(first)) {
 										// 分组
@@ -284,12 +288,21 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 											MGoodsgrouping goodsgrouping = goodsgroupingMapper.selectByPrimaryKey(Integer.valueOf(first));
 											if (goodsgrouping != null && goodsgrouping.getId() > 0) {
 												grouping = goodsgrouping.getName();
-											}
-											/*for (int k = 0; k < goodsgroupings.size(); k++) {
-												if (first.equals(goodsgroupings.get(k).getId().toString())) {	
-													grouping = goodsgroupings.get(k).getName();
+												sql = "select top 4 * from m_goods where useflag=1 and id in (select goodsid from m_goodsingroup where groupingid="+goodsgrouping.getId()+") order by id";
+												List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
+												goodsList = CommonUtil.transformUpperCase(goodsList);
+												for (int k = 0; k < goodsList.size(); k++) {
+													LinkedHashMap<String, Object> goodsMap = goodsList.get(k);
+													LinkedHashMap<String, Object> newMap = new LinkedHashMap<>();
+													newMap.put("id", goodsMap.get("id"));
+													newMap.put("name", goodsMap.get("name") == null ? "" : goodsMap.get("name"));
+													newMap.put("photourl", goodsMap.get("photourl") == null ? "" : goodsMap.get("photourl"));
+													newMap.put("price", goodsMap.get("price") == null ? 0 : goodsMap.get("price"));
+													newMap.put("point", goodsMap.get("exchangepoint") == null ? 0 : goodsMap.get("exchangepoint"));
+													newMap.put("kind", goodsMap.get("kind") == null ? 1 : goodsMap.get("kind"));
+													subList.add(newMap);
 												}
-											}*/
+											}
 										}
 										// 分类
 										else if ("8".equals(kind)) {
@@ -297,7 +310,8 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(third));
 												if (goodscategory != null && goodscategory.getId() > 0) {
 													category = goodscategory.getName();
-													sql = "select top 4 * from m_goods where smallcategory="+third+" order by id";
+													categorythree = goodscategory.getName();
+													sql = "select top 4 * from m_goods where useflag=1 and smallcategory="+goodscategory.getId()+" order by id";
 													List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
 													goodsList = CommonUtil.transformUpperCase(goodsList);
 													for (int k = 0; k < goodsList.size(); k++) {
@@ -312,17 +326,27 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 														subList.add(newMap);
 													}
 												}
-												/*for (int k = 0; k < smallCategories.size(); k++) {
-													if (third.equals(smallCategories.get(k).getId().toString())) {
-														category = smallCategories.get(k).getName();
+												List<Integer> idList = new ArrayList<>();
+												idList.add(Integer.valueOf(first));
+												idList.add(Integer.valueOf(second));
+												MGoodscategoryExample example = new MGoodscategoryExample();
+												example.createCriteria().andIdIn(idList);
+												List<MGoodscategory> goodscategories = goodscategoryMapper.selectByExample(example);
+												for (int k = 0; k < goodscategories.size(); k++) {
+													if (first.trim().equals(goodscategories.get(k).getId().toString())) {
+														categoryone = goodscategories.get(k).getName();
 													}
-												}*/
+													if (second.trim().equals(goodscategories.get(k).getId().toString())) {
+														categorytwo = goodscategories.get(k).getName();
+													}
+												}
 											}
 											if (!Common.isEmpty(second) && Common.isEmpty(category)) {
 												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(second));
 												if (goodscategory != null && goodscategory.getId() > 0) {
 													category = goodscategory.getName();
-													sql = "select top 4 * from m_goods where middlecategory="+second+" order by id";
+													categorytwo = goodscategory.getName();
+													sql = "select top 4 * from m_goods where useflag=1 and middlecategory="+goodscategory.getId()+" order by id";
 													List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
 													goodsList = CommonUtil.transformUpperCase(goodsList);
 													for (int k = 0; k < goodsList.size(); k++) {
@@ -337,17 +361,18 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 														subList.add(newMap);
 													}
 												}
-												/*for (int k = 0; k < middleCategories.size(); k++) {
-													if (second.equals(middleCategories.get(k).getId().toString())) {
-														category = middleCategories.get(k).getName();
-													}
-												}*/
+												goodscategory = new MGoodscategory();
+												goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(first));
+												if (goodscategory != null && goodscategory.getId() > 0) {
+													categoryone = goodscategory.getName();
+												}
 											}
 											if (!Common.isEmpty(first) && Common.isEmpty(category)) {
 												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(first));
 												if (goodscategory != null && goodscategory.getId() > 0) {
 													category = goodscategory.getName();
-													sql = "select top 4 * from m_goods where bigcategory="+first+" order by id";
+													categoryone = goodscategory.getName();
+													sql = "select top 4 * from m_goods where useflag=1 and bigcategory="+goodscategory.getId()+" order by id";
 													List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
 													goodsList = CommonUtil.transformUpperCase(goodsList);
 													for (int k = 0; k < goodsList.size(); k++) {
@@ -362,11 +387,6 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 														subList.add(newMap);
 													}
 												}
-												/*for (int k = 0; k < bigCategories.size(); k++) {
-													if (first.equals(bigCategories.get(k).getId().toString())) {
-														category = bigCategories.get(k).getName();
-													}
-												}*/
 											}
 										}
 										// 商品
@@ -379,14 +399,6 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												type = goods.getKind() == null ? 1 : goods.getKind();
 												setDtlList.get(j).put("photourl", goods.getPhotourl() == null ? "" : goods.getPhotourl());
 											}
-											/*for (int k = 0; k < goodsList.size(); k++) {
-												if (first.equals(goodsList.get(k).get("id").toString())) {
-													goodsname = goodsList.get(k).get("name") == null ? "" : goodsList.get(k).get("name").toString();
-													price = goodsList.get(k).get("price") == null ? "0" : goodsList.get(k).get("price").toString();
-													point = goodsList.get(k).get("point") == null ? "0" : goodsList.get(k).get("point").toString();
-													type = goodsList.get(k).get("kind") == null ? "1" : goodsList.get(k).get("kind").toString();
-												}
-											}*/
 										}
 									}
 									setDtlList.get(j).put("grouping", grouping);
@@ -396,6 +408,9 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 									setDtlList.get(j).put("point", point);
 									setDtlList.get(j).put("type", type);
 									setDtlList.get(j).put("list", subList);
+									setDtlList.get(j).put("categoryone", categoryone);
+									setDtlList.get(j).put("categorytwo", categorytwo);
+									setDtlList.get(j).put("categorythree", categorythree);
 									dtlList.add(setDtlList.get(j));
 								}
 							}

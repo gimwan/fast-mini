@@ -62,6 +62,31 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 
 		return result;
 	}
+	
+	@Override
+	public Result topFour(Integer id, Integer type, Integer orderBy) {
+		Result result = new Result();
+
+		try {
+			String sql = "select top 4 * from m_goods where useflag=1 ";
+			if (type.intValue() == 1) {
+				sql += "and (bigcategory="+id+" or middlecategory="+id+" or smallcategory="+id+")";
+			} else if (type.intValue() == 2) {
+				sql += "and id in (select goodsid from m_goodsingroup where groupingid="+id+")";
+			}
+			
+			List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
+			goodsList = CommonUtil.transformUpperCase(goodsList);
+			
+			result.setData(goodsList);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsServiceImpl.topFour报错：", e);
+		}
+
+		return result;
+	}
 
 	@Override
 	public Result goodsDetail(Integer id, String openid, String appid) {

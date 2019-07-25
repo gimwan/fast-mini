@@ -44,29 +44,13 @@
 								<div class="tab" v-for="(dt, index) in d.detail">{{dt.grouping}}</div>
 							</div>
 							<div class="group-list">
-								<div class="goods">
+								<div class="goods" v-for="(l, idx) in d.detail[0].list">
 									<div class="goodsimg">
-										<img alt="" src="" onerror="defaultImg(this)">
+										<img v-bind:src="l.photourl" onerror="defaultImg(this)">
 									</div>
 									<div class="goodsinfo">
-										<div class="">商品名称</div>
-										<div class="">¥199.00</div>
-									</div>
-								</div><div class="goods">
-									<div class="goodsimg">
-										<img alt="" src="https://next.fuxi.com/images/microformfiles/2019-07-14-18-233426.jpg" onerror="defaultImg(this)">
-									</div>
-									<div class="goodsinfo">
-										<div class="">商品名称商品名称商品名称商品名称商品名称</div>
-										<div class="">¥199.00</div>
-									</div>
-								</div><div class="goods">
-									<div class="goodsimg">
-										<img alt="" src="https://wx2.sinaimg.cn/wap720/8c803935ly1fu3tsffel1j21120kun2u.jpg" onerror="defaultImg(this)">
-									</div>
-									<div class="goodsinfo">
-										<div class="">商品名称</div>
-										<div class="">¥199.00</div>
+										<div class="">{{l.name}}</div>
+										<div class="">{{l.kind==1?'¥'+l.price:l.point+'分'}}</div>
 									</div>
 								</div>
 							</div>
@@ -76,29 +60,26 @@
 								<div class="tab" v-for="(dt, index) in d.detail">{{dt.category}}</div>
 							</div>
 							<div class="classify-list">
-								<div class="goods">
+								<div class="goods" v-for="(l, idx) in d.detail[0].list">
 									<div class="goodsimg">
-										<img alt="" src="" onerror="defaultImg(this)">
+										<img v-bind:src="l.photourl" onerror="defaultImg(this)">
 									</div>
 									<div class="goodsinfo">
-										<div class="">商品名称</div>
-										<div class="">¥199.00</div>
+										<div class="">{{l.name}}</div>
+										<div class="">{{l.kind==1?'¥'+l.price:l.point+'分'}}</div>
 									</div>
-								</div><div class="goods">
+								</div>
+							</div>
+						</div>
+						<div class="layui-classify" v-else-if="d.kind == 9">
+							<div class="classify-list">
+								<div class="goods" v-for="(dt, index in d.detail">
 									<div class="goodsimg">
-										<img alt="" src="https://next.fuxi.com/images/microformfiles/2019-07-14-18-233426.jpg" onerror="defaultImg(this)">
+										<img v-bind:src="dt.photourl" onerror="defaultImg(this)">
 									</div>
 									<div class="goodsinfo">
-										<div class="">商品名称商品名称商品名称商品名称商品名称</div>
-										<div class="">¥199.00</div>
-									</div>
-								</div><div class="goods">
-									<div class="goodsimg">
-										<img alt="" src="https://wx2.sinaimg.cn/wap720/8c803935ly1fu3tsffel1j21120kun2u.jpg" onerror="defaultImg(this)">
-									</div>
-									<div class="goodsinfo">
-										<div class="">商品名称</div>
-										<div class="">¥199.00</div>
+										<div class="">{{dt.goodsname}}</div>
+										<div class="">{{dt.type==1?'¥'+dt.price:dt.point+'分'}}</div>
 									</div>
 								</div>
 							</div>
@@ -113,7 +94,7 @@
 			<div class="editBox">
 				<div class="editItem" v-for="(e, index) in editdata" v-bind:data-index="index" v-bind:key="e.id">
 					<!-- 广告 -->
-					<div class="layTable uploadField ad" v-if="e.kind == 1 && e.choose == 1" v-for="(dt, i in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+					<div class="layTable uploadField ad" v-if="e.kind == 1 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
 						<div class="uploadBox">
 							<div class="layui-upload-drag layTableCell">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
@@ -197,7 +178,7 @@
 						</form>
 					</div>
 					<!-- 导航 -->
-					<div class="layTable uploadField ad" v-if="e.kind == 3 && e.choose == 1" v-for="(dt, i in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+					<div class="layTable uploadField ad" v-if="e.kind == 3 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
 						<div class="uploadBox">
 							<div class="layui-upload-drag layTableCell">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
@@ -380,50 +361,65 @@
 					<!-- 商品分类 -->
 					<div class="category" v-if="e.kind == 8 && e.choose == 1">
 						<form class="layui-form">
-						    <div class="selectBlock">
+						    <div class="selectBlock cascade" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
 								<label class="layui-form-label layui-inline selectTitle">商品分类：</label>
-								<div class="layui-input-inline selectBox cascadeSelect">
-									<select>
-										<option value="" selected="">请选择</option>
-										<option value="1">上衣</option>
-										<option value="2">裤子</option>
-										<option value="3">鞋子</option>
-										<option value="4">箱包</option>
-									</select>
-									<div class="layui-unselect layui-form-select">
-										<div class="layui-select-title">
-											<input type="text" placeholder="请选择" class="layui-input layui-unselect"> 
-											<i class="layui-edge"></i>
-										</div>
-										<dl class="layui-anim layui-anim-upbit" style="">
-											<dd lay-value="" class="layui-select-tips">请选择</dd>
-											<dd lay-value="1" class="">上衣</dd>
-											<dd lay-value="2" class="">裤子</dd>
-											<dd lay-value="3" class="">鞋子</dd>
-											<dd lay-value="4" class="">箱包</dd>
-										</dl>
+								<div class="cascade-value">
+									<div class="edit-value" data-field="bigcategory">
+										<input type="text" v-bind:data-id="dt.first"
+											v-bind:value="dt.categoryone"
+											data-url="./goodscategory/list?grade=1&pagesize=100"
+											data-grade="1" class="layui-input value"
+											readonly="readonly" v-bind:data-pindex="index"
+											v-bind:data-index="0" onchange="saveFirst(this)">
+									</div>
+									<div class="edit-value" data-field="middlecategory">
+										<input type="text" v-bind:data-id="dt.second"
+											v-bind:value="dt.categorytwo"
+											data-url="./goodscategory/list?grade=2&pagesize=100"
+											data-grade="2" class="layui-input value"
+											readonly="readonly" v-bind:data-pindex="index"
+											v-bind:data-index="0" onchange="saveSecond(this)">
+									</div>
+									<div class="edit-value" data-field="smallcategory">
+										<input type="text" v-bind:data-id="dt.third"
+											v-bind:value="dt.categorythree"
+											data-url="./goodscategory/list?grade=3&pagesize=100"
+											data-grade="3" class="layui-input value"
+											readonly="readonly" v-bind:data-pindex="index"
+											v-bind:data-index="0" onchange="saveThird(this)">
 									</div>
 								</div>
-								<div class="layui-input-inline selectBox cascadeSelect">
-									<select>
-										<option value="" selected="">请选择</option>
-										<option value="1">卫衣</option>
-										<option value="2">T恤</option>
-										<option value="3">长裤</option>
-										<option value="4">短裤</option>
-									</select>
-									<div class="layui-unselect layui-form-select">
-										<div class="layui-select-title">
-											<input type="text" placeholder="请选择" class="layui-input layui-unselect"> 
-											<i class="layui-edge"></i>
+							</div>
+						</form>
+					</div>
+					<!-- 商品分组 -->
+					<div class="group" v-if="e.kind == 7 && e.choose == 1">
+						<form class="layui-form">
+						    <div class="selectBlock popup" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+								<label class="layui-form-label layui-inline selectTitle">商品分组：</label>
+								<div class="group-value">
+									<div class="edit-title" style="display:none;"><span class="name">商品分组</span></div>
+									<input type="text" v-bind:data-id="dt.first" v-bind:value="dt.grouping"
+											data-url="./data/page?table=goodsgrouping"
+											class="layui-input value" readonly="readonly"
+											onchange="saveGrouping(this)" v-bind:data-pindex="index"
+											v-bind:data-index="i">
+								</div>
+							</div>
+						</form>
+					</div>
+					<!-- 商品 -->
+					<div class="goods" v-if="e.kind == 9 && e.choose == 1">
+						<form class="layui-form">
+						    <div class="selectBlock popup">
+								<label class="layui-form-label layui-inline selectTitle">商品：</label>
+								<div class="goodsBox">
+									<div class="uploadBox" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+										<div class="layui-upload-drag layTableCell">
+											<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
+											<i class="layui-icon" v-else></i>
 										</div>
-										<dl class="layui-anim layui-anim-upbit" style="">
-											<dd lay-value="" class="layui-select-tips">请选择</dd>
-											<dd lay-value="1" class="">卫衣</dd>
-											<dd lay-value="2" class="">T恤</dd>
-											<dd lay-value="3" class="">长裤</dd>
-											<dd lay-value="4" class="">短裤</dd>
-										</dl>
+										<i class="layui-icon layui-icon-delete"></i>
 									</div>
 								</div>
 							</div>
