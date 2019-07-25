@@ -16,14 +16,6 @@
 				v-on:click="add">
 				<i class="layui-icon"></i>
 			</button>
-			<!-- <button class="layui-btn layui-btn-sm del" title="删除"
-				v-on:click="del">
-				<i class="layui-icon"></i>
-			</button>
-			<button class="layui-btn layui-btn-sm set" title="配置"
-				v-on:click="set">
-				<i class="layui-icon">&#xe716;</i>
-			</button> -->
 		</div>
 	     
 	     <div class="selectView publicPlatform" >
@@ -118,7 +110,7 @@
 							<table cellspacing="0" cellpadding="0" border="0"
 								class="layui-table">
 								<tbody>
-									<tr v-bind:data-id="m.id" v-bind:data-index="index" class="" v-for="(m, index) in micro">
+									<tr v-bind:data-id="m.id" v-bind:data-name="m.name" v-bind:data-index="index" class="" v-for="(m, index) in micro">
 										<td class="item code">
 											<div class="layui-table-cell laytable-cell-1-0-0">
 											<a href="javascript:void(0);" v-on:click="edit">{{m.code}}</a>

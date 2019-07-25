@@ -1,122 +1,9 @@
-let menu = [
-    {
-        name: '系统管理 ',
-        link: '',
-        sub: [
-            {
-                name: '参数',
-                link: 'config'
-            },
-            {
-                name: '角色',
-                link: 'role'
-            },
-            {
-                name: '用户',
-                link: 'user'
-            }
-        ]
-    },
-    {
-        name: '资料管理 ',
-        link: '',
-        sub: [
-            {
-                name: '门店',
-                link: 'department'
-            },
-            {
-                name: '员工 ',
-                link: 'employee'
-            }
-        ]
-    },
-    {
-    	name: '商品管理 ',
-        link: '',
-        sub: [
-        	{
-                name: '颜色',
-                link: 'color'
-            },
-            {
-                name: '版型',
-                link: 'pattern'
-            },
-            {
-                name: '尺码',
-                link: 'size'
-            },
-            {
-                name: '品牌',
-                link: 'brand'
-            },
-            {
-                name: '分类',
-                link: 'goodscategory'
-            },
-            {
-                name: '分组',
-                link: 'goodsgrouping'
-            },
-            {
-                name: '商品',
-                link: 'goods'
-            }
-        ]
-    },
-    {
-        name: '会员管理 ',
-        link: '',
-        sub: [
-            {
-                name: '等级',
-                link: 'viptype'
-            },
-            {
-                name: '会员',
-                link: 'vip'
-            },
-            {
-                name: '优惠券',
-                link: 'coupon'
-            }
-        ]
-    },
-    {
-        name: '订单管理 ',
-        link: '',
-        sub: [
-            {
-                name: '订单',
-                link: 'order'
-            }
-        ]
-    },
-    {
-        name: '应用管理 ',
-        link: '',
-        sub: [
-            {
-                name: '公众号 ',
-                link: 'publicplatform'
-            },
-            {
-                name: '小程序',
-                link: 'miniprogram'
-            },
-            {
-                name: '微页面',
-                link: 'micropage'
-            }
-        ]
-    }
-]
-
+let menu = [];
 let menuVm;
+
 document.onreadystatechange = function() {
     if(document.readyState == "interactive"){
-        menuVm = new Vue({
+    	menuVm = new Vue({
 			el : ".layui-nav-tree",
 			data : {
                 menu: menu
@@ -174,7 +61,7 @@ document.onreadystatechange = function() {
             	        	let name = $(layero).find(".layui-layer-content .selected .name").html();
             	        	if (id != null && id != undefined && $.trim(id) != "") {
             	        		$(".popup .popuped").attr("data-id",id);
-            	        		$(".popup .popuped").val(name);
+            	        		$(".popup .popuped").val(name).change();
             	        		$(".popup .popuped").removeClass("popuped");
         					}
             	        	layer.close(index);
@@ -214,14 +101,14 @@ document.onreadystatechange = function() {
     			let id = $(this).data("id");
         		let name = $(this).find(".name").html();
         		$(".popup .popuped").attr("data-id",id);
-        		$(".popup .popuped").val(name);
+        		$(".popup .popuped").val(name).change();
         		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
         		$(".popup .popuped").removeClass("popuped");
     		}
     	});
     	
     	// 弹窗选择（级联）
-    	$("body").on("click", ".edit-view .edit-box .cascade input", function () {
+    	$("body").on("click", ".cascade input", function () {
     		let grade = $(this).attr("data-grade");
     		let region = $(this).attr("region");
     		let title = "大类";
@@ -243,7 +130,7 @@ document.onreadystatechange = function() {
 				common.warn(parentMsg);
 				return false;
 			}
-    		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
+    		$(".cascade .cascadeed").removeClass("cascadeed");
     		$(this).addClass("cascadeed");
     		let url = $(this).attr("data-url");
     		common.showLoading();
@@ -260,11 +147,11 @@ document.onreadystatechange = function() {
             	        	let id = $(layero).find(".layui-layer-content .selected").attr("data-id");
             	        	let name = $(layero).find(".layui-layer-content .selected .name").html();
             	        	if (id != null && id != undefined && $.trim(id) != "") {
-            	        		$(".edit-view .edit-box .cascade .cascadeed").attr("data-id",id);
-            	        		$(".edit-view .edit-box .cascade .cascadeed").val(name);
-            	        		checkCascade($(".edit-view .edit-box .cascade .cascadeed"));
+            	        		$(".cascade .cascadeed").attr("data-id",id);
+            	        		$(".cascade .cascadeed").val(name).change();
+            	        		checkCascade($(".cascade .cascadeed"));
         					}
-            	        	$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
+            	        	$(".cascade .cascadeed").removeClass("cascadeed");
             	        	changeCascadeUrl();
             	        	layer.close(index);
             	        },
@@ -276,7 +163,7 @@ document.onreadystatechange = function() {
             	        	$(layero).find(".layui-layer-content").append(selectOption);
             	        },
             	        cancel: function(){
-            	        	$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
+            	        	$(".cascade .cascadeed").removeClass("cascadeed");
             	        }
             		});
     			} else {
@@ -293,11 +180,11 @@ document.onreadystatechange = function() {
     		if (isCascade) {
     			let id = $(this).data("id");
         		let name = $(this).find(".name").html();
-        		$(".edit-view .edit-box .cascade .cascadeed").attr("data-id",id);
-        		$(".edit-view .edit-box .cascade .cascadeed").val(name);
-        		checkCascade($(".edit-view .edit-box .cascade .cascadeed"));
+        		$(".cascade .cascadeed").attr("data-id",id);
+        		$(".cascade .cascadeed").val(name).change();
+        		checkCascade($(".cascade .cascadeed"));
         		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
-        		$(".edit-view .edit-box .cascade .cascadeed").removeClass("cascadeed");
+        		$(".cascade .cascadeed").removeClass("cascadeed");
         		changeCascadeUrl();
 			}
     	});
@@ -313,6 +200,20 @@ document.onreadystatechange = function() {
     	$("img").bind("error",function () {
     		console.log("img error");
     	});
+    	
+    	api.load(basePath + 'home/menu','post',{},function (result) {
+        	if (result.errcode == 0) {
+        		let data = result.data;
+        		for (let i = 0; i < data.length; i++) {
+        			menu.push(data[i]);
+                }
+        	} else {
+                common.error('数据加载失败');
+            }
+        	setTimeout(() => {
+            	layuiElement.render();
+			}, 100);
+        });
     }
 }
 
@@ -322,7 +223,7 @@ function checkCascade(obj) {
 		let thisGrade = $(this).find(".value").attr("data-grade");
 		if (thisGrade > grade) {
 			$(this).find(".value").attr("data-id", "");
-			$(this).find(".value").val("");
+			$(this).find(".value").val("").change();
 		}
 	});
 }
@@ -351,7 +252,7 @@ function changeCascadeUrl() {
 	let bigCategoryID = "";
 	let middleCategoryID = "";
 	let smallCategoryID = "";
-	$(".edit-view .edit-box .cascade input").each(function() {
+	$(".cascade input").each(function() {
 		let grade = $(this).attr("data-grade");
 		if (grade == 1) {
 			bigCategoryID = $(this).attr("data-id");
@@ -362,7 +263,7 @@ function changeCascadeUrl() {
 		}
 	});
 	
-	$(".edit-view .edit-box .cascade input").each(function() {
+	$(".cascade input").each(function() {
 		let grade = $(this).attr("data-grade");
 		let region = $(this).attr("region");
 		if (grade == 2) {

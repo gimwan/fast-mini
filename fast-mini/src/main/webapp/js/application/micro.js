@@ -19,36 +19,24 @@ common.bindVue = function() {
             },
             set: function(event) {
             	if (event) {
-                    let id = $(event.target).parents("tr").data("id");
+                    let id = $(event.target).parents("tr").attr("data-id");
+                    let name = $(event.target).parents("tr").attr("data-name");
                     let deleteIndex = $(event.target).parents("tr").data("index");
                     let url = "./micropage/micropage?id="+id;
-                	//url = $("base").attr("href") + url;
                     layer.open({
                     	type: 1,
-                    	title: 'a',
-                    	//content: url,
-                        area: ['1200px', '800px'],
+                    	title: name,
+                        area: ['1300px', '800px'],
             	        success: function (layero, index) {
             	        	let data = {};
                         	data.id = id;
             	        	common.showLoading();
-            	        	$(layero).load(url, data,function(){
+            	        	$(layero).find(".layui-layer-content").load(url, data,function(){
         	                    common.closeLoading();
         	                    common.bindVue();
         	                });
             	        }
                 	});
-                	/*let data = {};
-                	data.id = id;
-    	            try {
-    	                common.showLoading();
-    	                $(".layui-body").load(url, data,function(){
-    	                    common.closeLoading();
-    	                    common.bindVue();
-    	                });
-    	            } catch (error) {
-    	                console.log(error);
-    	            }*/
             	}
 			},
             del: function (event) {

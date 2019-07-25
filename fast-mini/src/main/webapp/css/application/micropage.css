@@ -5,6 +5,7 @@
 .microPage .configureView {
 	display: table;
 	/*width: 100%;*/
+	padding-top: 30px;
 }
 
 .microPage .configureView .configurePanel {
@@ -238,7 +239,8 @@
 	overflow: visible;
 }
 
-.middlePanel .phoneBox .editView .setItem .layui-group,.middlePanel .phoneBox .editView .setItem .layui-classify {
+.middlePanel .phoneBox .editView .setItem .layui-group, .middlePanel .phoneBox .editView .setItem .layui-classify
+	{
 	height: auto !important;
 }
 
@@ -258,7 +260,7 @@
 }
 
 .microPage .configureView .rightPanel .editBox .editItem {
-	width: 400px;
+	width: 500px;
 }
 
 .microPage .configureView .rightPanel .editBox .editItem .ad {
@@ -267,6 +269,7 @@
 
 .microPage .configureView .rightPanel .editBox .editItem .uploadBox {
 	position: relative;
+	width: 150px;
 }
 
 .microPage .configureView .rightPanel .editBox .editItem .selectTitle {
@@ -397,4 +400,36 @@
 	font-size: 20px;
 	display: none;
 	z-index: 99;
+}
+
+.microPage .configureView .middlePanel .phoneBox .editView {
+	display: none;
+}
+
+.rightPanel .editBox {
+	display: none;
+}
+
+.layui-layer-title {
+	font-weight: bold;
+}
+
+.rightPanel .editBox .layui-form-item .layui-input-inline {
+	width : 290px;
+}
+
+.rightPanel .editBox .cascade input {
+	padding-right: 10px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .columntitle .selectTitle {
+	padding-left: 0px;
+}
+
+.microPage .configureView .rightPanel .editBox .editItem .columntitle .selectBox {
+	    margin-left: 0px;
+}
+
+.rightPanel .editBox .columntitle .layui-form-item .layui-input-inline {
+	width: 360px;
 }
