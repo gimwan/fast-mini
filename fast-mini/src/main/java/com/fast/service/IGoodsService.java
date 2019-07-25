@@ -16,6 +16,15 @@ public interface IGoodsService {
 	public Result goods();
 	
 	/**
+	 * 根据条件查询前4款商品
+	 * @param id  对应类型的id
+	 * @param type  1分类 2分组
+	 * @param orderBy 排序条件
+	 * @return
+	 */
+	public Result topFour(Integer id, Integer type, Integer orderBy);
+	
+	/**
 	 * 商品详情
 	 * @param id  商品id
 	 * @param openid  会员openid
@@ -37,5 +46,14 @@ public interface IGoodsService {
 	 * @return
 	 */
 	public Result goodsSKU(Integer goodsid);
+	
+	/**
+	 * 查询商品库存
+	 * @param goodsid
+	 * @param appid
+	 * @param openid
+	 * @return
+	 */
+	public Result queryGoodsStock(Integer goodsid, String appid, String openid);
 
 }

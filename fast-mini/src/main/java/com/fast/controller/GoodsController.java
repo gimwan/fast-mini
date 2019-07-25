@@ -65,6 +65,38 @@ public class GoodsController {
 	}
 	
 	/**
+	 * 按条件获取前4款商品
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/topfour")
+	@ResponseBody
+	public String topfour(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String type = request.getParameter("type");
+			String orderby = request.getParameter("orderby");
+			String id = request.getParameter("id");
+			if (Common.isEmpty(type)) {
+				type = "1";
+			}
+			if (Common.isEmpty(orderby)) {
+				orderby = "1";
+			}
+			Result result = iGoodsService.topFour(Integer.valueOf(id.trim()), Integer.valueOf(type), Integer.valueOf(orderby));
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
 	 * 修改商品
 	 * @param request
 	 * @param response

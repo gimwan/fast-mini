@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -58,6 +59,31 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用GoodsServiceImpl.goods报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result topFour(Integer id, Integer type, Integer orderBy) {
+		Result result = new Result();
+
+		try {
+			String sql = "select top 4 * from m_goods where useflag=1 ";
+			if (type.intValue() == 1) {
+				sql += "and (bigcategory="+id+" or middlecategory="+id+" or smallcategory="+id+")";
+			} else if (type.intValue() == 2) {
+				sql += "and id in (select goodsid from m_goodsingroup where groupingid="+id+")";
+			}
+			
+			List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
+			goodsList = CommonUtil.transformUpperCase(goodsList);
+			
+			result.setData(goodsList);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsServiceImpl.topFour报错：", e);
 		}
 
 		return result;
@@ -198,6 +224,119 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用GoodsServiceImpl.goodsSKU报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryGoodsStock(Integer goodsid, String appid, String openid) {
+		Result result = new Result();
+
+		try {
+			MGoods goods = goodsMapper.selectByPrimaryKey(goodsid);
+			if (goods != null && goods.getId() != null) {
+				HashMap<String, Object> map = new HashMap<>();
+				map.put("goodsid", goods.getId());
+				map.put("goodsname", goods.getName() == null ? "" : goods.getName());
+				map.put("price", goods.getPrice() == null ? BigDecimal.ZERO : goods.getPrice());
+				map.put("point", goods.getExchangepoint() == null ? 0 : goods.getExchangepoint());
+				map.put("imageurl", goods.getPhotourl() == null ? "" : goods.getPhotourl());
+				map.put("showcolor", goods.getShowcolor() == null ? 1 : goods.getShowcolor());
+				map.put("showpattern", goods.getShowpattern() == null ? 1 : goods.getShowpattern());
+				map.put("showsize", goods.getShowsize() == null ? 1 : goods.getShowsize());
+				map.put("atlist", goods.getOnsale() == null ? 1 : goods.getOnsale());
+				map.put("kind", goods.getKind() == null ? 1 : goods.getKind());
+				map.put("saleonweb", goods.getOnlyshow() == null ? 0 : goods.getOnlyshow());
+				
+				String sql = "select a.*,b.name as color,c.name as pattern,d.name as size "
+						+ "from m_goodssku a "
+						+ "left join m_color b on a.colorid=b.id "
+						+ "left join m_pattern c on a.patternid=c.id "
+						+ "left join m_size d on a.sizeid=d.id "
+						+ "where a.goodsid=" + goods.getId();
+				List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+				list = CommonUtil.transformUpperCase(list);
+				List<HashMap<String, Object>> stockList = new ArrayList<>();
+				List<HashMap<String, Object>> colorList = new ArrayList<>();
+				List<HashMap<String, Object>> patternList = new ArrayList<>();
+				List<HashMap<String, Object>> sizeList = new ArrayList<>();
+				for (int i = 0; i < list.size(); i++) {
+					// 颜色
+					HashMap<String, Object> color = new HashMap<>();
+					boolean canAdd = true;
+					if (colorList.size() > 0) {
+						for (int j = 0; j < colorList.size(); j++) {
+							if (colorList.get(j).get("id").toString().equals(list.get(i).get("colorid").toString())) {
+								canAdd = false;
+								break;
+							}
+						}
+					}
+					if (canAdd) {
+						color.put("id", list.get(i).get("colorid"));
+						color.put("name", list.get(i).get("color"));
+						colorList.add(color);
+					}
+					// 版型
+					HashMap<String, Object> pattern = new HashMap<>();
+					canAdd = true;
+					if (patternList.size() > 0) {
+						for (int j = 0; j < patternList.size(); j++) {
+							if (patternList.get(j).get("id").toString().equals(list.get(i).get("patternid").toString())) {
+								canAdd = false;
+								break;
+							}
+						}
+					}
+					if (canAdd) {
+						pattern.put("id", list.get(i).get("patternid"));
+						pattern.put("name", list.get(i).get("pattern"));
+						patternList.add(pattern);
+					}
+					// 尺码
+					HashMap<String, Object> size = new HashMap<>();
+					canAdd = true;
+					if (sizeList.size() > 0) {
+						for (int j = 0; j < sizeList.size(); j++) {
+							if (sizeList.get(j).get("id").toString().equals(list.get(i).get("sizeid").toString())) {
+								canAdd = false;
+								break;
+							}
+						}
+					}
+					if (canAdd) {
+						size.put("id", list.get(i).get("sizeid"));
+						size.put("name", list.get(i).get("size"));
+						sizeList.add(size);
+					}					
+					//库存
+					HashMap<String, Object> stock = new HashMap<>();
+					stock.put("id", list.get(i).get("id"));
+					stock.put("goodsid", list.get(i).get("goodsid"));
+					stock.put("colorid", list.get(i).get("colorid"));
+					stock.put("patternid", list.get(i).get("patternid"));
+					stock.put("sizeid", list.get(i).get("sizeid"));
+					stock.put("baseprice", goods.getBaseprice() == null ? BigDecimal.ZERO : goods.getBaseprice());
+					stock.put("price", goods.getPrice() == null ? BigDecimal.ZERO : goods.getPrice());
+					stock.put("point", goods.getExchangepoint() == null ? 0 : goods.getExchangepoint());
+					stock.put("quantity", list.get(i).get("quantity"));
+					stockList.add(stock);
+				}
+				HashMap<String, Object> speclist = new HashMap<>();
+				speclist.put("color", colorList);
+				speclist.put("pattern", patternList);
+				speclist.put("size", sizeList);
+				map.put("speclist", speclist);
+				
+				map.put("stocklist", stockList);
+				result.setData(map);
+				result.setErrcode(Integer.valueOf(0));
+				result.setId(goods.getId());
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsServiceImpl.queryGoodsStock报错：", e);
 		}
 
 		return result;

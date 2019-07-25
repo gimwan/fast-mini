@@ -129,6 +129,8 @@ function showEditBox(idx,data) {
         success: function () {
         	// 重新刷新form
         	layuiForm.render();
+        	// 初始化上传
+        	configUpload();
             var val = $(".edit-view .focus").val();
             $(".edit-view .focus").val("").focus().val(val);
         }
@@ -171,7 +173,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">头像</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"photourl\">"+
-				                "<img src=\""+d.photourl+"\" onerror=\"defaultImg(this)\" class=\"layui-circle-img circular value\"/>"+
+				                "<img src=\""+d.photourl+"\" onerror=\"defaultImg(this)\" class=\"layui-circle-img layui-upload-drag circular value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -240,4 +242,24 @@ function createElement(data) {
 				    "</div>"+
 				"</div>";
 	return element;
+}
+
+function configUpload() {
+	layuiUpload.render({
+	    elem: '.layui-upload-drag',
+	    url: './upload/field/platform',
+	    size: 1024,
+	    multiple: false,
+	    done: function(res, index, upload){
+	    	// 上传完毕回调
+	    	var item = this.item;
+	    	$(item).attr("src",res.data);
+	    },
+	    error: function(res, index){
+	    	// 请求异常回调
+	    	console.log(res);
+	    	console.log(index);
+	    	configAssembly();
+	    }
+	});
 }
