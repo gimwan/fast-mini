@@ -36,6 +36,8 @@ public class MViptype implements Serializable {
 
     private BigDecimal birthdaydiscount;
 
+    private Integer pointrate;
+
     public Integer getId() {
         return id;
     }
@@ -146,5 +148,13 @@ public class MViptype implements Serializable {
 
     public void setBirthdaydiscount(BigDecimal birthdaydiscount) {
         this.birthdaydiscount = birthdaydiscount;
+    }
+
+    public Integer getPointrate() {
+        return pointrate;
+    }
+
+    public void setPointrate(Integer pointrate) {
+        this.pointrate = pointrate;
     }
 }

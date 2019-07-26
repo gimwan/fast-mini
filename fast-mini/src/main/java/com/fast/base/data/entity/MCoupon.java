@@ -1,6 +1,7 @@
 package com.fast.base.data.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class MCoupon implements Serializable {
@@ -13,9 +14,9 @@ public class MCoupon implements Serializable {
 
     private String name;
 
-    private Integer amount;
+    private BigDecimal amount;
 
-    private Integer enableamount;
+    private BigDecimal enableamount;
 
     private Integer limitquantity;
 
@@ -69,19 +70,19 @@ public class MCoupon implements Serializable {
         this.name = name;
     }
 
-    public Integer getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public Integer getEnableamount() {
+    public BigDecimal getEnableamount() {
         return enableamount;
     }
 
-    public void setEnableamount(Integer enableamount) {
+    public void setEnableamount(BigDecimal enableamount) {
         this.enableamount = enableamount;
     }
 

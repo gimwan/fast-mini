@@ -1,36 +1,33 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fast.base.data.dao.MCouponMapper">
 	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MCoupon">
-		<id column="ID" property="id" jdbcType="INTEGER" />
-		<result column="Code" property="code" jdbcType="VARCHAR" />
-		<result column="Name" property="name" jdbcType="VARCHAR" />
-		<result column="Amount" property="amount" jdbcType="INTEGER" />
-		<result column="EnableAmount" property="enableamount" jdbcType="INTEGER" />
-		<result column="LimitQuantity" property="limitquantity"
-			jdbcType="INTEGER" />
-		<result column="TotalQuantity" property="totalquantity"
-			jdbcType="INTEGER" />
-		<result column="BeginTime" property="begintime" jdbcType="TIMESTAMP" />
-		<result column="EndTime" property="endtime" jdbcType="TIMESTAMP" />
-		<result column="Color" property="color" jdbcType="VARCHAR" />
-		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
-		<result column="Memo" property="memo" jdbcType="VARCHAR" />
-		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
-		<result column="Creator" property="creator" jdbcType="VARCHAR" />
-		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
-		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
-		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
-		<result column="SuitType" property="suittype" jdbcType="TINYINT" />
-		<result column="EffectiveTime" property="effectivetime"
-			jdbcType="INTEGER" />
+		<id column="ID" jdbcType="INTEGER" property="id" />
+		<result column="Code" jdbcType="VARCHAR" property="code" />
+		<result column="Name" jdbcType="VARCHAR" property="name" />
+		<result column="Amount" jdbcType="DECIMAL" property="amount" />
+		<result column="EnableAmount" jdbcType="DECIMAL" property="enableamount" />
+		<result column="LimitQuantity" jdbcType="INTEGER" property="limitquantity" />
+		<result column="TotalQuantity" jdbcType="INTEGER" property="totalquantity" />
+		<result column="BeginTime" jdbcType="TIMESTAMP" property="begintime" />
+		<result column="EndTime" jdbcType="TIMESTAMP" property="endtime" />
+		<result column="Color" jdbcType="VARCHAR" property="color" />
+		<result column="UseFlag" jdbcType="TINYINT" property="useflag" />
+		<result column="Memo" jdbcType="VARCHAR" property="memo" />
+		<result column="CreateTime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="Creator" jdbcType="VARCHAR" property="creator" />
+		<result column="ModifyTime" jdbcType="TIMESTAMP" property="modifytime" />
+		<result column="Modifier" jdbcType="VARCHAR" property="modifier" />
+		<result column="UpdatedTime" jdbcType="TIMESTAMP" property="updatedtime" />
+		<result column="SuitType" jdbcType="TINYINT" property="suittype" />
+		<result column="EffectiveTime" jdbcType="INTEGER" property="effectivetime" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
 			<foreach collection="oredCriteria" item="criteria" separator="or">
 				<if test="criteria.valid">
-					<trim prefix="(" suffix=")" prefixOverrides="and">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
 						<foreach collection="criteria.criteria" item="criterion">
 							<choose>
 								<when test="criterion.noValue">
@@ -45,8 +42,8 @@
 								</when>
 								<when test="criterion.listValue">
 									and ${criterion.condition}
-									<foreach collection="criterion.value" item="listItem"
-										open="(" close=")" separator=",">
+									<foreach close=")" collection="criterion.value" item="listItem"
+										open="(" separator=",">
 										#{listItem}
 									</foreach>
 								</when>
@@ -64,8 +61,8 @@
 		UpdatedTime, SuitType,
 		EffectiveTime
 	</sql>
-	<select id="selectByExample" resultMap="BaseResultMap"
-		parameterType="com.fast.base.data.entity.MCouponExample">
+	<select id="selectByExample" parameterType="com.fast.base.data.entity.MCouponExample"
+		resultMap="BaseResultMap">
 		select
 		<if test="distinct">
 			distinct
@@ -80,8 +77,8 @@
 			order by ${orderByClause}
 		</if>
 	</select>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from m_coupon
@@ -108,7 +105,7 @@
 		EffectiveTime)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
-		#{amount,jdbcType=INTEGER}, #{enableamount,jdbcType=INTEGER}, #{limitquantity,jdbcType=INTEGER},
+		#{amount,jdbcType=DECIMAL}, #{enableamount,jdbcType=DECIMAL}, #{limitquantity,jdbcType=INTEGER},
 		#{totalquantity,jdbcType=INTEGER}, #{begintime,jdbcType=TIMESTAMP},
 		#{endtime,jdbcType=TIMESTAMP},
 		#{color,jdbcType=VARCHAR}, #{useflag,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR},
@@ -190,10 +187,10 @@
 				#{name,jdbcType=VARCHAR},
 			</if>
 			<if test="amount != null">
-				#{amount,jdbcType=INTEGER},
+				#{amount,jdbcType=DECIMAL},
 			</if>
 			<if test="enableamount != null">
-				#{enableamount,jdbcType=INTEGER},
+				#{enableamount,jdbcType=DECIMAL},
 			</if>
 			<if test="limitquantity != null">
 				#{limitquantity,jdbcType=INTEGER},
@@ -240,7 +237,7 @@
 		</trim>
 	</insert>
 	<select id="countByExample" parameterType="com.fast.base.data.entity.MCouponExample"
-		resultType="java.lang.Integer">
+		resultType="java.lang.Long">
 		select count(*) from m_coupon
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />
@@ -256,10 +253,10 @@
 				Name = #{name,jdbcType=VARCHAR},
 			</if>
 			<if test="amount != null">
-				Amount = #{amount,jdbcType=INTEGER},
+				Amount = #{amount,jdbcType=DECIMAL},
 			</if>
 			<if test="enableamount != null">
-				EnableAmount = #{enableamount,jdbcType=INTEGER},
+				EnableAmount = #{enableamount,jdbcType=DECIMAL},
 			</if>
 			<if test="limitquantity != null">
 				LimitQuantity = #{limitquantity,jdbcType=INTEGER},
@@ -310,8 +307,8 @@
 		update m_coupon
 		set Code = #{code,jdbcType=VARCHAR},
 		Name = #{name,jdbcType=VARCHAR},
-		Amount = #{amount,jdbcType=INTEGER},
-		EnableAmount = #{enableamount,jdbcType=INTEGER},
+		Amount = #{amount,jdbcType=DECIMAL},
+		EnableAmount = #{enableamount,jdbcType=DECIMAL},
 		LimitQuantity = #{limitquantity,jdbcType=INTEGER},
 		TotalQuantity = #{totalquantity,jdbcType=INTEGER},
 		BeginTime = #{begintime,jdbcType=TIMESTAMP},
