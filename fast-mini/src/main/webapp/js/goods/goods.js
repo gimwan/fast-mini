@@ -453,7 +453,7 @@ function showImagesBox(id) {
     	    
     	    layer.open({
     	        type: 1,
-    	        title: "<label style='font-weight:600;'>详情</label>",
+    	        title: "<label style='font-weight:600;'>更多</label>",
     	        content: imagesDiv,
     	        area: ['700px', '710px'],
     	        btn: ['保存','取消'],
@@ -712,7 +712,7 @@ function showSKUBox(id) {
     	    
     	    layer.open({
     	        type: 1,
-    	        title: "<label style='font-weight:600;'>SKU</label>",
+    	        title: "<label style='font-weight:600;'>库存</label>",
     	        content: skuDiv,
     	        area: ['900px', '600px'],
     	        btn: ['保存','取消','添加'],
@@ -746,6 +746,7 @@ function showSKUBox(id) {
     	        	$(layero).find(".layui-layer-btn2").css({
     	        		"float": "left",
     	        		"background-color": "#009688",
+    	        		"border-color": "#009688",
     	        		"color": "#FFFFFF"
     	        	});
     	        	$(layero).find("tbody").attr("data-goodsid",id);

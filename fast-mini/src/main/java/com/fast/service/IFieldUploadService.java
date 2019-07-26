@@ -45,5 +45,21 @@ public interface IFieldUploadService {
 	 * @return
 	 */
 	public Result uploadGoodsDetail(HttpServletRequest request, MultipartFile file);
+	
+	/**
+	 * 上传员工头像
+	 * @param request
+	 * @param file
+	 * @return
+	 */
+	public Result uploadEmployeePhoto(HttpServletRequest request, MultipartFile file);
+	
+	/**
+	 * 上传应用图片
+	 * @param request
+	 * @param file
+	 * @return
+	 */
+	public Result uploadpPlatformPhoto(HttpServletRequest request, MultipartFile file);
 
 }

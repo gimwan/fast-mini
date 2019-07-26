@@ -195,71 +195,6 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 						sql = "select * from m_micropagesetdtldraft where micropagesetid in (" + StringUtils.join(setIDList.toArray(), ",") + ") order by showindex";
 					}
 					List<LinkedHashMap<String, Object>> setDtlList = dataMapper.pageList(sql);
-					/*
-					// 分组
-					List<Integer> groupIDList = new ArrayList<>();
-					// 分类
-					List<Integer> categoryIDList = new ArrayList<>();
-					if (setDtlList != null && setDtlList.size() > 0) {
-						setDtlList = CommonUtil.transformUpperCase(setDtlList);
-						for (int i = 0; i < setDtlList.size(); i++) {
-							String first = setDtlList.get(i).get("first") == null ? "" : setDtlList.get(i).get("first").toString().trim();
-							String second = setDtlList.get(i).get("second") == null ? "" : setDtlList.get(i).get("second").toString().trim();
-							String third = setDtlList.get(i).get("third") == null ? "" : setDtlList.get(i).get("third").toString().trim();
-							if (!Common.isEmpty(first)) {
-								groupIDList.add(Integer.valueOf(first));
-								categoryIDList.add(Integer.valueOf(first));
-							}
-							if (!Common.isEmpty(second)) {
-								categoryIDList.add(Integer.valueOf(second));
-							}
-							if (!Common.isEmpty(third)) {
-								categoryIDList.add(Integer.valueOf(third));
-							}
-						}
-					}
-					List<MGoodsgrouping> goodsgroupings = new ArrayList<>();
-					if (groupIDList.size() > 0) {
-						MGoodsgroupingExample example = new MGoodsgroupingExample();
-						example.createCriteria().andIdIn(groupIDList);
-						goodsgroupings = goodsgroupingMapper.selectByExample(example);
-					}
-					List<MGoodscategory> goodscategories = new ArrayList<>();
-					if (categoryIDList.size() > 0) {
-						MGoodscategoryExample example = new MGoodscategoryExample();
-						example.createCriteria().andIdIn(categoryIDList);
-						goodscategories = goodscategoryMapper.selectByExample(example);
-					}
-					List<MGoodscategory> bigCategories = new ArrayList<>();
-					List<MGoodscategory> middleCategories = new ArrayList<>();
-					List<MGoodscategory> smallCategories = new ArrayList<>();
-					for (int i = 0; i < goodscategories.size(); i++) {
-						if (goodscategories.get(i).getGrade().intValue() == 1) {
-							bigCategories.add(goodscategories.get(i));
-						} else if (goodscategories.get(i).getGrade().intValue() == 2) {
-							middleCategories.add(goodscategories.get(i));
-						} else if (goodscategories.get(i).getGrade().intValue() == 3) {
-							smallCategories.add(goodscategories.get(i));
-						}
-					}
-					
-					List<String> goodsidList = new ArrayList<>();
-					for (int i = 0; i < setList.size(); i++) {
-						String kind = setList.get(i).get("kind") == null ? "" : setList.get(i).get("kind").toString().trim();
-						if ("9".equals(kind)) {
-							String goodsid = setList.get(i).get("first") == null ? "" : setList.get(i).get("kind").toString().trim();
-							if (!Common.isEmpty(goodsid)) {
-								goodsidList.add(goodsid);
-							}
-						}
-					}
-					List<LinkedHashMap<String, Object>> goodsList = new ArrayList<>();
-					if (goodsidList.size() > 0) {
-						sql = "select * from m_goods where id in (" + StringUtils.join(goodsidList.toArray(), ",") + ") order by id";
-						goodsList = dataMapper.pageList(sql);
-						goodsList = CommonUtil.transformUpperCase(goodsList);
-					}*/
-					
 					for (int i = 0; i < setList.size(); i++) {
 						LinkedHashMap<String, Object> setMap = setList.get(i);
 						// 1广告 2搜索 3导航 4公告 5栏目标题 6辅助空白 7商品分组 8商品分类 9商品列表
@@ -272,11 +207,12 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 									String first = setDtlList.get(j).get("first") == null ? "" : setDtlList.get(j).get("first").toString().trim();
 									String second = setDtlList.get(j).get("second") == null ? "" : setDtlList.get(j).get("second").toString().trim();
 									String third = setDtlList.get(j).get("third") == null ? "" : setDtlList.get(j).get("third").toString().trim();
+									//String linkType = setDtlList.get(j).get("type") == null ? "0" : setDtlList.get(j).get("type").toString().trim();
 									String grouping = "";
 									String goodsname = "";
 									BigDecimal price = BigDecimal.ZERO;
 									Integer point = 0;
-									Byte type = 1;
+									Integer type = setDtlList.get(j).get("type") == null ? 0 : Integer.valueOf(setDtlList.get(j).get("type").toString().trim());
 									String category = "";
 									String categoryone = "";
 									String categorytwo = "";
@@ -305,7 +241,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 											}
 										}
 										// 分类
-										else if ("8".equals(kind)) {
+										else if ("8".equals(kind) || type.intValue() == 3) {
 											if (!Common.isEmpty(third)) {
 												MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(Integer.valueOf(third));
 												if (goodscategory != null && goodscategory.getId() > 0) {
@@ -396,8 +332,22 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												goodsname = goods.getName() == null ? "" : goods.getName();
 												price = goods.getPrice() == null ? BigDecimal.ZERO : goods.getPrice();
 												point = goods.getExchangepoint() == null ? 0 : goods.getExchangepoint();
-												type = goods.getKind() == null ? 1 : goods.getKind();
+												type = goods.getKind() == null ? 1 : goods.getKind().intValue();
 												setDtlList.get(j).put("photourl", goods.getPhotourl() == null ? "" : goods.getPhotourl());
+											}
+										} else {
+											
+											// 0无 1微页面 2分组 3分类 4小程序页面
+											if ("1".equals(type.toString())) {
+												MMicropage micropage = micropageMapper.selectByPrimaryKey(Integer.valueOf(first.trim()));
+												if (micropage != null && micropage.getId() > 0) {
+													grouping = micropage.getName();
+												}
+											} else if ("2".equals(type.toString())) {
+												MGoodsgrouping goodsgrouping = goodsgroupingMapper.selectByPrimaryKey(Integer.valueOf(first));
+												if (goodsgrouping != null && goodsgrouping.getId() > 0) {
+													grouping = goodsgrouping.getName();
+												}
 											}
 										}
 									}

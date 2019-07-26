@@ -29,6 +29,8 @@ import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
 import com.fast.util.Common;
 
+import net.sf.json.JSONObject;
+
 /**
  * 会员
  * @author J
@@ -210,7 +212,8 @@ public class VipServiceImpl implements IVipService, Serializable {
 		try {
 			result = queryVipByOpenid(appid, openid);
 			if (Common.isActive(result)) {
-				MVip vip = (MVip) result.getData();
+				JSONObject object = JSONObject.fromObject(result.getData());
+				MVip vip = (MVip) JSONObject.toBean(object, MVip.class);
 				if (vip != null && vip.getId() != null) {
 					MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(vip.getId());
 					if (vipaccount != null && vipaccount.getId() != null) {

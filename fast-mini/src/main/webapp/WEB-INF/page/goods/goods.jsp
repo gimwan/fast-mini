@@ -133,7 +133,7 @@
 											<div class="layui-btn-group">
 												<button
 													class="layui-btn layui-btn-normal layui-btn-xs image"
-													title="详情" v-on:click="images">详情</button>
+													title="更多" v-on:click="images">更多</button>
 												<button
 													class="layui-btn layui-btn-warm layui-btn-xs onsale"
 													title="上架" v-on:click="onsale" v-if="g.onsale!=1">上架</button>
@@ -142,7 +142,7 @@
 													title="下架" v-on:click="unsale" v-if="g.onsale==1">下架</button>
 												<button
 													class="layui-btn layui-btn-primary layui-btn-xs sku"
-													title="SKU" v-on:click="sku" v-if="g.onsale!=1">SKU</button>
+													title="库存" v-on:click="sku" v-if="g.onsale!=1">库存</button>
 												<button
 													class="layui-btn layui-btn-danger layui-btn-xs del"
 													title="删除" v-on:click="del" v-if="g.onsale!=1">删除</button>

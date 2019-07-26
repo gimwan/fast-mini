@@ -52,6 +52,14 @@
 										<div class="">{{l.name}}</div>
 										<div class="">{{l.kind==1?'¥'+l.price:l.point+'分'}}</div>
 									</div>
+								</div><div class="goods" v-if="d.detail[0].list.length<1">
+									<div class="goodsimg">
+										<img src="" onerror="defaultImg(this)">
+									</div>
+									<div class="goodsinfo">
+										<div class="">商品名称</div>
+										<div class="">¥999.00</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -68,6 +76,14 @@
 										<div class="">{{l.name}}</div>
 										<div class="">{{l.kind==1?'¥'+l.price:l.point+'分'}}</div>
 									</div>
+								</div><div class="goods" v-if="d.detail[0].list.length<1">
+									<div class="goodsimg">
+										<img src="" onerror="defaultImg(this)">
+									</div>
+									<div class="goodsinfo">
+										<div class="">商品名称</div>
+										<div class="">¥999.00</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -80,6 +96,14 @@
 									<div class="goodsinfo">
 										<div class="">{{dt.goodsname}}</div>
 										<div class="">{{dt.type==1?'¥'+dt.price:dt.point+'分'}}</div>
+									</div>
+								</div><div class="goods" v-if="d.detail.length<1">
+									<div class="goodsimg">
+										<img src="" onerror="defaultImg(this)">
+									</div>
+									<div class="goodsinfo">
+										<div class="">商品名称</div>
+										<div class="">¥999.00</div>
 									</div>
 								</div>
 							</div>
@@ -108,8 +132,8 @@
 									<label class="layui-form-label layui-inline selectTitle">链接类型：</label>
 									<div class="layui-input-inline selectBox">
 										<select id="linkType"  lay-filter="linkType" v-bind:data-pindex="index" v-bind:data-index="i">
-											<option value="" v-if="dt.type!=1&&dt.type!=2&&dt.type!=3&&dt.type!=4" selected="">请选择</option>
-											<option value="" v-else>请选择</option>
+											<option value="0" v-if="dt.type==0" selected="">无</option>
+											<option value="0" v-else>无</option>
 											<option value="1" v-if="dt.type==1" selected>微页面</option>
 											<option value="1" v-else>微页面</option>
 											<option value="2" v-if="dt.type==2" selected>商品分组</option>
@@ -126,7 +150,7 @@
 										v-if="dt.type==1||dt.type==2||dt.type==3||dt.type==4">{{dt.type==1?'微页面':(dt.type==2?'商品分组':(dt.type==3?'商品分类':(dt.type==4?'小程序页面':'')))}}：</label>
 									<div class="layui-input-inline selectBox popup" v-if="dt.type==1">
 										<div class="edit-title" style="display:none;"><span class="name">微页面</span></div>
-										<input type="text" v-bind:data-id="dt.first" value="Fast"
+										<input type="text" v-bind:data-id="dt.first" v-bind:value="dt.grouping"
 											data-url="./data/page?table=micropage"
 											class="layui-input value" readonly="readonly"
 											onchange="saveMicropage(this)" v-bind:data-pindex="index"
@@ -144,7 +168,7 @@
 										<div class="cascade-value">
 											<div class="edit-value" data-field="bigcategory">
 												<input type="text" v-bind:data-id="dt.first"
-													v-bind:value="dt.category"
+													v-bind:value="dt.categoryone"
 													data-url="./goodscategory/list?grade=1&pagesize=100"
 													data-grade="1" class="layui-input value"
 													readonly="readonly" v-bind:data-pindex="index"
@@ -152,7 +176,7 @@
 											</div>
 											<div class="edit-value" data-field="middlecategory">
 												<input type="text" v-bind:data-id="dt.second"
-													v-bind:value="dt.category"
+													v-bind:value="dt.categorytwo"
 													data-url="./goodscategory/list?grade=2&pagesize=100"
 													data-grade="2" class="layui-input value"
 													readonly="readonly" v-bind:data-pindex="index"
@@ -160,7 +184,7 @@
 											</div>
 											<div class="edit-value" data-field="smallcategory">
 												<input type="text" v-bind:data-id="dt.third"
-													v-bind:value="dt.category"
+													v-bind:value="dt.categorythree"
 													data-url="./goodscategory/list?grade=3&pagesize=100"
 													data-grade="3" class="layui-input value"
 													readonly="readonly" v-bind:data-pindex="index"
@@ -177,6 +201,9 @@
 							</div>
 						</form>
 					</div>
+					<div class="uploadField ad iconAdd" v-if="e.kind == 1 && e.choose == 1 && e.length!=5" key="adAdd">
+						<i class="layui-icon layui-icon-add-circle"></i>
+					</div>
 					<!-- 导航 -->
 					<div class="layTable uploadField ad" v-if="e.kind == 3 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
 						<div class="uploadBox">
@@ -192,8 +219,8 @@
 									<label class="layui-form-label layui-inline selectTitle">链接类型：</label>
 									<div class="layui-input-inline selectBox">
 										<select id="linkType"  lay-filter="linkType" v-bind:data-pindex="index" v-bind:data-index="i">
-											<option value="" v-if="dt.type!=1&&dt.type!=2&&dt.type!=3&&dt.type!=4" selected="">请选择</option>
-											<option value="" v-else>请选择</option>
+											<option value="0" v-if="dt.type==0" selected="">无</option>
+											<option value="0" v-else>无</option>
 											<option value="1" v-if="dt.type==1" selected>微页面</option>
 											<option value="1" v-else>微页面</option>
 											<option value="2" v-if="dt.type==2" selected>商品分组</option>
@@ -209,7 +236,7 @@
 									<label class="layui-form-label layui-inline selectTitle" v-if="dt.type==1||dt.type==2||dt.type==3||dt.type==4">{{dt.type==1?'微页面':(dt.type==2?'商品分组':(dt.type==3?'商品分类':(dt.type==4?'小程序页面':'')))}}：</label>
 									<div class="layui-input-inline selectBox popup" v-if="dt.type==1">
 										<div class="edit-title" style="display:none;"><span class="name">微页面</span></div>
-										<input type="text" v-bind:data-id="dt.first" value="Fast"
+										<input type="text" v-bind:data-id="dt.first" v-bind:value="dt.grouping"
 											data-url="./data/page?table=micropage"
 											class="layui-input value" readonly="readonly"
 											onchange="saveMicropage(this)" v-bind:data-pindex="index"
@@ -227,7 +254,7 @@
 										<div class="cascade-value">
 											<div class="edit-value" data-field="bigcategory">
 												<input type="text" v-bind:data-id="dt.first"
-													v-bind:value="dt.category"
+													v-bind:value="dt.categoryone"
 													data-url="./goodscategory/list?grade=1&pagesize=100"
 													data-grade="1" class="layui-input value"
 													readonly="readonly" v-bind:data-pindex="index"
@@ -235,7 +262,7 @@
 											</div>
 											<div class="edit-value" data-field="middlecategory">
 												<input type="text" v-bind:data-id="dt.second"
-													v-bind:value="dt.category"
+													v-bind:value="dt.categorytwo"
 													data-url="./goodscategory/list?grade=2&pagesize=100"
 													data-grade="2" class="layui-input value"
 													readonly="readonly" v-bind:data-pindex="index"
@@ -243,7 +270,7 @@
 											</div>
 											<div class="edit-value" data-field="smallcategory">
 												<input type="text" v-bind:data-id="dt.third"
-													v-bind:value="dt.category"
+													v-bind:value="dt.categorythree"
 													data-url="./goodscategory/list?grade=3&pagesize=100"
 													data-grade="3" class="layui-input value"
 													readonly="readonly" v-bind:data-pindex="index"
@@ -259,6 +286,9 @@
 								</div>
 							</div>
 						</form>
+					</div>
+					<div class="uploadField ad iconAdd" v-if="e.kind == 3 && e.choose == 1 && e.length!=4" key="navigationAdd">
+						<i class="layui-icon layui-icon-add-circle"></i>
 					</div>
 					<!-- 公告 -->
 					<div class="notice" v-if="e.kind == 4 && e.choose == 1">
@@ -289,15 +319,15 @@
 									<label class="layui-form-label layui-inline selectTitle">链接类型：</label>
 									<div class="layui-input-inline selectBox">
 										<select id="linkType"  lay-filter="linkType" v-bind:data-pindex="index" v-bind:data-index="0">
-											<option value="" v-if="e.detail[0].type!=1&&e.detail[0].type!=2&&e.detail[0].type!=3&&e.detail[0].type!=4" selected="">请选择</option>
-											<option value="" v-else>请选择</option>
+											<option value="" v-if="e.detail[0].type==0" selected="">无</option>
+											<option value="" v-else>无</option>
 											<option value="1" v-if="e.detail[0].type==1" selected>微页面</option>
 											<option value="1" v-else>微页面</option>
 											<option value="2" v-if="e.detail[0].type==2" selected>商品分组</option>
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="e.detail[0].type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<option value="4" v-if="e.detail[0].type==3" selected>小程序页面</option>
+											<option value="4" v-if="e.detail[0].type==4" selected>小程序页面</option>
 											<option value="4" v-else>小程序页面</option>
 										</select>
 									</div>
@@ -307,7 +337,7 @@
 										v-if="e.detail[0].type==1||e.detail[0].type==2||e.detail[0].type==3||e.detail[0].type==4">{{e.detail[0].type==1?'微页面':(e.detail[0].type==2?'商品分组':(e.detail[0].type==3?'商品分类':(e.detail[0].type==4?'小程序页面':'')))}}：</label>
 									<div class="layui-input-inline selectBox popup" v-if="e.detail[0].type==1">
 										<div class="edit-title" style="display:none;"><span class="name">微页面</span></div>
-										<input type="text" v-bind:data-id="e.detail[0].first" value="Fast"
+										<input type="text" v-bind:data-id="e.detail[0].first" v-bind:value="dt.grouping"
 											data-url="./data/page?table=micropage"
 											class="layui-input value" readonly="readonly"
 											onchange="saveMicropage(this)" v-bind:data-pindex="index"
@@ -325,7 +355,7 @@
 										<div class="cascade-value">
 											<div class="edit-value" data-field="bigcategory">
 												<input type="text" v-bind:data-id="e.detail[0].first"
-													v-bind:value="e.detail[0].category"
+													v-bind:value="e.detail[0].categoryone"
 													data-url="./goodscategory/list?grade=1&pagesize=100"
 													data-grade="1" class="layui-input value"
 													readonly="readonly" v-bind:data-pindex="index"
@@ -333,7 +363,7 @@
 											</div>
 											<div class="edit-value" data-field="middlecategory">
 												<input type="text" v-bind:data-id="e.detail[0].second"
-													v-bind:value="e.detail[0].category"
+													v-bind:value="e.detail[0].categorytwo"
 													data-url="./goodscategory/list?grade=2&pagesize=100"
 													data-grade="2" class="layui-input value"
 													readonly="readonly" v-bind:data-pindex="index"
@@ -341,7 +371,7 @@
 											</div>
 											<div class="edit-value" data-field="smallcategory">
 												<input type="text" v-bind:data-id="e.detail[0].third"
-													v-bind:value="e.detail[0].category"
+													v-bind:value="e.detail[0].categorythree"
 													data-url="./goodscategory/list?grade=3&pagesize=100"
 													data-grade="3" class="layui-input value"
 													readonly="readonly" v-bind:data-pindex="index"
@@ -392,6 +422,9 @@
 							</div>
 						</form>
 					</div>
+					<div class="category iconAdd" v-if="e.kind == 8 && e.choose == 1 && e.length!=4" key="navigationAdd">
+						<i class="layui-icon layui-icon-add-circle"></i>
+					</div>
 					<!-- 商品分组 -->
 					<div class="group" v-if="e.kind == 7 && e.choose == 1">
 						<form class="layui-form">
@@ -408,18 +441,24 @@
 							</div>
 						</form>
 					</div>
+					<div class="category iconAdd" v-if="e.kind == 7 && e.choose == 1 && e.length!=4" key="categoryAdd">
+						<i class="layui-icon layui-icon-add-circle"></i>
+					</div>
 					<!-- 商品 -->
 					<div class="goods" v-if="e.kind == 9 && e.choose == 1">
 						<form class="layui-form">
 						    <div class="selectBlock popup">
 								<label class="layui-form-label layui-inline selectTitle">商品：</label>
 								<div class="goodsBox">
-									<div class="uploadBox" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+									<div class="uploadBox uploadField" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
 										<div class="layui-upload-drag layTableCell">
 											<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
 											<i class="layui-icon" v-else></i>
 										</div>
 										<i class="layui-icon layui-icon-delete"></i>
+									</div>
+									<div class="category iconAdd" v-if="e.detail.length!=10" key="categoryAdd">
+										<i class="layui-icon layui-icon-add-circle"></i>
 									</div>
 								</div>
 							</div>

@@ -60,7 +60,7 @@
 
 .goodsPage .layui-table-view .layui-table-box .goods-data {
 	overflow-y: auto;
-	/* overflow-x: hidden; */
+	overflow-x: hidden;
 }
 
 .operationbtn .layui-icon {

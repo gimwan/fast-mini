@@ -53,7 +53,7 @@ let microPageEditVm;
 let uploadInst;
 let microPage;
 let setData;
-let editData;
+//let editData;
 
 common.bindVue = function() {
 	console.log('micropage');
@@ -66,6 +66,7 @@ common.bindVue = function() {
         	addItem: function(event) {
         		let index = $(event.currentTarget).attr("data-index");
                 console.log(item[index]);
+                addItemToPhone(Number(index)+1);
 			}
         }
     });
@@ -91,7 +92,7 @@ function loadData() {
         	if (pageData != null) {
         		microPage = pageData.micropage;
         		setData = pageData.setdata;
-        		editData = pageData.setdata;
+        		//editData = pageData.setdata;
             	microPageSetVm = new Vue({
                     el : ".phoneBox",
                     data : {
@@ -101,7 +102,7 @@ function loadData() {
             	microPageEditVm = new Vue({
                     el : ".editBox",
                     data : {
-                    	editdata: editData
+                    	editdata: setData
                     }
                 });
 			}
@@ -142,7 +143,7 @@ function configUploadInst() {
 	    	var index = $(item).parents(".editItem").attr("data-index");
 	    	var detailIndex = $(item).parents(".uploadField ").attr("data-index");
 	    	setData[index].detail[detailIndex].photourl = res.data;
-	    	editData[index].detail[detailIndex].photourl = res.data;
+	    	//editData[index].detail[detailIndex].photourl = res.data;
 	    	configAssembly();
 	    },
 	    error: function(res, index){
@@ -173,10 +174,10 @@ function chooseView() {
 		for (var i = 0; i < setData.length; i++) {
 			if (i == index) {
 				setData[i].choose = 1;
-				editData[i].choose = 1;
+				//editData[i].choose = 1;
 			} else {
 				setData[i].choose = 0;
-				editData[i].choose = 0;
+				//editData[i].choose = 0;
 			}
 		}
 		
@@ -197,7 +198,7 @@ function showDeleteIcon() {
 		var index = $(this).parents(".editItem").attr("data-index");
     	var detailIndex = $(this).parents(".ad").attr("data-index");
     	setData[index].detail[detailIndex].photourl = "";
-    	editData[index].detail[detailIndex].photourl = "";
+    	//editData[index].detail[detailIndex].photourl = "";
     	configAssembly();
 		return false;
 	});
@@ -206,17 +207,71 @@ function showDeleteIcon() {
 		event.preventDefault();
 		let index = $(this).parents(".setItem").attr("data-index");
 		setData.splice(index, 1);
-		editData.splice(index, 1);
+		//editData.splice(index, 1);
 		configAssembly();
 		return false;
 	});
+}
+
+function addItemToPhone(kind) {
+	let micropageid = $("#pageid").val();
+	let lastIndex = $(".middlePanel .editView .setItem:last").attr("data-index");
+	let item = {
+        "id": '',
+        "micropageid": micropageid,
+        "kind": kind,
+        "showindex": lastIndex+1,
+        "showname": 1,
+        "showprice": 1,
+        "imagestyle": 0,
+        "orderby": 0,
+        "choose": 1
+    }
+	let detail = [];
+	if (kind != 2 && kind != 6) {
+		detail = [
+            {
+                "id": '',
+                "micropagesetid": '',
+                "showindex": 1,
+                "first": '',
+                "second": '',
+                "third": '',
+                "text": '',
+                "targetpath": '',
+                "photourl": "",
+                "type": (kind==9?1:0),
+                "grouping": "",
+                "category": "",
+                "goodsname": (kind==9?'商品名称':''),
+                "price": (kind==9?999.00:0),
+                "point": 0,
+                "kind": 1,
+                "list": [],
+                "categoryone": "",
+                "categorytwo": "",
+                "categorythree": ""
+            }
+        ]
+	}
+	item.detail = detail;
+	for (var i = 0; i < setData.length; i++) {
+		/*if (i == index) {
+			setData[i].choose = 1;
+			editData[i].choose = 1;
+		} else {*/
+		setData[i].choose = 0;
+		//editData[i].choose = 0;
+	}
+	setData.push(item);
+	configAssembly();
 }
 
 function spellChange(obj) {
 	var index = $(obj).parents(".editItem").attr("data-index");
 	var text = $(obj).val();
 	setData[index].detail[0].text = text;
-	editData[index].detail[0].text = text;
+	//editData[index].detail[0].text = text;
 }
 
 function saveTargetPath(obj) {

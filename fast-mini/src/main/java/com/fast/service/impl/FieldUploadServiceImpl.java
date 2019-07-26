@@ -166,7 +166,7 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 		Result result = new Result();
 		try {
 			//获取文件需要上传到的路径
-			String path = request.getRealPath("/goodsthumbnail") + "\\";
+			String path = request.getRealPath("/uploadimages/goods/thumbnail") + "\\";
 			String originalFieldName = file.getOriginalFilename();
 			String prefix = originalFieldName.substring(originalFieldName.lastIndexOf("."));
 			String fieldName = String.valueOf(new Date().getTime()) + prefix;
@@ -182,7 +182,7 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
             int serverPort = request.getServerPort();
             String contextPath = request.getContextPath();
             String domain = scheme + "://" + serverName + ":" + serverPort + contextPath;
-			String imageUrls = domain + "/goodsthumbnail/" + fieldName;
+			String imageUrls = domain + "/uploadimages/goods/thumbnail/" + fieldName;
 			
 			result.setErrcode(0);
             result.setData(imageUrls);
@@ -199,7 +199,7 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 		Result result = new Result();
 		try {
 			//获取文件需要上传到的路径
-			String path = request.getRealPath("/goodsdetail") + "\\";
+			String path = request.getRealPath("/uploadimages/goods/detail") + "\\";
 			String originalFieldName = file.getOriginalFilename();
 			String prefix = originalFieldName.substring(originalFieldName.lastIndexOf("."));
 			String fieldName = String.valueOf(new Date().getTime()) + prefix;
@@ -215,7 +215,7 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
             int serverPort = request.getServerPort();
             String contextPath = request.getContextPath();
             String domain = scheme + "://" + serverName + ":" + serverPort + contextPath;
-			String imageUrls = domain + "/goodsdetail/" + fieldName;
+			String imageUrls = domain + "/uploadimages/goods/detail/" + fieldName;
 			
 			result.setErrcode(0);
             result.setData(imageUrls);
@@ -223,6 +223,72 @@ public class FieldUploadServiceImpl implements IFieldUploadService, Serializable
 		} catch (Exception e) {
 			e.printStackTrace();
 			FastLog.error("调用FieldUploadServiceImpl.uploadGoodsDetail报错：", e);
+		}
+		return result;
+	}
+
+	@Override
+	public Result uploadEmployeePhoto(HttpServletRequest request, MultipartFile file) {
+		Result result = new Result();
+		try {
+			//获取文件需要上传到的路径
+			String path = request.getRealPath("/uploadimages/employee") + "\\";
+			String originalFieldName = file.getOriginalFilename();
+			String prefix = originalFieldName.substring(originalFieldName.lastIndexOf("."));
+			String fieldName = String.valueOf(new Date().getTime()) + prefix;
+			String filePath = path + fieldName;
+			File desFile = new File(filePath);
+			if(!desFile.getParentFile().exists()){
+				desFile.mkdirs();
+			}
+			file.transferTo(desFile);
+			// 域名
+            String scheme = request.getScheme();
+            String serverName = request.getServerName();
+            int serverPort = request.getServerPort();
+            String contextPath = request.getContextPath();
+            String domain = scheme + "://" + serverName + ":" + serverPort + contextPath;
+			String imageUrls = domain + "/uploadimages/employee/" + fieldName;
+			
+			result.setErrcode(0);
+            result.setData(imageUrls);
+            result.setMessage("上传成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			FastLog.error("调用FieldUploadServiceImpl.uploadEmployeePhoto报错：", e);
+		}
+		return result;
+	}
+
+	@Override
+	public Result uploadpPlatformPhoto(HttpServletRequest request, MultipartFile file) {
+		Result result = new Result();
+		try {
+			//获取文件需要上传到的路径
+			String path = request.getRealPath("/uploadimages/platform") + "\\";
+			String originalFieldName = file.getOriginalFilename();
+			String prefix = originalFieldName.substring(originalFieldName.lastIndexOf("."));
+			String fieldName = String.valueOf(new Date().getTime()) + prefix;
+			String filePath = path + fieldName;
+			File desFile = new File(filePath);
+			if(!desFile.getParentFile().exists()){
+				desFile.mkdirs();
+			}
+			file.transferTo(desFile);
+			// 域名
+            String scheme = request.getScheme();
+            String serverName = request.getServerName();
+            int serverPort = request.getServerPort();
+            String contextPath = request.getContextPath();
+            String domain = scheme + "://" + serverName + ":" + serverPort + contextPath;
+			String imageUrls = domain + "/uploadimages/platform/" + fieldName;
+			
+			result.setErrcode(0);
+            result.setData(imageUrls);
+            result.setMessage("上传成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			FastLog.error("调用FieldUploadServiceImpl.uploadpPlatformPhoto报错：", e);
 		}
 		return result;
 	}

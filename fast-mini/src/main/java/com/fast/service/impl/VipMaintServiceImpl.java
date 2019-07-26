@@ -30,6 +30,8 @@ import com.fast.service.IVipService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
 
+import net.sf.json.JSONObject;
+
 /**
  * 会员
  * @author J
@@ -342,7 +344,8 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 		try {
 			Result r = iVipService.queryVipByOpenid(appid, openid);
 			if (r != null && r.getErrcode() != null && r.getErrcode().intValue() == 0) {
-				MVip vip = (MVip) r.getData();
+				JSONObject object = JSONObject.fromObject(r.getData());
+				MVip vip = (MVip) JSONObject.toBean(object, MVip.class);
 				
 				if (!Common.isEmpty(name)) {
 					vip.setName(name);
@@ -383,6 +386,9 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 				}
 				
 				mVipMapper.updateByPrimaryKeySelective(vip);
+				
+				result.setErrcode(Integer.valueOf(0));
+				result.setId(vip.getId());
 			}
 		} catch (Exception e) {
 			FastLog.error("调用VipMaintServiceImpl.updateVipInfo报错：", e);

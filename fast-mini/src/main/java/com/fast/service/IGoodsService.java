@@ -46,5 +46,14 @@ public interface IGoodsService {
 	 * @return
 	 */
 	public Result goodsSKU(Integer goodsid);
+	
+	/**
+	 * 查询商品库存
+	 * @param goodsid
+	 * @param appid
+	 * @param openid
+	 * @return
+	 */
+	public Result queryGoodsStock(Integer goodsid, String appid, String openid);
 
 }

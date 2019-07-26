@@ -12,6 +12,8 @@ import com.fast.base.Result;
 import com.fast.base.data.entity.MVip;
 import com.fast.service.IVipMaintService;
 import com.fast.service.IVipService;
+import com.fast.service.IVipcartMaintService;
+import com.fast.service.IVipcartService;
 import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
@@ -29,6 +31,12 @@ public class Vip extends MiniMaster {
 	
 	@Autowired
 	IVipMaintService iVipMaintService;
+	
+	@Autowired
+	IVipcartService iVipcartService;
+	
+	@Autowired
+	IVipcartMaintService iVipcartMaintService;
 	
 	/**
 	 * 默认登录
@@ -327,6 +335,141 @@ public class Vip extends MiniMaster {
 			String openid = request.getParameter("openid");
 			
 			r = iVipService.queryVipDPC(appid, openid);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 购物袋
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/cart")
+	@ResponseBody
+	public String cart(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String kind = request.getParameter("kind");
+			if (Common.isEmpty(kind)) {
+				kind = "1";
+			}
+			
+			r = iVipcartService.queryVipcart(openid, appid, Integer.valueOf(kind.trim()));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 加入购物袋
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/cart/add")
+	@ResponseBody
+	public String cartadd(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String goodsid = request.getParameter("goodsid");
+			String colorid = request.getParameter("colorid");
+			String patternid = request.getParameter("patternid");
+			String sizeid = request.getParameter("sizeid");
+			String quantity = request.getParameter("quantity");
+			
+			r = iVipcartMaintService.addVipcart(appid, openid, Integer.valueOf(goodsid), Integer.valueOf(colorid),
+					Integer.valueOf(patternid), Integer.valueOf(sizeid), Integer.valueOf(quantity));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 修改购物袋
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/cart/change")
+	@ResponseBody
+	public String cartchange(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String id = request.getParameter("id");
+			String goodsid = request.getParameter("goodsid");
+			String colorid = request.getParameter("colorid");
+			String patternid = request.getParameter("patternid");
+			String sizeid = request.getParameter("sizeid");
+			String quantity = request.getParameter("quantity");
+			
+			r = iVipcartMaintService.changeVipcart(appid, openid, Integer.valueOf(id), Integer.valueOf(goodsid),
+					Integer.valueOf(colorid), Integer.valueOf(patternid), Integer.valueOf(sizeid),
+					Integer.valueOf(quantity));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 移除购物袋
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/cart/delete")
+	@ResponseBody
+	public String cartdelete(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String id = request.getParameter("id");
+			
+			r = iVipcartMaintService.deleteVipcart(appid, openid, Integer.valueOf(id));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
