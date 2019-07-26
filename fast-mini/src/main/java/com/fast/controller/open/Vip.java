@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.base.Result;
 import com.fast.base.data.entity.MVip;
+import com.fast.service.IVipAddressMaintService;
+import com.fast.service.IVipAddressService;
 import com.fast.service.IVipMaintService;
 import com.fast.service.IVipService;
 import com.fast.service.IVipcartMaintService;
@@ -37,6 +39,12 @@ public class Vip extends MiniMaster {
 	
 	@Autowired
 	IVipcartMaintService iVipcartMaintService;
+	
+	@Autowired
+	IVipAddressService iVipAddressService;
+	
+	@Autowired
+	IVipAddressMaintService iVipAddressMaintService;
 	
 	/**
 	 * 默认登录
@@ -470,6 +478,111 @@ public class Vip extends MiniMaster {
 			String id = request.getParameter("id");
 			
 			r = iVipcartMaintService.deleteVipcart(appid, openid, Integer.valueOf(id));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 收货地址
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/address")
+	@ResponseBody
+	public String address(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			
+			r = iVipAddressService.vipAddress(appid, openid);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 新增/修改收货地址
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/address/save")
+	@ResponseBody
+	public String addresssave(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String id = request.getParameter("id");
+			String receiver = request.getParameter("receiver");
+			String phone = request.getParameter("phone");
+			String provinceid = request.getParameter("provinceid");
+			String cityid = request.getParameter("cityid");
+			String countyid = request.getParameter("countyid");
+			String address = request.getParameter("address");
+			String isdefault = request.getParameter("isdefault");
+			
+			if (Common.isEmpty(id)) {
+				id = "0";
+			}
+			if (Common.isEmpty(isdefault)) {
+				isdefault = "0";
+			}
+			
+			r = iVipAddressMaintService.saveVipAddress(appid, openid, Integer.valueOf(id), receiver, phone,
+					Integer.valueOf(provinceid.trim()), Integer.valueOf(cityid.trim()),
+					Integer.valueOf(countyid.trim()), address, Integer.valueOf(isdefault.trim()));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 删除收货地址
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/address/delete")
+	@ResponseBody
+	public String addressdelete(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String id = request.getParameter("id");
+			
+			r = iVipAddressMaintService.deleteVipAddress(appid, openid, Integer.valueOf(id.trim()));
 			
 		} catch (Exception e) {
 			e.printStackTrace();

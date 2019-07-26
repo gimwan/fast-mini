@@ -25,7 +25,6 @@ import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MCoupon;
 import com.fast.base.data.entity.MMiniprogram;
-import com.fast.base.data.entity.MMiniprogramExample;
 import com.fast.base.data.entity.MOrder;
 import com.fast.base.data.entity.MOrderExample;
 import com.fast.base.data.entity.MVip;
@@ -34,15 +33,13 @@ import com.fast.base.data.entity.MVipaddress;
 import com.fast.base.data.entity.MVipaddressExample;
 import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipmini;
-import com.fast.base.data.entity.MVipminiExample;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.page.PagingView;
 import com.fast.service.IDataService;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IOrderService;
-import com.fast.service.IVipService;
+import com.fast.service.IVipMiniService;
 import com.fast.system.log.FastLog;
-import com.fast.util.BeanUtil;
 import com.fast.util.Common;
 import com.fast.util.CommonUtil;
 
@@ -88,6 +85,12 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 	
 	@Autowired
 	MVipaddressMapper vipaddressMapper;
+	
+	@Autowired
+	IMiniProgramService iMiniProgramService;
+	
+	@Autowired
+	IVipMiniService iVipMiniService;
 
 	@Override
 	public Result order() {
@@ -139,38 +142,48 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 				return result;
 			}
 			MMiniprogram miniprogram = new MMiniprogram();
-			MMiniprogramExample miniprogramExample = new MMiniprogramExample();
-			miniprogramExample.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andAppidEqualTo(appid.trim());
-			List<MMiniprogram> miniprograms = miniprogramMapper.selectByExample(miniprogramExample);
-			if (miniprograms != null && miniprograms.size() > 0) {
-				miniprogram = miniprograms.get(0);
-			}			
-			if (miniprogram == null || miniprogram.getId() == null) {
-				result.setMessage("小程序无效");
-				return result;
+			Result r = iMiniProgramService.queryMiniprogramByAppid(appid);
+			if (Common.isActive(r)) {
+				miniprogram = (MMiniprogram) r.getData();
+			} else {
+				return r;
 			}
-			
-			MVipmini vipmini = null;
-			MVipminiExample vipminiExample = new MVipminiExample();
-			vipminiExample.createCriteria().andOpenidEqualTo(openid).andMiniprogramidEqualTo(miniprogram.getId());
-			List<MVipmini> vipminis = vipminiMapper.selectByExample(vipminiExample);
-			if (vipminis != null && vipminis.size() > 0) {
-				vipmini = new MVipmini();
-				vipmini = vipminis.get(0);				
-			}			
-			if (vipmini == null || vipmini.getId() == null) {
-				result.setMessage("会员无效");
-				return result;
+			MVipmini vipmini = new MVipmini();
+			r = iVipMiniService.queryVipMiniByOpenid(miniprogram.getId(), openid);
+			if (Common.isActive(r)) {
+				vipmini = (MVipmini) r.getData();
+			} else {
+				return r;
+			}
+			MVipaddress vipaddress = new MVipaddress();
+			if (Common.isActive(result)) {
+				MVipaddressExample example = new MVipaddressExample();
+				example.createCriteria().andVipidEqualTo(vipmini.getVipid());
+				example.setOrderByClause(" isdefault desc");
+				List<MVipaddress> list = vipaddressMapper.selectByExample(example);
+				if (list != null && list.size() > 0) {
+					vipaddress = list.get(0);
+				} else {
+					result.setErrcode(Integer.valueOf(2));
+					result.setMessage("无收货地址");
+					return result;
+				}
 			}
 			
 			result = calculation(vipmini.getVipid(), cartid, null, 0, 0);
-			
 			if (Common.isActive(result)) {
-				MVipaddressExample example = new MVipaddressExample();
-				example.createCriteria().andVipidEqualTo(vipmini.getVipid()).andIsdefaultEqualTo(Byte.valueOf("1"));
-				example.setOrderByClause(" isdefault desc");
-				List<MVipaddress> list = vipaddressMapper.selectByExample(example);
+				HashMap<String, Object> map = (HashMap<String, Object>) result.getData();
+				map.put("receiver", vipaddress.getReceiver() == null ? "" : vipaddress.getReceiver());
+				map.put("phone", vipaddress.getPhone() == null ? "" : vipaddress.getPhone());
+				String province = vipaddress.getProvince() == null ? "" : vipaddress.getProvince();
+				String city = vipaddress.getCity() == null ? "" : vipaddress.getCity();
+				String county = vipaddress.getCounty() == null ? "" : vipaddress.getCounty();
+				String address = vipaddress.getAddress() == null ? "" : vipaddress.getAddress();
+				map.put("address", province+city+county+address);
+				map.put("addressid", vipaddress.getId());
+				result.setData(map);
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
@@ -190,8 +203,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			if (vip == null || vip.getId() == null) {
 				result.setMessage("无此会员");
 				return result;
-			}
-			
+			}			
 			MViptype viptype = new MViptype();
 			viptype = viptypeMapper.selectByPrimaryKey(vip.getTypeid());
 			if (viptype == null || viptype.getId() == null) {
@@ -221,8 +233,10 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 				return result;
 			}
 			
-			String sql = "select a.id,a.goodsid,a.colorid,a.patternid,a.sizeid,a.quantity,"
-					+ "b.code,b.name,b.photourl,isnull(b.price,0) as price,b.exchangepoint,b.kind,b.showcolor,b.showpattern,b.showsize,"
+			String sql = "select a.id,a.goodsid,a.colorid,a.patternid,a.sizeid,isnull(a.quantity,0) as quantity,"
+					+ "b.code,b.name,b.photourl,isnull(b.price,0) as price,isnull(b.price,0) as saleprice,isnull(b.baseprice,0) as baseprice,"
+					+ "isnull(b.price,0)*isnull(a.quantity,0) as amount,isnull(b.price,0)*isnull(a.quantity,0) as saleamount,"
+					+ "isnull(b.baseprice,0)*isnull(a.quantity,0) as baseamount,b.exchangepoint,b.kind,b.showcolor,b.showpattern,b.showsize,"
 					+ "c.name as color,d.name as pattern,e.name as size "
 					+ "from m_vipcart a "
 					+ "inner join m_goods b on a.goodsid=b.id "
@@ -237,17 +251,25 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			}
 			// 商品总价
 			BigDecimal goodsAmount = BigDecimal.ZERO;
+			BigDecimal goodsSaleAmount = BigDecimal.ZERO;
+			Integer goodsQuantity = 0;
 			// 会员折扣
 			for (int i = 0; i < list.size(); i++) {
 				Integer quantity = list.get(i).get("quantity") == null ? 0 : Integer.valueOf(list.get(i).get("quantity").toString().trim());
 				BigDecimal price = list.get(i).get("price") == null ? BigDecimal.ZERO : new BigDecimal(list.get(i).get("price").toString().trim());
+				goodsSaleAmount = goodsSaleAmount.add(price.multiply(new BigDecimal(quantity.toString())));
 				BigDecimal newPrice = price.multiply(discount).setScale(2, BigDecimal.ROUND_HALF_UP);
 				list.get(i).put("price", newPrice);
-				goodsAmount = goodsAmount.add(newPrice.multiply(new BigDecimal(quantity.toString())));
+				BigDecimal amount = newPrice.multiply(new BigDecimal(quantity.toString()));
+				list.get(i).put("amount", amount);
+				goodsAmount = goodsAmount.add(amount);
+				goodsQuantity = goodsQuantity + quantity;
 			}
 			// 结算金额
 			BigDecimal paymoney = goodsAmount;
+			// 券抵扣额
 			BigDecimal couponMoney = BigDecimal.ZERO;
+			BigDecimal discounMoney = goodsSaleAmount.subtract(goodsAmount);
 			
 			if (couponid != null && couponid.intValue() > 0) {
 				MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(couponid);
@@ -310,7 +332,6 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 				}
 			}
 			
-			
 			// 使用储值
 			if (usedeposit != null && usedeposit.intValue() == 1) {
 				if (deposit.compareTo(paymoney) > 0) {
@@ -324,10 +345,14 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("goods", list);
 			map.put("goodsamount", goodsAmount);
+			map.put("goodsquantity", goodsQuantity);
 			map.put("vipid", vip.getId());
+			map.put("discount", discount);
+			map.put("discounmoney", discounMoney);
 			map.put("couponid", couponid);
 			map.put("couponmoney", couponMoney);
 			map.put("point", point);
+			map.put("pointrate", pointRate);
 			map.put("pointmoney", pointMoney);
 			map.put("deposit", deposit);
 			map.put("paymoney", paymoney);

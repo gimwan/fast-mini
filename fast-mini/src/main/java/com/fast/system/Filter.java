@@ -18,10 +18,10 @@ public class Filter implements HandlerInterceptor {
 		String url = request.getSession().getServletContext().getContextPath();
 		
 		Object user =  request.getSession().getAttribute("user");
-		/*if (user == null) {
+		if (user == null) {
 			String sessionid = request.getSession().getId();
 			user = RedisCache.retake(sessionid);
-		}*/
+		}
 		
 		if (user != null) {
 			return true;

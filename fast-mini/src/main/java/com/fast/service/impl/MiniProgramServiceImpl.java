@@ -65,6 +65,8 @@ public class MiniProgramServiceImpl implements IMiniProgramService, Serializable
 				result.setData(list.get(0));
 				result.setId(list.get(0).getId());
 				result.setErrcode(Integer.valueOf(0));
+			} else {
+				result.setMessage("小程序appid无效");
 			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());

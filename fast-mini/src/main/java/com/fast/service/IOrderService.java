@@ -27,18 +27,18 @@ public interface IOrderService {
 	 * 结算页数据
 	 * @param appid
 	 * @param openid
-	 * @param cartid
+	 * @param cartid  购物袋id，多个用英文,分隔
 	 * @return
 	 */
 	public Result orderConfirmData(String appid, String openid, String cartid);
 	
 	/**
 	 * 结算计算
-	 * @param vipid
-	 * @param cartid
-	 * @param couponid
-	 * @param usepoint
-	 * @param usedeposit
+	 * @param vipid  会员id
+	 * @param cartid  购物袋id，多个用英文,分隔
+	 * @param couponid  优惠券id
+	 * @param usepoint  是否使用积分
+	 * @param usedeposit  是否使用储值
 	 * @return
 	 */
 	public Result calculation(Integer vipid, String cartid, Integer couponid, Integer usepoint, Integer usedeposit);

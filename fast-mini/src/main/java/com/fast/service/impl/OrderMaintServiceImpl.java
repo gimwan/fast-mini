@@ -1,12 +1,28 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fast.base.Result;
 import com.fast.base.data.dao.MOrderMapper;
+import com.fast.base.data.dao.MOrderdtlMapper;
+import com.fast.base.data.dao.MVipaddressMapper;
+import com.fast.base.data.entity.MMiniprogram;
+import com.fast.base.data.entity.MOrder;
+import com.fast.base.data.entity.MOrderdtl;
+import com.fast.base.data.entity.MVipaddress;
+import com.fast.service.IMiniProgramService;
 import com.fast.service.IOrderMaintService;
+import com.fast.service.IOrderService;
+import com.fast.system.log.FastLog;
+import com.fast.util.Common;
 
 /**
  * 订单
@@ -20,5 +36,139 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	
 	@Autowired
 	MOrderMapper orderMapper;
+	
+	@Autowired
+	IOrderService iOrderService;
+	
+	@Autowired
+	MVipaddressMapper vipaddressMapper;
+	
+	@Autowired
+	IMiniProgramService iMiniProgramService;
+	
+	@Autowired
+	MOrderdtlMapper orderdtlMapper;
+	
+	@Override
+	public Result createOrder(String appid, Integer vipid, String cartid, Integer addressid, Integer couponid,
+			Integer usepoint, Integer usedeposit) {
+		Result result = new Result();
+
+		try {
+			MVipaddress vipaddress = vipaddressMapper.selectByPrimaryKey(addressid);
+			if (vipaddress == null || vipaddress.getId() == null) {
+				result.setMessage("收货地址无效");
+				return result;
+			}
+			Integer miniprogramid = 0;
+			Integer publicplatformid = 0;
+			Result r = iMiniProgramService.queryMiniprogramByAppid(appid);
+			if (Common.isActive(r)) {
+				MMiniprogram miniprogram = (MMiniprogram) r.getData();
+				miniprogramid = miniprogram.getId();
+				publicplatformid = miniprogram.getPublicplatformid();
+			} else {
+				return r;
+			}
+			
+			r = iOrderService.calculation(vipid, cartid, couponid, usepoint, usedeposit);
+			if (Common.isActive(r)) {
+				HashMap<String, Object> payInfo = (HashMap<String, Object>) r.getData();
+				Integer goodsQuantity = Integer.valueOf(payInfo.get("goodsquantity").toString());
+				BigDecimal goodsAmount = new BigDecimal(payInfo.get("goodsamount").toString());
+				BigDecimal discount = new BigDecimal(payInfo.get("discount").toString());
+				BigDecimal discountMoney = new BigDecimal(payInfo.get("discountmoney").toString());
+				BigDecimal couponmMoney = new BigDecimal(payInfo.get("couponmoney").toString());
+				Integer point = Integer.valueOf(payInfo.get("point").toString());
+				Integer pointRate = Integer.valueOf(payInfo.get("point").toString());
+				BigDecimal pointMoney = new BigDecimal(payInfo.get("pointmoney").toString());
+				BigDecimal deposit = new BigDecimal(payInfo.get("deposit").toString());
+				BigDecimal payMoney = new BigDecimal(payInfo.get("paymoney").toString());
+				List<LinkedHashMap<String, Object>> goodsList = (List<LinkedHashMap<String, Object>>) payInfo.get("goods");
+				BigDecimal baseAmount = BigDecimal.ZERO;
+				BigDecimal saleAmount = BigDecimal.ZERO;
+				for (int i = 0; i < goodsList.size(); i++) {
+					BigDecimal baseamt = new BigDecimal(goodsList.get(i).get("baseamount").toString());
+					BigDecimal saleamt = new BigDecimal(goodsList.get(i).get("saleamount").toString());
+					baseAmount = baseAmount.add(baseamt);
+					saleAmount = saleAmount.add(saleamt);
+				}
+				Date now = new Date();
+				MOrder order = new MOrder();
+				order.setNo(String.valueOf(System.currentTimeMillis()));
+				order.setKind(Integer.valueOf(1));
+				order.setSource(Integer.valueOf(1));
+				order.setVipid(vipid);
+				order.setQuantity(goodsQuantity);
+				order.setAmount(goodsAmount);
+				order.setBaseamount(baseAmount);
+				order.setSaleamount(saleAmount);
+				order.setDiscount(discount);
+				order.setDiscountmoney(discountMoney);
+				order.setDeposit(deposit);
+				order.setPoint(point);
+				order.setPointrate(pointRate);
+				order.setPointmoney(pointMoney);
+				order.setCouponid(couponid);
+				order.setCouponmoney(couponmMoney);
+				order.setPaymoney(payMoney);
+				order.setFreight(BigDecimal.ZERO);
+				order.setPaystatus(Byte.valueOf("0"));
+				order.setDeliverytype(Byte.valueOf("1"));
+				order.setReceiver(vipaddress.getReceiver());
+				order.setReceiverphone(vipaddress.getPhone());
+				order.setReceiverprovince(vipaddress.getProvince());
+				order.setReceivercity(vipaddress.getCity());
+				order.setReceivercounty(vipaddress.getCounty());
+				order.setReceiveraddress(vipaddress.getAddress());
+				order.setCreatetime(now);
+				order.setCreator("system");
+				order.setUpdatedtime(now);
+				order.setUseflag(Byte.valueOf("1"));
+				order.setStatus(Byte.valueOf("1"));
+				order.setMiniprogramid(miniprogramid);
+				order.setPublicplatformid(publicplatformid);
+				order.setRetuenpaystatus(Byte.valueOf("0"));
+				
+				order = saveOrder(order, goodsList);
+				result.setId(order.getId());
+				result.setErrcode(Integer.valueOf(0));
+			} else {
+				result = r;
+				return result;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.createOrder报错：", e);
+		}
+	
+		return result;
+	}
+	
+	public MOrder saveOrder(MOrder order, List<LinkedHashMap<String, Object>> goodsList) {
+		orderMapper.insertSelective(order);
+		for (int i = 0; i < goodsList.size(); i++) {
+			MOrderdtl orderdtl = new MOrderdtl();
+			orderdtl.setOrderid(order.getId());
+			orderdtl.setGoodsid(Integer.valueOf(goodsList.get(i).get("goodsid").toString()));
+			orderdtl.setColorid(Integer.valueOf(goodsList.get(i).get("colorid").toString()));
+			orderdtl.setPatternid(Integer.valueOf(goodsList.get(i).get("patternid").toString()));
+			orderdtl.setSizeid(Integer.valueOf(goodsList.get(i).get("sizeid").toString()));
+			orderdtl.setQuantity(Integer.valueOf(goodsList.get(i).get("quantity").toString()));
+			orderdtl.setPrice(new BigDecimal(goodsList.get(i).get("price").toString()));
+			orderdtl.setBaseprice(new BigDecimal(goodsList.get(i).get("baseprice").toString()));
+			orderdtl.setAmount(new BigDecimal(goodsList.get(i).get("amount").toString()));
+			orderdtl.setSaleprice(new BigDecimal(goodsList.get(i).get("saleprice").toString()));
+			orderdtl.setBaseamount(new BigDecimal(goodsList.get(i).get("baseamount").toString()));
+			orderdtl.setSaleamount(new BigDecimal(goodsList.get(i).get("saleamount").toString()));
+			orderdtl.setCreatetime(order.getCreatetime());
+			orderdtl.setCreator(order.getCreator());
+			orderdtl.setUpdatedtime(order.getUpdatedtime());
+			orderdtl.setUseflag(Byte.valueOf("1"));
+			orderdtlMapper.insertSelective(orderdtl);
+		}
+		return order;
+	}
 
 }
