@@ -17,6 +17,7 @@
 		<result column="Memo" jdbcType="VARCHAR" property="memo" />
 		<result column="Discount" jdbcType="DECIMAL" property="discount" />
 		<result column="BirthdayDiscount" jdbcType="DECIMAL" property="birthdaydiscount" />
+		<result column="PointRate" jdbcType="INTEGER" property="pointrate" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -52,7 +53,7 @@
 	<sql id="Base_Column_List">
 		ID, Code, Name, Grade, DefaultFlag, CreateTime, Creator, ModifyTime,
 		Modifier, UpdatedTime,
-		UseFlag, Memo, Discount, BirthdayDiscount
+		UseFlag, Memo, Discount, BirthdayDiscount, PointRate
 	</sql>
 	<select id="selectByExample" parameterType="com.fast.base.data.entity.MViptypeExample"
 		resultMap="BaseResultMap">
@@ -93,14 +94,17 @@
 		Grade, DefaultFlag, CreateTime,
 		Creator, ModifyTime, Modifier,
 		UpdatedTime, UseFlag, Memo,
-		Discount, BirthdayDiscount)
+		Discount, BirthdayDiscount, PointRate
+		)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{grade,jdbcType=INTEGER}, #{defaultflag,jdbcType=TINYINT}, #{createtime,jdbcType=TIMESTAMP},
 		#{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP},
 		#{modifier,jdbcType=VARCHAR},
 		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR},
-		#{discount,jdbcType=DECIMAL}, #{birthdaydiscount,jdbcType=DECIMAL})
+		#{discount,jdbcType=DECIMAL}, #{birthdaydiscount,jdbcType=DECIMAL},
+		#{pointrate,jdbcType=INTEGER}
+		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MViptype"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -148,6 +152,9 @@
 			<if test="birthdaydiscount != null">
 				BirthdayDiscount,
 			</if>
+			<if test="pointrate != null">
+				PointRate,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -191,6 +198,9 @@
 			</if>
 			<if test="birthdaydiscount != null">
 				#{birthdaydiscount,jdbcType=DECIMAL},
+			</if>
+			<if test="pointrate != null">
+				#{pointrate,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -243,6 +253,9 @@
 			<if test="birthdaydiscount != null">
 				BirthdayDiscount = #{birthdaydiscount,jdbcType=DECIMAL},
 			</if>
+			<if test="pointrate != null">
+				PointRate = #{pointrate,jdbcType=INTEGER},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -260,7 +273,8 @@
 		UseFlag = #{useflag,jdbcType=TINYINT},
 		Memo = #{memo,jdbcType=VARCHAR},
 		Discount = #{discount,jdbcType=DECIMAL},
-		BirthdayDiscount = #{birthdaydiscount,jdbcType=DECIMAL}
+		BirthdayDiscount = #{birthdaydiscount,jdbcType=DECIMAL},
+		PointRate = #{pointrate,jdbcType=INTEGER}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

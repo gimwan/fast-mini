@@ -17,7 +17,7 @@
 		<javaClientGenerator targetPackage="com.fast.base.data.dao"
 			targetProject="fast-mini" type="XMLMAPPER" />
         
-        <table tableName="m_vipcart" enableCountByExample="true"
+        <table tableName="m_vipaddress" enableCountByExample="true"
 			enableUpdateByExample="false" enableDeleteByExample="true"
 			enableSelectByExample="true" selectByExampleQueryId="false" />
 	</context>

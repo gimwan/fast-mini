@@ -995,6 +995,66 @@ public class MViptypeExample {
             addCriterion("BirthdayDiscount not between", value1, value2, "birthdaydiscount");
             return (Criteria) this;
         }
+
+        public Criteria andPointrateIsNull() {
+            addCriterion("PointRate is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateIsNotNull() {
+            addCriterion("PointRate is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateEqualTo(Integer value) {
+            addCriterion("PointRate =", value, "pointrate");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateNotEqualTo(Integer value) {
+            addCriterion("PointRate <>", value, "pointrate");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateGreaterThan(Integer value) {
+            addCriterion("PointRate >", value, "pointrate");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateGreaterThanOrEqualTo(Integer value) {
+            addCriterion("PointRate >=", value, "pointrate");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateLessThan(Integer value) {
+            addCriterion("PointRate <", value, "pointrate");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateLessThanOrEqualTo(Integer value) {
+            addCriterion("PointRate <=", value, "pointrate");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateIn(List<Integer> values) {
+            addCriterion("PointRate in", values, "pointrate");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateNotIn(List<Integer> values) {
+            addCriterion("PointRate not in", values, "pointrate");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateBetween(Integer value1, Integer value2) {
+            addCriterion("PointRate between", value1, value2, "pointrate");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointrateNotBetween(Integer value1, Integer value2) {
+            addCriterion("PointRate not between", value1, value2, "pointrate");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
