@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MViptypeMapper;
@@ -39,52 +40,7 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 		Result result = new Result();
 
 		try {
-			Date now = new Date();
-			MViptype mViptype = new MViptype();
-			viptype.setUpdatedtime(now);
-			if (viptype.getId() != null) {
-				mViptype = viptypeMapper.selectByPrimaryKey(viptype.getId());
-				BeanUtil.copyPropertiesIgnoreNull(viptype, mViptype);
-				mViptype.setModifier(user.getName());
-				mViptype.setModifytime(now);
-				int changeNum = viptypeMapper.updateByPrimaryKeySelective(mViptype);
-				if (changeNum > 0) {
-					result.setErrcode(0);
-					result.setId(mViptype.getId());
-					result.setMessage("保存成功");
-				} else {
-					result.setMessage("保存失败");
-				}
-			} else {
-				BeanUtil.copyPropertiesIgnoreNull(viptype, mViptype);
-				mViptype.setCreator(user.getName());
-				mViptype.setCreatetime(now);
-				int key = viptypeMapper.insertSelective(mViptype);
-				if (key > 0) {
-					result.setErrcode(0);
-					result.setId(mViptype.getId());
-					result.setMessage("新增成功");
-				} else {
-					result.setMessage("新增失败");
-				}
-			}
-			// 默认等级只能有一个
-			if (Common.isActive(result)) {
-				if (mViptype.getDefaultflag().intValue() == 1 && mViptype.getUseflag().intValue() == 1) {
-					MViptypeExample example = new MViptypeExample();
-					example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andDefaultflagEqualTo(Byte.valueOf("1")).andIdNotEqualTo(mViptype.getId());
-					List<MViptype> list = viptypeMapper.selectByExample(example);
-					if (list != null && list.size() > 0) {
-						for (int i = 0; i < list.size(); i++) {
-							MViptype record = list.get(i);
-							record.setDefaultflag(Byte.valueOf("0"));
-							record.setUpdatedtime(now);
-							viptypeMapper.updateByPrimaryKeySelective(record);
-						}
-					}
-					
-				}
-			}
+			result = saveType(viptype, user.getName());
 			
 			if (Common.isActive(result)) {
 				Result r = iDataService.one("viptype", result.getId());
@@ -97,6 +53,59 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 			FastLog.error("调用ViptypeMaintServiceImpl.changeVipType报错：", e);
 		}
 
+		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public Result saveType(MViptype viptype, String username) {
+		Result result = new Result();
+		Date now = new Date();
+		MViptype mViptype = new MViptype();
+		viptype.setUpdatedtime(now);
+		if (viptype.getId() != null) {
+			mViptype = viptypeMapper.selectByPrimaryKey(viptype.getId());
+			BeanUtil.copyPropertiesIgnoreNull(viptype, mViptype);
+			mViptype.setModifier(username);
+			mViptype.setModifytime(now);
+			int changeNum = viptypeMapper.updateByPrimaryKeySelective(mViptype);
+			if (changeNum > 0) {
+				result.setErrcode(0);
+				result.setId(mViptype.getId());
+				result.setMessage("保存成功");
+			} else {
+				result.setMessage("保存失败");
+			}
+		} else {
+			BeanUtil.copyPropertiesIgnoreNull(viptype, mViptype);
+			mViptype.setCreator(username);
+			mViptype.setCreatetime(now);
+			int key = viptypeMapper.insertSelective(mViptype);
+			if (key > 0) {
+				result.setErrcode(0);
+				result.setId(mViptype.getId());
+				result.setMessage("新增成功");
+			} else {
+				result.setMessage("新增失败");
+			}
+		}
+		// 默认等级只能有一个
+		if (Common.isActive(result)) {
+			if (mViptype.getDefaultflag().intValue() == 1 && mViptype.getUseflag().intValue() == 1) {
+				MViptypeExample example = new MViptypeExample();
+				example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andDefaultflagEqualTo(Byte.valueOf("1")).andIdNotEqualTo(mViptype.getId());
+				List<MViptype> list = viptypeMapper.selectByExample(example);
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						MViptype record = list.get(i);
+						record.setDefaultflag(Byte.valueOf("0"));
+						record.setUpdatedtime(now);
+						viptypeMapper.updateByPrimaryKeySelective(record);
+					}
+				}
+				
+			}
+		}
+		
 		return result;
 	}
 

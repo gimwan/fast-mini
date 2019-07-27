@@ -9,15 +9,25 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MOrderMapper;
 import com.fast.base.data.dao.MOrderdtlMapper;
+import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipaddressMapper;
+import com.fast.base.data.dao.MVipcouponMapper;
+import com.fast.base.data.dao.MVipdepositrecordMapper;
+import com.fast.base.data.dao.MVippointrecordMapper;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MOrder;
+import com.fast.base.data.entity.MOrderExample;
 import com.fast.base.data.entity.MOrderdtl;
+import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipaddress;
+import com.fast.base.data.entity.MVipcoupon;
+import com.fast.base.data.entity.MVipdepositrecord;
+import com.fast.base.data.entity.MVippointrecord;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IOrderMaintService;
 import com.fast.service.IOrderService;
@@ -48,6 +58,18 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	
 	@Autowired
 	MOrderdtlMapper orderdtlMapper;
+	
+	@Autowired
+	MVipaccountMapper vipaccountMapper;
+	
+	@Autowired
+	MVipdepositrecordMapper vipdepositrecordMapper;
+	
+	@Autowired
+	MVippointrecordMapper vippointrecordMapper;
+	
+	@Autowired
+	MVipcouponMapper vipcouponMapper;
 	
 	@Override
 	public Result createOrder(String appid, Integer vipid, String cartid, Integer addressid, Integer couponid,
@@ -146,6 +168,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		return result;
 	}
 	
+	@Transactional(rollbackFor = Exception.class)
 	public MOrder saveOrder(MOrder order, List<LinkedHashMap<String, Object>> goodsList) {
 		orderMapper.insertSelective(order);
 		for (int i = 0; i < goodsList.size(); i++) {
@@ -168,7 +191,83 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			orderdtl.setUseflag(Byte.valueOf("1"));
 			orderdtlMapper.insertSelective(orderdtl);
 		}
+		if (order.getCouponid() != null && order.getCouponid().intValue() > 0) {
+			MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(order.getCouponid());
+			if (vipcoupon != null && vipcoupon.getId() != null && vipcoupon.getUseflag().intValue() != 1) {
+				vipcoupon.setUseflag(Byte.valueOf("1"));
+				vipcoupon.setUsetime(order.getUpdatedtime());
+				vipcouponMapper.updateByPrimaryKeySelective(vipcoupon);
+			}
+		}
+		boolean isUpdate = false;
+		MVippointrecord vippointrecord = new MVippointrecord();
+		vippointrecord.setVipid(order.getVipid());
+		vippointrecord.setType(Byte.valueOf("1"));
+		vippointrecord.setRefid(order.getId());
+		vippointrecord.setUpdatedtime(order.getUpdatedtime());
+		MVipdepositrecord vipdepositrecord = new MVipdepositrecord();
+		vipdepositrecord.setVipid(order.getVipid());
+		vipdepositrecord.setType(Byte.valueOf("1"));
+		vipdepositrecord.setRefid(order.getId());
+		vipdepositrecord.setUpdatedtime(order.getUpdatedtime());
+		MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(order.getVipid());
+		if (order.getPoint() != null && order.getPoint().intValue() > 0) {			
+			Integer point = vipaccount.getPoint() - order.getPoint();			
+			vipaccount.setPoint(point);
+			vippointrecord.setPoint(order.getPoint());
+			vippointrecord.setNewpoint(point);
+			isUpdate = true;
+		}
+		if (order.getDeposit() != null && order.getDeposit().compareTo(BigDecimal.ZERO) > 0) {
+			BigDecimal deposit = vipaccount.getDeposit().subtract(order.getDeposit());
+			vipaccount.setDeposit(deposit);
+			vipdepositrecord.setDeposit(order.getDeposit());
+			vipdepositrecord.setNewdeposit(deposit);
+			isUpdate = true;
+		}
+		if (isUpdate) {
+			vipaccountMapper.updateByPrimaryKeySelective(vipaccount);
+			vipdepositrecordMapper.insertSelective(vipdepositrecord);
+			vippointrecordMapper.insertSelective(vippointrecord);
+		}
+		
 		return order;
+	}
+
+	@Override
+	public Result afterPay(String orderno, String wechatno) {
+		Result result = new Result();
+
+		try {
+			MOrderExample example = new MOrderExample();
+			example.createCriteria().andNoEqualTo(orderno);
+			List<MOrder> list = orderMapper.selectByExample(example);
+			if (list == null || list.size() < 1) {
+				result.setMessage("订单不存在");
+				return result;
+			}
+			MOrder order = list.get(0);
+			if (order.getStatus().intValue() != 1) {
+				result.setMessage("当前订单状态为：" + order.getStatus() + "，流程有误");
+				return result;
+			}
+			Date now = new Date();
+			order.setWechatpayno(wechatno);
+			order.setStatus(Byte.valueOf("2"));
+			order.setPaystatus(Byte.valueOf("2"));
+			order.setPaytime(now);
+			order.setUpdatedtime(now);
+			orderMapper.updateByPrimaryKeySelective(order);
+			
+			result.setErrcode(Integer.valueOf(0));
+			result.setId(order.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.afterPay报错：", e);
+		}
+	
+		return result;
 	}
 
 }

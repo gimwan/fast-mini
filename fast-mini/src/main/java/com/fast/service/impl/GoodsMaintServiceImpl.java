@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fast.base.Result;
@@ -154,53 +155,13 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 		Result result = new Result();
 
 		try {
-			Date now = new Date();
+			
 			images = CommonUtil.unescape(images);
 			groups = CommonUtil.unescape(groups);
 			List<MGoodsdtl> goodsdtls = JSONObject.parseArray(images,  MGoodsdtl.class);
 			List<MGoodsingroup> grouping = JSONObject.parseArray(groups,  MGoodsingroup.class);
 			
-			List<Integer> deleteList = new ArrayList<>();
-			for (int i = 0; i < goodsdtls.size(); i++) {
-				MGoodsdtl goodsdtl = goodsdtls.get(i);
-				goodsdtl.setUpdatedtime(now);
-				if (goodsdtl.getId() != null && goodsdtl.getId() > 0) {
-					goodsdtlMapper.updateByPrimaryKeySelective(goodsdtl);
-				} else {
-					goodsdtlMapper.insertSelective(goodsdtl);
-				}
-				deleteList.add(goodsdtl.getId());
-			}
-			MGoodsdtlExample example = new MGoodsdtlExample();
-			example.createCriteria().andGoodsidEqualTo(goodsid);
-			if (deleteList.size() > 0) {
-				example = new MGoodsdtlExample();
-				example.createCriteria().andGoodsidEqualTo(goodsid).andIdNotIn(deleteList);
-			}
-			goodsdtlMapper.deleteByExample(example);
-			
-			deleteList = new ArrayList<>();
-			for (int i = 0; i < grouping.size(); i++) {
-				MGoodsingroup goodsingroup = grouping.get(i);
-				goodsingroup.setUpdatedtime(now);
-				if (goodsingroup.getId() != null && goodsingroup.getId() > 0) {
-					goodsingroup.setModifier(user.getName());
-					goodsingroup.setModifytime(now);
-					goodsingroupMapper.updateByPrimaryKeySelective(goodsingroup);
-				} else {
-					goodsingroup.setCreator(user.getName());
-					goodsingroup.setCreatetime(now);
-					goodsingroupMapper.insertSelective(goodsingroup);
-				}
-				deleteList.add(goodsingroup.getId());
-			}
-			MGoodsingroupExample goodsingroupExample = new MGoodsingroupExample();
-			goodsingroupExample.createCriteria().andGoodsidEqualTo(goodsid);
-			if (deleteList.size() > 0) {
-				goodsingroupExample = new MGoodsingroupExample();
-				goodsingroupExample.createCriteria().andGoodsidEqualTo(goodsid).andIdNotIn(deleteList);
-			}
-			goodsingroupMapper.deleteByExample(goodsingroupExample);
+			saveImages(goodsid, user.getName(), goodsdtls, grouping);
 			
 			result.setErrcode(Integer.valueOf(0));
 			result.setId(goodsid);
@@ -212,38 +173,64 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 
 		return result;
 	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void saveImages(Integer goodsid, String username, List<MGoodsdtl> goodsdtls, List<MGoodsingroup> grouping) {
+		Date now = new Date();
+		List<Integer> deleteList = new ArrayList<>();
+		for (int i = 0; i < goodsdtls.size(); i++) {
+			MGoodsdtl goodsdtl = goodsdtls.get(i);
+			goodsdtl.setUpdatedtime(now);
+			if (goodsdtl.getId() != null && goodsdtl.getId() > 0) {
+				goodsdtlMapper.updateByPrimaryKeySelective(goodsdtl);
+			} else {
+				goodsdtlMapper.insertSelective(goodsdtl);
+			}
+			deleteList.add(goodsdtl.getId());
+		}
+		MGoodsdtlExample example = new MGoodsdtlExample();
+		example.createCriteria().andGoodsidEqualTo(goodsid);
+		if (deleteList.size() > 0) {
+			example = new MGoodsdtlExample();
+			example.createCriteria().andGoodsidEqualTo(goodsid).andIdNotIn(deleteList);
+		}
+		goodsdtlMapper.deleteByExample(example);
+		
+		deleteList = new ArrayList<>();
+		for (int i = 0; i < grouping.size(); i++) {
+			MGoodsingroup goodsingroup = grouping.get(i);
+			goodsingroup.setUpdatedtime(now);
+			if (goodsingroup.getId() != null && goodsingroup.getId() > 0) {
+				goodsingroup.setModifier(username);
+				goodsingroup.setModifytime(now);
+				goodsingroupMapper.updateByPrimaryKeySelective(goodsingroup);
+			} else {
+				goodsingroup.setCreator(username);
+				goodsingroup.setCreatetime(now);
+				goodsingroupMapper.insertSelective(goodsingroup);
+			}
+			deleteList.add(goodsingroup.getId());
+		}
+		MGoodsingroupExample goodsingroupExample = new MGoodsingroupExample();
+		goodsingroupExample.createCriteria().andGoodsidEqualTo(goodsid);
+		if (deleteList.size() > 0) {
+			goodsingroupExample = new MGoodsingroupExample();
+			goodsingroupExample.createCriteria().andGoodsidEqualTo(goodsid).andIdNotIn(deleteList);
+		}
+		goodsingroupMapper.deleteByExample(goodsingroupExample);
+	}
 
 	@Override
 	public Result saveGoodsSku(MUser user, Integer goodsid, String skus) {
 		Result result = new Result();
 
 		try {
-			Date now = new Date();
+			
 			skus = CommonUtil.unescape(skus);
 			List<MGoodssku> goodsskus = JSONObject.parseArray(skus,  MGoodssku.class);
 			
-			List<Integer> deleteList = new ArrayList<>();
-			for (int i = 0; i < goodsskus.size(); i++) {
-				MGoodssku goodssku = goodsskus.get(i);
-				goodssku.setUpdatedtime(now);
-				if (goodssku.getId() != null && goodssku.getId() > 0) {
-					goodssku.setModifier(user.getName());
-					goodssku.setModifytime(now);
-					goodsskuMapper.updateByPrimaryKeySelective(goodssku);
-				} else {
-					goodssku.setCreator(user.getName());
-					goodssku.setCreatetime(now);
-					goodsskuMapper.insertSelective(goodssku);
-				}
-				deleteList.add(goodssku.getId());
-			}
-			MGoodsskuExample example = new MGoodsskuExample();
-			example.createCriteria().andGoodsidEqualTo(goodsid);
-			if (deleteList.size() > 0) {
-				example = new MGoodsskuExample();
-				example.createCriteria().andGoodsidEqualTo(goodsid).andIdNotIn(deleteList);
-			}
-			goodsskuMapper.deleteByExample(example);
+			saveSku(goodsid, user.getName(), goodsskus);
+			
 			result.setErrcode(Integer.valueOf(0));
 			result.setId(goodsid);
 			result.setMessage("保存成功");
@@ -253,6 +240,33 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 		}
 
 		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void saveSku(Integer goodsid, String username, List<MGoodssku> goodsskus) {
+		Date now = new Date();
+		List<Integer> deleteList = new ArrayList<>();
+		for (int i = 0; i < goodsskus.size(); i++) {
+			MGoodssku goodssku = goodsskus.get(i);
+			goodssku.setUpdatedtime(now);
+			if (goodssku.getId() != null && goodssku.getId() > 0) {
+				goodssku.setModifier(username);
+				goodssku.setModifytime(now);
+				goodsskuMapper.updateByPrimaryKeySelective(goodssku);
+			} else {
+				goodssku.setCreator(username);
+				goodssku.setCreatetime(now);
+				goodsskuMapper.insertSelective(goodssku);
+			}
+			deleteList.add(goodssku.getId());
+		}
+		MGoodsskuExample example = new MGoodsskuExample();
+		example.createCriteria().andGoodsidEqualTo(goodsid);
+		if (deleteList.size() > 0) {
+			example = new MGoodsskuExample();
+			example.createCriteria().andGoodsidEqualTo(goodsid).andIdNotIn(deleteList);
+		}
+		goodsskuMapper.deleteByExample(example);
 	}
 
 }

@@ -21,5 +21,13 @@ public interface IOrderMaintService {
 	 * @return
 	 */
 	public Result createOrder(String appid, Integer vipid, String cartid, Integer addressid, Integer couponid, Integer usepoint, Integer usedeposit);
+	
+	/**
+	 * 支付后操作
+	 * @param orderno 单号
+	 * @param wechatno 微信支付单号
+	 * @return
+	 */
+	public Result afterPay(String orderno, String wechatno);
 
 }

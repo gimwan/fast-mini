@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MRegionMapper;
@@ -85,24 +86,8 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			vip.setUseflag(Byte.valueOf("1"));
 			vip = resetVipRegion(vip);			
 			
-			if (vip.getId() != null) {
-				mVipMapper.updateByPrimaryKeySelective(vip);
-			} else {
-				String code = newCode(1);
-				vip.setCode(code);
-				mVipMapper.insertSelective(vip);
-			}
+			vip = saveVip(appid, openid, vip);
 			
-			MVipaccount vipaccount = mVipaccountMapper.selectByPrimaryKey(vip.getId());
-			if (vipaccount == null || vipaccount.getId() == null) {
-				vipaccount = new MVipaccount();
-				vipaccount.setId(vip.getId());
-				vipaccount.setCreatetime(now);
-				vipaccount.setCreator("system");
-				vipaccount.setUpdatedtime(now);
-				mVipaccountMapper.insertSelective(vipaccount);
-			}
-			resetVipMini(vip, appid, openid);
 			result.setErrcode(Integer.valueOf(0));
 			result.setData(vip);
 			result.setId(vip.getId());
@@ -112,6 +97,29 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 		}
 
 		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public MVip saveVip(String appid, String openid, MVip vip) {
+		if (vip.getId() != null) {
+			mVipMapper.updateByPrimaryKeySelective(vip);
+		} else {
+			String code = newCode(1);
+			vip.setCode(code);
+			mVipMapper.insertSelective(vip);
+		}
+		
+		MVipaccount vipaccount = mVipaccountMapper.selectByPrimaryKey(vip.getId());
+		if (vipaccount == null || vipaccount.getId() == null) {
+			vipaccount = new MVipaccount();
+			vipaccount.setId(vip.getId());
+			vipaccount.setCreatetime(vip.getUpdatedtime());
+			vipaccount.setCreator("system");
+			vipaccount.setUpdatedtime(vip.getUpdatedtime());
+			mVipaccountMapper.insertSelective(vipaccount);
+		}
+		resetVipMini(vip, appid, openid);
+		return vip;
 	}
 	
 	/**
@@ -147,6 +155,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			vip = mVip;
 			vip.setModifytime(now);
 			vip.setModifier("system");
+			vip.setUpdatedtime(now);
 		} else {
 			vip.setRegisttime(now);
 			vip.setCreatetime(now);
