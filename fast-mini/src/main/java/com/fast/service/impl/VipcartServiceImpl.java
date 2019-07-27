@@ -58,9 +58,10 @@ private static final long serialVersionUID = 71148004875517941L;
 			if (Common.isActive(r)) {
 				Integer vipid = r.getId();
 				
-				String sql = "select a.id,a.colorid,a.sizeid,a.patternid,a.quantity as qty,isnull(f.quantity,0) as stockqty,isnull(f.barcode,'') as barcode"
+				String sql = "select a.id,a.colorid,a.sizeid,a.patternid,a.quantity as qty,isnull(f.quantity,0) as stockqty,isnull(f.barcode,'') as barcode,"
 						+ "e.code as goodsno,e.name as goodsname,e.photourl as imageurl,e.showcolor,e.showsize,e.showpattern,"
-						+ "e.onsale as atlist,e.shiptype,isnull(e.exchangepoint,0) as point,e.price as unitprice,a.quantity*isnull(e.price,0) as amt,"
+						+ "e.onsale as atlist,e.shiptype,isnull(e.exchangepoint,0) as point,e.price as unitprice,a.quantity*isnull(e.price,0) as amt,e.kind,"
+						+ "b.name as color,c.name as pattern,d.name as size "
 						+ "from m_vipcart a "
 						+ "inner join m_goods e on a.goodsid=e.id "
 						+ "left join m_color b on a.colorid=b.id "

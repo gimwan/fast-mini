@@ -237,16 +237,30 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 					+ "b.code,b.name,b.photourl,isnull(b.price,0) as price,isnull(b.price,0) as saleprice,isnull(b.baseprice,0) as baseprice,"
 					+ "isnull(b.price,0)*isnull(a.quantity,0) as amount,isnull(b.price,0)*isnull(a.quantity,0) as saleamount,"
 					+ "isnull(b.baseprice,0)*isnull(a.quantity,0) as baseamount,b.exchangepoint,b.kind,b.showcolor,b.showpattern,b.showsize,"
-					+ "c.name as color,d.name as pattern,e.name as size "
+					+ "c.name as color,d.name as pattern,e.name as size,isnull(f.quantity,0) as stockqty,f.id as skuid "
 					+ "from m_vipcart a "
 					+ "inner join m_goods b on a.goodsid=b.id "
 					+ "left join m_color c on a.colorid=c.id "
 					+ "left join m_pattern d on a.patternid=d.id "
 					+ "left join m_size e on a.sizeid=e.id "
+					+ "left join m_goodssku f on a.goodsid=f.goodsid and a.colorid=f.colorid and a.sizeid=f.sizeid and a.patternid=f.patternid "
 					+ "where a.id in ("+StringUtils.join(cartList.toArray(), ",")+")";
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list == null || list.size() < 1) {
 				result.setMessage("商品数据无效");
+				return result;
+			}
+			boolean notEnough = false;
+			for (int i = 0; i < list.size(); i++) {
+				Integer quantity = Integer.valueOf(list.get(i).get("quantity").toString());
+				Integer stockqty = Integer.valueOf(list.get(i).get("stockqty").toString());
+				if (quantity.intValue() > stockqty.intValue() || stockqty.intValue() < 1) {
+					notEnough = true;
+					break;
+				}
+			}
+			if (notEnough) {
+				result.setMessage("商品库存不足");
 				return result;
 			}
 			// 商品总价
@@ -363,6 +377,112 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
 			FastLog.error("调用OrderServiceImpl.calculation报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryOrderByStatus(PagingView page, String appid, String openid, Integer status) {
+		Result result = new Result();
+
+		try {
+			if (Common.isEmpty(openid)) {
+				result.setMessage("openid无效");
+				return result;
+			}
+			MMiniprogram miniprogram = new MMiniprogram();
+			Result r = iMiniProgramService.queryMiniprogramByAppid(appid);
+			if (Common.isActive(r)) {
+				miniprogram = (MMiniprogram) r.getData();
+			} else {
+				return r;
+			}
+			MVipmini vipmini = new MVipmini();
+			r = iVipMiniService.queryVipMiniByOpenid(miniprogram.getId(), openid);
+			if (Common.isActive(r)) {
+				vipmini = (MVipmini) r.getData();
+			} else {
+				return r;
+			}
+			page.setOrderBy(" order by createtime desc,no desc");			
+			// 订单状态 0已取消 1未付款 2未发货(已付款) 3待收货(已发货) 4已完成(已收货)
+			String sql = "select id,no,quantity,amount,paymoney,status from m_order where vipid=" + vipmini.getVipid() + " and miniprogramid=" + miniprogram.getId();
+			if (status != null && status.intValue() > 0) {
+				sql += " and status=" + status;
+			}
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql, page);
+			List<String> idList = new ArrayList<>();
+			for (int i = 0; i < list.size(); i++) {
+				idList.add(list.get(i).get("id").toString());
+			}
+			sql = "select a.id,a.orderid,a.goodsid,a.colorid,a.patternid,a.sizeid,a.quantity,a.price,"
+					+ "b.code,b.name,b.photourl,b.showcolor,b.showpattern,b.showsize,"
+					+ "c.name as color,d.name as pattern,e.name as size "
+					+ "from m_orderdtl a "
+					+ "inner join m_goods b on a.goodsid=b.id "
+					+ "left join m_color c on a.colorid=c.id "
+					+ "left join m_pattern d on a.patternid=d.id "
+					+ "left join m_size e on a.sizeid=e.id "
+					+ "where a.orderid in ("+StringUtils.join(idList.toArray(), ",")+") "
+					+ "order by a.orderid desc";
+			List<LinkedHashMap<String, Object>> dtlList = dataMapper.pageList(sql);
+			for (int i = 0; i < list.size(); i++) {
+				String id = list.get(i).get("id").toString();
+				List<LinkedHashMap<String, Object>> dtl = new ArrayList<>();
+				for (int j = 0; j < dtlList.size(); j++) {
+					String orderid = list.get(i).get("orderid").toString();
+					if (id.equals(orderid)) {
+						dtl.add(dtlList.get(j));
+					}
+				}
+				list.get(i).put("detail", dtl);
+			}
+			
+			result.setData(list);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderServiceImpl.queryOrderByStatus报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryOrderDetail(Integer id) {
+		Result result = new Result();
+
+		try {
+			String sql = "select a.id,a.no,a.quantity,a.amount,a.paymoney,a.status,a.discountmoney,a.point,a.pointmoney,a.deposit,a.couponid,a.couponmoney,"
+					+ "convert(varchar(100), a.createtime, 20) as createtime,convert(varchar(100), a.paytime, 20) as paytime,a.receiver,a.receiverphone,"
+					+ "a.ReceiverProvince,a.receivercity,a.receivercounty,a.receiveraddress "
+					+ "from m_order a where a.id=" + id;
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list == null || list.size() < 1) {
+				result.setMessage("订单不存在");
+				return result;
+			}
+			
+			sql = "select a.id,a.goodsid,a.colorid,a.patternid,a.sizeid,a.quantity,a.price,"
+					+ "b.code,b.name,b.photourl,b.showcolor,b.showpattern,b.showsize,"
+					+ "c.name as color,d.name as pattern,e.name as size "
+					+ "from m_orderdtl a "
+					+ "inner join m_goods b on a.goodsid=b.id "
+					+ "left join m_color c on a.colorid=c.id "
+					+ "left join m_pattern d on a.patternid=d.id "
+					+ "left join m_size e on a.sizeid=e.id "
+					+ "where a.orderid=" + id;
+			List<LinkedHashMap<String, Object>> detailList = dataMapper.pageList(sql);
+			LinkedHashMap<String, Object> map = list.get(0);
+			map.put("detail", detailList);
+			result.setData(map);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderServiceImpl.queryOrderDetail报错：", e);
 		}
 
 		return result;

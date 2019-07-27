@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
+import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.dao.MOrderMapper;
 import com.fast.base.data.dao.MOrderdtlMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
@@ -19,6 +20,8 @@ import com.fast.base.data.dao.MVipaddressMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.dao.MVipdepositrecordMapper;
 import com.fast.base.data.dao.MVippointrecordMapper;
+import com.fast.base.data.entity.MGoodssku;
+import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MOrder;
 import com.fast.base.data.entity.MOrderExample;
@@ -70,6 +73,9 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	
 	@Autowired
 	MVipcouponMapper vipcouponMapper;
+	
+	@Autowired
+	MGoodsskuMapper goodsskuMapper;
 	
 	@Override
 	public Result createOrder(String appid, Integer vipid, String cartid, Integer addressid, Integer couponid,
@@ -190,7 +196,13 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			orderdtl.setUpdatedtime(order.getUpdatedtime());
 			orderdtl.setUseflag(Byte.valueOf("1"));
 			orderdtlMapper.insertSelective(orderdtl);
+			// 扣减库存
+			MGoodssku goodssku = goodsskuMapper.selectByPrimaryKey(Integer.valueOf(goodsList.get(i).get("skuid").toString()));
+			Integer quantity = goodssku.getQuantity().intValue() - orderdtl.getQuantity().intValue();
+			goodssku.setQuantity(Long.valueOf(quantity.toString()));
+			goodsskuMapper.updateByPrimaryKeySelective(goodssku);
 		}
+		// 核销优惠券
 		if (order.getCouponid() != null && order.getCouponid().intValue() > 0) {
 			MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(order.getCouponid());
 			if (vipcoupon != null && vipcoupon.getId() != null && vipcoupon.getUseflag().intValue() != 1) {
@@ -199,6 +211,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 				vipcouponMapper.updateByPrimaryKeySelective(vipcoupon);
 			}
 		}
+		// 扣减积分、储值，记录积分、储值流水
 		boolean isUpdate = false;
 		MVippointrecord vippointrecord = new MVippointrecord();
 		vippointrecord.setVipid(order.getVipid());

@@ -42,5 +42,21 @@ public interface IOrderService {
 	 * @return
 	 */
 	public Result calculation(Integer vipid, String cartid, Integer couponid, Integer usepoint, Integer usedeposit);
+	
+	/**
+	 * 按状态查询订单
+	 * @param appid
+	 * @param openid
+	 * @param status
+	 * @return
+	 */
+	public Result queryOrderByStatus(PagingView page, String appid, String openid, Integer status);
+	
+	/**
+	 * 订单明细
+	 * @param id
+	 * @return
+	 */
+	public Result queryOrderDetail(Integer id);
 
 }
