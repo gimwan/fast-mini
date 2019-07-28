@@ -416,22 +416,25 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			for (int i = 0; i < list.size(); i++) {
 				idList.add(list.get(i).get("id").toString());
 			}
-			sql = "select a.id,a.orderid,a.goodsid,a.colorid,a.patternid,a.sizeid,a.quantity,a.price,"
-					+ "b.code,b.name,b.photourl,b.showcolor,b.showpattern,b.showsize,"
-					+ "c.name as color,d.name as pattern,e.name as size "
-					+ "from m_orderdtl a "
-					+ "inner join m_goods b on a.goodsid=b.id "
-					+ "left join m_color c on a.colorid=c.id "
-					+ "left join m_pattern d on a.patternid=d.id "
-					+ "left join m_size e on a.sizeid=e.id "
-					+ "where a.orderid in ("+StringUtils.join(idList.toArray(), ",")+") "
-					+ "order by a.orderid desc";
-			List<LinkedHashMap<String, Object>> dtlList = dataMapper.pageList(sql);
+			List<LinkedHashMap<String, Object>> dtlList = new ArrayList<>();
+			if (idList.size() > 0) {
+				sql = "select a.id,a.orderid,a.goodsid,a.colorid,a.patternid,a.sizeid,a.quantity,a.price,"
+						+ "b.code,b.name,b.photourl,b.showcolor,b.showpattern,b.showsize,"
+						+ "c.name as color,d.name as pattern,e.name as size "
+						+ "from m_orderdtl a "
+						+ "inner join m_goods b on a.goodsid=b.id "
+						+ "left join m_color c on a.colorid=c.id "
+						+ "left join m_pattern d on a.patternid=d.id "
+						+ "left join m_size e on a.sizeid=e.id "
+						+ "where a.orderid in ("+StringUtils.join(idList.toArray(), ",")+") "
+						+ "order by a.orderid desc";
+				dtlList = dataMapper.pageList(sql);
+			}
 			for (int i = 0; i < list.size(); i++) {
 				String id = list.get(i).get("id").toString();
 				List<LinkedHashMap<String, Object>> dtl = new ArrayList<>();
 				for (int j = 0; j < dtlList.size(); j++) {
-					String orderid = list.get(i).get("orderid").toString();
+					String orderid = dtlList.get(j).get("orderid").toString();
 					if (id.equals(orderid)) {
 						dtl.add(dtlList.get(j));
 					}

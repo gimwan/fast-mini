@@ -1,5 +1,7 @@
 package com.fast.controller;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
 import com.fast.base.data.entity.MMicropage;
@@ -27,6 +30,12 @@ public class GoodsCategoryController {
 	
 	@Autowired
 	IGoodsCategoryService iGoodsCategoryService;
+	
+	@RequestMapping("")
+	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		return new ModelAndView("goods/goodscategory", map);
+	}
 	
 	/**
 	 * 按等级查询分类
@@ -61,6 +70,23 @@ public class GoodsCategoryController {
 			page.setPageSize(Integer.valueOf(pageSize).intValue());
 			
 			Result result = iGoodsCategoryService.list(page, Integer.valueOf(grade.trim()), Integer.valueOf(parentid.trim()));
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	@RequestMapping("/category")
+	@ResponseBody
+	public String category(HttpServletRequest request, HttpServletResponse response, MMicropage micropage) {
+		String r = "";
+		
+		try {			
+			Result result = iGoodsCategoryService.category();
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

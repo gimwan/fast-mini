@@ -19,6 +19,10 @@
 	border-bottom-width: 1px;
 }
 
+.goodsPage .layui-table-view .layui-table-box tr .code {
+	min-width: 140px;
+}
+
 .goodsPage .layui-table-view .layui-table-box tr .photourl {
 	min-width: 80px;
 }

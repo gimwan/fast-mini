@@ -35,6 +35,12 @@ public class LoginController {
 		return new ModelAndView("login", map);
 	}
 	
+	/**
+	 * 登入
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping("/login")
 	@ResponseBody
 	public String login(HttpServletRequest request, HttpServletResponse response) {
@@ -55,6 +61,34 @@ public class LoginController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return r;
+	}
+	
+	/**
+	 * 登出
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/logout")
+	@ResponseBody
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		Result result = new Result();
+		
+		try {
+			request.getSession().removeAttribute("user");
+			String sessionid = request.getSession().getId();
+			RedisCache.remove(sessionid);
+			
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(result);
+		r = jsonObject.toString();
 		
 		return r;
 	}

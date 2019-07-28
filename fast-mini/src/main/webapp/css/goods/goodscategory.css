@@ -1,0 +1,55 @@
+.goodscategoryPage .operating {
+	margin: 0px 15px;
+}
+
+.goodscategoryPage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
+.goodscategoryPage .operating .selectView {
+	display: inline-block;
+	vertical-align: bottom;
+	float: right;
+}
+
+.goodscategoryPage .operating .selectView .layui-form-item {
+	margin-bottom: 0;
+}
+
+.goodscategoryPage .operating .selectView .layui-form-item .selectBox {
+	margin-right: 0;
+}
+
+.goodscategoryPage .layui-table-view .layui-table-box .layui-table-header span {
+	font-weight: 600;
+}
+
+.goodscategoryPage .layui-table-view .layui-table-box tr .item {
+	width: 100px;
+	min-width: 100px;
+	border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 1px;
+}
+
+.goodscategoryPage .layui-table-view .layui-table-box tr .name {
+	min-width: 180px;
+}
+
+.goodscategoryPage .layui-table-view .layui-table-box tr .memo {
+	width: 100%;
+}
+
+.goodscategoryPage .layui-table-view .layui-table-box tr .creator,.goodscategoryPage .layui-table-view .layui-table-box tr .modifier {
+	min-width: 120px;
+}
+
+.goodscategoryPage .layui-table-view .layui-table-box tr .time-item {
+	min-width: 200px;
+}
+
+.goodscategoryPage .layui-table-view .layui-table-box .goodscategory-data {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
