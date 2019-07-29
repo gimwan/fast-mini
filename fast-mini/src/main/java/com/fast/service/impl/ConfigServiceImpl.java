@@ -33,6 +33,7 @@ public class ConfigServiceImpl implements IConfigService, Serializable {
 
 		try {
 			MConfigExample example = new MConfigExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1"));
 			example.setOrderByClause("code asc");
 			List<MConfig> list = mConfigMapper.selectByExample(example);
 			result.setErrcode(0);

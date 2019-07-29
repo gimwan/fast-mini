@@ -103,6 +103,61 @@ function loadData() {
                     el : ".editBox",
                     data : {
                     	editdata: setData
+                    },
+                    methods : {
+                    	addItem : function(event) {
+							let kind = $(event.target).attr("data-kind");
+							let index = $(event.target).attr("data-index");
+							console.log(setData[index]);
+							// 广告
+							if (kind == 1) {
+								if (setData[index].detail.length < 5) {
+									let item = {
+						                "id": '',
+						                "micropagesetid": '',
+						                "showindex": 1,
+						                "first": '',
+						                "second": '',
+						                "third": '',
+						                "text": '',
+						                "targetpath": '',
+						                "photourl": "",
+						                "type": 0,
+						                "grouping": "",
+						                "category": "",
+						                "goodsname": '',
+						                "price": 0,
+						                "point": 0,
+						                "kind": 1,
+						                "list": [],
+						                "categoryone": "",
+						                "categorytwo": "",
+						                "categorythree": ""
+						            }
+									setData[index].detail.push(item);
+									setTimeout(() => {
+										layuiForm.render();
+										configUploadInst();
+									}, 300);
+								}
+							}
+							// 导航
+							else if (kind == 3) {
+								
+							}
+							// 分组
+							else if (kind == 7) {
+								
+							}
+							// 分类
+							else if (kind == 8) {
+								
+							}
+							// 商品
+							else if (kind == 9) {
+								
+							}
+						}
                     }
                 });
 			}
@@ -132,27 +187,30 @@ function configAssembly() {
 }
 
 function configUploadInst() {
-	layuiUpload.render({
-	    elem: '.layui-upload-drag',
-	    url: './upload/field/image',
-	    size: 1024,
-	    multiple: false,
-	    done: function(res, index, upload){
-	    	// 上传完毕回调
-	    	var item = this.item;
-	    	var index = $(item).parents(".editItem").attr("data-index");
-	    	var detailIndex = $(item).parents(".uploadField ").attr("data-index");
-	    	setData[index].detail[detailIndex].photourl = res.data;
-	    	//editData[index].detail[detailIndex].photourl = res.data;
-	    	configAssembly();
-	    },
-	    error: function(res, index){
-	    	// 请求异常回调
-	    	console.log(res);
-	    	console.log(index);
-	    	configAssembly();
-	    }
-    });
+	$(".rightPanel .layui-upload-drag").each(function() {
+		var id = $(this).attr("id");
+		layuiUpload.render({
+		    elem: '#'+id,
+		    url: './upload/field/image',
+		    size: 1024,
+		    multiple: false,
+		    done: function(res, index, upload){
+		    	// 上传完毕回调
+		    	var item = this.item;
+		    	var index = $(item).parents(".editItem").attr("data-index");
+		    	var detailIndex = $(item).parents(".uploadField ").attr("data-index");
+		    	setData[index].detail[detailIndex].photourl = res.data;
+		    	//editData[index].detail[detailIndex].photourl = res.data;
+		    	configAssembly();
+		    },
+		    error: function(res, index){
+		    	// 请求异常回调
+		    	console.log(res);
+		    	console.log(index);
+		    	configAssembly();
+		    }
+	    });
+	});
 }
 
 function configCarousel() {

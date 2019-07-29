@@ -7,15 +7,24 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MGoodsMapper;
+import com.fast.base.data.dao.MGoodscategoryMapper;
+import com.fast.base.data.dao.MGoodsgroupingMapper;
+import com.fast.base.data.dao.MGoodsingroupMapper;
 import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodsExample;
+import com.fast.base.data.entity.MGoodscategory;
+import com.fast.base.data.entity.MGoodscategoryExample;
+import com.fast.base.data.entity.MGoodsingroup;
+import com.fast.base.data.entity.MGoodsingroupExample;
+import com.fast.base.page.PagingView;
 import com.fast.service.IDataService;
 import com.fast.service.IGoodsService;
 import com.fast.system.log.FastLog;
@@ -44,6 +53,15 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 	
 	@Autowired
 	MGoodsskuMapper goodsskuMapper;
+	
+	@Autowired
+	MGoodscategoryMapper goodscategoryMapper;
+	
+	@Autowired
+	MGoodsgroupingMapper goodsgroupingMapper;
+	
+	@Autowired
+	MGoodsingroupMapper goodsingroupMapper;
 
 	@Override
 	public Result goods() {
@@ -337,6 +355,121 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用GoodsServiceImpl.queryGoodsStock报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryGoodsClassify(String appid) {
+		Result result = new Result();
+
+		try {
+			MGoodscategoryExample example = new MGoodscategoryExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1"));
+			List<MGoodscategory> list = goodscategoryMapper.selectByExample(example);
+			List<HashMap<String, Object>> dataList = BeanUtil.toMapList(list);
+			
+			List<HashMap<String, Object>> category = new ArrayList<>();
+			List<HashMap<String, Object>> middle = new ArrayList<>();
+			List<HashMap<String, Object>> small = new ArrayList<>();
+			for (int i = 0; i < dataList.size(); i++) {
+				Integer grade = Integer.valueOf(dataList.get(i).get("grade").toString());
+				if (grade.intValue() == 1) {
+					category.add(dataList.get(i));
+				} else if (grade.intValue() == 2) {
+					middle.add(dataList.get(i));
+				} else if (grade.intValue() == 3) {
+					small.add(dataList.get(i));
+				}
+			}
+			for (int i = 0; i < category.size(); i++) {
+				Integer id = Integer.valueOf(category.get(i).get("id").toString());
+				List<HashMap<String, Object>> childs = new ArrayList<>();
+				for (int j = 0; j < middle.size(); j++) {
+					Integer parentid = Integer.valueOf(middle.get(j).get("parentid").toString());
+					if (parentid.intValue() == id.intValue()) {
+						Integer mid = Integer.valueOf(middle.get(j).get("id").toString());
+						List<HashMap<String, Object>> sub = new ArrayList<>();
+						for (int k = 0; k < small.size(); k++) {
+							Integer pid = Integer.valueOf(small.get(k).get("parentid").toString());
+							if (pid.intValue() == mid.intValue()) {
+								sub.add(small.get(k));
+							}
+						}
+						middle.get(j).put("childs", sub);
+						childs.add(middle.get(j));
+					}
+				}
+				category.get(i).put("childs", childs);
+			}
+			
+			result.setData(category);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsServiceImpl.queryGoodsClassify报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryGoodsBySort(String appid, Integer type, Integer id, String keyword, Integer sortType, PagingView page) {
+		Result result = new Result();
+
+		try {
+			List<LinkedHashMap<String, Object>> goods = new ArrayList<>();
+			String sql = "select id,code,name,photourl,kind,price,exchangepoint as point from m_goods where useflag=1 and onsale=1 ";
+			// 分类
+			if (type.intValue() == 1) {
+				MGoodscategory goodscategory = goodscategoryMapper.selectByPrimaryKey(id);
+				if (goodscategory.getGrade().intValue() == 1) {
+					sql += " and bigcategory=" + goodscategory.getId();
+				} else if (goodscategory.getGrade().intValue() == 2) {
+					sql += " and middlecategory=" + goodscategory.getId();
+				} else if (goodscategory.getGrade().intValue() == 3) {
+					sql += " and smallcategory=" + goodscategory.getId();
+				}
+			}
+			// 分组
+			else if (type.intValue() == 2) {
+				MGoodsingroupExample example = new MGoodsingroupExample();
+				example.createCriteria().andGroupingidEqualTo(id);
+				List<MGoodsingroup> list = goodsingroupMapper.selectByExample(example);
+				List<String> idList = new ArrayList<>();
+				for (int i = 0; i < list.size(); i++) {
+					idList.add(list.get(i).getGoodsid().toString());
+				}
+				if (idList != null && idList.size() > 0) {
+					sql += " and id in (" + StringUtils.join(idList.toArray(), ",") + ")";
+				}
+			}
+			
+			// 关键词搜索
+			if (!Common.isEmpty(keyword)) {
+				sql += " and (code like '%" + keyword.trim() + "%' or name like '%" + keyword.trim() + "%') ";
+			}
+			
+			// 0综合 1新品 2价格从低到高 3价格从高到低
+			if (sortType.intValue() == 1) {
+				page.setOrderBy(" order by onsaletime desc,createtime,code asc,name asc");
+			} else if (sortType.intValue() == 2) {
+				page.setOrderBy(" order by price desc,onsaletime desc,code asc,name asc");
+			} else if (sortType.intValue() == 3) {
+				page.setOrderBy(" order by price asc,onsaletime desc,code asc,name asc");
+			} else {
+				page.setOrderBy(" order by updatedtime desc,modifytime desc,onsaletime desc");
+			}
+			
+			goods = dataMapper.pageList(sql, page);
+			page.setRecords(goods);
+					
+			result.setData(page);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GoodsServiceImpl.queryGoodsBySort报错：", e);
 		}
 
 		return result;

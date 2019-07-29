@@ -1,6 +1,7 @@
 package com.fast.service;
 
 import com.fast.base.Result;
+import com.fast.base.page.PagingView;
 
 /**
  * 商品
@@ -55,5 +56,24 @@ public interface IGoodsService {
 	 * @return
 	 */
 	public Result queryGoodsStock(Integer goodsid, String appid, String openid);
+	
+	/**
+	 * 小程序商品分类
+	 * @param appid
+	 * @return
+	 */
+	public Result queryGoodsClassify(String appid);
+	
+	/**
+	 * 搜索商品
+	 * @param appid  小程序appid
+	 * @param type 0全部 1分类 2分组
+	 * @param id  type in (1,2)是分类/分组id
+	 * @param keyword 搜索关键词
+	 * @param sortType  排序方式，0综合 1新品 2价格从低到高 3价格从高到低
+	 * @param page 分页
+	 * @return
+	 */
+	public Result queryGoodsBySort(String appid, Integer type, Integer id, String keyword, Integer sortType, PagingView page);
 
 }

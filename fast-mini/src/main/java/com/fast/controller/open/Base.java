@@ -59,7 +59,7 @@ public class Base extends MiniMaster {
 			codeList.add("1003");
 			codeList.add("1004");
 			codeList.add("1005");
-			codeList.add("1006");
+			//codeList.add("1006");
 			codeList.add("1007");
 			codeList.add("2001");
 			codeList.add("2002");

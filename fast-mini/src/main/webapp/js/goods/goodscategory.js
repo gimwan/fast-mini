@@ -260,6 +260,7 @@ function createElement(data) {
 		name : "",
 		grade: grade,
 		parentid: parentid,
+		photourl: '',
 		useflag : 1,
 		memo : ""
 	};
@@ -312,6 +313,14 @@ function createElement(data) {
 				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
+				        "<div class=\"edit-item\" image=\"1\" need=\"0\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">缩略图</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"photourl\">"+
+				                "<img src=\""+d.photourl+"\" onerror=\"defaultImg(this)\" class=\"layui-square-img layui-upload-drag value\"/>"+
+				            "</div>"+
+				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">是否使用</label>：</span>"+
@@ -356,7 +365,7 @@ function showEditBox(idx,data) {
         type: 1,
         title: boxTitle,
         content: editDiv,
-        area: ['600px', '520px'],
+        area: ['600px', '660px'],
         btn: ['保存','取消'],
         btn1: function (index, layero) {
             let data = catchBoxValue();
@@ -386,6 +395,7 @@ function showEditBox(idx,data) {
         success: function () {
         	// 重新刷新form
         	layuiForm.render();
+        	configUpload();
             var val = $(".edit-view .focus").val();
             $(".edit-view .focus").val("").focus().val(val);
         }
@@ -447,5 +457,25 @@ function smallDel() {
                 common.closeLoading();
             });
 		}
+	});
+}
+
+function configUpload() {
+	layuiUpload.render({
+	    elem: '.layui-upload-drag',
+	    url: './upload/field/employee',
+	    size: 1024,
+	    multiple: false,
+	    done: function(res, index, upload){
+	    	// 上传完毕回调
+	    	var item = this.item;
+	    	$(item).attr("src",res.data);
+	    },
+	    error: function(res, index){
+	    	// 请求异常回调
+	    	console.log(res);
+	    	console.log(index);
+	    	configAssembly();
+	    }
 	});
 }

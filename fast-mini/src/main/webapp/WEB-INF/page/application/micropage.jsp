@@ -120,9 +120,9 @@
 					<!-- 广告 -->
 					<div class="layTable uploadField ad" v-if="e.kind == 1 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
 						<div class="uploadBox">
-							<div class="layui-upload-drag layTableCell">
+							<div class="layui-upload-drag layTableCell" v-bind:id="'ad'+index+i" v-bind:key="index+i" v-bind:lay-filter="index+i">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
-								<i class="layui-icon" v-else></i>
+								<i class="layui-icon" v-else>&#xe62f;</i>
 							</div>
 							<i class="layui-icon layui-icon-delete"></i>
 						</div>
@@ -131,7 +131,7 @@
 								<div class="selectItem">
 									<label class="layui-form-label layui-inline selectTitle">链接类型：</label>
 									<div class="layui-input-inline selectBox">
-										<select id="linkType"  lay-filter="linkType" v-bind:data-pindex="index" v-bind:data-index="i">
+										<select id="linkType" lay-filter="linkType" v-bind:data-pindex="index" v-bind:data-index="i">
 											<option value="0" v-if="dt.type==0" selected="">无</option>
 											<option value="0" v-else>无</option>
 											<option value="1" v-if="dt.type==1" selected>微页面</option>
@@ -201,8 +201,8 @@
 							</div>
 						</form>
 					</div>
-					<div class="uploadField ad iconAdd" v-if="e.kind == 1 && e.choose == 1 && e.length!=5" key="adAdd">
-						<i class="layui-icon layui-icon-add-circle"></i>
+					<div class="uploadField ad iconAdd" v-if="e.kind == 1 && e.choose == 1 && e.detail.length!=5" key="adAdd">
+						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-bind:data-index="index" v-on:click="addItem"></i>
 					</div>
 					<!-- 导航 -->
 					<div class="layTable uploadField ad" v-if="e.kind == 3 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
@@ -288,7 +288,7 @@
 						</form>
 					</div>
 					<div class="uploadField ad iconAdd" v-if="e.kind == 3 && e.choose == 1 && e.length!=4" key="navigationAdd">
-						<i class="layui-icon layui-icon-add-circle"></i>
+						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-on:click="addItem"></i>
 					</div>
 					<!-- 公告 -->
 					<div class="notice" v-if="e.kind == 4 && e.choose == 1">
@@ -423,7 +423,7 @@
 						</form>
 					</div>
 					<div class="category iconAdd" v-if="e.kind == 8 && e.choose == 1 && e.length!=4" key="navigationAdd">
-						<i class="layui-icon layui-icon-add-circle"></i>
+						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-on:click="addItem"></i>
 					</div>
 					<!-- 商品分组 -->
 					<div class="group" v-if="e.kind == 7 && e.choose == 1">
@@ -442,7 +442,7 @@
 						</form>
 					</div>
 					<div class="category iconAdd" v-if="e.kind == 7 && e.choose == 1 && e.length!=4" key="categoryAdd">
-						<i class="layui-icon layui-icon-add-circle"></i>
+						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-on:click="addItem"></i>
 					</div>
 					<!-- 商品 -->
 					<div class="goods" v-if="e.kind == 9 && e.choose == 1">
@@ -458,7 +458,7 @@
 										<i class="layui-icon layui-icon-delete"></i>
 									</div>
 									<div class="category iconAdd" v-if="e.detail.length!=10" key="categoryAdd">
-										<i class="layui-icon layui-icon-add-circle"></i>
+										<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-on:click="addItem"></i>
 									</div>
 								</div>
 							</div>
