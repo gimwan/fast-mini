@@ -624,6 +624,66 @@ public class MConfigExample {
             addCriterion("UpdatedTime not between", value1, value2, "updatedtime");
             return (Criteria) this;
         }
+
+        public Criteria andUseflagIsNull() {
+            addCriterion("UseFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagIsNotNull() {
+            addCriterion("UseFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagEqualTo(Byte value) {
+            addCriterion("UseFlag =", value, "useflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagNotEqualTo(Byte value) {
+            addCriterion("UseFlag <>", value, "useflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagGreaterThan(Byte value) {
+            addCriterion("UseFlag >", value, "useflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagGreaterThanOrEqualTo(Byte value) {
+            addCriterion("UseFlag >=", value, "useflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagLessThan(Byte value) {
+            addCriterion("UseFlag <", value, "useflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagLessThanOrEqualTo(Byte value) {
+            addCriterion("UseFlag <=", value, "useflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagIn(List<Byte> values) {
+            addCriterion("UseFlag in", values, "useflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagNotIn(List<Byte> values) {
+            addCriterion("UseFlag not in", values, "useflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagBetween(Byte value1, Byte value2) {
+            addCriterion("UseFlag between", value1, value2, "useflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseflagNotBetween(Byte value1, Byte value2) {
+            addCriterion("UseFlag not between", value1, value2, "useflag");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

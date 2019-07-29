@@ -23,6 +23,8 @@ public class MConfig implements Serializable {
 
     private Date updatedtime;
 
+    private Byte useflag;
+
     public Integer getId() {
         return id;
     }
@@ -85,5 +87,13 @@ public class MConfig implements Serializable {
 
     public void setUpdatedtime(Date updatedtime) {
         this.updatedtime = updatedtime;
+    }
+
+    public Byte getUseflag() {
+        return useflag;
+    }
+
+    public void setUseflag(Byte useflag) {
+        this.useflag = useflag;
     }
 }
