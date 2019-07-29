@@ -387,3 +387,19 @@ $('.kit-side-fold').click(function () {
         isShow = true;
     }
 });
+
+/**
+ * 登出
+ * @returns
+ */
+function logout() {
+	layer.confirm('确定退出？', {
+		btn: ['确定','取消'],
+		btn1 : function(index, layero) {
+			common.showLoading();
+		    api.load(basePath + 'logout','post',{},function (result) {
+		    	window.location.reload();
+		    });
+		}
+	});
+}

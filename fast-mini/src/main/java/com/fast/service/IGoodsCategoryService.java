@@ -24,5 +24,7 @@ public interface IGoodsCategoryService {
 	 * @return
 	 */
 	public Result list(PagingView page, Integer grade, Integer parentID);
+	
+	public Result category();
 
 }

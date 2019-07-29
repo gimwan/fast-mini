@@ -149,6 +149,7 @@ function createElement(data) {
 	    code : "",
 	    name : "",
 	    grade : 1,
+	    pointrate : 0,
 	    discount : 1,
 	    birthdaydiscount : 1,
 	    defaultflag : 0,
@@ -256,6 +257,14 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"birthdaydiscount\">"+
 				                "<input type=\"text\" value=\""+d.birthdaydiscount+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">积分转换比例(多少积分抵1元)</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"pointrate\">"+
+				                "<input type=\"text\" value=\""+d.pointrate+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+

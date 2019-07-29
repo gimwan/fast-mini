@@ -50,7 +50,7 @@ public class BeanUtil {
 					Field f = obj.getClass().getDeclaredField(fields[i].getName());
 					f.setAccessible(true);
 					Object o = f.get(obj);
-					reMap.put(fields[i].getName(), o);
+					reMap.put(fields[i].getName().toLowerCase(), o);
 				} catch (NoSuchFieldException e) {
 					e.printStackTrace();
 				} catch (IllegalArgumentException e) {

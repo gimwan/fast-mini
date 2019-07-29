@@ -161,7 +161,7 @@ public class WechatServiceImpl implements IWechatService, Serializable {
 			jsonObject = CommonUtil.httpsRequest(requestUrl, "GET", null);
 
 			// 把openid、session_key、unionid存入缓存
-			String openid = "";
+			/*String openid = "";
 			if (jsonObject != null && jsonObject.has("openid")) {
 				openid = jsonObject.getString("openid");
 			}
@@ -176,7 +176,7 @@ public class WechatServiceImpl implements IWechatService, Serializable {
 				unionid = jsonObject.getString("unionid");
 			}
 			
-			/*if (openid != null && !"".equals(openid.trim())) {
+			if (openid != null && !"".equals(openid.trim())) {
 				JSONObject jObject = new JSONObject();
 				
 				Object object = RedisCache.get(openid);

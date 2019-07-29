@@ -9,16 +9,16 @@
 				<label class="username">${user.name}
 				<span class="layui-nav-more"></span></label>
 			</a>
-			<dl class="layui-nav-child">
+			<!-- <dl class="layui-nav-child">
 				<dd>
 					<a href="javascript:void(0);">基本资料</a>
 				</dd>
 				<dd>
 					<a href="javascript:void(0);">安全设置</a>
 				</dd>
-			</dl>
+			</dl> -->
 		</li>
-		<li class="layui-nav-item"><a href="">退出</a></li>
+		<li class="layui-nav-item"><a href="javascript:logout();">退出</a></li>
 		<!-- <span class="layui-nav-bar"
 			style="left: 54px; top: 55px; width: 0px; opacity: 0;"></span> -->
 	</ul>

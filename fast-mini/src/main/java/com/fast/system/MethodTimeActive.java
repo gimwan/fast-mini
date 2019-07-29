@@ -30,8 +30,8 @@ public class MethodTimeActive implements MethodInterceptor {
 		String methodName = invocation.getMethod().getDeclaringClass().getName() + "." + invocation.getMethod().getName();
 		// 获取计时器计时时间
 		Long time = watch.getTime();
-
-		String logMsg = methodName + ":" + time + "毫秒";
+		methodName = methodName.replace("com.fast.service.impl.", "");
+		String logMsg = methodName + "：" + time + "ms";
 		System.out.println(logMsg);
 		FastLog.info(logMsg);
 		

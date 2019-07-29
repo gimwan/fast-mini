@@ -70,6 +70,15 @@ public class VipcartMaintServiceImpl implements IVipcartMaintService, Serializab
 			if (Common.isActive(r)) {
 				JSONObject object = JSONObject.fromObject(r.getData());
 				MVip vip = (MVip) JSONObject.toBean(object, MVip.class);
+				
+				MVipcartExample vipcartExample = new MVipcartExample();
+				vipcartExample.createCriteria().andVipidEqualTo(vip.getId()).andPublicplatformidEqualTo(publicplatformid).andTypeEqualTo(kind);
+				List<MVipcart> cartList = vipcartMapper.selectByExample(vipcartExample);
+				if (cartList != null && cartList.size() > 100) {
+					result.setMessage("已超过100条记录，请精简记录");
+					return result;
+				}
+				
 				Date now = new Date();
 				MVipcartExample example = new MVipcartExample();
 				example.createCriteria().andVipidEqualTo(vip.getId()).andPublicplatformidEqualTo(publicplatformid)
