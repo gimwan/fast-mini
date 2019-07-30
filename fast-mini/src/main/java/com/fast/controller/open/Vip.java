@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.base.Result;
 import com.fast.base.data.entity.MVip;
+import com.fast.base.page.PagingView;
 import com.fast.service.IVipAddressMaintService;
 import com.fast.service.IVipAddressService;
 import com.fast.service.IVipCouponMaintService;
+import com.fast.service.IVipCouponService;
 import com.fast.service.IVipMaintService;
 import com.fast.service.IVipService;
 import com.fast.service.IVipcartMaintService;
@@ -49,6 +51,9 @@ public class Vip extends MiniMaster {
 	
 	@Autowired
 	IVipCouponMaintService iVipCouponMaintService;
+	
+	@Autowired
+	IVipCouponService iVipCouponService;
 	
 	/**
 	 * 默认登录
@@ -629,6 +634,12 @@ public class Vip extends MiniMaster {
 		return result;
 	}
 	
+	/**
+	 * 可用优惠券
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping("/vip/coupon")
 	@ResponseBody
 	public String coupon(HttpServletRequest request, HttpServletResponse response) {
@@ -638,8 +649,23 @@ public class Vip extends MiniMaster {
 		try {
 			String appid = request.getParameter("appid");
 			String openid = request.getParameter("openid");
+			String type = request.getParameter("type");
+			String pageNo = request.getParameter("pageno");
+			String pageSize = request.getParameter("pagesize");
 			
-			//r = iVipCouponMaintService.gainVipCoupon(appid, openid, Integer.valueOf(id.trim()));
+			if (Common.isEmpty(type)) {
+				type = "0";
+			}
+			if (Common.isEmpty(pageNo)) {
+				pageNo = "1";
+			}
+			if (Common.isEmpty(pageSize)) {
+				pageSize = "15";
+			}
+			PagingView page = new PagingView(Integer.valueOf(pageNo));
+			page.setPageSize(Integer.valueOf(pageSize).intValue());
+			
+			r = iVipCouponService.queryVipCoupon(appid, openid, Integer.valueOf(type.trim()), page);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

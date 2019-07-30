@@ -89,17 +89,27 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 	@Transactional(rollbackFor = Exception.class)
 	public void saveData(Integer vipid, MCoupon coupon, Integer quantity) {
 		Date now = new Date();
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(now);
+		ca.set(Calendar.HOUR_OF_DAY, 0);
+		ca.set(Calendar.MINUTE, 0);
+		ca.set(Calendar.SECOND, 0);
+		
 		Integer effectiveTime = coupon.getEffectivetime();
 		Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
         calendar.add(Calendar.DATE, effectiveTime);
+        ca.set(Calendar.HOUR_OF_DAY, 23);
+		ca.set(Calendar.MINUTE, 59);
+		ca.set(Calendar.SECOND, 59);
         Date endTime = calendar.getTime();
+        
 		for (int i = 0; i < quantity.intValue(); i++) {
         	MVipcoupon vipcoupon = new MVipcoupon();
 	        vipcoupon.setVipid(vipid);
 	        vipcoupon.setCouponid(coupon.getId());
 	        vipcoupon.setGettime(now);
-	        vipcoupon.setBegintime(now);
+	        vipcoupon.setBegintime(ca.getTime());
 	        vipcoupon.setEndtime(endTime);
 	        vipcoupon.setUseflag(Byte.valueOf("0"));
 	        vipcoupon.setCreatetime(now);
