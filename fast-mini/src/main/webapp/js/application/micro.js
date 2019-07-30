@@ -143,7 +143,7 @@ function loadPageData(pageno) {
 }
 
 function setData(pageView) {
-	let data = pageView.records;
+	let data = pageView.data;
 	micro.splice(0, micro.length);
 	if (data != null) {
 		for (let i = 0; i < data.length; i++) {

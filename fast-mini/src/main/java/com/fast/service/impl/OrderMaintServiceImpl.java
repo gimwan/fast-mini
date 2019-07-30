@@ -158,7 +158,15 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 				order.setCreator("system");
 				order.setUpdatedtime(now);
 				order.setUseflag(Byte.valueOf("1"));
-				order.setStatus(Byte.valueOf("1"));
+				
+				if (order.getPaymoney().compareTo(BigDecimal.ZERO) > 0) {
+					order.setStatus(Byte.valueOf("1"));
+				} else {
+					order.setStatus(Byte.valueOf("2"));
+					order.setPaystatus(Byte.valueOf("2"));
+					order.setPaytime(now);
+				}
+				
 				order.setMiniprogramid(miniprogramid);
 				order.setPublicplatformid(publicplatformid);
 				order.setRetuenpaystatus(Byte.valueOf("0"));

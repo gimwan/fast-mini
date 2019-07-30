@@ -74,7 +74,7 @@ public class GoodsCategoryServiceImpl implements IGoodsCategoryService, Serializ
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql, page);
 			list = CommonUtil.transformUpperCase(list);
 			list = iDataService.completeData(list, "goodscategory");
-			page.setRecords(list);
+			page.setData(list);
 			result.setErrcode(0);
 			result.setData(page);
 		} catch (Exception e) {

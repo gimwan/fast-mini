@@ -125,7 +125,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql, page);
 			list = CommonUtil.transformUpperCase(list);
 			list = iDataService.completeData(list, "order");
-			page.setRecords(list);
+			page.setData(list);
 			result.setErrcode(0);
 			result.setData(page);
 		} catch (Exception e) {
@@ -473,7 +473,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 				list.get(i).put("detail", dtl);
 			}
 			
-			page.setRecords(list);
+			page.setData(list);
 			
 			result.setData(page);
 			result.setErrcode(Integer.valueOf(0));

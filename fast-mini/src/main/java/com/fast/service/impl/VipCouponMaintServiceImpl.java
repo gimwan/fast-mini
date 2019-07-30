@@ -7,15 +7,21 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MCouponMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.entity.MCoupon;
+import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipcouponExample;
+import com.fast.base.data.entity.MVipmini;
+import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipCouponMaintService;
+import com.fast.service.IVipMiniService;
 import com.fast.system.log.FastLog;
+import com.fast.util.Common;
 
 /**
  * 优惠券
@@ -32,12 +38,19 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 	
 	@Autowired
 	MCouponMapper couponMapper;
+	
+	@Autowired
+	IMiniProgramService iMiniProgramService;
 
+	@Autowired
+	IVipMiniService iVipMiniService;
+	
 	@Override
 	public Result addVipCoupon(Integer couponID, Integer VipID, Integer quantity) {
 		Result result = new Result();
 
 		try {
+			
 			MCoupon coupon = couponMapper.selectByPrimaryKey(couponID);
 			
 			if (coupon.getTotalquantity() != null && coupon.getTotalquantity().intValue() > 0) {
@@ -62,27 +75,8 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 				}
 			}
 			
-			Integer effectiveTime = coupon.getEffectivetime();
-			Date now = new Date();
-			Calendar calendar = Calendar.getInstance();
-	        calendar.setTime(now);
-	        calendar.add(Calendar.DATE, effectiveTime);
-	        Date endTime = calendar.getTime();
+			saveData(VipID, coupon, quantity);
 	        
-	        for (int i = 0; i < quantity.intValue(); i++) {
-	        	MVipcoupon vipcoupon = new MVipcoupon();
-		        vipcoupon.setVipid(VipID);
-		        vipcoupon.setCouponid(couponID);
-		        vipcoupon.setGettime(now);
-		        vipcoupon.setBegintime(now);
-		        vipcoupon.setEndtime(endTime);
-		        vipcoupon.setUseflag(Byte.valueOf("0"));
-		        vipcoupon.setCreatetime(now);
-		        vipcoupon.setCreator("system");
-		        vipcoupon.setUpdatedtime(now);
-		        vipcoupon.setCode(getCouponCode());
-		        vipcouponMapper.insertSelective(vipcoupon);
-			}
 	        result.setErrcode(Integer.valueOf(0));
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
@@ -90,6 +84,30 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 		}
 
 		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public void saveData(Integer vipid, MCoupon coupon, Integer quantity) {
+		Date now = new Date();
+		Integer effectiveTime = coupon.getEffectivetime();
+		Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.DATE, effectiveTime);
+        Date endTime = calendar.getTime();
+		for (int i = 0; i < quantity.intValue(); i++) {
+        	MVipcoupon vipcoupon = new MVipcoupon();
+	        vipcoupon.setVipid(vipid);
+	        vipcoupon.setCouponid(coupon.getId());
+	        vipcoupon.setGettime(now);
+	        vipcoupon.setBegintime(now);
+	        vipcoupon.setEndtime(endTime);
+	        vipcoupon.setUseflag(Byte.valueOf("0"));
+	        vipcoupon.setCreatetime(now);
+	        vipcoupon.setCreator("system");
+	        vipcoupon.setUpdatedtime(now);
+	        vipcoupon.setCode(getCouponCode());
+	        vipcouponMapper.insertSelective(vipcoupon);
+		}
 	}
 	
 	/**
@@ -106,6 +124,39 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 		randValue = randValue.substring(randValue.length() - 4);
 		code = code + randValue;
 		return code;
+	}
+
+	@Override
+	public Result gainVipCoupon(String appid, String openid, Integer id) {
+		Result result = new Result();
+
+		try {
+			if (Common.isEmpty(openid)) {
+				result.setMessage("openid无效");
+				return result;
+			}
+			MMiniprogram miniprogram = new MMiniprogram();
+			Result r = iMiniProgramService.queryMiniprogramByAppid(appid);
+			if (Common.isActive(r)) {
+				miniprogram = (MMiniprogram) r.getData();
+			} else {
+				return r;
+			}
+			MVipmini vipmini = new MVipmini();
+			r = iVipMiniService.queryVipMiniByOpenid(miniprogram.getId(), openid);
+			if (Common.isActive(r)) {
+				vipmini = (MVipmini) r.getData();
+			} else {
+				return r;
+			}
+			
+			result = addVipCoupon(id, vipmini.getVipid(), 1);
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipCouponMaintServiceImpl.gainVipCoupon报错：", e);
+		}
+
+		return result;
 	}
 
 }

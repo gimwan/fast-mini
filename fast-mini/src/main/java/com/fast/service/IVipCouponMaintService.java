@@ -17,5 +17,14 @@ public interface IVipCouponMaintService {
 	 * @return
 	 */
 	public Result addVipCoupon(Integer couponID, Integer VipID, Integer quantity);
+	
+	/**
+	 * 会员领取优惠券
+	 * @param appid  小程序appid
+	 * @param openid  会员openid
+	 * @param id  优惠券id
+	 * @return
+	 */
+	public Result gainVipCoupon(String appid, String openid, Integer id);
 
 }

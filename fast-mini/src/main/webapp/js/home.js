@@ -325,8 +325,8 @@ function pageConfig(page, fn) {
 	let limit = 15;
 	let pageNow = 1;
 	if (page != null && page != undefined) {
-		count = page.rowCount;
-		pageNow = page.pageNow;
+		count = page.totalCount;
+		pageNow = page.pageNo;
 	}
 	if (pageNow == 1) {
 		dataPage = layPage;

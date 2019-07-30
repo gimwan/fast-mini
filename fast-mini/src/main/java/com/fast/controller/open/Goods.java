@@ -128,34 +128,6 @@ public class Goods extends MiniMaster {
 		
 		return result;
 	}
-
-	/**
-	 * 按分组查找商品
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/goods/grouping")
-	@ResponseBody
-	public String grouping(HttpServletRequest request, HttpServletResponse response) {
-		String result = "";
-		Result r = new Result();
-		
-		try {
-			String appid = request.getParameter("appid");
-			String id = request.getParameter("id");
-			
-			r = iGoodsService.queryGoodsClassify(appid);
-		} catch (Exception e) {
-			e.printStackTrace();
-			r.setMessage(e.getMessage());
-		}
-		
-		JSONObject jsonObject = JSONObject.fromObject(r);
-		result = jsonObject.toString();
-		
-		return result;
-	}
 	
 	/**
 	 * 按分类查找商品

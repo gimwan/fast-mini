@@ -231,7 +231,7 @@ function loadPageData(pageno) {
 }
 
 function setData(pageView) {
-	let data = pageView.records;
+	let data = pageView.data;
 	if (grade == 1) {
 		bigcategory.splice(0, bigcategory.length);
 	} else if (grade == 2) {

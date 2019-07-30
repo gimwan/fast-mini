@@ -113,7 +113,7 @@ public class PagingPlugin implements Interceptor {
 					if (rs.next()) {
 						count = ((Number) rs.getObject(1)).intValue();
 					}
-					PagingView.setRowCount(count);
+					PagingView.settotalCount(count);
 				} finally {
 					try {
 						rs.close();
@@ -142,7 +142,7 @@ public class PagingPlugin implements Interceptor {
 	private String generatePagesSql(String sql, PagingView page) {
 		if (page != null && dialectObject != null) {
 			// pageNow默认是从1，而已数据库是从0开始计算的．所以(page.getPageNow()-1)
-			int pageNow = page.getPageNow();
+			int pageNow = page.getpageNo();
 			return dialectObject.getLimitString(sql, (pageNow <= 0 ? 0 : pageNow - 1) * page.getPageSize(),
 					page.getPageSize(), page.getOrderBy());
 		}

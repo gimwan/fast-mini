@@ -12,6 +12,7 @@ import com.fast.base.Result;
 import com.fast.base.data.entity.MVip;
 import com.fast.service.IVipAddressMaintService;
 import com.fast.service.IVipAddressService;
+import com.fast.service.IVipCouponMaintService;
 import com.fast.service.IVipMaintService;
 import com.fast.service.IVipService;
 import com.fast.service.IVipcartMaintService;
@@ -45,6 +46,9 @@ public class Vip extends MiniMaster {
 	
 	@Autowired
 	IVipAddressMaintService iVipAddressMaintService;
+	
+	@Autowired
+	IVipCouponMaintService iVipCouponMaintService;
 	
 	/**
 	 * 默认登录
@@ -583,6 +587,59 @@ public class Vip extends MiniMaster {
 			String id = request.getParameter("id");
 			
 			r = iVipAddressMaintService.deleteVipAddress(appid, openid, Integer.valueOf(id.trim()));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 领取优惠券
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/coupon/gain")
+	@ResponseBody
+	public String coupongain(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String id = request.getParameter("id");
+			
+			r = iVipCouponMaintService.gainVipCoupon(appid, openid, Integer.valueOf(id.trim()));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	@RequestMapping("/vip/coupon")
+	@ResponseBody
+	public String coupon(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			
+			//r = iVipCouponMaintService.gainVipCoupon(appid, openid, Integer.valueOf(id.trim()));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
