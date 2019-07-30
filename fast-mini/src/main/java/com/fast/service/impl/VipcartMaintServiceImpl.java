@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MGoodsMapper;
@@ -147,6 +148,19 @@ public class VipcartMaintServiceImpl implements IVipcartMaintService, Serializab
 				MVip vip = (MVip) JSONObject.toBean(object, MVip.class);
 				MVipcart vipcart = vipcartMapper.selectByPrimaryKey(id);
 				if (vipcart != null && vipcart.getId() != null) {
+					Integer qty = 0;
+					MVipcartExample example = new MVipcartExample();
+					example.createCriteria().andVipidEqualTo(vip.getId()).andPublicplatformidEqualTo(publicplatformid)
+							.andGoodsidEqualTo(goodsid).andColoridEqualTo(colorid).andPatternidEqualTo(patternid)
+							.andSizeidEqualTo(sizeid).andIdNotEqualTo(vipcart.getId());
+					List<MVipcart> list = vipcartMapper.selectByExample(example);
+					if (list != null && list.size() > 0) {
+						for (int i = 0; i < list.size(); i++) {
+							qty = qty + list.get(i).getQuantity().intValue();
+						}
+					}
+					quantity = quantity + qty;
+					
 					Date now = new Date();
 					vipcart.setVipid(vip.getId());
 					vipcart.setGoodsid(goodsid);
@@ -158,7 +172,8 @@ public class VipcartMaintServiceImpl implements IVipcartMaintService, Serializab
 					vipcart.setModifier(vip.getName());
 					vipcart.setModifytime(now);
 					vipcart.setUpdatedtime(now);
-					vipcartMapper.updateByPrimaryKeySelective(vipcart);
+					
+					vipcart = saveData(vipcart, example);
 					
 					result.setErrcode(Integer.valueOf(0));
 					result.setData(vipcart);
@@ -177,6 +192,13 @@ public class VipcartMaintServiceImpl implements IVipcartMaintService, Serializab
 		}
 
 		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public MVipcart saveData(MVipcart vipcart, MVipcartExample example) {
+		vipcartMapper.updateByPrimaryKeySelective(vipcart);
+		vipcartMapper.deleteByExample(example);
+		return vipcart;
 	}
 
 	@Override

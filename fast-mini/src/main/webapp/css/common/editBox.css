@@ -17,6 +17,13 @@
 	color: gray;
 }
 
+.edit-view .edit-box .edit-item .layui-square-img {
+	width: 100px;
+	height: 100px;
+	contain: content;
+	padding: 0px;
+}
+
 .edit-view .edit-box .edit-item .layui-circle-img {
 	width: 100px;
 	height: 100px;

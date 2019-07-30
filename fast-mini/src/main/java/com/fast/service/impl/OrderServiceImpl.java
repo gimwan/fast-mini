@@ -442,7 +442,9 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 				list.get(i).put("detail", dtl);
 			}
 			
-			result.setData(list);
+			page.setRecords(list);
+			
+			result.setData(page);
 			result.setErrcode(Integer.valueOf(0));
 		} catch (Exception e) {
 			e.printStackTrace();

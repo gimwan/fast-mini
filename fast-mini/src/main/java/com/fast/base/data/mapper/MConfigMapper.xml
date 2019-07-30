@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MConfigMapper">
-	<cache type="com.fast.system.RedisCache"/>
+	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MConfig">
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="Code" property="code" jdbcType="VARCHAR" />
@@ -11,6 +11,7 @@
 		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
 		<result column="Modifytime" property="modifytime" jdbcType="TIMESTAMP" />
 		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -44,7 +45,7 @@
 		</where>
 	</sql>
 	<sql id="Base_Column_List">
-		ID, Code, Name, Type, Value, Modifier, Modifytime, UpdatedTime
+		ID, Code, Name, Type, Value, Modifier, Modifytime, UpdatedTime, UseFlag
 	</sql>
 	<select id="selectByExample" resultMap="BaseResultMap"
 		parameterType="com.fast.base.data.entity.MConfigExample">
@@ -83,11 +84,14 @@
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into m_config (ID, Code, Name,
 		Type, Value, Modifier,
-		Modifytime, UpdatedTime)
+		Modifytime, UpdatedTime, UseFlag
+		)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{type,jdbcType=TINYINT}, #{value,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
-		#{modifytime,jdbcType=TIMESTAMP}, #{updatedtime,jdbcType=TIMESTAMP})
+		#{modifytime,jdbcType=TIMESTAMP}, #{updatedtime,jdbcType=TIMESTAMP},
+		#{useflag,jdbcType=TINYINT}
+		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MConfig"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -117,6 +121,9 @@
 			<if test="updatedtime != null">
 				UpdatedTime,
 			</if>
+			<if test="useflag != null">
+				UseFlag,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -142,6 +149,9 @@
 			</if>
 			<if test="updatedtime != null">
 				#{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useflag != null">
+				#{useflag,jdbcType=TINYINT},
 			</if>
 		</trim>
 	</insert>
@@ -176,6 +186,9 @@
 			<if test="updatedtime != null">
 				UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
 			</if>
+			<if test="useflag != null">
+				UseFlag = #{useflag,jdbcType=TINYINT},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -187,7 +200,8 @@
 		Value = #{value,jdbcType=VARCHAR},
 		Modifier = #{modifier,jdbcType=VARCHAR},
 		Modifytime = #{modifytime,jdbcType=TIMESTAMP},
-		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP}
+		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+		UseFlag = #{useflag,jdbcType=TINYINT}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>
