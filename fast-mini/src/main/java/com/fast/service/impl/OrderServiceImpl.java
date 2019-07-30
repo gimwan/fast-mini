@@ -493,7 +493,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 		try {
 			String sql = "select a.id,a.no,a.quantity,a.amount,a.paymoney,a.status,a.discountmoney,a.point,a.pointmoney,a.deposit,a.couponid,a.couponmoney,"
 					+ "convert(varchar(100), a.createtime, 20) as createtime,convert(varchar(100), a.paytime, 20) as paytime,a.receiver,a.receiverphone,"
-					+ "a.ReceiverProvince,a.receivercity,a.receivercounty,a.receiveraddress "
+					+ "a.receiverprovince,a.receivercity,a.receivercounty,a.receiveraddress "
 					+ "from m_order a where a.id=" + id;
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list == null || list.size() < 1) {
