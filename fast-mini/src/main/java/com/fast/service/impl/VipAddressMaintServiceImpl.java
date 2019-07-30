@@ -74,7 +74,7 @@ public class VipAddressMaintServiceImpl implements IVipAddressMaintService, Seri
 			} else {
 				return r;
 			}
-			MVip vip = vipMapper.selectByPrimaryKey(vipmini.getId());
+			MVip vip = vipMapper.selectByPrimaryKey(vipmini.getVipid());
 			Date now = new Date();
 			MVipaddress vipaddress = new MVipaddress();
 			if (id != null && id.intValue() > 0) {
@@ -84,11 +84,13 @@ public class VipAddressMaintServiceImpl implements IVipAddressMaintService, Seri
 					return result;
 				}
 			}
+			vipaddress.setReceiver(receiver);
+			vipaddress.setPhone(phone);
 			vipaddress.setProvinceid(provinceid);
 			vipaddress.setCityid(cityid);
 			vipaddress.setCountyid(countyid);
 			vipaddress.setAddress(address);
-			vipaddress.setIsdefault(Byte.valueOf(vipaddress.toString()));
+			vipaddress.setIsdefault(Byte.valueOf(isDefault.toString()));
 			vipaddress = resetVipAddressRegion(vipaddress);
 			
 			if (vipaddress.getId() != null && vipaddress.getId().intValue() > 0) {
@@ -100,6 +102,7 @@ public class VipAddressMaintServiceImpl implements IVipAddressMaintService, Seri
 			}
 			// 新增
 			else {
+				vipaddress.setVipid(vip.getId());
 				vipaddress.setCreator(vip.getName());
 				vipaddress.setCreatetime(now);
 				vipaddress.setUpdatedtime(now);
