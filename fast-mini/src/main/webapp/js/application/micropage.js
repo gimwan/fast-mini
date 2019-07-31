@@ -108,55 +108,65 @@ function loadData() {
                     	addItem : function(event) {
 							let kind = $(event.target).attr("data-kind");
 							let index = $(event.target).attr("data-index");
-							console.log(setData[index]);
+							let id = new Date().getTime();
+							let item = {
+				                id: id,
+				                micropagesetid: setData[index].id,
+				                showindex: 1,
+				                first: 0,
+				                second: 0,
+				                third: 0,
+				                text: '',
+				                targetpath: '',
+				                photourl: '',
+				                type: (kind==9?1:0),
+				                grouping: '',
+				                category: '',
+				                goodsname: (kind==9?'商品名称':''),
+				                price: (kind==9?888.88:0),
+				                point: 0,
+				                kind: 1,
+				                list: [],
+				                categoryone: '',
+				                categorytwo: '',
+				                categorythree: ''
+				            };
+							
 							// 广告
 							if (kind == 1) {
 								if (setData[index].detail.length < 5) {
-									let item = {
-						                "id": '',
-						                "micropagesetid": '',
-						                "showindex": 1,
-						                "first": '',
-						                "second": '',
-						                "third": '',
-						                "text": '',
-						                "targetpath": '',
-						                "photourl": "",
-						                "type": 0,
-						                "grouping": "",
-						                "category": "",
-						                "goodsname": '',
-						                "price": 0,
-						                "point": 0,
-						                "kind": 1,
-						                "list": [],
-						                "categoryone": "",
-						                "categorytwo": "",
-						                "categorythree": ""
-						            }
 									setData[index].detail.push(item);
-									setTimeout(() => {
-										layuiForm.render();
-										configUploadInst();
-									}, 300);
 								}
 							}
 							// 导航
 							else if (kind == 3) {
-								
+								if (setData[index].detail.length < 4) {
+									setData[index].detail.push(item);
+								}
 							}
 							// 分组
 							else if (kind == 7) {
-								
+								if (setData[index].detail.length < 4) {
+									setData[index].detail.push(item);
+								}
 							}
 							// 分类
 							else if (kind == 8) {
-								
+								if (setData[index].detail.length < 4) {
+									setData[index].detail.push(item);
+								}
 							}
 							// 商品
 							else if (kind == 9) {
-								
+								if (setData[index].detail.length < 10) {
+									setData[index].detail.push(item);
+								}
 							}
+							
+							setTimeout(() => {
+								layuiForm.render();
+								configUploadInst();
+							}, 300);
 						}
                     }
                 });
@@ -274,41 +284,43 @@ function showDeleteIcon() {
 function addItemToPhone(kind) {
 	let micropageid = $("#pageid").val();
 	let lastIndex = $(".middlePanel .editView .setItem:last").attr("data-index");
+	let id = new Date().getTime();
 	let item = {
-        "id": '',
-        "micropageid": micropageid,
-        "kind": kind,
-        "showindex": lastIndex+1,
-        "showname": 1,
-        "showprice": 1,
-        "imagestyle": 0,
-        "orderby": 0,
-        "choose": 1
+        id: id,
+        micropageid: micropageid,
+        kind: kind,
+        showindex: lastIndex+1,
+        showname: 1,
+        showprice: 1,
+        imagestyle: 0,
+        orderby: 0,
+        choose: 1
     }
 	let detail = [];
 	if (kind != 2 && kind != 6) {
+		let detailid = new Date().getTime();
 		detail = [
             {
-                "id": '',
-                "micropagesetid": '',
-                "showindex": 1,
-                "first": '',
-                "second": '',
-                "third": '',
-                "text": '',
-                "targetpath": '',
-                "photourl": "",
-                "type": (kind==9?1:0),
-                "grouping": "",
-                "category": "",
-                "goodsname": (kind==9?'商品名称':''),
-                "price": (kind==9?999.00:0),
-                "point": 0,
-                "kind": 1,
-                "list": [],
-                "categoryone": "",
-                "categorytwo": "",
-                "categorythree": ""
+                id: detailid,
+                micropagesetid: id,
+                showindex: 1,
+                first: 0,
+                second: 0,
+                third: 0,
+                text: '',
+                targetpath: '',
+                photourl: "",
+                type: (kind==9?1:0),
+                grouping: '',
+                category: '',
+                goodsname: (kind==9?'商品名称':''),
+                price: (kind==9?888.88:0),
+                point: 0,
+                kind: 1,
+                list: [],
+                categoryone: '',
+                categorytwo: '',
+                categorythree: ''
             }
         ]
 	}

@@ -26,7 +26,7 @@ common.bindVue = function() {
                     layer.open({
                     	type: 1,
                     	title: name,
-                        area: ['1300px', '800px'],
+                        area: ['1320px', '800px'],
             	        success: function (layero, index) {
             	        	let data = {};
                         	data.id = id;
