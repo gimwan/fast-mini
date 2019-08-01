@@ -21,7 +21,7 @@ public class PagingView {
 	/**
 	 * 分页数据
 	 */
-	private List records;
+	private List data;
 
 	/**
 	 * 页码的开始索引类 这个类包含， startindex 开始索引 endindex 结束索引 这个数是计算出来的
@@ -32,7 +32,7 @@ public class PagingView {
 	 * 总页数 这个数是计算出来的
 	 * 
 	 */
-	private long pageCount;
+	private long totalPage;
 
 	/**
 	 * 每页显示几条记录
@@ -42,12 +42,12 @@ public class PagingView {
 	/**
 	 * 默认 当前页 为第一页 这个数是计算出来的
 	 */
-	private int pageNow = 1;
+	private int pageNo = 1;
 
 	/**
 	 * 总记录数
 	 */
-	private long rowCount;
+	private long totalCount;
 
 	/**
 	 * 从第几条记录开始
@@ -68,7 +68,7 @@ public class PagingView {
 	 * @return
 	 */
 	public int getFirstResult() {
-		return (this.pageNow - 1) * this.pageSize;
+		return (this.pageNo - 1) * this.pageSize;
 	}
 
 	public int getPagecode() {
@@ -84,51 +84,52 @@ public class PagingView {
 	 * 
 	 * @param pageSize
 	 *            每页显示数量
-	 * @param pageNow
+	 * @param pageNo
 	 *            当前页
 	 */
-	public PagingView(int pageSize, int pageNow) {
+	public PagingView(int pageSize, int pageNo) {
 		this.pageSize = pageSize;
-		this.pageNow = pageNow;
+		this.pageNo = pageNo;
 	}
 
 	/**
 	 * 使用构造函数，，强制必需输入 当前页
 	 * 
-	 * @param pageNow
+	 * @param pageNo
 	 *            当前页
 	 */
-	public PagingView(int pageNow) {
-		this.pageNow = pageNow;
-		startPage = (this.pageNow - 1) * this.pageSize;
+	public PagingView(int pageNo) {
+		this.pageNo = pageNo;
+		startPage = (this.pageNo - 1) * this.pageSize;
 	}
 
 	/**
 	 * 查询结果方法 把 记录数 结果集合 放入到 PageView对象
 	 * 
-	 * @param rowCount
+	 * @param totalCount
 	 *            总记录数
 	 * @param records
 	 *            结果集合
 	 */
 
-	public void setQueryResult(long rowCount, List records) {
-		setRowCount(rowCount);
-		setRecords(records);
+	public void setQueryResult(long totalCount, List records) {
+		settotalCount(totalCount);
+		setData(records);
 	}
 
-	public void setRowCount(long rowCount) {
-		this.rowCount = rowCount;
-		setPageCount(
-				this.rowCount % this.pageSize == 0 ? this.rowCount / this.pageSize : this.rowCount / this.pageSize + 1);
+	public void settotalCount(long totalCount) {
+		this.totalCount = totalCount;
+		settotalPage(
+				this.totalCount % this.pageSize == 0 ? this.totalCount / this.pageSize : this.totalCount / this.pageSize + 1);
+	}
+	
+
+	public List getData() {
+		return data;
 	}
 
-	public List getRecords() {
-		return records;
-	}
-
-	public void setRecords(List records) {
-		this.records = records;
+	public void setData(List data) {
+		this.data = data;
 	}
 
 	public PagingIndex getPagingIndex() {
@@ -144,33 +145,33 @@ public class PagingView {
 	 * 
 	 * @author Administrator
 	 * 
-	 *         pagecode 要获得记录的开始索引 即 开始页码 pageNow 当前页 pageCount 总页数
+	 *         pagecode 要获得记录的开始索引 即 开始页码 pageNo 当前页 totalPage 总页数
 	 *
 	 *         这个工具类 返回的是页索引 PagingIndex
 	 * 
 	 *         在这个方法中存在一个问题，每页显示数量 和 当前页、、不能为空 必需输入
 	 */
-	public void setPageCount(long pageCount) {
-		this.pageCount = pageCount;
-		if (pageCount < pageNow)
-			pageNow = (int) pageCount;
+	public void settotalPage(long totalPage) {
+		this.totalPage = totalPage;
+		if (totalPage < pageNo)
+			pageNo = (int) totalPage;
 
-		this.pagingIndex = PagingTools.getPageIndex(pagecode, pageNow, pageCount);
+		this.pagingIndex = PagingTools.getPageIndex(pagecode, pageNo, totalPage);
 	}
 
-	public int getPageNow() {
-		return pageNow;
+	public int getpageNo() {
+		return pageNo;
 	}
 
-	public void setPageNow(int pageNow) {
+	public void setpageNo(int pageNo) {
 
-		this.pageNow = pageNow;
-		if (this.pageNow < 1)
-			this.pageNow = 1;
+		this.pageNo = pageNo;
+		if (this.pageNo < 1)
+			this.pageNo = 1;
 	}
 
-	public long getPageCount() {
-		return pageCount;
+	public long gettotalPage() {
+		return totalPage;
 	}
 
 	public int getPageSize() {
@@ -181,8 +182,8 @@ public class PagingView {
 		this.pageSize = pageSize;
 	}
 
-	public long getRowCount() {
-		return rowCount;
+	public long gettotalCount() {
+		return totalCount;
 	}
 
 	public int getStartPage() {

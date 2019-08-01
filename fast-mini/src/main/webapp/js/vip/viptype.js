@@ -78,7 +78,7 @@ function loadPageData(pageno) {
 }
 
 function setData(pageView) {
-	let data = pageView.records;
+	let data = pageView.data;
 	viptype.splice(0, viptype.length);
 	if (data != null) {
         for (let i = 0; i < data.length; i++) {

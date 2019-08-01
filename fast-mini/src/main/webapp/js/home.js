@@ -49,7 +49,7 @@ document.onreadystatechange = function() {
     		common.showLoading();
     		api.load(url, 'post', {}, function(result) {
     			if (result.errcode == 0) {
-            		let selectOption = optionView(result.data.records,region);;
+            		let selectOption = optionView(result.data.data,region);;
             		layer.open({
             	        type: 1,
             	        title: "<label style='font-weight:600;'>"+title+"</label>",
@@ -136,7 +136,7 @@ document.onreadystatechange = function() {
     		common.showLoading();
     		api.load(url, 'post', {}, function(result) {
     			if (result.errcode == 0) {
-            		let selectOption = optionView(result.data.records,region);;
+            		let selectOption = optionView(result.data.data,region);;
             		layer.open({
             	        type: 1,
             	        title: "<label style='font-weight:600;'>"+title+"</label>",
@@ -325,8 +325,8 @@ function pageConfig(page, fn) {
 	let limit = 15;
 	let pageNow = 1;
 	if (page != null && page != undefined) {
-		count = page.rowCount;
-		pageNow = page.pageNow;
+		count = page.totalCount;
+		pageNow = page.pageNo;
 	}
 	if (pageNow == 1) {
 		dataPage = layPage;

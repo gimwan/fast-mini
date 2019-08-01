@@ -49,7 +49,7 @@ function loadPageData(pageno) {
 }
 
 function setData(pageView) {
-	let data = pageView.records;
+	let data = pageView.data;
 	order.splice(0, order.length);
 	if (data != null) {
         for (let i = 0; i < data.length; i++) {

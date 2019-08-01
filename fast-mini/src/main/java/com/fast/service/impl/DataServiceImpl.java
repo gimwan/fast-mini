@@ -94,7 +94,7 @@ public class DataServiceImpl implements IDataService, Serializable {
 			String sql = "select * from " + tableName;
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql, page);
 			list = CommonUtil.transformUpperCase(list);
-			page.setRecords(list);
+			page.setData(list);
 			result.setErrcode(0);
 			result.setData(page);
 		} catch (Exception e) {
@@ -116,7 +116,7 @@ public class DataServiceImpl implements IDataService, Serializable {
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql, page);
 			list = CommonUtil.transformUpperCase(list);
 			list = completeData(list, tableName.replace("m_", ""));
-			page.setRecords(list);
+			page.setData(list);
 			result.setErrcode(0);
 			result.setData(page);
 		} catch (Exception e) {

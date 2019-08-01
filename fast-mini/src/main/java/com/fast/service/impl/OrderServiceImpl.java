@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.xml.crypto.Data;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MCoupon;
+import com.fast.base.data.entity.MCouponExample;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MOrder;
 import com.fast.base.data.entity.MOrderExample;
@@ -32,6 +35,7 @@ import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipaddress;
 import com.fast.base.data.entity.MVipaddressExample;
 import com.fast.base.data.entity.MVipcoupon;
+import com.fast.base.data.entity.MVipcouponExample;
 import com.fast.base.data.entity.MVipmini;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.page.PagingView;
@@ -42,6 +46,7 @@ import com.fast.service.IVipMiniService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
 import com.fast.util.CommonUtil;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 /**
  * 订单
@@ -120,7 +125,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql, page);
 			list = CommonUtil.transformUpperCase(list);
 			list = iDataService.completeData(list, "order");
-			page.setRecords(list);
+			page.setData(list);
 			result.setErrcode(0);
 			result.setData(page);
 		} catch (Exception e) {
@@ -156,18 +161,16 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 				return r;
 			}
 			MVipaddress vipaddress = new MVipaddress();
-			if (Common.isActive(result)) {
-				MVipaddressExample example = new MVipaddressExample();
-				example.createCriteria().andVipidEqualTo(vipmini.getVipid());
-				example.setOrderByClause(" isdefault desc");
-				List<MVipaddress> list = vipaddressMapper.selectByExample(example);
-				if (list != null && list.size() > 0) {
-					vipaddress = list.get(0);
-				} else {
-					result.setErrcode(Integer.valueOf(2));
-					result.setMessage("无收货地址");
-					return result;
-				}
+			MVipaddressExample example = new MVipaddressExample();
+			example.createCriteria().andVipidEqualTo(vipmini.getVipid());
+			example.setOrderByClause(" isdefault desc");
+			List<MVipaddress> list = vipaddressMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				vipaddress = list.get(0);
+			} else {
+				result.setErrcode(Integer.valueOf(2));
+				result.setMessage("无收货地址");
+				return result;
 			}
 			
 			result = calculation(vipmini.getVipid(), cartid, null, 0, 0);
@@ -181,6 +184,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 				String address = vipaddress.getAddress() == null ? "" : vipaddress.getAddress();
 				map.put("address", province+city+county+address);
 				map.put("addressid", vipaddress.getId());
+				map.put("isdefault", vipaddress.getIsdefault());
 				result.setData(map);
 			}
 			
@@ -234,7 +238,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			}
 			
 			String sql = "select a.id,a.goodsid,a.colorid,a.patternid,a.sizeid,isnull(a.quantity,0) as quantity,"
-					+ "b.code,b.name,b.photourl,isnull(b.price,0) as price,isnull(b.price,0) as saleprice,isnull(b.baseprice,0) as baseprice,"
+					+ "b.code,b.name,b.photourl,isnull(b.price,0) as price,isnull(b.exchangepoint,0) as point,isnull(b.price,0) as saleprice,isnull(b.baseprice,0) as baseprice,"
 					+ "isnull(b.price,0)*isnull(a.quantity,0) as amount,isnull(b.price,0)*isnull(a.quantity,0) as saleamount,"
 					+ "isnull(b.baseprice,0)*isnull(a.quantity,0) as baseamount,b.exchangepoint,b.kind,b.showcolor,b.showpattern,b.showsize,"
 					+ "c.name as color,d.name as pattern,e.name as size,isnull(f.quantity,0) as stockqty,f.id as skuid "
@@ -284,6 +288,9 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			// 券抵扣额
 			BigDecimal couponMoney = BigDecimal.ZERO;
 			BigDecimal discounMoney = goodsSaleAmount.subtract(goodsAmount);
+			// 可用优惠券数量
+			Integer couponNum = 0;
+			couponNum = useableCouponNumber(goodsAmount, vip.getId());
 			
 			if (couponid != null && couponid.intValue() > 0) {
 				MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(couponid);
@@ -326,7 +333,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			}
 			
 			// 使用积分
-			BigDecimal pointMoney = new BigDecimal(point.toString()).multiply(new BigDecimal(pointRate.toString()));
+			BigDecimal pointMoney = new BigDecimal(point.toString()).divide(new BigDecimal(pointRate.toString()), 2, BigDecimal.ROUND_HALF_UP);
 			if (usepoint != null && usepoint.intValue() == 1) {
 				if (pointRate.intValue() > 0) {
 					if (pointMoney.compareTo(paymoney) > 0) {
@@ -335,14 +342,14 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 					} else {
 						paymoney = paymoney.subtract(pointMoney);
 					}
-					point = pointMoney.divide(new BigDecimal(pointRate.toString())).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+					point = pointMoney.multiply(new BigDecimal(pointRate.toString())).setScale(0, BigDecimal.ROUND_UP).intValue();
 				} else {
 					point = 0;
 				}
 			} else {
 				if (pointMoney.compareTo(paymoney) > 0) {
 					pointMoney = paymoney;
-					point = pointMoney.divide(new BigDecimal(pointRate.toString())).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+					point = pointMoney.multiply(new BigDecimal(pointRate.toString())).setScale(0, BigDecimal.ROUND_UP).intValue();
 				}
 			}
 			
@@ -354,6 +361,10 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 				} else {
 					paymoney = paymoney.subtract(deposit);
 				}
+			} else {
+				if (deposit.compareTo(paymoney) > 0) {
+					deposit = paymoney;
+				}
 			}
 			
 			HashMap<String, Object> map = new HashMap<>();
@@ -362,9 +373,10 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			map.put("goodsquantity", goodsQuantity);
 			map.put("vipid", vip.getId());
 			map.put("discount", discount);
-			map.put("discounmoney", discounMoney);
+			map.put("discountmoney", discounMoney);
 			map.put("couponid", couponid);
 			map.put("couponmoney", couponMoney);
+			map.put("couponnum", couponNum);
 			map.put("point", point);
 			map.put("pointrate", pointRate);
 			map.put("pointmoney", pointMoney);
@@ -380,6 +392,25 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 		}
 
 		return result;
+	}
+	
+	public Integer useableCouponNumber(BigDecimal money, Integer vipid) {
+		Integer num = 0;
+		Date now = new Date();
+		MCouponExample example = new MCouponExample();
+		example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andEnableamountLessThanOrEqualTo(money).andBegintimeLessThanOrEqualTo(now);
+		List<MCoupon> list = couponMapper.selectByExample(example);
+		List<Integer> idList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			idList.add(list.get(i).getId());
+		}
+		if (idList != null && idList.size() > 0) {
+			MVipcouponExample vipcouponExample = new MVipcouponExample();
+			vipcouponExample.createCriteria().andUseflagEqualTo(Byte.valueOf("0")).andVipidEqualTo(vipid).andBegintimeLessThanOrEqualTo(now).andEndtimeGreaterThanOrEqualTo(now);
+			List<MVipcoupon> vipcoupons = vipcouponMapper.selectByExample(vipcouponExample);
+			num= vipcoupons.size();
+		}
+		return num;
 	}
 
 	@Override
@@ -442,7 +473,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 				list.get(i).put("detail", dtl);
 			}
 			
-			page.setRecords(list);
+			page.setData(list);
 			
 			result.setData(page);
 			result.setErrcode(Integer.valueOf(0));
@@ -462,7 +493,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 		try {
 			String sql = "select a.id,a.no,a.quantity,a.amount,a.paymoney,a.status,a.discountmoney,a.point,a.pointmoney,a.deposit,a.couponid,a.couponmoney,"
 					+ "convert(varchar(100), a.createtime, 20) as createtime,convert(varchar(100), a.paytime, 20) as paytime,a.receiver,a.receiverphone,"
-					+ "a.ReceiverProvince,a.receivercity,a.receivercounty,a.receiveraddress "
+					+ "a.receiverprovince,a.receivercity,a.receivercounty,a.receiveraddress "
 					+ "from m_order a where a.id=" + id;
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list == null || list.size() < 1) {

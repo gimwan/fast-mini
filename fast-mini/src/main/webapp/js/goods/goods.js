@@ -187,7 +187,7 @@ function loadPageData(pageno) {
  * @returns
  */
 function setData(pageView) {
-	let data = pageView.records;
+	let data = pageView.data;
 	goods.splice(0, goods.length);
 	if (data != null) {
         for (let i = 0; i < data.length; i++) {

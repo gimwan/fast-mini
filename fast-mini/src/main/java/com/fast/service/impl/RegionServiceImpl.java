@@ -121,7 +121,7 @@ public class RegionServiceImpl implements IRegionService, Serializable {
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql, page);
 			list = CommonUtil.transformUpperCase(list);
 			//list = iDataService.completeData(list, "region");
-			page.setRecords(list);
+			page.setData(list);
 			result.setErrcode(0);
 			result.setData(page);
 		} catch (Exception e) {

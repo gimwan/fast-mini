@@ -58,7 +58,7 @@
 									</div>
 									<div class="goodsinfo">
 										<div class="">商品名称</div>
-										<div class="">¥999.00</div>
+										<div class="">¥888.88</div>
 									</div>
 								</div>
 							</div>
@@ -82,7 +82,7 @@
 									</div>
 									<div class="goodsinfo">
 										<div class="">商品名称</div>
-										<div class="">¥999.00</div>
+										<div class="">¥888.88</div>
 									</div>
 								</div>
 							</div>
@@ -103,7 +103,7 @@
 									</div>
 									<div class="goodsinfo">
 										<div class="">商品名称</div>
-										<div class="">¥999.00</div>
+										<div class="">¥888.88</div>
 									</div>
 								</div>
 							</div>
@@ -118,7 +118,7 @@
 			<div class="editBox">
 				<div class="editItem" v-for="(e, index) in editdata" v-bind:data-index="index" v-bind:key="e.id">
 					<!-- 广告 -->
-					<div class="layTable uploadField ad" v-if="e.kind == 1 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+					<div class="layTable uploadField ad" v-if="e.kind == 1 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i+i">
 						<div class="uploadBox">
 							<div class="layui-upload-drag layTableCell" v-bind:id="'ad'+index+i" v-bind:key="index+i" v-bind:lay-filter="index+i">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
@@ -205,7 +205,7 @@
 						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-bind:data-index="index" v-on:click="addItem"></i>
 					</div>
 					<!-- 导航 -->
-					<div class="layTable uploadField ad" v-if="e.kind == 3 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+					<div class="layTable uploadField ad" v-if="e.kind == 3 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
 						<div class="uploadBox">
 							<div class="layui-upload-drag layTableCell">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
@@ -287,8 +287,8 @@
 							</div>
 						</form>
 					</div>
-					<div class="uploadField ad iconAdd" v-if="e.kind == 3 && e.choose == 1 && e.length!=4" key="navigationAdd">
-						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-on:click="addItem"></i>
+					<div class="uploadField ad iconAdd" v-if="e.kind == 3 && e.choose == 1 && e.detail.length!=4" key="navigationAdd">
+						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-bind:data-index="index" v-on:click="addItem"></i>
 					</div>
 					<!-- 公告 -->
 					<div class="notice" v-if="e.kind == 4 && e.choose == 1">
@@ -391,7 +391,7 @@
 					<!-- 商品分类 -->
 					<div class="category" v-if="e.kind == 8 && e.choose == 1">
 						<form class="layui-form">
-						    <div class="selectBlock cascade" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+						    <div class="selectBlock cascade" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
 								<label class="layui-form-label layui-inline selectTitle">商品分类：</label>
 								<div class="cascade-value">
 									<div class="edit-value" data-field="bigcategory">
@@ -422,13 +422,13 @@
 							</div>
 						</form>
 					</div>
-					<div class="category iconAdd" v-if="e.kind == 8 && e.choose == 1 && e.length!=4" key="navigationAdd">
-						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-on:click="addItem"></i>
+					<div class="category iconAdd" v-if="e.kind == 8 && e.choose == 1 && e.detail.length!=4" key="navigationAdd">
+						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-bind:data-index="index" v-on:click="addItem"></i>
 					</div>
 					<!-- 商品分组 -->
 					<div class="group" v-if="e.kind == 7 && e.choose == 1">
 						<form class="layui-form">
-						    <div class="selectBlock popup" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+						    <div class="selectBlock popup" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
 								<label class="layui-form-label layui-inline selectTitle">商品分组：</label>
 								<div class="group-value">
 									<div class="edit-title" style="display:none;"><span class="name">商品分组</span></div>
@@ -441,8 +441,8 @@
 							</div>
 						</form>
 					</div>
-					<div class="category iconAdd" v-if="e.kind == 7 && e.choose == 1 && e.length!=4" key="categoryAdd">
-						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-on:click="addItem"></i>
+					<div class="category iconAdd" v-if="e.kind == 7 && e.choose == 1 && e.detail.length!=4" key="categoryAdd">
+						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-bind:data-index="index" v-on:click="addItem"></i>
 					</div>
 					<!-- 商品 -->
 					<div class="goods" v-if="e.kind == 9 && e.choose == 1">
@@ -450,7 +450,7 @@
 						    <div class="selectBlock popup">
 								<label class="layui-form-label layui-inline selectTitle">商品：</label>
 								<div class="goodsBox">
-									<div class="uploadBox uploadField" v-for="(dt, i) in e.detail" v-bind:data-index="i" v-bind:key="dt.id+index+i">
+									<div class="uploadBox uploadField" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
 										<div class="layui-upload-drag layTableCell">
 											<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
 											<i class="layui-icon" v-else></i>
@@ -458,7 +458,7 @@
 										<i class="layui-icon layui-icon-delete"></i>
 									</div>
 									<div class="category iconAdd" v-if="e.detail.length!=10" key="categoryAdd">
-										<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-on:click="addItem"></i>
+										<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-bind:data-index="index" v-on:click="addItem"></i>
 									</div>
 								</div>
 							</div>

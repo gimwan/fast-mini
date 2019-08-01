@@ -97,7 +97,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql, page);
 			list = CommonUtil.transformUpperCase(list);
 			list = iDataService.completeData(list, "micropage");
-			page.setRecords(list);
+			page.setData(list);
 			result.setErrcode(0);
 			result.setData(page);
 		} catch (Exception e) {

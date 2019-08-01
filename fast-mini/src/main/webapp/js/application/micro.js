@@ -26,7 +26,7 @@ common.bindVue = function() {
                     layer.open({
                     	type: 1,
                     	title: name,
-                        area: ['1300px', '800px'],
+                        area: ['1320px', '800px'],
             	        success: function (layero, index) {
             	        	let data = {};
                         	data.id = id;
@@ -143,7 +143,7 @@ function loadPageData(pageno) {
 }
 
 function setData(pageView) {
-	let data = pageView.records;
+	let data = pageView.data;
 	micro.splice(0, micro.length);
 	if (data != null) {
 		for (let i = 0; i < data.length; i++) {

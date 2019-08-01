@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,17 +18,18 @@ import com.fast.base.data.dao.MOrderMapper;
 import com.fast.base.data.dao.MOrderdtlMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipaddressMapper;
+import com.fast.base.data.dao.MVipcartMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.dao.MVipdepositrecordMapper;
 import com.fast.base.data.dao.MVippointrecordMapper;
 import com.fast.base.data.entity.MGoodssku;
-import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MOrder;
 import com.fast.base.data.entity.MOrderExample;
 import com.fast.base.data.entity.MOrderdtl;
 import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipaddress;
+import com.fast.base.data.entity.MVipcartExample;
 import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipdepositrecord;
 import com.fast.base.data.entity.MVippointrecord;
@@ -76,6 +78,9 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	
 	@Autowired
 	MGoodsskuMapper goodsskuMapper;
+	
+	@Autowired
+	MVipcartMapper vipcartMapper;
 	
 	@Override
 	public Result createOrder(String appid, Integer vipid, String cartid, Integer addressid, Integer couponid,
@@ -153,7 +158,15 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 				order.setCreator("system");
 				order.setUpdatedtime(now);
 				order.setUseflag(Byte.valueOf("1"));
-				order.setStatus(Byte.valueOf("1"));
+				
+				if (order.getPaymoney().compareTo(BigDecimal.ZERO) > 0) {
+					order.setStatus(Byte.valueOf("1"));
+				} else {
+					order.setStatus(Byte.valueOf("2"));
+					order.setPaystatus(Byte.valueOf("2"));
+					order.setPaytime(now);
+				}
+				
 				order.setMiniprogramid(miniprogramid);
 				order.setPublicplatformid(publicplatformid);
 				order.setRetuenpaystatus(Byte.valueOf("0"));
@@ -177,6 +190,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	@Transactional(rollbackFor = Exception.class)
 	public MOrder saveOrder(MOrder order, List<LinkedHashMap<String, Object>> goodsList) {
 		orderMapper.insertSelective(order);
+		List<Integer> cartidList = new ArrayList<>();
 		for (int i = 0; i < goodsList.size(); i++) {
 			MOrderdtl orderdtl = new MOrderdtl();
 			orderdtl.setOrderid(order.getId());
@@ -201,6 +215,8 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			Integer quantity = goodssku.getQuantity().intValue() - orderdtl.getQuantity().intValue();
 			goodssku.setQuantity(Long.valueOf(quantity.toString()));
 			goodsskuMapper.updateByPrimaryKeySelective(goodssku);
+			
+			cartidList.add(Integer.valueOf(goodsList.get(i).get("id").toString()));
 		}
 		// 核销优惠券
 		if (order.getCouponid() != null && order.getCouponid().intValue() > 0) {
@@ -243,6 +259,10 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			vipdepositrecordMapper.insertSelective(vipdepositrecord);
 			vippointrecordMapper.insertSelective(vippointrecord);
 		}
+		
+		MVipcartExample vipcartExample = new MVipcartExample();
+		vipcartExample.createCriteria().andVipidEqualTo(order.getVipid()).andIdIn(cartidList);
+		vipcartMapper.deleteByExample(vipcartExample);
 		
 		return order;
 	}

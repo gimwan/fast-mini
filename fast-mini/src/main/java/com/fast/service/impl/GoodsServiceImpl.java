@@ -463,7 +463,7 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 			}
 			
 			goods = dataMapper.pageList(sql, page);
-			page.setRecords(goods);
+			page.setData(goods);
 					
 			result.setData(page);
 			result.setErrcode(Integer.valueOf(0));
