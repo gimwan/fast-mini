@@ -17,7 +17,7 @@
 			<div class="phoneBox">
 				<div class="editView">
 					<div v-for="(d, index) in setdata" v-bind:data-index="index" class="setItem" v-bind:key="d.id">
-						<div class="layui-carousel" v-bind:data-index="index" v-bind:id="'carouselView'+index" v-bind:lay-filter="'carouselView'+index" v-if="d.kind == 1">
+						<div class="layui-carousel" v-bind:data-index="index" v-bind:id="d.id" v-bind:lay-filter="'carouselView'+index" v-if="d.kind == 1">
 							<div class="carouselBox" carousel-item="">
 								<div v-for="(dt, index) in d.detail"><img v-bind:src="dt.photourl" onerror="defaultImg(this)"></div>
 							</div>
@@ -120,7 +120,7 @@
 					<!-- 广告 -->
 					<div class="layTable uploadField ad" v-if="e.kind == 1 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i+i">
 						<div class="uploadBox">
-							<div class="layui-upload-drag layTableCell" v-bind:id="'ad'+index+i" v-bind:key="index+i" v-bind:lay-filter="index+i">
+							<div class="layui-upload-drag layTableCell" v-bind:id="dt.id" v-bind:key="index+i" v-bind:lay-filter="index+i">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
 								<i class="layui-icon" v-else>&#xe62f;</i>
 							</div>
@@ -207,7 +207,7 @@
 					<!-- 导航 -->
 					<div class="layTable uploadField ad" v-if="e.kind == 3 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
 						<div class="uploadBox">
-							<div class="layui-upload-drag layTableCell">
+							<div class="layui-upload-drag layTableCell" v-bind:id="dt.id">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
 								<i class="layui-icon" v-else></i>
 							</div>
@@ -400,7 +400,7 @@
 											data-url="./goodscategory/list?grade=1&pagesize=100"
 											data-grade="1" class="layui-input value"
 											readonly="readonly" v-bind:data-pindex="index"
-											v-bind:data-index="0" onchange="saveFirst(this)">
+											v-bind:data-index="i" onchange="saveFirst(this)">
 									</div>
 									<div class="edit-value" data-field="middlecategory">
 										<input type="text" v-bind:data-id="dt.second"
@@ -408,7 +408,7 @@
 											data-url="./goodscategory/list?grade=2&pagesize=100"
 											data-grade="2" class="layui-input value"
 											readonly="readonly" v-bind:data-pindex="index"
-											v-bind:data-index="0" onchange="saveSecond(this)">
+											v-bind:data-index="i" onchange="saveSecond(this)">
 									</div>
 									<div class="edit-value" data-field="smallcategory">
 										<input type="text" v-bind:data-id="dt.third"
@@ -416,7 +416,7 @@
 											data-url="./goodscategory/list?grade=3&pagesize=100"
 											data-grade="3" class="layui-input value"
 											readonly="readonly" v-bind:data-pindex="index"
-											v-bind:data-index="0" onchange="saveThird(this)">
+											v-bind:data-index="i" onchange="saveThird(this)">
 									</div>
 								</div>
 							</div>
@@ -433,7 +433,7 @@
 								<div class="group-value">
 									<div class="edit-title" style="display:none;"><span class="name">商品分组</span></div>
 									<input type="text" v-bind:data-id="dt.first" v-bind:value="dt.grouping"
-											data-url="./data/page?table=goodsgrouping"
+											data-url="./data/page?table=goodsgrouping&pagesize=100"
 											class="layui-input value" readonly="readonly"
 											onchange="saveGrouping(this)" v-bind:data-pindex="index"
 											v-bind:data-index="i">
@@ -450,11 +450,15 @@
 						    <div class="selectBlock popup">
 								<label class="layui-form-label layui-inline selectTitle">商品：</label>
 								<div class="goodsBox">
-									<div class="uploadBox uploadField" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
-										<div class="layui-upload-drag layTableCell">
-											<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
-											<i class="layui-icon" v-else></i>
+									<div class="uploadBox selectGoods" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
+										<div class="layTableCell goodsPhoto" v-bind:id="dt.id">
+											<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)">
 										</div>
+										<div class="edit-title" style="display:none;"><span class="name">商品</span></div>
+										<input type="text" v-bind:data-id="dt.id" v-bind:value="dt.photourl"
+											data-url="./data/page?table=goods&pagesize=100"
+											class="layui-input goodsinput" readonly="readonly"
+											v-bind:data-pindex="index" v-bind:data-index="i" goods="1" onchange="changeGoods(this);">
 										<i class="layui-icon layui-icon-delete"></i>
 									</div>
 									<div class="category iconAdd" v-if="e.detail.length!=10" key="categoryAdd">
