@@ -17,8 +17,8 @@
 			<div class="phoneBox">
 				<div class="editView">
 					<div v-for="(d, index) in setdata" v-bind:data-index="index" class="setItem" v-bind:key="d.id">
-						<div class="layui-carousel" v-bind:data-index="index" v-bind:id="d.id" v-bind:lay-filter="'carouselView'+index" v-if="d.kind == 1">
-							<div class="carouselBox" carousel-item="">
+						<div class="layui-carousel" v-bind:id="'carousel_'+d.id" v-bind:data-index="index" v-bind:lay-filter="'carouselView'+index" v-if="d.kind == 1">
+							<div class="carouselBox" carousel-item>
 								<div v-for="(dt, index) in d.detail"><img v-bind:src="dt.photourl" onerror="defaultImg(this)"></div>
 							</div>
 						</div>
@@ -120,7 +120,7 @@
 					<!-- 广告 -->
 					<div class="layTable uploadField ad" v-if="e.kind == 1 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i+i">
 						<div class="uploadBox">
-							<div class="layui-upload-drag layTableCell" v-bind:id="dt.id" v-bind:key="index+i" v-bind:lay-filter="index+i">
+							<div class="layui-upload-drag layTableCell" v-bind:id="dt.id">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
 								<i class="layui-icon" v-else>&#xe62f;</i>
 							</div>
@@ -472,5 +472,12 @@
 			</div>
 		</div>
 	</div>
+	<div class="microButton">
+		<div class="btn btn1">
+			<button class="layui-btn-normal save" onclick="saveMicroset()">保存</button>
+		</div>
+	</div>
 	<input type="hidden" id="pageid" value="${pageid}">
+	<input type="hidden" id="publicplatformid" value="${publicplatformid}">
+	<input type="hidden" id="openViewIndex" value="${openViewIndex}">
 </div>

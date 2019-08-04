@@ -65,13 +65,12 @@ common.bindVue = function() {
         methods : {
         	addItem: function(event) {
         		let index = $(event.currentTarget).attr("data-index");
-                console.log(item[index]);
                 addItemToPhone(Number(index)+1);
 			}
         }
     });
 	
-	loadData();
+	loadSetData();
 	
     // 重新刷新form
     layuiForm.render();
@@ -83,7 +82,7 @@ common.bindVue = function() {
     showDeleteIcon();
 }
 
-function loadData() {
+function loadSetData() {
 	let pageid = $(".microPage #pageid").val();
     common.showLoading();
     api.load(basePath + 'micropage/data','post',{"pageid":pageid},function (result) {
@@ -222,16 +221,25 @@ function configUploadInst() {
 	});
 }
 
+var carousel = {};
 function configCarousel() {
 	$(".middlePanel .editView .layui-carousel").each(function() {
+		var length = $(this).find(".carouselBox .layui-this").length;
 		var id = $(this).attr("id");
-		layCarousel.render({
+		var options = {
 			elem : '#'+id,
 			arrow : 'none',
 			width : '100%',
 			height : '160px',
 			indicator : 'inside'
-		});
+		};
+		if (length > 0) {
+			var thisCarousel = carousel[id];
+			thisCarousel.reload(options);
+		} else {
+			var thisCarousel = layCarousel.render(options);
+			carousel[id] = thisCarousel;
+		}
 	});
 }
 
@@ -419,3 +427,42 @@ layuiForm.on('select(linkType)', function(data) {
 	let idx = $(data.elem).attr("data-index");
 	setData[pidx].detail[idx].type = data.value;
 });
+
+function saveMicroset() {
+	let pageid = $(".microPage #pageid").val();
+	var setdata = setData;
+	for (var i = 0; i < setdata.length; i++) {
+		var id = setdata[i].id;
+		if (String(id).indexOf("add") == 0) {
+			setdata[i].id = 0;
+		}
+		var detail = setdata[i].detail;
+		for (var j = 0; j < detail.length; j++) {
+			var detailid = detail[j].id;
+			var micropagesetid = detail[j].micropagesetid;
+			if (String(detailid).indexOf("add") == 0) {
+				setdata[i].detail[j].id = 0;
+			}
+			if (String(micropagesetid).indexOf("add") == 0) {
+				setdata[i].detail[j].micropagesetid = 0;
+			}
+		}
+	}
+	setdata = JSON.stringify(setdata);
+	let data = {};
+    data.pageid = pageid;
+    data.setdata = escape(setdata);
+	common.showLoading();
+    api.load('./micropage/save','post',data, function(result) {
+        if (result.errcode == 0) {
+        	common.tips(result.message);
+        	var openViewIndex = $("#openViewIndex").val();
+        	layer.close(openViewIndex);
+        	let publicplatformid = $("#publicplatformid").val();
+        	loadData(publicplatformid);
+        } else {
+            common.error(result.message);
+        }
+        common.closeLoading();
+    });
+}

@@ -25,5 +25,22 @@ public interface IMicropageMaintService {
 	 * @return
 	 */
 	public Result deleteMicropage(Integer id);
+	
+	/**
+	 * 保存配置数据
+	 * @param pageID
+	 * @param setdataStr
+	 * @param user
+	 * @return
+	 */
+	public Result saveMicropageSetData(Integer pageID, String setdataStr, MUser user);
+	
+	/**
+	 * 发布
+	 * @param pageID
+	 * @param user
+	 * @return
+	 */
+	public Result releaseMicroPage(Integer pageID, MUser user);
 
 }

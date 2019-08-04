@@ -161,7 +161,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 
 		try {
 			HashMap<String, Object> dataMap = new HashMap<>();
-			String sql = "select * from m_micropage where id=" + pageID;
+			String sql = "select id,code,name,homeflag,memo,useflag,publishflag,publisher,publicplatformid,miniprogramid from m_micropage where id=" + pageID;
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
 				list = CommonUtil.transformUpperCase(list);
@@ -178,9 +178,9 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 				map.put("publicplatformcode", publicPlatformCode);
 				dataMap.put("micropage", map);
 				
-				sql = "select * from m_micropageset where micropageid=" + pageID + " order by showindex";
+				sql = "select id,micropageid,kind,showindex,showname,showprice,imagestyle,orderby,memo from m_micropageset where micropageid=" + pageID + " order by showindex";
 				if (isDraft) {
-					sql = "select * from m_micropagesetdraft where micropageid=" + pageID + " order by showindex";
+					sql = "select id,micropageid,kind,showindex,showname,showprice,imagestyle,orderby,memo from m_micropagesetdraft where micropageid=" + pageID + " order by showindex";
 				}
 				List<LinkedHashMap<String, Object>> setList = dataMapper.pageList(sql);
 				if (setList != null && setList.size() > 0) {
@@ -190,9 +190,9 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 					for (int i = 0; i < setList.size(); i++) {
 						setIDList.add(setList.get(i).get("id").toString().trim());
 					}
-					sql = "select * from m_micropagesetdtl where micropagesetid in (" + StringUtils.join(setIDList.toArray(), ",") + ") order by showindex";
+					sql = "select id,micropagesetid,showindex,first,second,third,text,photourl,targetpath,type from m_micropagesetdtl where micropagesetid in (" + StringUtils.join(setIDList.toArray(), ",") + ") order by showindex";
 					if (isDraft) {
-						sql = "select * from m_micropagesetdtldraft where micropagesetid in (" + StringUtils.join(setIDList.toArray(), ",") + ") order by showindex";
+						sql = "select id,micropagesetid,showindex,first,second,third,text,photourl,targetpath,type from m_micropagesetdtldraft where micropagesetid in (" + StringUtils.join(setIDList.toArray(), ",") + ") order by showindex";
 					}
 					List<LinkedHashMap<String, Object>> setDtlList = dataMapper.pageList(sql);
 					for (int i = 0; i < setList.size(); i++) {

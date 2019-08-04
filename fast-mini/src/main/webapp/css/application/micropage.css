@@ -1,6 +1,11 @@
-.microPage .nav-bar {
-	margin-bottom: 15px;
+.microPage {
+	position: relative;
+	height: 100%;
 }
+
+/* .microPage .nav-bar {
+	margin-bottom: 15px;
+} */
 
 .microPage .configureView {
 	display: table;
@@ -578,4 +583,24 @@
 	width: 100%;
 	height: auto;
 	object-fit: contain;
+}
+
+.microButton {
+	display: inline-block;
+	position: absolute;
+	bottom: 10px;
+	padding-left: 10px;
+}
+
+.microButton .btn {
+	line-height: 30px;
+	height: 30px;
+}
+
+.microButton .save {
+	height: 30px;
+	width: 50px;
+	color: #FFFFFF;
+	border: 0px;
+	cursor: pointer;
 }

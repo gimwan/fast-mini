@@ -147,8 +147,11 @@
 										<td class="item operationbtn">
 											<div class="layui-btn-group">
 												<button
-													class="layui-btn layui-btn-normal layui-btn-xs image"
+													class="layui-btn layui-btn-normal layui-btn-xs set"
 													title="配置" v-on:click="set">配置</button>
+												<button
+													class="layui-btn layui-btn-warm layui-btn-xs release"
+													title="发布" v-on:click="release">发布</button>
 												<button
 													class="layui-btn layui-btn-danger layui-btn-xs del"
 													title="删除" v-on:click="del">删除</button>

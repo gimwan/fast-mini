@@ -45,6 +45,10 @@
 	width: 100%;
 }
 
+.microPage .layui-table-view .layui-table-box tr .operationbtn {
+	min-width: 140px;
+}
+
 .microPage .layui-table-view .layui-table-box tr .creator, .microPage .layui-table-view .layui-table-box tr .modifier
 	{
 	min-width: 120px;
