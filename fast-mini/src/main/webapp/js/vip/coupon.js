@@ -187,7 +187,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">面值</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"amount\">"+
-				                "<input type=\"text\" value=\""+d.amount+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.amount+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -195,7 +195,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">启用金额</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"enableamount\">"+
-				                "<input type=\"text\" value=\""+d.enableamount+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.enableamount+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -203,7 +203,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">发放总数</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"totalquantity\">"+
-				                "<input type=\"text\" value=\""+d.totalquantity+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.totalquantity+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -211,7 +211,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">每人限领</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"limitquantity\">"+
-				                "<input type=\"text\" value=\""+d.limitquantity+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.limitquantity+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -219,7 +219,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">有效时长（天）</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"effectivetime\">"+
-				                "<input type=\"text\" value=\""+d.effectivetime+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.effectivetime+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+

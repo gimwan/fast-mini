@@ -2,13 +2,18 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MColorMapper;
+import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.entity.MColor;
+import com.fast.base.data.entity.MColorExample;
+import com.fast.base.data.entity.MGoodssku;
+import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IColorMaintService;
 import com.fast.service.IDataService;
@@ -31,12 +36,27 @@ public class ColorMaintServiceImpl implements IColorMaintService, Serializable {
 	
 	@Autowired
 	IDataService iDataService;
+	
+	@Autowired
+	MGoodsskuMapper goodsskuMapper;
 
 	@Override
 	public Result changeColor(MColor color, MUser user) {
 		Result result = new Result();
 
 		try {
+			MColorExample example = new MColorExample();
+			if (color.getId() != null) {
+				example.createCriteria().andCodeEqualTo(color.getCode().trim()).andIdNotEqualTo(color.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(color.getCode().trim());
+			}
+			List<MColor> list = colorMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MColor mColor = new MColor();
 			color.setUpdatedtime(now);
@@ -86,6 +106,13 @@ public class ColorMaintServiceImpl implements IColorMaintService, Serializable {
 		Result result = new Result();
 
 		try {
+			MGoodsskuExample example = new MGoodsskuExample();
+			example.createCriteria().andColoridEqualTo(id);
+			List<MGoodssku> list = goodsskuMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("删除失败！此颜色已被使用");
+				return result;
+			}
 			int i = colorMapper.deleteByPrimaryKey(id);
 			if (i > 0) {
 				result.setErrcode(0);

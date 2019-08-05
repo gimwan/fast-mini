@@ -2,13 +2,18 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
+import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.dao.MSizeMapper;
+import com.fast.base.data.entity.MGoodssku;
+import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MSize;
+import com.fast.base.data.entity.MSizeExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.ISizeMaintService;
@@ -31,12 +36,27 @@ public class SizeMaintServiceImpl implements ISizeMaintService, Serializable {
 	
 	@Autowired
 	IDataService iDataService;
+	
+	@Autowired
+	MGoodsskuMapper goodsskuMapper;
 
 	@Override
 	public Result changeSize(MSize size, MUser user) {
 		Result result = new Result();
 
 		try {
+			MSizeExample example = new MSizeExample();
+			if (size.getId() != null) {
+				example.createCriteria().andCodeEqualTo(size.getCode().trim()).andIdNotEqualTo(size.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(size.getCode().trim());
+			}
+			List<MSize> list = sizeMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MSize mSize = new MSize();
 			size.setUpdatedtime(now);
@@ -86,6 +106,13 @@ public class SizeMaintServiceImpl implements ISizeMaintService, Serializable {
 		Result result = new Result();
 
 		try {
+			MGoodsskuExample example = new MGoodsskuExample();
+			example.createCriteria().andSizeidEqualTo(id);
+			List<MGoodssku> list = goodsskuMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("删除失败！此尺码已被使用");
+				return result;
+			}
 			int i = sizeMapper.deleteByPrimaryKey(id);
 			if (i > 0) {
 				result.setErrcode(0);

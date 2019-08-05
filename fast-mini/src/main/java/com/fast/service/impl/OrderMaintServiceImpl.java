@@ -27,6 +27,7 @@ import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MOrder;
 import com.fast.base.data.entity.MOrderExample;
 import com.fast.base.data.entity.MOrderdtl;
+import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipaddress;
 import com.fast.base.data.entity.MVipcartExample;
@@ -298,6 +299,39 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
 			FastLog.error("调用OrderMaintServiceImpl.afterPay报错：", e);
+		}
+	
+		return result;
+	}
+
+	@Override
+	public Result changeOrderStatus(MUser user, Integer orderid, Integer logisticsid, String logisticsno) {
+		Result result = new Result();
+
+		try {
+			MOrder order = orderMapper.selectByPrimaryKey(orderid);
+			if (order != null && order.getId() != null) {
+				Date now = new Date();
+				// 发货
+				if (order.getStatus().intValue() == 2) {
+					order.setLogisticsid(logisticsid);
+					order.setLogisticsno(logisticsno.trim());
+					order.setStatus(Byte.valueOf("3"));
+					order.setUpdatedtime(now);
+					order.setDeliverer(user.getName());
+					order.setDeliverertime(now);
+					order.setDelivererdepartmentid(0);
+					orderMapper.updateByPrimaryKeySelective(order);
+					
+					result.setErrcode(Integer.valueOf(0));
+					result.setId(order.getId());
+					result.setMessage("发货成功");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.changeOrderStatus报错：", e);
 		}
 	
 		return result;

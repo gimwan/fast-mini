@@ -1,6 +1,7 @@
 package com.fast.service;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MUser;
 
 /**
  * 订单
@@ -29,5 +30,15 @@ public interface IOrderMaintService {
 	 * @return
 	 */
 	public Result afterPay(String orderno, String wechatno);
+	
+	/**
+	 * 修改订单状态
+	 * @param user
+	 * @param orderid
+	 * @param logisticsid
+	 * @param logisticsno
+	 * @return
+	 */
+	public Result changeOrderStatus(MUser user, Integer orderid, Integer logisticsid, String logisticsno);
 
 }

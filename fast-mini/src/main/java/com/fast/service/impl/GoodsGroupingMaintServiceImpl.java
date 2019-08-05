@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MGoodsgroupingMapper;
 import com.fast.base.data.entity.MGoodsgrouping;
+import com.fast.base.data.entity.MGoodsgroupingExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IGoodsGroupingMaintService;
@@ -37,6 +39,18 @@ public class GoodsGroupingMaintServiceImpl implements IGoodsGroupingMaintService
 		Result result = new Result();
 
 		try {
+			MGoodsgroupingExample example = new MGoodsgroupingExample();
+			if (goodsgrouping.getId() != null) {
+				example.createCriteria().andCodeEqualTo(goodsgrouping.getCode().trim()).andIdNotEqualTo(goodsgrouping.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(goodsgrouping.getCode().trim());
+			}
+			List<MGoodsgrouping> list = goodsgroupingMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MGoodsgrouping mGoodsgrouping = new MGoodsgrouping();
 			goodsgrouping.setUpdatedtime(now);

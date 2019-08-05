@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MCouponMapper;
 import com.fast.base.data.entity.MCoupon;
+import com.fast.base.data.entity.MCouponExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.ICouponMaintService;
 import com.fast.service.IDataService;
@@ -37,6 +39,18 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 		Result result = new Result();
 
 		try {
+			MCouponExample example = new MCouponExample();
+			if (coupon.getId() != null) {
+				example.createCriteria().andCodeEqualTo(coupon.getCode().trim()).andIdNotEqualTo(coupon.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(coupon.getCode().trim());
+			}
+			List<MCoupon> list = couponMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MCoupon mCoupon = new MCoupon();
 			coupon.setUpdatedtime(now);

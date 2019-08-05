@@ -40,6 +40,18 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 		Result result = new Result();
 
 		try {
+			MViptypeExample example = new MViptypeExample();
+			if (viptype.getId() != null) {
+				example.createCriteria().andCodeEqualTo(viptype.getCode().trim()).andIdNotEqualTo(viptype.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(viptype.getCode().trim());
+			}
+			List<MViptype> list = viptypeMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			result = saveType(viptype, user.getName());
 			
 			if (Common.isActive(result)) {

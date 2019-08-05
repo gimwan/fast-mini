@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MMiniprogramMapper;
 import com.fast.base.data.entity.MMiniprogram;
+import com.fast.base.data.entity.MMiniprogramExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IMiniProgramMaintService;
@@ -37,6 +39,18 @@ public class MiniProgramMaintServiceImpl implements IMiniProgramMaintService, Se
 		Result result = new Result();
 
 		try {
+			MMiniprogramExample example = new MMiniprogramExample();
+			if (miniprogram.getId() != null) {
+				example.createCriteria().andCodeEqualTo(miniprogram.getCode().trim()).andIdNotEqualTo(miniprogram.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(miniprogram.getCode().trim());
+			}
+			List<MMiniprogram> list = miniprogramMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MMiniprogram mMiniprogram = new MMiniprogram();
 			miniprogram.setUpdatedtime(now);

@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MRoleMapper;
 import com.fast.base.data.entity.MRole;
+import com.fast.base.data.entity.MRoleExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IRoleMaintService;
@@ -37,6 +39,18 @@ public class RoleMaintServiceImpl implements IRoleMaintService, Serializable {
 		Result result = new Result();
 
 		try {
+			MRoleExample example = new MRoleExample();
+			if (role.getId() != null) {
+				example.createCriteria().andCodeEqualTo(role.getCode().trim()).andIdNotEqualTo(role.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(role.getCode().trim());
+			}
+			List<MRole> list = roleMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MRole mRole = new MRole();
 			role.setUpdatedtime(now);

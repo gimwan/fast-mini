@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MEmployeeMapper;
 import com.fast.base.data.entity.MEmployee;
+import com.fast.base.data.entity.MEmployeeExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IEmployeeMaintService;
@@ -37,6 +39,18 @@ public class EmployeeMaintServiceImpl implements IEmployeeMaintService, Serializ
 		Result result = new Result();
 
 		try {
+			MEmployeeExample example = new MEmployeeExample();
+			if (employee.getId() != null) {
+				example.createCriteria().andCodeEqualTo(employee.getCode().trim()).andIdNotEqualTo(employee.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(employee.getCode().trim());
+			}
+			List<MEmployee> list = employeeMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MEmployee mEmployee = new MEmployee();
 			employee.setUpdatedtime(now);

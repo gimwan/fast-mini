@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MPublicplatformMapper;
 import com.fast.base.data.entity.MPublicplatform;
+import com.fast.base.data.entity.MPublicplatformExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IPublicPlatformMaintService;
@@ -37,6 +39,18 @@ private static final long serialVersionUID = 71148004875517941L;
 		Result result = new Result();
 
 		try {
+			MPublicplatformExample example = new MPublicplatformExample();
+			if (publicplatform.getId() != null) {
+				example.createCriteria().andCodeEqualTo(publicplatform.getCode().trim()).andIdNotEqualTo(publicplatform.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(publicplatform.getCode().trim());
+			}
+			List<MPublicplatform> list = publicplatformMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MPublicplatform mPublicplatform = new MPublicplatform();
 			publicplatform.setUpdatedtime(now);

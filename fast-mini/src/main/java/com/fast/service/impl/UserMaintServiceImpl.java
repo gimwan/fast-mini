@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MUserMapper;
 import com.fast.base.data.entity.MUser;
+import com.fast.base.data.entity.MUserExample;
 import com.fast.service.IDataService;
 import com.fast.service.IUserMaintService;
 import com.fast.system.log.FastLog;
@@ -36,6 +38,18 @@ public class UserMaintServiceImpl implements IUserMaintService, Serializable {
 		Result result = new Result();
 
 		try {
+			MUserExample example = new MUserExample();
+			if (user.getId() != null) {
+				example.createCriteria().andCodeEqualTo(user.getCode().trim()).andIdNotEqualTo(user.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(user.getCode().trim());
+			}
+			List<MUser> list = userMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MUser mUser = new MUser();
 			user.setUpdatedtime(now);

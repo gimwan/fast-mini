@@ -248,7 +248,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">折扣</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"discount\">"+
-				                "<input type=\"text\" value=\""+d.discount+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.discount+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -256,7 +256,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">生日折扣</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"birthdaydiscount\">"+
-				                "<input type=\"text\" value=\""+d.birthdaydiscount+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.birthdaydiscount+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -264,7 +264,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">积分转换比例(多少积分抵1元)</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"pointrate\">"+
-				                "<input type=\"text\" value=\""+d.pointrate+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.pointrate+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
