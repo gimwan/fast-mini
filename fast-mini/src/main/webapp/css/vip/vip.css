@@ -14,14 +14,14 @@
 	width: 100px;
 	min-width: 100px;
 	border-top-width: 0;
-    border-left-width: 0;
-    border-right-width: 0;
-    border-bottom-width: 1px;
+	border-left-width: 0;
+	border-right-width: 0;
+	border-bottom-width: 1px;
 }
 
 .vipPage .layui-table-view .layui-table-box tr .layui-nav-img {
 	width: 25px;
-    height: 25px;
+	height: 25px;
 }
 
 .vipPage .layui-table-view .layui-table-box tr .photourl {
@@ -56,4 +56,42 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 	height: 605px;
+}
+
+.edit-view .edit-box {
+	column-count: 5;
+	-webkit-column-count: 5;
+}
+
+.edit-view .edit-item {
+	min-width: 190px;
+	vertical-align: top;
+}
+
+.edit-view .edit-item[image='1'] {
+	text-align: center;
+}
+
+.edit-view .edit-item>div {
+	display: inline-block;
+	    vertical-align: top;
+}
+
+.edit-view .edit-item .edit-title {
+	    width: 70px;
+    text-align: right;
+}
+
+.edit-view .edit-item .edit-value {
+	width: 120px;
+}
+
+.edit-view .edit-item .edit-value span {
+	width: 120px;
+    display: block;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: keep-all;
 }
