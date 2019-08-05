@@ -65,13 +65,12 @@ common.bindVue = function() {
         methods : {
         	addItem: function(event) {
         		let index = $(event.currentTarget).attr("data-index");
-                console.log(item[index]);
                 addItemToPhone(Number(index)+1);
 			}
         }
     });
 	
-	loadData();
+	loadSetData();
 	
     // 重新刷新form
     layuiForm.render();
@@ -83,7 +82,7 @@ common.bindVue = function() {
     showDeleteIcon();
 }
 
-function loadData() {
+function loadSetData() {
 	let pageid = $(".microPage #pageid").val();
     common.showLoading();
     api.load(basePath + 'micropage/data','post',{"pageid":pageid},function (result) {
@@ -92,7 +91,6 @@ function loadData() {
         	if (pageData != null) {
         		microPage = pageData.micropage;
         		setData = pageData.setdata;
-        		//editData = pageData.setdata;
             	microPageSetVm = new Vue({
                     el : ".phoneBox",
                     data : {
@@ -108,7 +106,7 @@ function loadData() {
                     	addItem : function(event) {
 							let kind = $(event.target).attr("data-kind");
 							let index = $(event.target).attr("data-index");
-							let id = new Date().getTime();
+							let id = "add" + new Date().getTime();
 							let item = {
 				                id: id,
 				                micropagesetid: setData[index].id,
@@ -131,6 +129,7 @@ function loadData() {
 				                categorytwo: '',
 				                categorythree: ''
 				            };
+							item.showindex = setData[index].detail.length;
 							
 							// 广告
 							if (kind == 1) {
@@ -163,10 +162,11 @@ function loadData() {
 								}
 							}
 							
-							setTimeout(() => {
+							configAssembly();
+							/*setTimeout(() => {
 								layuiForm.render();
 								configUploadInst();
-							}, 300);
+							}, 300);*/
 						}
                     }
                 });
@@ -189,8 +189,7 @@ function loadData() {
 
 function configAssembly() {
 	setTimeout(() => {
-		layCarousel.render();
-	    layuiUpload.render();
+		configCarousel();
 	    configUploadInst();
 	    layuiForm.render();
 	}, 500);
@@ -207,10 +206,9 @@ function configUploadInst() {
 		    done: function(res, index, upload){
 		    	// 上传完毕回调
 		    	var item = this.item;
-		    	var index = $(item).parents(".editItem").attr("data-index");
-		    	var detailIndex = $(item).parents(".uploadField ").attr("data-index");
+		    	var index = $(item).parents(".uploadField").attr("data-index");
+		    	var detailIndex = $(item).parents(".uploadField").attr("data-idx");
 		    	setData[index].detail[detailIndex].photourl = res.data;
-		    	//editData[index].detail[detailIndex].photourl = res.data;
 		    	configAssembly();
 		    },
 		    error: function(res, index){
@@ -223,16 +221,25 @@ function configUploadInst() {
 	});
 }
 
+var carousel = {};
 function configCarousel() {
 	$(".middlePanel .editView .layui-carousel").each(function() {
+		var length = $(this).find(".carouselBox .layui-this").length;
 		var id = $(this).attr("id");
-		layCarousel.render({
+		var options = {
 			elem : '#'+id,
 			arrow : 'none',
 			width : '100%',
 			height : '160px',
 			indicator : 'inside'
-		});
+		};
+		if (length > 0) {
+			var thisCarousel = carousel[id];
+			thisCarousel.reload(options);
+		} else {
+			var thisCarousel = layCarousel.render(options);
+			carousel[id] = thisCarousel;
+		}
 	});
 }
 
@@ -242,10 +249,8 @@ function chooseView() {
 		for (var i = 0; i < setData.length; i++) {
 			if (i == index) {
 				setData[i].choose = 1;
-				//editData[i].choose = 1;
 			} else {
 				setData[i].choose = 0;
-				//editData[i].choose = 0;
 			}
 		}
 		
@@ -263,10 +268,9 @@ function showDeleteIcon() {
 	$(".layui-layer-page").on("click", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox .layui-icon-delete", function(event) {
 		event.stopPropagation();
 		event.preventDefault();
-		var index = $(this).parents(".editItem").attr("data-index");
-    	var detailIndex = $(this).parents(".ad").attr("data-index");
-    	setData[index].detail[detailIndex].photourl = "";
-    	//editData[index].detail[detailIndex].photourl = "";
+		var index = $(this).parents(".uploadField").attr("data-index");
+    	var detailIndex = $(this).parents(".uploadField").attr("data-idx");
+    	setData[index].detail.splice(detailIndex, 1);
     	configAssembly();
 		return false;
 	});
@@ -275,7 +279,6 @@ function showDeleteIcon() {
 		event.preventDefault();
 		let index = $(this).parents(".setItem").attr("data-index");
 		setData.splice(index, 1);
-		//editData.splice(index, 1);
 		configAssembly();
 		return false;
 	});
@@ -284,7 +287,7 @@ function showDeleteIcon() {
 function addItemToPhone(kind) {
 	let micropageid = $("#pageid").val();
 	let lastIndex = $(".middlePanel .editView .setItem:last").attr("data-index");
-	let id = new Date().getTime();
+	let id = "add" + new Date().getTime();
 	let item = {
         id: id,
         micropageid: micropageid,
@@ -298,7 +301,7 @@ function addItemToPhone(kind) {
     }
 	let detail = [];
 	if (kind != 2 && kind != 6) {
-		let detailid = new Date().getTime();
+		let detailid = "add" + new Date().getTime();
 		detail = [
             {
                 id: detailid,
@@ -326,12 +329,7 @@ function addItemToPhone(kind) {
 	}
 	item.detail = detail;
 	for (var i = 0; i < setData.length; i++) {
-		/*if (i == index) {
-			setData[i].choose = 1;
-			editData[i].choose = 1;
-		} else {*/
 		setData[i].choose = 0;
-		//editData[i].choose = 0;
 	}
 	setData.push(item);
 	configAssembly();
@@ -341,7 +339,6 @@ function spellChange(obj) {
 	var index = $(obj).parents(".editItem").attr("data-index");
 	var text = $(obj).val();
 	setData[index].detail[0].text = text;
-	//editData[index].detail[0].text = text;
 }
 
 function saveTargetPath(obj) {
@@ -359,25 +356,70 @@ function saveMicropage(obj) {
 function saveGrouping(obj) {
 	let pidx = $(obj).attr("data-pindex");
 	let idx = $(obj).attr("data-index");
-	setData[pidx].detail[idx].targetpath = $(obj).attr("data-id");
+	setData[pidx].detail[idx].first = $(obj).attr("data-id");
+	setData[pidx].detail[idx].grouping = $(obj).val();
 }
 
 function saveFirst(obj) {
+	event.stopPropagation();
+	event.preventDefault();
 	let pidx = $(obj).attr("data-pindex");
 	let idx = $(obj).attr("data-index");
-	setData[pidx].detail[idx].first = $(obj).attr("data-id");
+	var val = $(obj).val();
+	var id = $(obj).attr("data-id");
+	setData[pidx].detail[idx].first = id;
+	setData[pidx].detail[idx].categoryone = val;
+	setData[pidx].detail[idx].category = val;
+	return false;
 }
 
 function saveSecond(obj) {
+	event.stopPropagation();
+	event.preventDefault();
 	let pidx = $(obj).attr("data-pindex");
 	let idx = $(obj).attr("data-index");
-	setData[pidx].detail[idx].second = $(obj).attr("data-id");
+	var val = $(obj).val();
+	var id = $(obj).attr("data-id");
+	setData[pidx].detail[idx].second = id;
+	setData[pidx].detail[idx].categorytwo = val;
+	if (val == null || val == undefined || $.trim(val) == "") {
+		val = setData[pidx].detail[idx].categoryone;
+	}
+	setData[pidx].detail[idx].category = val;
+	return false;
 }
 
 function saveThird(obj) {
+	event.stopPropagation();
+	event.preventDefault();
 	let pidx = $(obj).attr("data-pindex");
 	let idx = $(obj).attr("data-index");
-	setData[pidx].detail[idx].third = $(obj).attr("data-id");
+	var val = $(obj).val();
+	var id = $(obj).attr("data-id");
+	setData[pidx].detail[idx].third = id;
+	setData[pidx].detail[idx].categorythree = val;
+	if (val == null || val == undefined || $.trim(val) == "") {
+		val = setData[pidx].detail[idx].categorytwo;
+		if (val == null || val == undefined || $.trim(val) == "") {
+			val = setData[pidx].detail[idx].categoryone;
+		}
+	}
+	setData[pidx].detail[idx].category = val;
+	return false;
+}
+
+function changeGoods(obj) {
+	let goods = $(obj).attr("data-goods");
+	goods = JSON.parse(goods);
+	let pidx = $(obj).parents(".selectGoods").attr("data-index");
+	let idx = $(obj).parents(".selectGoods").attr("data-idx");
+	$(obj).parents(".selectGoods").find(".goodsPhoto img").attr("src", goods.photourl==null?"":goods.photourl);
+	setData[pidx].detail[idx].first = goods.id;
+	setData[pidx].detail[idx].photourl = goods.photourl==null?"":goods.photourl;
+	setData[pidx].detail[idx].goodsname = goods.name==null?"":goods.name;
+	setData[pidx].detail[idx].price = goods.price==null?0:goods.price;
+	setData[pidx].detail[idx].point = goods.point==null?0:goods.point;
+	setData[pidx].detail[idx].kind = goods.kind;
 }
 
 layuiForm.on('select(linkType)', function(data) {
@@ -385,3 +427,42 @@ layuiForm.on('select(linkType)', function(data) {
 	let idx = $(data.elem).attr("data-index");
 	setData[pidx].detail[idx].type = data.value;
 });
+
+function saveMicroset() {
+	let pageid = $(".microPage #pageid").val();
+	var setdata = setData;
+	for (var i = 0; i < setdata.length; i++) {
+		var id = setdata[i].id;
+		if (String(id).indexOf("add") == 0) {
+			setdata[i].id = 0;
+		}
+		var detail = setdata[i].detail;
+		for (var j = 0; j < detail.length; j++) {
+			var detailid = detail[j].id;
+			var micropagesetid = detail[j].micropagesetid;
+			if (String(detailid).indexOf("add") == 0) {
+				setdata[i].detail[j].id = 0;
+			}
+			if (String(micropagesetid).indexOf("add") == 0) {
+				setdata[i].detail[j].micropagesetid = 0;
+			}
+		}
+	}
+	setdata = JSON.stringify(setdata);
+	let data = {};
+    data.pageid = pageid;
+    data.setdata = escape(setdata);
+	common.showLoading();
+    api.load('./micropage/save','post',data, function(result) {
+        if (result.errcode == 0) {
+        	common.tips(result.message);
+        	var openViewIndex = $("#openViewIndex").val();
+        	layer.close(openViewIndex);
+        	let publicplatformid = $("#publicplatformid").val();
+        	loadData(publicplatformid);
+        } else {
+            common.error(result.message);
+        }
+        common.closeLoading();
+    });
+}

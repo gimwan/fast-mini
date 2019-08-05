@@ -90,7 +90,7 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 		}
 		// 默认等级只能有一个
 		if (Common.isActive(result)) {
-			if (mViptype.getDefaultflag().intValue() == 1 && mViptype.getUseflag().intValue() == 1) {
+			if (mViptype.getDefaultflag().intValue() == 1) {
 				MViptypeExample example = new MViptypeExample();
 				example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andDefaultflagEqualTo(Byte.valueOf("1")).andIdNotEqualTo(mViptype.getId());
 				List<MViptype> list = viptypeMapper.selectByExample(example);

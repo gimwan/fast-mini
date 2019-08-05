@@ -45,8 +45,10 @@ public class MicropageController {
 	@RequestMapping("/micropage")
 	public ModelAndView micropage(HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
+		String publicplatformid = request.getParameter("publicplatformid");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("pageid", id);
+		map.put("publicplatformid", publicplatformid);
 		return new ModelAndView("application/micropage", map);
 	}
 	
@@ -166,6 +168,79 @@ public class MicropageController {
 				return jsonObject.toString();
 			}
 			Result result = iMicropageService.queryPageData(Integer.valueOf(pageid.trim()), true);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 保存微页面配置数据
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/save")
+	@ResponseBody
+	public String dasaveta(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			Result result = new Result();
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				String pageid = request.getParameter("pageid");
+				if (Common.isEmpty(pageid)) {
+					result.setMessage("pageid无效");
+					JSONObject jsonObject = JSONObject.fromObject(result);
+					return jsonObject.toString();
+				}
+				String setdata = request.getParameter("setdata");
+				result = iMicropageMaintService.saveMicropageSetData(Integer.valueOf(pageid), setdata, user);
+			} else {
+				result.setErrcode(Integer.valueOf(88));
+				result.setMessage("当前登入者已失效");
+			}
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 发布
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/release")
+	@ResponseBody
+	public String release(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			Result result = new Result();
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				String pageid = request.getParameter("pageid");
+				if (Common.isEmpty(pageid)) {
+					result.setMessage("pageid无效");
+					JSONObject jsonObject = JSONObject.fromObject(result);
+					return jsonObject.toString();
+				}
+				result = iMicropageMaintService.releaseMicroPage(Integer.valueOf(pageid), user);
+			} else {
+				result.setErrcode(Integer.valueOf(88));
+				result.setMessage("当前登入者已失效");
+			}
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

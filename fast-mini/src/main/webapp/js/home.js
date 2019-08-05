@@ -42,6 +42,7 @@ document.onreadystatechange = function() {
     	// 弹窗选择
     	$("body").on("click", ".popup input", function () {
     		let region = $(this).attr("region");
+    		let goods = $(this).attr("goods");
     		$(".popup .popuped").removeClass("popuped");
     		$(this).addClass("popuped");
     		let url = $(this).data("url");
@@ -49,7 +50,7 @@ document.onreadystatechange = function() {
     		common.showLoading();
     		api.load(url, 'post', {}, function(result) {
     			if (result.errcode == 0) {
-            		let selectOption = optionView(result.data.data,region);;
+            		let selectOption = optionView(result.data.data,region,goods);;
             		layer.open({
             	        type: 1,
             	        title: "<label style='font-weight:600;'>"+title+"</label>",
@@ -57,9 +58,14 @@ document.onreadystatechange = function() {
             	        area: ['500px', '400px'],
             	        btn: ['确定','取消'],
             	        btn1: function (index, layero) {
-            	        	let id = $(layero).find(".layui-layer-content .selected").data("id");
+            	        	let id = $(layero).find(".layui-layer-content .selected").attr("data-id");
             	        	let name = $(layero).find(".layui-layer-content .selected .name").html();
             	        	if (id != null && id != undefined && $.trim(id) != "") {
+            	        		if (goods == "1") {
+            	        			let goods = (layero).find(".layui-layer-content .selected").attr("data-datas");
+            	        			$(".popup .popuped").attr("data-goods", goods);
+            	        			name = goods.photourl;
+    							}
             	        		$(".popup .popuped").attr("data-id",id);
             	        		$(".popup .popuped").val(name).change();
             	        		$(".popup .popuped").removeClass("popuped");
@@ -100,6 +106,12 @@ document.onreadystatechange = function() {
     		if (isPopup) {
     			let id = $(this).data("id");
         		let name = $(this).find(".name").html();
+        		let goods = $(this).parent().attr("goods");
+        		if (goods == "1") {
+        			let goods = $(this).attr("data-datas");
+        			$(".popup .popuped").attr("data-goods", goods);
+        			name = goods.photourl;
+				}
         		$(".popup .popuped").attr("data-id",id);
         		$(".popup .popuped").val(name).change();
         		$(this).parents(".layui-layer").find(".layui-layer-btn .layui-layer-btn1").click();
@@ -111,6 +123,7 @@ document.onreadystatechange = function() {
     	$("body").on("click", ".cascade input", function () {
     		let grade = $(this).attr("data-grade");
     		let region = $(this).attr("region");
+    		let goods = $(this).attr("goods");
     		let title = "大类";
     		if (grade == 2) {
     			title = "中类";
@@ -136,7 +149,7 @@ document.onreadystatechange = function() {
     		common.showLoading();
     		api.load(url, 'post', {}, function(result) {
     			if (result.errcode == 0) {
-            		let selectOption = optionView(result.data.data,region);;
+            		let selectOption = optionView(result.data.data,region,goods);;
             		layer.open({
             	        type: 1,
             	        title: "<label style='font-weight:600;'>"+title+"</label>",
@@ -235,7 +248,7 @@ function checkParentChoose(obj) {
 		let thisGrade = $(this).find(".value").attr("data-grade");
 		if (thisGrade < grade) {
 			var id = $(this).find(".value").attr("data-id");
-			if (id == null || id == undefined || $.trim(id) == "") {
+			if (id == null || id == undefined || $.trim(id) == "" || $.trim(id) == "0") {
 				if (thisGrade == 1) {
 					msg = "请先选择大类";
 				} else if (thisGrade == 2) {
@@ -302,11 +315,11 @@ function defaultImg(obj) {
 	}
 }
 
-function optionView(data,region) {
+function optionView(data,region,goods) {
 	let view = "<div class=\"popup-view\">" +
-					"<div class=\"popup-box\">";
+					"<div class=\"popup-box\" goods='"+goods+"' region='"+region+"'>";
 	for (var i = 0; i < data.length; i++) {
-		view += "<div class=\"popup-data\" data-id=\""+data[i].id+"\">";
+		view += "<div class=\"popup-data\" data-id=\""+data[i].id+"\" data-datas='"+JSON.stringify(data[i])+"'>";
 		if (region == 1) {
 			view += "<span class=\"code\">"+data[i].id+"</span>";
 		} else {

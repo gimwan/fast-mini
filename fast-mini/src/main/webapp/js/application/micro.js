@@ -19,10 +19,11 @@ common.bindVue = function() {
             },
             set: function(event) {
             	if (event) {
+            		let publicPlatformID = $(".publicPlatform .selectItem .layui-this").attr("lay-value");
                     let id = $(event.target).parents("tr").attr("data-id");
                     let name = $(event.target).parents("tr").attr("data-name");
                     let deleteIndex = $(event.target).parents("tr").data("index");
-                    let url = "./micropage/micropage?id="+id;
+                    let url = "./micropage/micropage?id="+id+"&publicplatformid="+publicPlatformID;
                     layer.open({
                     	type: 1,
                     	title: name,
@@ -34,10 +35,32 @@ common.bindVue = function() {
             	        	$(layero).find(".layui-layer-content").load(url, data,function(){
         	                    common.closeLoading();
         	                    common.bindVue();
+        	                    $("#openViewIndex").val(index);
         	                });
             	        }
                 	});
             	}
+			},
+			release: function() {
+				if (event) {
+					let id = $(event.target).parents("tr").attr("data-id");
+					layer.confirm('确定发布？', {
+                		btn: ['确定','取消'],
+                		btn1 : function(index, layero) {
+        					var data = {};
+            				data.pageid = id;
+                        	common.showLoading();
+                            api.load('./micropage/release','post',data, function(result) {
+                                if (result.errcode == 0) {
+                                    common.tips(result.message);
+                                } else {
+                                    common.error(result.message);
+                                }
+                                common.closeLoading();
+                            });
+                		}
+					});
+				}
 			},
             del: function (event) {
             	if (event) {
@@ -59,7 +82,6 @@ common.bindVue = function() {
                                 }
                                 common.closeLoading();
                             });
-                			
                 		}
                 	});
             	}
@@ -269,6 +291,13 @@ function showEditBox(idx,data) {
             api.load('./micropage/change','post',data, function(result) {
                 if (result.errcode == 0) {
                 	data = result.data;
+                	// 同一公众号首页只有一个
+                	let isHome = data.homeflag;
+                	if (isHome == 1) {
+						for (var i = 0; i < micro.length; i++) {
+							micro[i].homeflag = 0;
+						}
+					}
                 	if (idx < 0) {
                 		micro.push(data);
 					} else {
