@@ -13,6 +13,7 @@
 .sizePage .layui-table-view .layui-table-box tr .item {
 	width: 100px;
 	min-width: 100px;
+	max-width: 200px;
 	border-top-width: 0;
 	border-left-width: 0;
 	border-right-width: 0;
@@ -21,10 +22,12 @@
 
 .sizePage .layui-table-view .layui-table-box tr .name {
 	min-width: 180px;
+	max-width: 180px;
 }
 
-.sizePage .layui-table-view .layui-table-box tr .value {
-	min-width: 200px;
+.sizePage .layui-table-view .layui-table-box tr .useflag {
+	min-width: 80px;
+	max-width: 80px;
 }
 
 .sizePage .layui-table-view .layui-table-box tr .memo {
@@ -34,10 +37,12 @@
 .sizePage .layui-table-view .layui-table-box tr .creator, .sizePage .layui-table-view .layui-table-box tr .modifier
 	{
 	min-width: 120px;
+	max-width: 120px;
 }
 
 .sizePage .layui-table-view .layui-table-box tr .time-item {
 	min-width: 200px;
+	max-width: 200px;
 }
 
 .sizePage .layui-table-view .layui-table-box .size-data {

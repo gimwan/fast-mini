@@ -4,6 +4,7 @@
 
 .configPage .layui-table-view .layui-table-box tr .item {
 	width: 100px;
+	max-width: 100px;
 	min-width: 100px;
 	border-top-width: 0;
     border-left-width: 0;
@@ -13,10 +14,12 @@
 
 .configPage .layui-table-view .layui-table-box tr .name {
 	min-width: 220px;
+	max-width: 220px;
 }
 
 .configPage .layui-table-view .layui-table-box tr .value {
 	min-width: 260px;
+	max-width: 260px;
 }
 
 .configPage .layui-table-view .layui-table-box tr .memo {
@@ -25,10 +28,12 @@
 
 .configPage .layui-table-view .layui-table-box tr .modifier {
 	min-width: 120px;
+	max-width: 120px;
 }
 
 .configPage .layui-table-view .layui-table-box tr .time-item {
 	min-width: 200px;
+	max-width: 200px;
 }
 
 .configPage .layui-table-view .layui-table-box .config-data {

@@ -47,7 +47,7 @@
 										</th>
 										<th class="item useflag">
 											<div class="layui-table-cell">
-												<span>是否使用</span>
+												<span>使用</span>
 											</div>
 										</th>
 										<th class="item creator">
@@ -95,7 +95,7 @@
 										<td class="item totalquantity">
 											<div class="layui-table-cell laytable-cell-1-0-1">{{v.totalquantity}}</div>
 										</td>
-										<td class="item useflage">
+										<td class="item useflag">
 											<div class="layui-table-cell laytable-cell-1-0-2">
 												<i class="layui-icon layui-icon-ok" v-if="v.useflag == 1"></i>
 											</div>

@@ -13,6 +13,7 @@
 .vipPage .layui-table-view .layui-table-box tr .item {
 	width: 100px;
 	min-width: 100px;
+	max-width: 100px;
 	border-top-width: 0;
 	border-left-width: 0;
 	border-right-width: 0;
@@ -26,22 +27,27 @@
 
 .vipPage .layui-table-view .layui-table-box tr .photourl {
 	min-width: 70px;
+	max-width: 70px;
 }
 
 .vipPage .layui-table-view .layui-table-box tr .code {
 	min-width: 140px;
+	max-width: 140px;
 }
 
 .vipPage .layui-table-view .layui-table-box tr .name {
 	min-width: 160px;
+	max-width: 160px;
 }
 
 .vipPage .layui-table-view .layui-table-box tr .mobilephone {
 	min-width: 140px;
+	max-width: 140px;
 }
 
 .vipPage .layui-table-view .layui-table-box tr .department {
 	min-width: 160px;
+	max-width: 160px;
 }
 
 .vipPage .layui-table-view .layui-table-box tr .memo {
@@ -50,6 +56,7 @@
 
 .vipPage .layui-table-view .layui-table-box tr .time-item {
 	min-width: 200px;
+	max-width: 200px;
 }
 
 .vipPage .layui-table-view .layui-table-box .vip-data {
@@ -58,18 +65,20 @@
 	height: 605px;
 }
 
-.edit-view .edit-box {
+/* .edit-view .edit-box {
 	column-count: 5;
 	-webkit-column-count: 5;
-}
+} */
 
 .edit-view .edit-item {
 	min-width: 190px;
 	vertical-align: top;
+	display: inline-block;
 }
 
 .edit-view .edit-item[image='1'] {
 	text-align: center;
+	    float: left;
 }
 
 .edit-view .edit-item>div {
@@ -84,6 +93,7 @@
 
 .edit-view .edit-item .edit-value {
 	width: 120px;
+	max-width: 120px;
 }
 
 .edit-view .edit-item .edit-value span {
@@ -94,4 +104,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     word-break: keep-all;
+}
+
+.edit-view .edit-item[need='1'] .edit-title label:before {
+	display: none;
 }

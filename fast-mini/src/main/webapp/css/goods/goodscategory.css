@@ -27,6 +27,7 @@
 .goodscategoryPage .layui-table-view .layui-table-box tr .item {
 	width: 100px;
 	min-width: 100px;
+	max-width: 100px;
 	border-top-width: 0;
     border-left-width: 0;
     border-right-width: 0;
@@ -35,6 +36,12 @@
 
 .goodscategoryPage .layui-table-view .layui-table-box tr .name {
 	min-width: 180px;
+	max-width: 180px;
+}
+
+.goodscategoryPage .layui-table-view .layui-table-box tr .useflag {
+	min-width: 80px;
+	max-width: 80px;
 }
 
 .goodscategoryPage .layui-table-view .layui-table-box tr .memo {
@@ -43,10 +50,12 @@
 
 .goodscategoryPage .layui-table-view .layui-table-box tr .creator,.goodscategoryPage .layui-table-view .layui-table-box tr .modifier {
 	min-width: 120px;
+	max-width: 120px;
 }
 
 .goodscategoryPage .layui-table-view .layui-table-box tr .time-item {
 	min-width: 200px;
+	max-width: 200px;
 }
 
 .goodscategoryPage .layui-table-view .layui-table-box .goodscategory-data {

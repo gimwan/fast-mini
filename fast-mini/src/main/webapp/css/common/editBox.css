@@ -9,6 +9,11 @@
 	margin: 5px;
 }
 
+.edit-view .edit-item[need='1'] .edit-title label:before {
+	content: "*";
+	color: #FF5722;
+}
+
 .edit-view .edit-box .edit-item>div {
 	margin: 10px 0;
 }

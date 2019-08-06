@@ -45,9 +45,9 @@
 												<span>名称</span>
 											</div>
 										</th>
-										<th class="item value">
+										<th class="item useflag">
 											<div class="layui-table-cell">
-												<span>是否使用</span>
+												<span>使用</span>
 											</div>
 										</th>
 										<th class="item creator">
@@ -86,7 +86,7 @@
 									<tr v-bind:data-id="p.id" v-bind:data-index="index" class="" v-for="(p, index) in publicplatform">
 										<td class="item photourl">
 											<div class="layui-table-cell laytable-cell-1-0-0">
-												<img v-bind:src="p.photourl" onerror="defaultImg(this)" class="layui-nav-img circular">
+												<img v-bind:src="p.photourl==null?'':p.photourl" onerror="defaultImg(this)" class="layui-nav-img circular">
 											</div>
 										</td>
 										<td class="item code">
@@ -97,7 +97,7 @@
 										<td class="item name">
 											<div class="layui-table-cell laytable-cell-1-0-1">{{p.name}}</div>
 										</td>
-										<td class="item value">
+										<td class="item useflag">
 											<div class="layui-table-cell laytable-cell-1-0-2">
 												<i class="layui-icon layui-icon-ok" v-if="p.useflag == 1"></i>
 											</div>

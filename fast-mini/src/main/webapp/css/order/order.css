@@ -13,6 +13,7 @@
 .orderPage .layui-table-view .layui-table-box tr .item {
 	width: 100px;
 	min-width: 100px;
+	max-width: 100px;
 	border-top-width: 0;
 	border-left-width: 0;
 	border-right-width: 0;
@@ -21,10 +22,12 @@
 
 .orderPage .layui-table-view .layui-table-box tr .no {
 	min-width: 140px;
+	max-width: 140px;
 }
 
 .orderPage .layui-table-view .layui-table-box tr .vip {
 	min-width: 140px;
+	max-width: 140px;
 }
 
 .orderPage .layui-table-view .layui-table-box tr .memo {
@@ -33,6 +36,7 @@
 
 .orderPage .layui-table-view .layui-table-box tr .time-item {
 	min-width: 200px;
+	max-width: 200px;
 }
 
 .orderPage .layui-table-view .layui-table-box .order-data {

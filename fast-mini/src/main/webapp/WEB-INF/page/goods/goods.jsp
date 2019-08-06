@@ -49,7 +49,7 @@
 										</th>
 										<th class="item useflag">
 											<div class="layui-table-cell">
-												<span>是否使用</span>
+												<span>使用</span>
 											</div>
 										</th>
 										<th class="item creator">
@@ -72,11 +72,11 @@
 												<span>修改时间</span>
 											</div>
 										</th>
-										<th class="item memo">
+										<!-- <th class="item memo">
 											<div class="layui-table-cell">
 												<span>备注</span>
 											</div>
-										</th>
+										</th> -->
 										<th class="item operationbtn">
 											<div class="layui-table-cell">
 												<span>操作</span>
@@ -93,7 +93,7 @@
 									<tr v-bind:data-id="g.id" v-bind:data-index="index" class="" v-for="(g, index) in goods">
 										<td class="item photourl">
 											<div class="layui-table-cell laytable-cell-1-0-0">
-												<img v-bind:src="g.photourl" onerror="defaultImg(this)" class="layui-nav-img">
+												<img v-bind:src="g.photourl==null?'':g.photourl" onerror="defaultImg(this)" class="layui-nav-img">
 											</div>
 										</td>
 										<td class="item code">
@@ -126,19 +126,19 @@
 										<td class="item modifytime time-item">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(g.modifytime)}}</div>
 										</td>
-										<td class="item memo">
+										<!-- <td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{g.memo}}</div>
-										</td>
+										</td> -->
 										<td class="item operationbtn">
 											<div class="layui-btn-group">
 												<button
 													class="layui-btn layui-btn-normal layui-btn-xs image"
 													title="更多" v-on:click="images">更多</button>
 												<button
-													class="layui-btn layui-btn-warm layui-btn-xs onsale"
+													class="layui-btn layui-btn-warm layui-btn-xs saleflag"
 													title="上架" v-on:click="onsale" v-if="g.onsale!=1">上架</button>
 												<button
-													class="layui-btn layui-btn-xs onsale"
+													class="layui-btn layui-btn-xs saleflag"
 													title="下架" v-on:click="unsale" v-if="g.onsale==1">下架</button>
 												<button
 													class="layui-btn layui-btn-primary layui-btn-xs sku"
