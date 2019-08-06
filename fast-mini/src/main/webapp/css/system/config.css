@@ -41,3 +41,31 @@
 	overflow-x: hidden;
 	height: 658px;
 }
+
+.edit-view .colorpicker {
+	width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin: 0 !important;
+}
+
+.edit-view .colorpicker .layui-colorpicker {
+	width: 100px;
+    height: 100px;
+    border: 0;
+    padding: 0;
+}
+
+.edit-view .colorpicker .layui-colorpicker .layui-icon {
+	display: none;
+}
+
+.edit-view .colorpicker .layui-colorpicker .layui-colorpicker-trigger-span {
+	border: 0;
+}
+
+.edit-view .imagepicker {
+	width: 100px;
+    height: 100px;
+    cursor: pointer;
+}

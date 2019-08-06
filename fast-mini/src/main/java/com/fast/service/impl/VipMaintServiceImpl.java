@@ -16,6 +16,7 @@ import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.dao.MViptypeMapper;
+import com.fast.base.data.entity.MConfigExample;
 import com.fast.base.data.entity.MRegion;
 import com.fast.base.data.entity.MRegionExample;
 import com.fast.base.data.entity.MVip;
@@ -25,6 +26,7 @@ import com.fast.base.data.entity.MVipmini;
 import com.fast.base.data.entity.MVipminiExample;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
+import com.fast.service.IConfigService;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipMaintService;
 import com.fast.service.IVipService;
@@ -63,6 +65,9 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	
 	@Autowired
 	IVipService iVipService;
+	
+	@Autowired
+	IConfigService iConfigService;
 
 	@Override
 	public Result bind(String appid, String openid, MVip vip) {
@@ -81,6 +86,20 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 				} else {
 					result.setMessage("无默认会员类别");
 					return result;
+				}
+			}
+			// 默认门店
+			if (Common.isEmpty(String.valueOf(vip.getDepartmentid()))) {
+				String departmentid = "";
+				Result r = iConfigService.queryConfigValueByCode("6001");
+				if (Common.isActive(r)) {
+					departmentid = (String) r.getData();
+				}
+				if (Common.isEmpty(departmentid)) {
+					result.setMessage("缺少默认门店");
+					return result;
+				} else {
+					vip.setDepartmentid(Integer.valueOf(departmentid.trim()));
 				}
 			}
 			vip.setUseflag(Byte.valueOf("1"));

@@ -4,16 +4,18 @@ let layuiForm;
 let layuiUpload;
 let layPage;
 let layCarousel;
+let layColorpicker;
 let loadIndex;
 let basePath = $("base").attr("href");
 
-layui.use(['layer', 'element', 'form', 'upload', 'laypage', 'carousel'], function () {
+layui.use(['layer', 'element', 'form', 'upload', 'laypage', 'carousel', 'colorpicker'], function () {
     layer = layui.layer;
     layuiElement = layui.element;
     layuiForm = layui.form;
     layPage = layui.laypage;
     layCarousel = layui.carousel;
     layuiUpload = layui.upload;
+    layColorpicker = layui.colorpicker;
 });
 
 let common = new Vue({

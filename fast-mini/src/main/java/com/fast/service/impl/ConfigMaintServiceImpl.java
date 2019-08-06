@@ -11,8 +11,10 @@ import com.fast.base.data.dao.MConfigMapper;
 import com.fast.base.data.entity.MConfig;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IConfigMaintService;
+import com.fast.service.IDataService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 
 /**
  * 系统参数
@@ -26,6 +28,9 @@ public class ConfigMaintServiceImpl implements IConfigMaintService, Serializable
 	
 	@Autowired
 	MConfigMapper mConfigMapper;
+	
+	@Autowired
+	IDataService iDataService;
 	
 	@Override
 	public Result changeConfig(MConfig config, MUser user) {
@@ -46,6 +51,13 @@ public class ConfigMaintServiceImpl implements IConfigMaintService, Serializable
 				result.setMessage("保存成功");
 			} else {
 				result.setMessage("保存失败");
+			}
+			
+			if (Common.isActive(result)) {
+				Result r = iDataService.one("config", result.getId());
+				if (Common.isActive(r)) {
+					result.setData(r.getData());
+				}
 			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
