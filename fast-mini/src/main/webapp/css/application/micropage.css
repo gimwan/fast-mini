@@ -124,7 +124,7 @@
 }
 
 .layui-navigation>div img {
-	width: 80px;
+	width: 100%;
 	height: 80px;
 	display: inline-block;
 	object-fit: contain;

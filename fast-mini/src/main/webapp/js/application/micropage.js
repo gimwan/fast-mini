@@ -350,7 +350,8 @@ function saveTargetPath(obj) {
 function saveMicropage(obj) {
 	let pidx = $(obj).attr("data-pindex");
 	let idx = $(obj).attr("data-index");
-	setData[pidx].detail[idx].targetpath = $(obj).attr("data-id");
+	setData[pidx].detail[idx].first = $(obj).attr("data-id");
+	setData[pidx].detail[idx].grouping = $(obj).val();
 }
 
 function saveGrouping(obj) {
