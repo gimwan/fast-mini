@@ -2,6 +2,7 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -102,6 +103,15 @@ public class VipServiceImpl implements IVipService, Serializable {
 						HashMap<String, Object> map = BeanUtil.convertObjToMap(vip);
 						MViptype viptype = viptypeMapper.selectByPrimaryKey(vip.getTypeid());
 						map.put("type", viptype.getName());
+						try {
+							Object object = map.get("birthday");
+							SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); 
+					        String birthday = format.format(object);
+					        map.put("birthday", birthday);
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+						
 						result.setData(map);
 						result.setId(vip.getId());
 						result.setErrcode(Integer.valueOf(0));

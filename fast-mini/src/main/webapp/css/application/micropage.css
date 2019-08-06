@@ -6,7 +6,6 @@
 /* .microPage .nav-bar {
 	margin-bottom: 15px;
 } */
-
 .microPage .configureView {
 	display: table;
 	/*width: 100%;*/
@@ -44,6 +43,11 @@
 
 .microPage .configureView .leftPanel .itemBox .item .itemName {
 	margin: 10px;
+}
+
+.microPage .configureView .leftPanel .itemBox .coupon {
+	float: left;
+	margin-left: 15px;
 }
 
 /**************** middle ****************/
@@ -603,4 +607,63 @@
 	color: #FFFFFF;
 	border: 0px;
 	cursor: pointer;
+}
+
+.microPage .configureView .rightPanel .editBox .coupon .uploadBox {
+	width: 150px;
+	height: 150px;
+}
+
+.rightPanel .coupon .uploadBox {
+	width: 150px;
+	height: 150px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.rightPanel .coupon .uploadBox .layui-upload-drag {
+	width: 150px;
+	height: 150px;
+	padding: 0;
+}
+
+.rightPanel .coupon .uploadBox .layui-upload-drag .layui-icon img {
+	width: 150px;
+	height: 150px;
+	object-fit: contain;
+}
+
+.rightPanel .coupon .uploadBox .layui-upload-drag .layui-icon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.rightPanel .coupon .selectBlock {
+	width: 250px;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 10px;
+}
+
+.rightPanel .coupon .uploadBox .layui-icon-delete {
+	position: absolute;
+	top: auto;
+	left: auto;
+	right: 0;
+	bottom: 0;
+	transform: none;
+	font-size: 25px;
+	color: grey;
+	display: none;
+	z-index: 99;
+	left: auto;
+	right: 0;
+	bottom: 0;
+}
+
+.microPage .configureView .rightPanel .editBox .coupon .selectBlock input
+	{
+	width: 100%;
 }
