@@ -140,8 +140,8 @@
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="dt.type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<option value="4" v-if="dt.type==3" selected>小程序页面</option>
-											<option value="4" v-else>小程序页面</option>
+											<!-- <option value="4" v-if="dt.type==3" selected>小程序页面</option>
+											<option value="4" v-else>小程序页面</option> -->
 										</select>
 									</div>
 								</div>
@@ -227,8 +227,8 @@
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="dt.type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<option value="4" v-if="dt.type==3" selected>小程序页面</option>
-											<option value="4" v-else>小程序页面</option>
+											<!-- <option value="4" v-if="dt.type==3" selected>小程序页面</option>
+											<option value="4" v-else>小程序页面</option> -->
 										</select>
 									</div>
 								</div>
@@ -327,8 +327,8 @@
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="e.detail[0].type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<option value="4" v-if="e.detail[0].type==4" selected>小程序页面</option>
-											<option value="4" v-else>小程序页面</option>
+											<!-- <option value="4" v-if="e.detail[0].type==4" selected>小程序页面</option>
+											<option value="4" v-else>小程序页面</option> -->
 										</select>
 									</div>
 								</div>
