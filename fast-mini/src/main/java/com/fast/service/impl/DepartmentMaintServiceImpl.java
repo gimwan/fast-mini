@@ -12,6 +12,7 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MDepartmentMapper;
 import com.fast.base.data.dao.MRegionMapper;
 import com.fast.base.data.entity.MDepartment;
+import com.fast.base.data.entity.MDepartmentExample;
 import com.fast.base.data.entity.MRegion;
 import com.fast.base.data.entity.MRegionExample;
 import com.fast.base.data.entity.MUser;
@@ -45,6 +46,18 @@ public class DepartmentMaintServiceImpl implements IDepartmentMaintService, Seri
 		Result result = new Result();
 
 		try {
+			MDepartmentExample example = new MDepartmentExample();
+			if (department.getId() != null) {
+				example.createCriteria().andCodeEqualTo(department.getCode().trim()).andIdNotEqualTo(department.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(department.getCode().trim());
+			}
+			List<MDepartment> list = departmentMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MDepartment mDepartment = new MDepartment();
 			department.setUpdatedtime(now);

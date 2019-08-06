@@ -75,3 +75,11 @@ a {
 .layui-carousel-ind ul:hover {
 	background-color: rgba(0, 0, 0, 0);
 }
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+}

@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import com.fast.base.data.entity.MMicropagesetdraft;
 import com.fast.base.data.entity.MMicropagesetdraftExample;
 import com.fast.base.data.entity.MMicropagesetdtlExample;
 import com.fast.base.data.entity.MMicropagesetdtldraft;
+import com.fast.base.data.entity.MMicropagesetdtldraftExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IMicropageMaintService;
@@ -68,6 +70,18 @@ public class MicropageMaintServiceImpl implements IMicropageMaintService, Serial
 		Result result = new Result();
 
 		try {
+			MMicropageExample example = new MMicropageExample();
+			if (micropage.getId() != null) {
+				example.createCriteria().andCodeEqualTo(micropage.getCode().trim()).andIdNotEqualTo(micropage.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(micropage.getCode().trim());
+			}
+			List<MMicropage> list = micropageMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			result = save(micropage, user);
 			
 			if (Common.isActive(result)) {
@@ -180,6 +194,7 @@ public class MicropageMaintServiceImpl implements IMicropageMaintService, Serial
 		Date now = new Date();
 		String setdata = Common.unescape(setdataStr);
 		JSONArray jsonArray = JSONArray.parseArray(setdata);
+		List<Integer> setidList = new ArrayList<>();
 		for (int i = 0; i < jsonArray.size(); i++) {
 			MMicropagesetdraft micropagesetdraft = JSONObject.parseObject(jsonArray.getJSONObject(i).toString(), MMicropagesetdraft.class);
 			micropagesetdraft.setUpdatedtime(now);
@@ -193,10 +208,11 @@ public class MicropageMaintServiceImpl implements IMicropageMaintService, Serial
 				micropagesetdraft.setCreatetime(now);
 				micropagesetdraftMapper.insertSelective(micropagesetdraft);
 			}
-			
+			setidList.add(micropagesetdraft.getId());
 			String details = jsonArray.getJSONObject(i).getString("detail");
 			if (!Common.isEmpty(details)) {
 				List<MMicropagesetdtldraft> micropagesetdtldrafts = JSONObject.parseArray(details, MMicropagesetdtldraft.class);
+				List<Integer> setdtlidList = new ArrayList<>();
 				for (int j = 0; j < micropagesetdtldrafts.size(); j++) {
 					MMicropagesetdtldraft micropagesetdtldraft = micropagesetdtldrafts.get(j);
 					micropagesetdtldraft.setMicropagesetid(micropagesetdraft.getId());
@@ -206,9 +222,26 @@ public class MicropageMaintServiceImpl implements IMicropageMaintService, Serial
 						micropagesetdtldraft.setId(null);
 						micropagesetdtldraftMapper.insertSelective(micropagesetdtldraft);
 					}
+					setdtlidList.add(micropagesetdtldraft.getId());
 				}
+				// 删除未设置项
+				MMicropagesetdtldraftExample micropagesetdtldraftExample = new MMicropagesetdtldraftExample();
+				if (setdtlidList.size() > 0) {
+					micropagesetdtldraftExample.createCriteria().andIdNotIn(setdtlidList).andMicropagesetidEqualTo(micropagesetdraft.getId());
+				} else {
+					micropagesetdtldraftExample.createCriteria().andMicropagesetidEqualTo(micropagesetdraft.getId());
+				}
+				micropagesetdtldraftMapper.deleteByExample(micropagesetdtldraftExample);
 			}
 		}
+		// 删除未设置项
+		MMicropagesetdraftExample micropagesetdraftExample = new MMicropagesetdraftExample();
+		if (setidList.size() > 0) {
+			micropagesetdraftExample.createCriteria().andMicropageidEqualTo(pageID).andIdNotIn(setidList);
+		} else {
+			micropagesetdraftExample.createCriteria().andMicropageidEqualTo(pageID);
+		}
+		micropagesetdraftMapper.deleteByExample(micropagesetdraftExample);
 		
 		MMicropage micropage = new MMicropage();
 		micropage.setId(pageID);

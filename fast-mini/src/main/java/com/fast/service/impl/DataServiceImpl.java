@@ -15,6 +15,7 @@ import com.fast.base.data.dao.MBrandMapper;
 import com.fast.base.data.dao.MColorMapper;
 import com.fast.base.data.dao.MDepartmentMapper;
 import com.fast.base.data.dao.MGoodscategoryMapper;
+import com.fast.base.data.dao.MLogisticsMapper;
 import com.fast.base.data.dao.MPatternMapper;
 import com.fast.base.data.dao.MPublicplatformMapper;
 import com.fast.base.data.dao.MSizeMapper;
@@ -29,6 +30,8 @@ import com.fast.base.data.entity.MDepartment;
 import com.fast.base.data.entity.MDepartmentExample;
 import com.fast.base.data.entity.MGoodscategory;
 import com.fast.base.data.entity.MGoodscategoryExample;
+import com.fast.base.data.entity.MLogistics;
+import com.fast.base.data.entity.MLogisticsExample;
 import com.fast.base.data.entity.MPattern;
 import com.fast.base.data.entity.MPatternExample;
 import com.fast.base.data.entity.MPublicplatform;
@@ -84,6 +87,9 @@ public class DataServiceImpl implements IDataService, Serializable {
 	
 	@Autowired
 	MSizeMapper sizeMapper;
+	
+	@Autowired
+	MLogisticsMapper logisticsMapper;
 
 	@Override
 	public Result pageList(PagingView page, String tableName) {
@@ -523,6 +529,7 @@ public class DataServiceImpl implements IDataService, Serializable {
 	 */
 	public List<LinkedHashMap<String, Object>> completeOrder(List<LinkedHashMap<String, Object>> list) {
 		List<Integer> vipidList = new ArrayList<>();
+		List<Integer> logisticsidList = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).put("vip", "");
 			list.get(i).put("vipphone", "");
@@ -531,6 +538,13 @@ public class DataServiceImpl implements IDataService, Serializable {
 			} else {
 				list.get(i).put("vip", "");
 				list.get(i).put("vipphone", "");
+			}
+			list.get(i).put("logistics", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("logisticsid")))) {
+				logisticsidList.add(Integer.valueOf(list.get(i).get("logisticsid").toString()));
+			} else {
+				list.get(i).put("logisticsid", "");
+				list.get(i).put("logistics", "");
 			}
 		}
 		if (vipidList.size() > 0) {
@@ -549,9 +563,27 @@ public class DataServiceImpl implements IDataService, Serializable {
 				}
 			}
 		}
+		if (logisticsidList.size() > 0) {
+			MLogisticsExample example = new MLogisticsExample();
+			example.createCriteria().andIdIn(logisticsidList);
+			List<MLogistics> data = logisticsMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("logisticsid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("logistics", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
 		for (int i = 0; i < list.size(); i++) {
 			if ("".equals(list.get(i).get("vip").toString())) {
 				list.get(i).put("vipid", "");
+			}
+			if ("".equals(list.get(i).get("logistics").toString())) {
+				list.get(i).put("logisticsid", "");
 			}
 			// 明细
 			String detailSql = "select a.*,b.code,b.name,b.photourl,c.name as color,d.name as pattern,e.name as size "

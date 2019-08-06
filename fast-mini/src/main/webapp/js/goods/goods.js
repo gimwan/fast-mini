@@ -296,7 +296,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">采购价</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"purchaseprice\">"+
-				                "<input type=\"text\" value=\""+d.purchaseprice+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.purchaseprice+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" money=\"1\" key=\"0\">"+
@@ -304,7 +304,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">标准价</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"baseprice\">"+
-				                "<input type=\"text\" value=\""+d.baseprice+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.baseprice+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" money=\"1\" key=\"0\">"+
@@ -312,7 +312,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">零售价</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"price\">"+
-				                "<input type=\"text\" value=\""+d.price+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.price+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" checkbox=\"1\" key=\"0\">"+
@@ -784,7 +784,7 @@ function createSKUElement(data) {
 							"</div>" +
 						"</td>" +
 						"<td><input type=\"text\" class=\"layui-input value barcode\" value=\""+(data[i].barcode==null?'':data[i].barcode)+"\"/></td>" +
-						"<td><input type=\"text\" class=\"layui-input value quantity\" value=\""+(data[i].quantity==null?'':data[i].quantity)+"\"/></td>" +
+						"<td><input type=\"number\" class=\"layui-input value quantity\" value=\""+(data[i].quantity==null?'':data[i].quantity)+"\" /></td>" +
 						"<td class=\"operationBtn\"><i class=\"layui-icon layui-icon-delete\" onclick='deleteTr(this)'></i></td>" +
 					"</tr>";
 		}
@@ -838,7 +838,7 @@ function addSKU() {
 					"</div>" +
 				"</td>" +
 				"<td><input type=\"text\" class=\"layui-input value barcode\"/></td>" +
-				"<td><input type=\"text\" class=\"layui-input value quantity\"/></td>" +
+				"<td><input type=\"number\" class=\"layui-input value quantity\"/></td>" +
 				"<td class=\"operationBtn\"><i class=\"layui-icon layui-icon-delete\" onclick='deleteTr(this)'></i></td>" +
 			"</tr>";
 	$(".sku-view .sku-table tbody").append(tr);

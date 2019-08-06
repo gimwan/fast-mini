@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MGoodscategory;
+import com.fast.base.data.entity.MGoodsgrouping;
 import com.fast.base.data.entity.MMicropage;
+import com.fast.base.data.entity.MUser;
 import com.fast.base.page.PagingView;
+import com.fast.service.IGoodsCategoryMaintService;
 import com.fast.service.IGoodsCategoryService;
 import com.fast.util.Common;
 
@@ -30,6 +34,9 @@ public class GoodsCategoryController {
 	
 	@Autowired
 	IGoodsCategoryService iGoodsCategoryService;
+	
+	@Autowired
+	IGoodsCategoryMaintService iGoodsCategoryMaintService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
@@ -87,6 +94,62 @@ public class GoodsCategoryController {
 		
 		try {			
 			Result result = iGoodsCategoryService.category();
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 修改分类
+	 * @param request
+	 * @param response
+	 * @param goodscategory
+	 * @return
+	 */
+	@RequestMapping("/change")
+	@ResponseBody
+	public String change(HttpServletRequest request, HttpServletResponse response, MGoodscategory goodscategory) {
+		String r = "";
+		
+		try {
+			Result result = new Result();
+			
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				result = iGoodsCategoryMaintService.changeGoodsCategory(goodscategory, user);
+			} else {
+				result.setErrcode(Integer.valueOf(88));
+				result.setMessage("当前登入者已失效");
+			}
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 删除分类
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/delete")
+	@ResponseBody
+	public String delete(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			Result result = iGoodsCategoryMaintService.deleteGoodsCategory(Integer.valueOf(id));
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

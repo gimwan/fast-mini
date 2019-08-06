@@ -375,15 +375,7 @@ function showEditBox(idx,data) {
             common.showLoading();
             api.load('./goodscategory/change','post',data, function(result) {
                 if (result.errcode == 0) {
-                	data = result.data;
-                	if (idx < 0) {
-                		goodscategory.push(data);
-					} else {
-						for (const key in data) {
-	                        goodscategory[idx][key] = data[key];
-	                    }
-					}
-                    
+                	loadData();
                     layer.close(index);
                     common.tips(result.message);
                 } else {

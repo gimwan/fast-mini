@@ -2,6 +2,7 @@ let order = [];
 let orderVm;
 
 common.bindVue = function() {
+	console.log('order');
     orderVm = new Vue({
         el : ".orderPage",
         data : {
@@ -85,6 +86,8 @@ function createElement(data) {
 		pointmoney: 0,
 		couponmoney: 0,
 		discountmoney: 0,
+		logistics: '',
+		logisticsno: '',
 		remark: '',
 		memo : '',
 		details: []
@@ -205,6 +208,22 @@ function createElement(data) {
 				            	"<span class=\"value\">"+common.formatDate(d.deliverertime)+"</span>"+
 				            "</div>"+
 				        "</div>"+
+				        "<div class=\"edit-item\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">物流公司</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\">"+
+				            	"<span class=\"value\">"+d.logistics+"</span>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">物流单号</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\">"+
+				            	"<span class=\"value\">"+d.logisticsno+"</span>"+
+				            "</div>"+
+				        "</div>"+
 				        "<div class=\"edit-item memo\">"+
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">买家备注</label>：</span>"+
@@ -313,38 +332,90 @@ function showEditBox(idx,data) {
 	let editDiv = createElement(data);
 	
 	let boxTitle = "<label style='font-weight:600;'>明细</label>";
+	
+	var btnOperation = ['关闭'];
+	if (data.status == 2) {
+		btnOperation = ['发货','关闭'];
+	}
     
     layer.open({
         type: 1,
         title: boxTitle,
         content: editDiv,
         area: ['1100px', '800px'],
-        btn: ['发货','关闭'],
-        /*btn1: function (index, layero) {
-            let data = catchBoxValue();
+        btn: btnOperation,
+        btn1: function (index, layero) {
+            if (data.status == 2) {
+            	chooseLogistics(data.id, index);
+            	return false;
+			} else {
+				layer.close(index);
+			}
+        },
+        success: function () {
+        	// 重新刷新form
+        	layuiForm.render();
+        }
+        
+    });
+}
+
+function chooseLogistics(orderid, idx) {
+	var logisticsView = "<div class=\"edit-view\">"+
+						    "<div class=\"edit-box\">"+
+							    "<div class=\"edit-item\" need=\"1\" key=\"1\" style='width: 100%;display:none;'>"+
+						            "<div class=\"edit-title\">"+
+						                "<span class=\"title\"><label class=\"name\">ID</label>：</span>"+
+						            "</div>"+
+						            "<div class=\"edit-value\" data-field=\"id\" style=\"display: block;\">"+
+						                "<input type=\"text\" value=\""+orderid+"\" class=\"layui-input value\"/>"+
+						            "</div>"+
+						        "</div>"+
+							    "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\" style=\"width: 100%;\">"+
+						            "<div class=\"edit-title\" style=\"text-align:left;\">"+
+						                "<span class=\"title\"><label class=\"name\">物流公司</label>：</span>"+
+						            "</div>"+
+						            "<div class=\"edit-value\" data-field=\"logisticsid\" style=\"display: block;\">"+
+						                "<input type=\"text\" data-id=\"\" value=\"\" " +
+						                		"data-url=\"./data/page?table=logistics\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+						                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
+						            "</div>"+
+						        "</div>"+
+							    "<div class=\"edit-item\" style=\"width: 100%;\">"+
+							        "<div class=\"edit-title\" style=\"text-align:left;\">"+
+							            "<span class=\"title\"><label class=\"name\">物流单号</label>：</span>"+
+							        "</div>"+
+							        "<div class=\"edit-value\" data-field=\"logisticsno\" style=\"display: block;\">"+
+						                "<input type=\"text\" value=\"\" class=\"layui-input value\"/>"+
+						            "</div>"+
+							    "</div>" +
+							 "</div>" +
+						"</div>";
+	layer.open({
+        type: 1,
+        title: "物流",
+        content: logisticsView,
+        area: ['500px', '350px'],
+        btn: ["确定","关闭"],
+        btn1: function (index, layero) {
+        	let data = catchBoxValue();
             if (data == '') {
                 return;
             }
             common.showLoading();
             api.load('./order/change','post',data, function(result) {
                 if (result.errcode == 0) {
-                	data = result.data;
-                	if (idx < 0) {
-                		order.push(data);
-					} else {
-						for (const key in data) {
-	                        order[idx][key] = data[key];
-	                    }
-					}
-                    
-                    layer.close(index);
-                    common.tips(result.message);
+                	layer.close(index);
+                	layer.close(idx);
+                	common.tips(result.message);
+                	loadData();
                 } else {
                     common.error(result.message);
                 }
                 common.closeLoading();
             });
-        },*/
+            
+        },
         success: function () {
         	// 重新刷新form
         	layuiForm.render();

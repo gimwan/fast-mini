@@ -2,13 +2,18 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MBrandMapper;
+import com.fast.base.data.dao.MGoodsMapper;
 import com.fast.base.data.entity.MBrand;
+import com.fast.base.data.entity.MBrandExample;
+import com.fast.base.data.entity.MGoods;
+import com.fast.base.data.entity.MGoodsExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IBrandMaintService;
 import com.fast.service.IDataService;
@@ -31,12 +36,27 @@ public class BrandMaintServiceImpl implements IBrandMaintService, Serializable {
 	
 	@Autowired
 	IDataService iDataService;
+	
+	@Autowired
+	MGoodsMapper goodsMaper;
 
 	@Override
 	public Result changeBrand(MBrand brand, MUser user) {
 		Result result = new Result();
 
 		try {
+			MBrandExample example = new MBrandExample();
+			if (brand.getId() != null) {
+				example.createCriteria().andCodeEqualTo(brand.getCode().trim()).andIdNotEqualTo(brand.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(brand.getCode().trim());
+			}
+			List<MBrand> list = brandMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MBrand mBrand = new MBrand();
 			brand.setUpdatedtime(now);
@@ -86,6 +106,13 @@ public class BrandMaintServiceImpl implements IBrandMaintService, Serializable {
 		Result result = new Result();
 
 		try {
+			MGoodsExample example = new MGoodsExample();
+			example.createCriteria().andBrandidEqualTo(id);
+			List<MGoods> list = goodsMaper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("删除失败！此品牌已被使用");
+				return result;
+			}
 			int i = brandMapper.deleteByPrimaryKey(id);
 			if (i > 0) {
 				result.setErrcode(0);

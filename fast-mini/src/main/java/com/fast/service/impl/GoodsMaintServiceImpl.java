@@ -15,13 +15,17 @@ import com.fast.base.data.dao.MGoodsMapper;
 import com.fast.base.data.dao.MGoodsdtlMapper;
 import com.fast.base.data.dao.MGoodsingroupMapper;
 import com.fast.base.data.dao.MGoodsskuMapper;
+import com.fast.base.data.dao.MOrderdtlMapper;
 import com.fast.base.data.entity.MGoods;
+import com.fast.base.data.entity.MGoodsExample;
 import com.fast.base.data.entity.MGoodsdtl;
 import com.fast.base.data.entity.MGoodsdtlExample;
 import com.fast.base.data.entity.MGoodsingroup;
 import com.fast.base.data.entity.MGoodsingroupExample;
 import com.fast.base.data.entity.MGoodssku;
 import com.fast.base.data.entity.MGoodsskuExample;
+import com.fast.base.data.entity.MOrderdtl;
+import com.fast.base.data.entity.MOrderdtlExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IGoodsMaintService;
@@ -54,12 +58,27 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 	
 	@Autowired
 	MGoodsskuMapper goodsskuMapper;
+	
+	@Autowired
+	MOrderdtlMapper orderdtlMapper;
 
 	@Override
 	public Result changeGoods(MGoods goods, MUser user) {
 		Result result = new Result();
 
 		try {
+			MGoodsExample example = new MGoodsExample();
+			if (goods.getId() != null) {
+				example.createCriteria().andCodeEqualTo(goods.getCode().trim()).andIdNotEqualTo(goods.getId());
+			} else {
+				example.createCriteria().andCodeEqualTo(goods.getCode().trim());
+			}
+			List<MGoods> list = goodsMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("编号不能重复");
+				return result;
+			}
+			
 			Date now = new Date();
 			MGoods mGoods = new MGoods();
 			goods.setUpdatedtime(now);
@@ -109,6 +128,13 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 		Result result = new Result();
 
 		try {
+			MOrderdtlExample example = new MOrderdtlExample();
+			example.createCriteria().andGoodsidEqualTo(id);
+			List<MOrderdtl> list = orderdtlMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("删除失败！该商品已使用");
+				return result;
+			}
 			int i = goodsMapper.deleteByPrimaryKey(id);
 			if (i > 0) {
 				result.setErrcode(0);
