@@ -139,6 +139,13 @@ public class FieldUploadController {
 		return r;
 	}
 	
+	/**
+	 * 应用
+	 * @param request
+	 * @param response
+	 * @param file
+	 * @return
+	 */
 	@RequestMapping("/field/platform")
 	@ResponseBody
 	public String platform(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) {
@@ -146,6 +153,30 @@ public class FieldUploadController {
 		
 		try {
 			Result result = iFieldUploadService.uploadpPlatformPhoto(request, file);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 参数
+	 * @param request
+	 * @param response
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping("/field/config")
+	@ResponseBody
+	public String config(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) {
+		String r = "";
+		
+		try {
+			Result result = iFieldUploadService.uploadpConfigPhoto(request, file);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

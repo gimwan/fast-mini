@@ -50,9 +50,9 @@
 												<span>所属门店</span>
 											</div>
 										</th>
-										<th class="item value">
+										<th class="item useflag">
 											<div class="layui-table-cell">
-												<span>是否使用</span>
+												<span>使用</span>
 											</div>
 										</th>
 										<th class="item creator">
@@ -91,7 +91,7 @@
 									<tr v-bind:data-id="e.id" v-bind:data-index="index" class="" v-for="(e, index) in employee">
 										<td class="item photourl">
 											<div class="layui-table-cell laytable-cell-1-0-0">
-												<img v-bind:src="e.photourl" onerror="defaultImg(this)" class="layui-nav-img circular">
+												<img v-bind:src="e.photourl==null?'':e.photourl" onerror="defaultImg(this)" class="layui-nav-img circular">
 											</div>
 										</td>
 										<td class="item code">
@@ -105,7 +105,7 @@
 										<td class="item department">
 											<div class="layui-table-cell laytable-cell-1-0-1">{{e.department}}</div>
 										</td>
-										<td class="item value">
+										<td class="item useflag">
 											<div class="layui-table-cell laytable-cell-1-0-2">
 												<i class="layui-icon layui-icon-ok" v-if="e.useflag == 1"></i>
 											</div>

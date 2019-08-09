@@ -1,18 +1,24 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
+import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MConfigMapper;
 import com.fast.base.data.entity.MConfig;
 import com.fast.base.data.entity.MConfigExample;
 import com.fast.service.IConfigService;
+import com.fast.service.IDataService;
 import com.fast.system.log.FastLog;
+import com.fast.util.BeanUtil;
 import com.fast.util.Common;
+import com.fast.util.CommonUtil;
 
 /**
  * 系统参数
@@ -26,16 +32,22 @@ public class ConfigServiceImpl implements IConfigService, Serializable {
 	
 	@Autowired
 	MConfigMapper mConfigMapper;
+	
+	@Autowired
+	DataMapper dataMapper;
+	
+	@Autowired
+	IDataService iDataService;
 
 	@Override
 	public Result config() {
 		Result result = new Result();
 
 		try {
-			MConfigExample example = new MConfigExample();
-			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1"));
-			example.setOrderByClause("code asc");
-			List<MConfig> list = mConfigMapper.selectByExample(example);
+			String sql = "select * from m_config where useflag=1 order by code asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			list = CommonUtil.transformUpperCase(list);
+			list = iDataService.completeData(list, "config");
 			result.setErrcode(0);
 			result.setData(list);
 		} catch (Exception e) {

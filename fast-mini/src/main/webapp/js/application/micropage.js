@@ -43,6 +43,11 @@ let item = [
 		name: "商品列表",
 		image: "./images/list.png",
 		target: "list"
+	},
+	{
+		name: "优惠券",
+		image: "./images/coupon.png",
+		target: "coupon"
 	}
 ]
 
@@ -158,6 +163,10 @@ function loadSetData() {
 							// 商品
 							else if (kind == 9) {
 								if (setData[index].detail.length < 10) {
+									setData[index].detail.push(item);
+								}
+							} else if (kind == 10) {
+								if (setData[index].detail.length < 4) {
 									setData[index].detail.push(item);
 								}
 							}
@@ -350,10 +359,18 @@ function saveTargetPath(obj) {
 function saveMicropage(obj) {
 	let pidx = $(obj).attr("data-pindex");
 	let idx = $(obj).attr("data-index");
-	setData[pidx].detail[idx].targetpath = $(obj).attr("data-id");
+	setData[pidx].detail[idx].first = $(obj).attr("data-id");
+	setData[pidx].detail[idx].grouping = $(obj).val();
 }
 
 function saveGrouping(obj) {
+	let pidx = $(obj).attr("data-pindex");
+	let idx = $(obj).attr("data-index");
+	setData[pidx].detail[idx].first = $(obj).attr("data-id");
+	setData[pidx].detail[idx].grouping = $(obj).val();
+}
+
+function saveCoupon(obj) {
 	let pidx = $(obj).attr("data-pindex");
 	let idx = $(obj).attr("data-index");
 	setData[pidx].detail[idx].first = $(obj).attr("data-id");

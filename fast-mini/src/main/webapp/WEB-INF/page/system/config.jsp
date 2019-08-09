@@ -66,7 +66,7 @@
 											<div class="layui-table-cell laytable-cell-1-0-1">{{c.name}}</div>
 										</td>
 										<td class="item value">
-											<div class="layui-table-cell laytable-cell-1-0-2">{{c.value}}</div>
+											<div class="layui-table-cell laytable-cell-1-0-2">{{c.code=='6001'?c.department:c.value}}</div>
 										</td>
 										<td class="item modifier">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{c.modifier}}</div>

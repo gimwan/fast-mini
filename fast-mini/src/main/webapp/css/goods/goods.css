@@ -13,6 +13,7 @@
 .goodsPage .layui-table-view .layui-table-box tr .item {
 	width: 100px;
 	min-width: 100px;
+	max-width: 100px;
 	border-top-width: 0;
 	border-left-width: 0;
 	border-right-width: 0;
@@ -20,11 +21,23 @@
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .code {
-	min-width: 140px;
+	min-width: 120px;
+	max-width: 120px;
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .photourl {
 	min-width: 80px;
+	max-width: 80px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .onsale {
+	min-width: 80px;
+	max-width: 80px;
+}
+
+.goodsPage .layui-table-view .layui-table-box tr .useflag {
+	min-width: 80px;
+	max-width: 80px;
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .photourl img {
@@ -33,10 +46,12 @@
 
 .goodsPage .layui-table-view .layui-table-box tr .name {
 	min-width: 180px;
+	max-width: 180px;
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .value {
 	min-width: 200px;
+	max-width: 200px;
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .memo {
@@ -44,7 +59,9 @@
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .operationbtn {
-	min-width: 180px;
+	/* min-width: 180px;
+	max-width: 180px; */
+	width: 100%;
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .operationbtn .sku {
@@ -56,10 +73,12 @@
 .goodsPage .layui-table-view .layui-table-box tr .creator, .goodsPage .layui-table-view .layui-table-box tr .modifier
 	{
 	min-width: 120px;
+	max-width: 120px;
 }
 
 .goodsPage .layui-table-view .layui-table-box tr .time-item {
 	min-width: 200px;
+	max-width: 200px;
 }
 
 .goodsPage .layui-table-view .layui-table-box .goods-data {
@@ -69,6 +88,10 @@
 
 .operationbtn .layui-icon {
 	margin-right: 0px;
+}
+
+.operationbtn .layui-btn-group {
+	padding-left: 15px;
 }
 
 .operationbtn .layui-btn-group .layui-btn {

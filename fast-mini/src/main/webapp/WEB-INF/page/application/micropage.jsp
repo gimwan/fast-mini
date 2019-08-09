@@ -108,6 +108,11 @@
 								</div>
 							</div>
 						</div>
+						<div class="layui-navigation" v-else-if="d.kind == 10">
+							<div class="navigation-img-box" v-for="(dt, index) in d.detail">
+								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)">
+							</div>
+						</div>
 						<div class="chooseBox" v-bind:class="d.choose == 1 ? 'choose-view' : ''"></div>
 						<i class="layui-icon layui-icon-delete deleteIcon"></i>
 					</div>
@@ -140,8 +145,8 @@
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="dt.type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<option value="4" v-if="dt.type==3" selected>小程序页面</option>
-											<option value="4" v-else>小程序页面</option>
+											<!-- <option value="4" v-if="dt.type==3" selected>小程序页面</option>
+											<option value="4" v-else>小程序页面</option> -->
 										</select>
 									</div>
 								</div>
@@ -227,8 +232,8 @@
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="dt.type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<option value="4" v-if="dt.type==3" selected>小程序页面</option>
-											<option value="4" v-else>小程序页面</option>
+											<!-- <option value="4" v-if="dt.type==3" selected>小程序页面</option>
+											<option value="4" v-else>小程序页面</option> -->
 										</select>
 									</div>
 								</div>
@@ -327,8 +332,8 @@
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="e.detail[0].type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<option value="4" v-if="e.detail[0].type==4" selected>小程序页面</option>
-											<option value="4" v-else>小程序页面</option>
+											<!-- <option value="4" v-if="e.detail[0].type==4" selected>小程序页面</option>
+											<option value="4" v-else>小程序页面</option> -->
 										</select>
 									</div>
 								</div>
@@ -467,6 +472,32 @@
 								</div>
 							</div>
 						</form>
+					</div>
+					<!-- 优惠券 -->
+					<div class="group coupon" v-if="e.kind == 10 && e.choose == 1">
+						<form class="layui-form uploadField" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
+							<div class="uploadBox">
+								<div class="layui-upload-drag layTableCell" v-bind:id="dt.id">
+									<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
+									<i class="layui-icon" v-else></i>
+								</div>
+								<i class="layui-icon layui-icon-delete"></i>
+							</div>
+						    <div class="selectBlock popup">
+								<label class="layui-form-label layui-inline selectTitle">优惠券：</label>
+								<div class="group-value">
+									<div class="edit-title" style="display:none;"><span class="name">优惠券</span></div>
+									<input type="text" v-bind:data-id="dt.first" v-bind:value="dt.grouping"
+											data-url="./data/page?table=coupon&pagesize=100"
+											class="layui-input value" readonly="readonly"
+											onchange="saveCoupon(this)" v-bind:data-pindex="index"
+											v-bind:data-index="i">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="uploadField ad  iconAdd" v-if="e.kind == 10 && e.choose == 1 && e.detail.length!=4" key="couponAdd">
+						<i class="layui-icon layui-icon-add-circle" v-bind:data-kind="e.kind" v-bind:data-index="index" v-on:click="addItem"></i>
 					</div>
 				</div>
 			</div>

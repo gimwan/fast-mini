@@ -70,7 +70,7 @@
 									<tr v-bind:data-id="v.id" v-bind:data-index="index" class="" v-for="(v, index) in vip">
 										<td class="item photourl">
 											<div class="layui-table-cell laytable-cell-1-0-0">
-												<img v-bind:src="v.photourl" onerror="defaultImg(this)" class="layui-nav-img circular">
+												<img v-bind:src="v.photourl==null?'':v.photourl" onerror="defaultImg(this)" class="layui-nav-img circular">
 											</div>
 										</td>
 										<td class="item code">

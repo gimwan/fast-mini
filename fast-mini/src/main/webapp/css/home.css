@@ -83,3 +83,14 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 input[type="number"] {
 	-moz-appearance: textfield;
 }
+
+.layui-table-main .layui-table .item {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	word-break: keep-all;
+}
+
+.layui-icon-ok {
+	color: #5FB878;
+}

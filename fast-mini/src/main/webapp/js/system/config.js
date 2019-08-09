@@ -2,6 +2,7 @@ let config = [];
 let configVm;
 
 common.bindVue = function() {
+	console.log('config');
     configVm = new Vue({
         el : ".config-data",
         data : {
@@ -11,8 +12,7 @@ common.bindVue = function() {
             edit: function(event) {
                 if (event) {
                     let index = $(event.target).parents("tr").data("index");
-                    console.log(config[index].id);
-                    showEditBox(index,config[index].id,config[index].name,config[index].value);
+                    showEditBox(index);
                 }
             },
             formatDate: function(jsonDate) {
@@ -41,7 +41,7 @@ function loadData() {
     });
 }
 
-function showEditBox(idx,id,name,val) {
+function showEditBox(idx) {
     let editDiv = "<div class=\"edit-view\">"+
                     "<div class=\"edit-box\">"+
                         "<div class=\"edit-item\" need=\"0\" key=\"1\" hidden>"+
@@ -49,25 +49,68 @@ function showEditBox(idx,id,name,val) {
                                 "<span class=\"title\"><label class=\"name\">ID</label>：</span>"+
                             "</div>"+
                             "<div class=\"edit-value\" data-field=\"id\">"+
-                                "<input type=\"text\" value=\""+id+"\" class=\"layui-input value\"/>"+
+                                "<input type=\"text\" value=\""+config[idx].id+"\" class=\"layui-input value\"/>"+
                             "</div>"+
-                        "</div>"+
-                        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
-                            "<div class=\"edit-title\">"+
-                                "<span class=\"title\"><label class=\"name\">"+name+"</label>：</span>"+
-                            "</div>"+
-                            "<div class=\"edit-value\" data-field=\"value\">"+
-                                "<input type=\"text\" value=\""+val+"\" class=\"layui-input value focus\"/>"+
-                            "</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>";
+                        "</div>";
+    let height = '230px';
+    if (config[idx].type == 1) {
+    	editDiv += "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				        "<div class=\"edit-title\">"+
+					        "<span class=\"title\"><label class=\"name\">"+config[idx].name+"</label>：</span>"+
+					    "</div>"+
+					    "<div class=\"edit-value\" data-field=\"value\">"+
+					        "<input "+(config[idx].code=='4001'?'type=\"number\"':'type=\"text\"')+" value=\""+config[idx].value+"\" class=\"layui-input value focus\"/>"+
+					    "</div>"+
+					"</div>";
+	} else if (config[idx].type == 2) {
+		editDiv += "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				        "<div class=\"edit-title\">"+
+					        "<span class=\"title\"><label class=\"name\">"+config[idx].name+"</label>：</span>"+
+					    "</div>"+
+					    "<div class=\"edit-value\" data-field=\"value\">"+
+					        "<input type=\"text\" value=\""+config[idx].value+"\" class=\"layui-input value focus\" disabled/>"+
+					    "</div>"+
+					"</div>" +
+					"<div class=\"edit-item\">"+
+					    "<div class=\"colorpicker\" id=\"colorbox\">"+
+					    "</div>"+
+					"</div>";
+		height = "330px";
+    } else if (config[idx].type == 3) {
+    	editDiv += "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\">"+
+				        "<div class=\"edit-title\">"+
+					        "<span class=\"title\"><label class=\"name\">"+config[idx].name+"</label>：</span>"+
+					    "</div>"+
+					    "<div class=\"edit-value\" data-field=\"value\">"+
+					        "<input type=\"text\" data-id=\""+config[idx].value+"\" value=\""+(config[idx].code=='6001'?config[idx].department:config[idx].value)+"\" " +
+					        		"data-url=\"./data/page?table=department\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					        "<i class=\"layui-icon layui-icon-layer\"> </i>"+
+					    "</div>"+
+					"</div>";
+	} else if (config[idx].type == 4) {
+		
+	} else if (config[idx].type == 5) {
+		editDiv += "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				        "<div class=\"edit-title\">"+
+					        "<span class=\"title\"><label class=\"name\">"+config[idx].name+"</label>：</span>"+
+					    "</div>"+
+					    "<div class=\"edit-value\" data-field=\"value\">"+
+					        "<input type=\"text\" value=\""+config[idx].value+"\" class=\"layui-input value focus\" disabled/>"+
+					    "</div>"+
+					"</div>" +
+					"<div class=\"edit-item\">"+
+					    "<img src=\""+config[idx].value+"\" onerror=\"defaultImg(this)\" class=\"imagepicker\" id=\"imagebox\">"+
+					"</div>";
+		height = "330px";
+	}
+    
+    editDiv += "</div></div>";
     
     layer.open({
         type: 1,
         title: "<label style='font-weight:600;'>修改</label>",
         content: editDiv,
-        area: ['600px', '230px'],
+        area: ['600px', height],
         btn: ['保存','取消'],
         btn1: function (index, layero) {
             let data = catchBoxValue();
@@ -93,6 +136,35 @@ function showEditBox(idx,id,name,val) {
         success: function () {
             var val = $(".edit-view .focus").val();
             $(".edit-view .focus").val("").focus().val(val);
+            
+            if (config[idx].type == 2) {
+            	layColorpicker.render({
+            		elem: '#colorbox',
+            		color: config[idx].value,
+            		done: function (color) {
+            			$(".edit-view .focus").val(color);
+            	    }
+            	});
+			} else if (config[idx].type == 5) {
+				layuiUpload.render({
+				    elem: '#imagebox',
+				    url: './upload/field/config',
+				    size: 1024,
+				    multiple: false,
+				    done: function(res, index, upload){
+				    	// 上传完毕回调
+				    	var item = this.item;
+				    	$(item).attr("src",res.data);
+				    	$(".edit-view .focus").val(res.data);
+				    },
+				    error: function(res, index){
+				    	// 请求异常回调
+				    	console.log(res);
+				    	console.log(index);
+				    	configAssembly();
+				    }
+				});
+			}
         }
         
     });

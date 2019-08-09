@@ -47,12 +47,12 @@
 										</th>
 										<th class="item defaultflag">
 											<div class="layui-table-cell">
-												<span>默认等级</span>
+												<span>默认</span>
 											</div>
 										</th>
 										<th class="item useflag">
 											<div class="layui-table-cell">
-												<span>是否使用</span>
+												<span>使用</span>
 											</div>
 										</th>
 										<th class="item creator">
@@ -105,7 +105,7 @@
 												<i class="layui-icon layui-icon-ok" v-if="v.defaultflag == 1"></i>
 											</div>
 										</td>
-										<td class="item useflage">
+										<td class="item useflag">
 											<div class="layui-table-cell laytable-cell-1-0-2">
 												<i class="layui-icon layui-icon-ok" v-if="v.useflag == 1"></i>
 											</div>

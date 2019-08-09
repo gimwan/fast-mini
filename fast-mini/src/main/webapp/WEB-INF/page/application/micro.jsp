@@ -64,12 +64,12 @@
 										</th>
 										<th class="item homeflag">
 											<div class="layui-table-cell">
-												<span>是否首页</span>
+												<span>首页</span>
 											</div>
 										</th>
 										<th class="item useflag">
 											<div class="layui-table-cell">
-												<span>是否使用</span>
+												<span>使用</span>
 											</div>
 										</th>
 										<th class="item creator">
@@ -90,11 +90,6 @@
 										<th class="item modifytime time-item">
 											<div class="layui-table-cell">
 												<span>修改时间</span>
-											</div>
-										</th>
-										<th class="item memo">
-											<div class="layui-table-cell">
-												<span>备注</span>
 											</div>
 										</th>
 										<th class="item operationbtn">
@@ -140,9 +135,6 @@
 										</td>
 										<td class="item modifytime time-item">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(m.modifytime)}}</div>
-										</td>
-										<td class="item memo">
-											<div class="layui-table-cell laytable-cell-1-0-3">{{m.memo}}</div>
 										</td>
 										<td class="item operationbtn">
 											<div class="layui-btn-group">

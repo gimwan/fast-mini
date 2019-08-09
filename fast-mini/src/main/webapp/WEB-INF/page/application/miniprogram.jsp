@@ -50,9 +50,9 @@
 												<span>公众号</span>
 											</div>
 										</th>
-										<th class="item value">
+										<th class="item useflag">
 											<div class="layui-table-cell">
-												<span>是否使用</span>
+												<span>使用</span>
 											</div>
 										</th>
 										<th class="item creator">
@@ -91,7 +91,7 @@
 									<tr v-bind:data-id="m.id" v-bind:data-index="index" class="" v-for="(m, index) in miniprogram">
 										<td class="item photourl">
 											<div class="layui-table-cell laytable-cell-1-0-0">
-												<img v-bind:src="m.photourl" onerror="defaultImg(this)" class="layui-nav-img circular">
+												<img v-bind:src="m.photourl==null?'':m.photourl" onerror="defaultImg(this)" class="layui-nav-img circular">
 											</div>
 										</td>
 										<td class="item code">
@@ -105,7 +105,7 @@
 										<td class="item publicplatform">
 											<div class="layui-table-cell laytable-cell-1-0-1">{{m.publicplatform}}</div>
 										</td>
-										<td class="item value">
+										<td class="item useflag">
 											<div class="layui-table-cell laytable-cell-1-0-2">
 												<i class="layui-icon layui-icon-ok" v-if="m.useflag == 1"></i>
 											</div>

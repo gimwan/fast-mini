@@ -19,7 +19,7 @@ import com.fast.system.log.FastLog;
  *
  */
 @Service
-public class EmployeeImpl implements IEmployeeService, Serializable {
+public class EmployeeServiceImpl implements IEmployeeService, Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	

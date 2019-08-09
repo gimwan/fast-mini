@@ -157,6 +157,9 @@ public class DataServiceImpl implements IDataService, Serializable {
 		else if ("department".endsWith(tableName)) {
 			list = completeDepartment(list);
 		}
+		else if ("config".endsWith(tableName)) {
+			list = completeConfig(list);
+		}
 		
 		return list;
 	}
@@ -604,6 +607,34 @@ public class DataServiceImpl implements IDataService, Serializable {
 	
 	public List<LinkedHashMap<String, Object>> completeDepartment(List<LinkedHashMap<String, Object>> list) {
 		
+		return list;
+	}
+	
+	public List<LinkedHashMap<String, Object>> completeConfig(List<LinkedHashMap<String, Object>> list) {
+		List<Integer> departmentidList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).put("department", "");
+			if ("6001".equals(String.valueOf(list.get(i).get("code"))) && !Common.isEmpty(String.valueOf(list.get(i).get("value")))) {
+				departmentidList.add(Integer.valueOf(list.get(i).get("value").toString()));
+			} else {
+				list.get(i).put("department", "");
+			}
+		}
+		if (departmentidList.size() > 0) {
+			MDepartmentExample example = new MDepartmentExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andIdIn(departmentidList);
+			List<MDepartment> data = departmentMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if ("6001".equals(list.get(i).get("code").toString()) && list.get(i).get("value").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("department", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
 		return list;
 	}
 	

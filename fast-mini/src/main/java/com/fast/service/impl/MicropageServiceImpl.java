@@ -21,6 +21,7 @@ import com.fast.base.data.dao.MMicropageMapper;
 import com.fast.base.data.dao.MMicropagesetMapper;
 import com.fast.base.data.dao.MMicropagesetdtlMapper;
 import com.fast.base.data.dao.MPublicplatformMapper;
+import com.fast.base.data.entity.MCoupon;
 import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodscategory;
 import com.fast.base.data.entity.MGoodscategoryExample;
@@ -334,6 +335,13 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												point = goods.getExchangepoint() == null ? 0 : goods.getExchangepoint();
 												type = goods.getKind() == null ? 1 : goods.getKind().intValue();
 												setDtlList.get(j).put("photourl", goods.getPhotourl() == null ? "" : goods.getPhotourl());
+											}
+										}
+										// 优惠券
+										else if ("10".equals(kind)) {
+											MCoupon coupon = couponMapper.selectByPrimaryKey(Integer.valueOf(first));
+											if (coupon != null && coupon.getId() > 0) {
+												grouping = coupon.getName() == null ? "" : coupon.getName();
 											}
 										} else {
 											

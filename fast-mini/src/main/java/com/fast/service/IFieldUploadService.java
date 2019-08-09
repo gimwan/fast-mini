@@ -61,5 +61,13 @@ public interface IFieldUploadService {
 	 * @return
 	 */
 	public Result uploadpPlatformPhoto(HttpServletRequest request, MultipartFile file);
+	
+	/**
+	 * 系统参数
+	 * @param request
+	 * @param file
+	 * @return
+	 */
+	public Result uploadpConfigPhoto(HttpServletRequest request, MultipartFile file);
 
 }
