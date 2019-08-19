@@ -20,6 +20,7 @@
 		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
 		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
 		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+		<result column="ExtID" property="extid" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -55,7 +56,8 @@
 	<sql id="Base_Column_List">
 		ID, GoodsID, ColorID, PatternID, SizeID, Barcode, Quantity, Price,
 		IANumber, ExtBarcode,
-		Memo, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime, UseFlag
+		Memo, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime, UseFlag,
+		ExtID
 	</sql>
 	<select id="selectByExample" resultMap="BaseResultMap"
 		parameterType="com.fast.base.data.entity.MGoodsskuExample">
@@ -97,7 +99,8 @@
 		Quantity, Price, IANumber,
 		ExtBarcode, Memo, CreateTime,
 		Creator, ModifyTime, Modifier,
-		UpdatedTime, UseFlag)
+		UpdatedTime, UseFlag, ExtID
+		)
 		values (#{id,jdbcType=INTEGER}, #{goodsid,jdbcType=INTEGER},
 		#{colorid,jdbcType=INTEGER},
 		#{patternid,jdbcType=INTEGER}, #{sizeid,jdbcType=INTEGER}, #{barcode,jdbcType=VARCHAR},
@@ -106,7 +109,8 @@
 		#{extbarcode,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
 		#{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP},
 		#{modifier,jdbcType=VARCHAR},
-		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT})
+		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}, #{extid,jdbcType=INTEGER}
+		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MGoodssku"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -163,6 +167,9 @@
 			<if test="useflag != null">
 				UseFlag,
 			</if>
+			<if test="extid != null">
+				ExtID,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -215,6 +222,9 @@
 			</if>
 			<if test="useflag != null">
 				#{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="extid != null">
+				#{extid,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -276,6 +286,9 @@
 			<if test="useflag != null">
 				UseFlag = #{useflag,jdbcType=TINYINT},
 			</if>
+			<if test="extid != null">
+				ExtID = #{extid,jdbcType=INTEGER},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -296,7 +309,8 @@
 		ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
 		Modifier = #{modifier,jdbcType=VARCHAR},
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-		UseFlag = #{useflag,jdbcType=TINYINT}
+		UseFlag = #{useflag,jdbcType=TINYINT},
+		ExtID = #{extid,jdbcType=INTEGER}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

@@ -68,6 +68,8 @@ public class MGoods implements Serializable {
 
     private Integer smallcategory;
 
+    private Integer extid;
+
     public Integer getId() {
         return id;
     }
@@ -306,5 +308,13 @@ public class MGoods implements Serializable {
 
     public void setSmallcategory(Integer smallcategory) {
         this.smallcategory = smallcategory;
+    }
+
+    public Integer getExtid() {
+        return extid;
+    }
+
+    public void setExtid(Integer extid) {
+        this.extid = extid;
     }
 }

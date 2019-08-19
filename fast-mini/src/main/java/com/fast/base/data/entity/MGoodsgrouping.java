@@ -27,6 +27,8 @@ public class MGoodsgrouping implements Serializable {
 
     private String memo;
 
+    private Integer extid;
+
     public Integer getId() {
         return id;
     }
@@ -105,5 +107,13 @@ public class MGoodsgrouping implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public Integer getExtid() {
+        return extid;
+    }
+
+    public void setExtid(Integer extid) {
+        this.extid = extid;
     }
 }

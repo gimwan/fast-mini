@@ -58,6 +58,7 @@
 			jdbcType="INTEGER" />
 		<result column="RetuenPayStatus" property="retuenpaystatus"
 			jdbcType="TINYINT" />
+		<result column="ExtID" property="extid" jdbcType="INTEGER" />
 	</resultMap>
 	<resultMap id="ResultMapWithBLOBs" type="com.fast.base.data.entity.MOrder"
 		extends="BaseResultMap">
@@ -107,7 +108,8 @@
 		Deliverer, DelivererTime, ReceiverTime, Memo, Remark, CreateTime, Creator,
 		ModifyTime,
 		Modifier, UpdatedTime, UseFlag, Status, MiniprogramID, PublicplatformID,
-		RetuenPayStatus
+		RetuenPayStatus,
+		ExtID
 	</sql>
 	<sql id="Blob_Column_List">
 		ReceiverAddress
@@ -182,7 +184,8 @@
 		CreateTime, Creator, ModifyTime,
 		Modifier, UpdatedTime, UseFlag,
 		Status, MiniprogramID, PublicplatformID,
-		RetuenPayStatus, ReceiverAddress)
+		RetuenPayStatus, ExtID, ReceiverAddress
+		)
 		values (#{id,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR},
 		#{kind,jdbcType=INTEGER},
 		#{source,jdbcType=INTEGER}, #{vipid,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER},
@@ -208,8 +211,9 @@
 		#{useflag,jdbcType=TINYINT},
 		#{status,jdbcType=TINYINT}, #{miniprogramid,jdbcType=INTEGER},
 		#{publicplatformid,jdbcType=INTEGER},
-		#{retuenpaystatus,jdbcType=TINYINT},
-		#{receiveraddress,jdbcType=LONGVARCHAR})
+		#{retuenpaystatus,jdbcType=TINYINT}, #{extid,jdbcType=INTEGER},
+		#{receiveraddress,jdbcType=LONGVARCHAR}
+		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MOrder"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -353,6 +357,9 @@
 			<if test="retuenpaystatus != null">
 				RetuenPayStatus,
 			</if>
+			<if test="extid != null">
+				ExtID,
+			</if>
 			<if test="receiveraddress != null">
 				ReceiverAddress,
 			</if>
@@ -495,6 +502,9 @@
 			</if>
 			<if test="retuenpaystatus != null">
 				#{retuenpaystatus,jdbcType=TINYINT},
+			</if>
+			<if test="extid != null">
+				#{extid,jdbcType=INTEGER},
 			</if>
 			<if test="receiveraddress != null">
 				#{receiveraddress,jdbcType=LONGVARCHAR},
@@ -646,6 +656,9 @@
 			<if test="retuenpaystatus != null">
 				RetuenPayStatus = #{retuenpaystatus,jdbcType=TINYINT},
 			</if>
+			<if test="extid != null">
+				ExtID = #{extid,jdbcType=INTEGER},
+			</if>
 			<if test="receiveraddress != null">
 				ReceiverAddress = #{receiveraddress,jdbcType=LONGVARCHAR},
 			</if>
@@ -699,6 +712,7 @@
 		MiniprogramID = #{miniprogramid,jdbcType=INTEGER},
 		PublicplatformID = #{publicplatformid,jdbcType=INTEGER},
 		RetuenPayStatus = #{retuenpaystatus,jdbcType=TINYINT},
+		ExtID = #{extid,jdbcType=INTEGER},
 		ReceiverAddress = #{receiveraddress,jdbcType=LONGVARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -748,7 +762,8 @@
 		Status = #{status,jdbcType=TINYINT},
 		MiniprogramID = #{miniprogramid,jdbcType=INTEGER},
 		PublicplatformID = #{publicplatformid,jdbcType=INTEGER},
-		RetuenPayStatus = #{retuenpaystatus,jdbcType=TINYINT}
+		RetuenPayStatus = #{retuenpaystatus,jdbcType=TINYINT},
+		ExtID = #{extid,jdbcType=INTEGER}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

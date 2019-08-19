@@ -46,6 +46,8 @@ public class MCoupon implements Serializable {
 
     private Integer effectivetime;
 
+    private Integer extid;
+
     public Integer getId() {
         return id;
     }
@@ -196,5 +198,13 @@ public class MCoupon implements Serializable {
 
     public void setEffectivetime(Integer effectivetime) {
         this.effectivetime = effectivetime;
+    }
+
+    public Integer getExtid() {
+        return extid;
+    }
+
+    public void setExtid(Integer extid) {
+        this.extid = extid;
     }
 }

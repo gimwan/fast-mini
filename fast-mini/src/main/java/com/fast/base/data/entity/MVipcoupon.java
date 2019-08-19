@@ -37,6 +37,8 @@ public class MVipcoupon implements Serializable {
 
     private Date updatedtime;
 
+    private Integer extid;
+
     public Integer getId() {
         return id;
     }
@@ -155,5 +157,13 @@ public class MVipcoupon implements Serializable {
 
     public void setUpdatedtime(Date updatedtime) {
         this.updatedtime = updatedtime;
+    }
+
+    public Integer getExtid() {
+        return extid;
+    }
+
+    public void setExtid(Integer extid) {
+        this.extid = extid;
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Options;
 
 public interface MViptypeMapper {
-    long countByExample(MViptypeExample example);
+    int countByExample(MViptypeExample example);
 
     int deleteByExample(MViptypeExample example);
 

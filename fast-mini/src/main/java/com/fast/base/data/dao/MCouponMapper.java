@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Options;
 
 public interface MCouponMapper {
-    long countByExample(MCouponExample example);
+    int countByExample(MCouponExample example);
 
     int deleteByExample(MCouponExample example);
 

@@ -65,6 +65,8 @@ public class MVip implements Serializable {
 
     private Integer typeid;
 
+    private Integer extid;
+
     public Integer getId() {
         return id;
     }
@@ -295,5 +297,13 @@ public class MVip implements Serializable {
 
     public void setTypeid(Integer typeid) {
         this.typeid = typeid;
+    }
+
+    public Integer getExtid() {
+        return extid;
+    }
+
+    public void setExtid(Integer extid) {
+        this.extid = extid;
     }
 }

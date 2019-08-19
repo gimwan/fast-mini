@@ -1185,6 +1185,66 @@ public class MGoodsskuExample {
             addCriterion("UseFlag not between", value1, value2, "useflag");
             return (Criteria) this;
         }
+
+        public Criteria andExtidIsNull() {
+            addCriterion("ExtID is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidIsNotNull() {
+            addCriterion("ExtID is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidEqualTo(Integer value) {
+            addCriterion("ExtID =", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidNotEqualTo(Integer value) {
+            addCriterion("ExtID <>", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidGreaterThan(Integer value) {
+            addCriterion("ExtID >", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("ExtID >=", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidLessThan(Integer value) {
+            addCriterion("ExtID <", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidLessThanOrEqualTo(Integer value) {
+            addCriterion("ExtID <=", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidIn(List<Integer> values) {
+            addCriterion("ExtID in", values, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidNotIn(List<Integer> values) {
+            addCriterion("ExtID not in", values, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidBetween(Integer value1, Integer value2) {
+            addCriterion("ExtID between", value1, value2, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidNotBetween(Integer value1, Integer value2) {
+            addCriterion("ExtID not between", value1, value2, "extid");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

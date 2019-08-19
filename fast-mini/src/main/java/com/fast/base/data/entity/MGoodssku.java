@@ -42,6 +42,8 @@ public class MGoodssku implements Serializable {
 
     private Byte useflag;
 
+    private Integer extid;
+
     public Integer getId() {
         return id;
     }
@@ -176,5 +178,13 @@ public class MGoodssku implements Serializable {
 
     public void setUseflag(Byte useflag) {
         this.useflag = useflag;
+    }
+
+    public Integer getExtid() {
+        return extid;
+    }
+
+    public void setExtid(Integer extid) {
+        this.extid = extid;
     }
 }
