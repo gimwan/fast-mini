@@ -3,6 +3,21 @@ body {
 	font-family: Microsoft YaHei;
 }
 
+.home::-webkit-scrollbar {
+	width: 8px;
+	height: 2px;
+	background: #F0F0F0;
+	border-radius: 10px;
+}
+
+.home::-webkit-scrollbar-thumb {
+	display: block;
+	width: 8px;
+	margin: 0 auto;
+	border-radius: 10px;
+	background: #e2e2e2;
+}
+
 .layui-layer-content::-webkit-scrollbar {
 	width: 8px;
 	height: 2px;

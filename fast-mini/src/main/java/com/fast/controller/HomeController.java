@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,7 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
 import com.fast.base.data.entity.MUser;
+import com.fast.service.IConfigService;
 import com.fast.system.RedisCache;
+import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
 
@@ -26,6 +29,9 @@ import net.sf.json.JSONObject;
 @RequestMapping(value = "/home", produces = "application/json; charset=utf-8")
 @Controller
 public class HomeController {
+	
+	@Autowired
+	IConfigService iConfigService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
@@ -66,6 +72,20 @@ public class HomeController {
 			map.put("name", "用户");
 			map.put("link", "user");
 			sub.add(map);
+			
+			// 与线下ERP联用
+			Integer ext = 0;
+			Result re = iConfigService.queryConfigValueByCode("7001");
+			if (Common.isActive(re)) {
+				ext = (re.getData() == null || "".equals(re.getData().toString().trim())) ? 0 : Integer.valueOf(re.getData().toString().trim());
+			}
+			if (ext.intValue() == 1) {
+				map = new HashMap<String, Object>();
+				map.put("name", "接口");
+				map.put("link", "extsystem");
+				sub.add(map);
+			}
+			
 			main.put("sub", sub);
 			list.add(main);
 			

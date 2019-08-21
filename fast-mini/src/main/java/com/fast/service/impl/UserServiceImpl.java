@@ -37,6 +37,7 @@ public class UserServiceImpl implements IUserService, Serializable {
 
 		try {
 			MUserExample example = new MUserExample();
+			example.createCriteria().andIdGreaterThan(Integer.valueOf(0));
 			example.setOrderByClause("code asc");
 			List<MUser> list = userMapper.selectByExample(example);
 			result.setErrcode(0);

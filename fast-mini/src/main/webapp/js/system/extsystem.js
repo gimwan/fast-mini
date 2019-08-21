@@ -1,17 +1,17 @@
-let department = [];
-let departmentVm;
+let extsystem = [];
+let extsystemVm;
 
 common.bindVue = function() {
-    departmentVm = new Vue({
-        el : ".departmentPage",
+    extsystemVm = new Vue({
+        el : ".extsystemPage",
         data : {
-            department: department
+            extsystem: extsystem
         },
         methods : {
             edit: function(event) {
                 if (event) {
                     let index = $(event.target).parents("tr").data("index");
-                    showEditBox(index,department[index]);
+                    showEditBox(index,extsystem[index]);
                 }
             },
             add: function () {
@@ -19,7 +19,7 @@ common.bindVue = function() {
             },
             del: function () {
             	let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
-    			let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
+            	let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
             	if (id == null || id == undefined || $.trim(id) == "") {
             		common.warn("请选择删除项");
                     return false;
@@ -30,9 +30,9 @@ common.bindVue = function() {
         				var data = {};
         				data['id'] = id;
                     	common.showLoading();
-                        api.load('./department/delete','post',data, function(result) {
+                        api.load('./extsystem/delete','post',data, function(result) {
                             if (result.errcode == 0) {
-                            	department.splice(deleteIndex);
+                            	extsystem.splice(deleteIndex);
                                 
                                 common.tips(result.message);
                             } else {
@@ -40,6 +40,7 @@ common.bindVue = function() {
                             }
                             common.closeLoading();
                         });
+            			
             		}
             	});
             },
@@ -54,7 +55,7 @@ common.bindVue = function() {
 
 function loadData() {
     common.showLoading();
-    api.load(basePath + 'data/list','post',{"table":"department"},function (result) {
+    api.load(basePath + 'data/list','post',{"table":"extsystem"},function (result) {
         if (result.errcode == 0) {
         	let pageView = result.data;
         	setData(pageView);
@@ -70,7 +71,7 @@ function loadData() {
 
 function loadPageData(pageno) {
 	common.showLoading();
-	api.load(basePath + 'data/list','post',{"table":"color","department":pageno},function (result) {
+	api.load(basePath + 'data/list','post',{"table":"extsystem","pageno":pageno},function (result) {
 		let pageView = result.data;
 		setData(pageView);
 		common.closeLoading();
@@ -79,80 +80,27 @@ function loadPageData(pageno) {
 
 function setData(pageView) {
 	let data = pageView.data;
-	department.splice(0, department.length);
+	extsystem.splice(0, extsystem.length);
 	if (data != null) {
         for (let i = 0; i < data.length; i++) {
-        	department.push(data[i]);
+        	extsystem.push(data[i]);
         }
     }
-}
-
-function showEditBox(idx,data) {
-	let editDiv = createElement(data);
-	
-	let boxTitle = "<label style='font-weight:600;'>修改</label>";
-	if (idx < 0) {
-		boxTitle = "<label style='font-weight:600;'>新增</label>";
-	}
-    
-    layer.open({
-        type: 1,
-        title: boxTitle,
-        content: editDiv,
-        area: ['700px', '720px'],
-        btn: ['保存','取消'],
-        btn1: function (index, layero) {
-            let data = catchBoxValue();
-            console.log(data);
-            if (data == '') {
-                return;
-            }
-            common.showLoading();
-            api.load('./department/change','post',data, function(result) {
-                if (result.errcode == 0) {
-                	data = result.data;
-                	if (idx < 0) {
-                		department.push(data);
-					} else {
-						for (const key in data) {
-	                        department[idx][key] = data[key];
-	                    }
-					}
-                    
-                    layer.close(index);
-                    common.tips(result.message);
-                } else {
-                    common.error(result.message);
-                }
-                common.closeLoading();
-            });
-        },
-        success: function () {
-        	// 重新刷新form
-        	layuiForm.render();
-            var val = $(".edit-view .focus").val();
-            $(".edit-view .focus").val("").focus().val(val);
-        }
-        
-    });
 }
 
 function createElement(data) {
 	let d = {
 		id : "",
-	    code : "",
-	    name : "",
-	    contacts : "",
-	    provinceid : "",
-	    province : "",
-	    cityid : "",
-	    city : "",
-	    countyid : "",
-	    county : "",
-	    phone : "",
-	    address : "",
-	    useflag : 1,
-	    memo : ""
+		code : "",
+		name : "",
+		version : "",
+		serveraddress : "",
+		token : "",
+		appid : "",
+		secret : "",
+		active : 0,
+		useflag : 1,
+		memo : ""
 	};
     if (data != null && data != undefined && data != "") {
     	for (const key in data) {
@@ -187,50 +135,55 @@ function createElement(data) {
 				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
-				        "<div class=\"edit-item\" need=\"0\" key=\"0\">"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
-				                "<span class=\"title\"><label class=\"name\">联系人</label>：</span>"+
+				                "<span class=\"title\"><label class=\"name\">服务地址</label>：</span>"+
 				            "</div>"+
-				            "<div class=\"edit-value\" data-field=\"contacts\">"+
-				                "<input type=\"text\" value=\""+d.contacts+"\" class=\"layui-input value\"/>"+
+				            "<div class=\"edit-value\" data-field=\"serveraddress\">"+
+				                "<input type=\"text\" value=\""+d.serveraddress+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"0\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
-				                "<span class=\"title\"><label class=\"name\">联系人电话</label>：</span>"+
+				                "<span class=\"title\"><label class=\"name\">调用凭据</label>：</span>"+
 				            "</div>"+
-				            "<div class=\"edit-value\" data-field=\"phone\">"+
-				                "<input type=\"text\" value=\""+d.phone+"\" class=\"layui-input value\"/>"+
-				            "</div>"+
-				        "</div>"+
-				        "<div class=\"edit-item cascade\" cascade=\"1\" need=\"1\" key=\"0\">"+
-				            "<div class=\"edit-title\">"+
-				                "<span class=\"title\"><label class=\"name\">地区</label>：</span>"+
-				            "</div>"+
-				            "<div class=\"cascade-value\">" +
-					            "<div class=\"edit-value\" data-field=\"provinceid\">"+
-					                "<input type=\"text\" data-id=\""+d.provinceid+"\" value=\""+d.province+"\" " +
-					                		"data-url=\"./region/list?grade=1&pagesize=100\" data-grade=\"1\" region=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
-					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
-					            "</div>"+
-					            "<div class=\"edit-value\" data-field=\"cityid\">"+
-					                "<input type=\"text\" data-id=\""+d.cityid+"\" value=\""+d.city+"\" " +
-					                		"data-url=\"./region/list?grade=2&pagesize=100"+(d.provinceid==null?'':'&parentid='+d.provinceid)+"\" data-grade=\"2\" region=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
-					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
-					            "</div>"+
-					            "<div class=\"edit-value\" data-field=\"countyid\">"+
-					                "<input type=\"text\" data-id=\""+d.countyid+"\" value=\""+d.county+"\" " +
-					                		"data-url=\"./region/list?grade=3&pagesize=100"+(d.cityid==null?'':'&parentid='+d.cityid)+"\" data-grade=\"3\" region=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
-					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
-					            "</div>" +
+				            "<div class=\"edit-value\" data-field=\"token\">"+
+				                "<input type=\"text\" value=\""+d.token+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"0\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
-				                "<span class=\"title\"><label class=\"name\">详细地址</label>：</span>"+
+				                "<span class=\"title\"><label class=\"name\">用户凭证</label>：</span>"+
 				            "</div>"+
-				            "<div class=\"edit-value\" data-field=\"address\">"+
-				                "<input type=\"text\" value=\""+d.address+"\" class=\"layui-input value\"/>"+
+				            "<div class=\"edit-value\" data-field=\"appid\">"+
+				                "<input type=\"text\" value=\""+d.appid+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"0\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">凭证密钥</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"secret\">"+
+				                "<input type=\"text\" value=\""+d.secret+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"0\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">版本号</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"version\">"+
+				                "<input type=\"text\" value=\""+d.version+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">是否启用</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value layui-form-item\" data-field=\"active\">"+
+				                "<div class=\"layui-input-block\">" +
+				                	"<input type=\"radio\" name=\"active\" value=\"1\" title=\"是\" "+(d.active==1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"active\" value=\"0\" title=\"否\" "+(d.active!=1?'checked':'')+" class=\"layui-input value\">" +
+				                "</div>" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
@@ -257,4 +210,53 @@ function createElement(data) {
 				    "</div>"+
 				"</div>";
 	return element;
+}
+
+function showEditBox(idx,data) {
+	let editDiv = createElement(data);
+	
+	let boxTitle = "<label style='font-weight:600;'>修改</label>";
+	if (idx < 0) {
+		boxTitle = "<label style='font-weight:600;'>新增</label>";
+	}
+    
+    layer.open({
+        type: 1,
+        title: boxTitle,
+        content: editDiv,
+        area: ['800px', '600px'],
+        btn: ['保存','取消'],
+        btn1: function (index, layero) {
+            let data = catchBoxValue();
+            if (data == '') {
+                return;
+            }
+            common.showLoading();
+            api.load('./extsystem/change','post',data, function(result) {
+                if (result.errcode == 0) {
+                	data = result.data;
+                	if (idx < 0) {
+                		extsystem.push(data);
+					} else {
+						for (const key in data) {
+	                        extsystem[idx][key] = data[key];
+	                    }
+					}
+                    
+                    layer.close(index);
+                    common.tips(result.message);
+                } else {
+                    common.error(result.message);
+                }
+                common.closeLoading();
+            });
+        },
+        success: function () {
+        	// 重新刷新form
+        	layuiForm.render();
+            var val = $(".edit-view .focus").val();
+            $(".edit-view .focus").val("").focus().val(val);
+        }
+        
+    });
 }

@@ -2,10 +2,18 @@ package com.fast.base.data.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Id;
+
+@Entity
+@Table(name = "m_micropagesetdtldraft")
 public class MMicropagesetdtldraft implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
+	@Id
     private Integer id;
 
     private Integer micropagesetid;

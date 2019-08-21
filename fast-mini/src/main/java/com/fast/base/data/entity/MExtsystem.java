@@ -9,23 +9,29 @@ import javax.persistence.Table;
 import org.springframework.data.annotation.Id;
 
 @Entity
-@Table(name = "m_region")
-public class MRegion implements Serializable {
+@Table(name = "m_extsystem")
+public class MExtsystem implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Id
     private Integer id;
 
-    private Byte type;
+    private String code;
 
     private String name;
 
-    private Integer parentid;
+    private String version;
 
-    private String shortname;
+    private String serveraddress;
 
-    private String memo;
+    private String token;
+
+    private String appid;
+
+    private String secret;
+
+    private Byte active;
 
     private Date createtime;
 
@@ -35,9 +41,11 @@ public class MRegion implements Serializable {
 
     private String modifier;
 
+    private Byte useflag;
+
     private Date updatedtime;
 
-    private Byte useflag;
+    private String memo;
 
     public Integer getId() {
         return id;
@@ -47,12 +55,12 @@ public class MRegion implements Serializable {
         this.id = id;
     }
 
-    public Byte getType() {
-        return type;
+    public String getCode() {
+        return code;
     }
 
-    public void setType(Byte type) {
-        this.type = type;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -63,28 +71,52 @@ public class MRegion implements Serializable {
         this.name = name;
     }
 
-    public Integer getParentid() {
-        return parentid;
+    public String getVersion() {
+        return version;
     }
 
-    public void setParentid(Integer parentid) {
-        this.parentid = parentid;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
-    public String getShortname() {
-        return shortname;
+    public String getServeraddress() {
+        return serveraddress;
     }
 
-    public void setShortname(String shortname) {
-        this.shortname = shortname;
+    public void setServeraddress(String serveraddress) {
+        this.serveraddress = serveraddress;
     }
 
-    public String getMemo() {
-        return memo;
+    public String getToken() {
+        return token;
     }
 
-    public void setMemo(String memo) {
-        this.memo = memo;
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getAppid() {
+        return appid;
+    }
+
+    public void setAppid(String appid) {
+        this.appid = appid;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public Byte getActive() {
+        return active;
+    }
+
+    public void setActive(Byte active) {
+        this.active = active;
     }
 
     public Date getCreatetime() {
@@ -119,6 +151,14 @@ public class MRegion implements Serializable {
         this.modifier = modifier;
     }
 
+    public Byte getUseflag() {
+        return useflag;
+    }
+
+    public void setUseflag(Byte useflag) {
+        this.useflag = useflag;
+    }
+
     public Date getUpdatedtime() {
         return updatedtime;
     }
@@ -127,11 +167,11 @@ public class MRegion implements Serializable {
         this.updatedtime = updatedtime;
     }
 
-    public Byte getUseflag() {
-        return useflag;
+    public String getMemo() {
+        return memo;
     }
 
-    public void setUseflag(Byte useflag) {
-        this.useflag = useflag;
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 }
