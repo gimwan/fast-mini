@@ -18,11 +18,18 @@ public interface IConfigService {
 	public Result config();
 	
 	/**
-	 * 根据code查询参数
+	 * 根据code查询参数值
 	 * @param code
 	 * @return
 	 */
 	public Result queryConfigValueByCode(String code);
+	
+	/**
+	 * 根据code查询参数
+	 * @param code
+	 * @return
+	 */
+	public Result queryConfigByCode(String code);
 	
 	/**
 	 * 根据code查询多个参数

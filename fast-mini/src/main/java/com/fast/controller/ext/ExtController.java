@@ -1,0 +1,48 @@
+package com.fast.controller.ext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fast.base.Result;
+
+import net.sf.json.JSONObject;
+
+/**
+ * 外部接口
+ * @author J
+ *
+ */
+@RequestMapping(value = "/ext", produces = "application/json; charset=utf-8")
+@Controller
+public class ExtController {
+	
+	/**
+	 * 同步
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/synchronize")
+	@ResponseBody
+	public String synchronize(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String type = request.getParameter("type");
+			Result result = new Result();
+			result.setErrcode(Integer.valueOf(0));
+			result.setMessage("synchronize success");
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+
+}

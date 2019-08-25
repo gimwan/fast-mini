@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.service.IConfigService;
 import com.fast.service.IUserService;
 import com.fast.system.RedisCache;
+import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
 
@@ -28,6 +30,9 @@ public class LoginController {
 	
 	@Autowired
 	IUserService IUserService;
+	
+	@Autowired
+	IConfigService iConfigService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
@@ -57,6 +62,16 @@ public class LoginController {
 				request.getSession().setAttribute("user",result.getData());
 				String sessionid = request.getSession().getId();
 				RedisCache.set(sessionid, result.getData());
+				
+				Result re = iConfigService.queryConfigValueByCode("7001");
+				if (Common.isActive(re)) {
+					String value = (String) re.getData();
+					Integer extsystem = 0;
+					if (value != null && "1".equals(value.trim())) {
+						extsystem = 1;
+					}
+					request.getSession().setAttribute("extsystem", extsystem);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

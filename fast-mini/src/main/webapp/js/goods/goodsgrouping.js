@@ -1,19 +1,19 @@
 let goodsgrouping = [];
 let goodsgroupingVm;
+let btnVm;
 
 common.bindVue = function() {
-    goodsgroupingVm = new Vue({
-        el : ".goodsgroupingPage",
-        data : {
-            goodsgrouping: goodsgrouping
+	refreshConfig("7001");
+	
+	btnVm = new Vue({
+		el : ".operating",
+		data : {
+			config: config
         },
         methods : {
-            edit: function(event) {
-                if (event) {
-                    let index = $(event.target).parents("tr").data("index");
-                    showEditBox(index,goodsgrouping[index]);
-                }
-            },
+            synchronize: function() {
+            	synchronize('goodsgrouping',loadData());
+			},
             add: function () {
                 showEditBox(-1, null);
             },
@@ -42,6 +42,21 @@ common.bindVue = function() {
                         });
             		}
             	});
+            }
+        }
+	});
+	
+    goodsgroupingVm = new Vue({
+        el : ".goodsgrouping-data",
+        data : {
+            goodsgrouping: goodsgrouping
+        },
+        methods : {
+            edit: function(event) {
+                if (event) {
+                    let index = $(event.target).parents("tr").data("index");
+                    showEditBox(index,goodsgrouping[index]);
+                }
             },
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);

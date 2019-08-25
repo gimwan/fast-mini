@@ -85,6 +85,33 @@ public class ConfigServiceImpl implements IConfigService, Serializable {
 
 		return result;
 	}
+	
+	@Override
+	public Result queryConfigByCode(String code) {
+		Result result = new Result();
+
+		try {			
+			if (Common.isEmpty(code)) {
+				result.setMessage("code无效");
+				return result;
+			}
+			
+			MConfig config = new MConfig();
+			MConfigExample example = new MConfigExample();
+			example.createCriteria().andCodeEqualTo(code.trim());
+			List<MConfig> list = mConfigMapper.selectByExample(example);
+			if (list.size() > 0) {
+				config = list.get(0);
+			}
+			result.setErrcode(0);
+			result.setData(config);
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ConfigServiceImpl.queryConfigByCode报错：", e);
+		}
+
+		return result;
+	}
 
 	@Override
 	public Result queryConfigByCodeList(List<String> codeList) {

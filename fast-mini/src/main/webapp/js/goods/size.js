@@ -1,19 +1,19 @@
 let size = [];
 let sizeVm;
+let btnVm;
 
 common.bindVue = function() {
-    sizeVm = new Vue({
-        el : ".sizePage",
-        data : {
-            size: size
+	refreshConfig("7001");
+	
+	btnVm = new Vue({
+		el : ".operating",
+		data : {
+			config: config
         },
         methods : {
-            edit: function(event) {
-                if (event) {
-                    let index = $(event.target).parents("tr").data("index");
-                    showEditBox(index,size[index]);
-                }
-            },
+            synchronize: function() {
+            	synchronize('size',loadData());
+			},
             add: function () {
                 showEditBox(-1, null);
             },
@@ -42,6 +42,21 @@ common.bindVue = function() {
                         });
             		}
             	});
+            }
+        }
+	});
+	
+    sizeVm = new Vue({
+        el : ".size-data",
+        data : {
+            size: size
+        },
+        methods : {
+            edit: function(event) {
+                if (event) {
+                    let index = $(event.target).parents("tr").data("index");
+                    showEditBox(index,size[index]);
+                }
             },
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);

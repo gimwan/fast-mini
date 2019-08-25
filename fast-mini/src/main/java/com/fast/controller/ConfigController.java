@@ -65,6 +65,30 @@ public class ConfigController {
 	}
 	
 	/**
+	 * 查询单个参数
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/one")
+	@ResponseBody
+	public String one(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String code = request.getParameter("code");
+			Result result = iConfigService.queryConfigByCode(code);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
 	 * 修改参数
 	 * @param request
 	 * @param response
@@ -82,6 +106,15 @@ public class ConfigController {
 			MUser user = Common.currentUser(request);
 			if (user != null) {
 				result = iConfigMaintService.changeConfig(config, user);
+				
+				if (Common.isActive(result)) {
+					Integer extsystem = 0;
+					// 与线下ERP联用
+					if ("7001".equals(config.getCode()) && config.getValue() != null && "1".equals(config.getValue().trim())) {
+						extsystem = 1;
+					}
+					request.getSession().setAttribute("extsystem", extsystem);
+				}
 			} else {
 				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");

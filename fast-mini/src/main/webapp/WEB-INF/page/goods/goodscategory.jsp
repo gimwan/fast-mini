@@ -20,14 +20,15 @@
 				<div class="layui-tab-item big layui-show">
 					<div class="operating">
 						<div class="layui-btn-group">
-							<button class="layui-btn layui-btn-sm add" title="新增"
-								v-on:click="add">
-								<i class="layui-icon"></i>
-							</button>
-							<button class="layui-btn layui-btn-sm del" title="删除"
-								v-on:click="del">
-								<i class="layui-icon"></i>
-							</button>
+							<button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add" v-bind:data-extsystem="config.value" v-if="config.value!=1">
+					          <i class="layui-icon layui-icon-add-1"></i>
+					        </button>
+					        <button class="layui-btn layui-btn-sm synchronize" title="同步" v-on:click="synchronize" v-bind:data-extsystem="config.value" v-else>
+					          <i class="layui-icon layui-icon-refresh"></i>
+					        </button>
+					        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
+					          <i class="layui-icon layui-icon-delete"></i>
+					        </button>
 						</div>
 					</div>
 					<div class="layui-main">
@@ -127,14 +128,15 @@
 				<div class="layui-tab-item">
 					<div class="operating parentCategory1">
 						<div class="layui-btn-group">
-							<button class="layui-btn layui-btn-sm add" title="新增"
-								v-on:click="add">
-								<i class="layui-icon"></i>
-							</button>
-							<button class="layui-btn layui-btn-sm del" title="删除"
-								v-on:click="del">
-								<i class="layui-icon"></i>
-							</button>
+							<button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add" v-bind:data-extsystem="config.value" v-if="config.value!=1">
+					          <i class="layui-icon layui-icon-add-1"></i>
+					        </button>
+					        <button class="layui-btn layui-btn-sm synchronize" title="同步" v-on:click="synchronize" v-bind:data-extsystem="config.value" v-else>
+					          <i class="layui-icon layui-icon-refresh"></i>
+					        </button>
+					        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
+					          <i class="layui-icon layui-icon-delete"></i>
+					        </button>
 						</div>
 						<div class="selectView" >
 					     	<form class="layui-form layTableCell" action="">
@@ -246,16 +248,17 @@
 					</div>
 				</div>
 				<div class="layui-tab-item">
-					<div class="operating">
-						<div class="layui-btn-group">
-							<button class="layui-btn layui-btn-sm add" title="新增"
-								onclick="smallAdd()">
-								<i class="layui-icon"></i>
-							</button>
-							<button class="layui-btn layui-btn-sm del" title="删除"
-								onclick="smallDel()">
-								<i class="layui-icon"></i>
-							</button>
+					<div class="operating ">
+						<div class="layui-btn-group smallBtn">
+							<button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add" v-bind:data-extsystem="config.value" v-if="config.value!=1">
+					          <i class="layui-icon layui-icon-add-1"></i>
+					        </button>
+					        <button class="layui-btn layui-btn-sm synchronize" title="同步" v-on:click="synchronize" v-bind:data-extsystem="config.value" v-else>
+					          <i class="layui-icon layui-icon-refresh"></i>
+					        </button>
+					        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
+					          <i class="layui-icon layui-icon-delete"></i>
+					        </button>
 						</div>
 						<div class="selectView" >
 					     	<form class="layui-form layTableCell" action="">

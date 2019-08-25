@@ -1,14 +1,31 @@
 let goods = [];
 let goodsVm;
 let uploadInst;
+let btnVm;
 
 /**
  * vue初始页面
  */
 common.bindVue = function() {
-	console.log("goods");
+	refreshConfig("7001");
+	
+	btnVm = new Vue({
+		el : ".operating",
+		data : {
+			config: config
+        },
+        methods : {
+            synchronize: function() {
+            	synchronize('goods',loadData());
+			},
+			add: function () {
+                showEditBox(-1, null);
+            }
+        }
+	});
+	
     goodsVm = new Vue({
-        el : ".goodsPage",
+        el : ".goods-data",
         data : {
             goods: goods
         },
@@ -21,12 +38,6 @@ common.bindVue = function() {
                     let index = $(event.target).parents("tr").data("index");
                     showEditBox(index,goods[index]);
                 }
-            },
-            /**
-             * 新增
-             */
-            add: function () {
-                showEditBox(-1, null);
             },
             /**
              * 上架

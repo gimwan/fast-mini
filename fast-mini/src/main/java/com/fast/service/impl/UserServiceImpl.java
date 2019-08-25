@@ -77,10 +77,14 @@ public class UserServiceImpl implements IUserService, Serializable {
 				return result;
 			} else {
 				MUser mUser = mUsersList.get(0);
-				
-				result.setErrcode(0);
-				result.setId(mUser.getId());
-				result.setData(mUser);
+				if (password != null && password.equals(mUser.getPassword())) {
+					result.setErrcode(0);
+					result.setId(mUser.getId());
+					result.setData(mUser);
+				} else {
+					result.setMessage("用户名或密码错误");
+					return result;
+				}
 			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
