@@ -235,6 +235,13 @@ function showEditBox(idx,data) {
             api.load('./extsystem/change','post',data, function(result) {
                 if (result.errcode == 0) {
                 	data = result.data;
+                	// 只能启用一个
+                	let isActive = data.active;
+                	if (isActive == 1) {
+						for (var i = 0; i < extsystem.length; i++) {
+							extsystem[i].active = 0;
+						}
+					}
                 	if (idx < 0) {
                 		extsystem.push(data);
 					} else {

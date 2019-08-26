@@ -33,7 +33,7 @@
 		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
 		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
 		<result column="TypeID" property="typeid" jdbcType="INTEGER" />
-		<result column="ExtID" property="extid" jdbcType="INTEGER" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -135,7 +135,7 @@
 		#{memo,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
 		#{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
 		#{updatedtime,jdbcType=TIMESTAMP},
-		#{useflag,jdbcType=TINYINT}, #{typeid,jdbcType=INTEGER}, #{extid,jdbcType=INTEGER}
+		#{useflag,jdbcType=TINYINT}, #{typeid,jdbcType=INTEGER}, #{extid,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MVip"
@@ -322,7 +322,7 @@
 				#{typeid,jdbcType=INTEGER},
 			</if>
 			<if test="extid != null">
-				#{extid,jdbcType=INTEGER},
+				#{extid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -421,7 +421,7 @@
 				TypeID = #{typeid,jdbcType=INTEGER},
 			</if>
 			<if test="extid != null">
-				ExtID = #{extid,jdbcType=INTEGER},
+				ExtID = #{extid,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
@@ -456,7 +456,7 @@
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
 		UseFlag = #{useflag,jdbcType=TINYINT},
 		TypeID = #{typeid,jdbcType=INTEGER},
-		ExtID = #{extid,jdbcType=INTEGER}
+		ExtID = #{extid,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

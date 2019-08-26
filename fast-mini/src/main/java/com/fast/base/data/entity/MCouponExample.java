@@ -1316,52 +1316,62 @@ public class MCouponExample {
             return (Criteria) this;
         }
 
-        public Criteria andExtidEqualTo(Integer value) {
+        public Criteria andExtidEqualTo(String value) {
             addCriterion("ExtID =", value, "extid");
             return (Criteria) this;
         }
 
-        public Criteria andExtidNotEqualTo(Integer value) {
+        public Criteria andExtidNotEqualTo(String value) {
             addCriterion("ExtID <>", value, "extid");
             return (Criteria) this;
         }
 
-        public Criteria andExtidGreaterThan(Integer value) {
+        public Criteria andExtidGreaterThan(String value) {
             addCriterion("ExtID >", value, "extid");
             return (Criteria) this;
         }
 
-        public Criteria andExtidGreaterThanOrEqualTo(Integer value) {
+        public Criteria andExtidGreaterThanOrEqualTo(String value) {
             addCriterion("ExtID >=", value, "extid");
             return (Criteria) this;
         }
 
-        public Criteria andExtidLessThan(Integer value) {
+        public Criteria andExtidLessThan(String value) {
             addCriterion("ExtID <", value, "extid");
             return (Criteria) this;
         }
 
-        public Criteria andExtidLessThanOrEqualTo(Integer value) {
+        public Criteria andExtidLessThanOrEqualTo(String value) {
             addCriterion("ExtID <=", value, "extid");
             return (Criteria) this;
         }
 
-        public Criteria andExtidIn(List<Integer> values) {
+        public Criteria andExtidLike(String value) {
+            addCriterion("ExtID like", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidNotLike(String value) {
+            addCriterion("ExtID not like", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidIn(List<String> values) {
             addCriterion("ExtID in", values, "extid");
             return (Criteria) this;
         }
 
-        public Criteria andExtidNotIn(List<Integer> values) {
+        public Criteria andExtidNotIn(List<String> values) {
             addCriterion("ExtID not in", values, "extid");
             return (Criteria) this;
         }
 
-        public Criteria andExtidBetween(Integer value1, Integer value2) {
+        public Criteria andExtidBetween(String value1, String value2) {
             addCriterion("ExtID between", value1, value2, "extid");
             return (Criteria) this;
         }
 
-        public Criteria andExtidNotBetween(Integer value1, Integer value2) {
+        public Criteria andExtidNotBetween(String value1, String value2) {
             addCriterion("ExtID not between", value1, value2, "extid");
             return (Criteria) this;
         }

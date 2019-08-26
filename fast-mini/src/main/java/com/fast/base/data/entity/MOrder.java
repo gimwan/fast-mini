@@ -108,7 +108,7 @@ public class MOrder implements Serializable {
 
     private Byte retuenpaystatus;
 
-    private Integer extid;
+    private String extid;
 
     private String receiveraddress;
 
@@ -480,11 +480,11 @@ public class MOrder implements Serializable {
         this.retuenpaystatus = retuenpaystatus;
     }
 
-    public Integer getExtid() {
+    public String getExtid() {
         return extid;
     }
 
-    public void setExtid(Integer extid) {
+    public void setExtid(String extid) {
         this.extid = extid;
     }
 

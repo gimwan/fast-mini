@@ -19,7 +19,7 @@
 		<result column="BirthdayDiscount" property="birthdaydiscount"
 			jdbcType="DECIMAL" />
 		<result column="PointRate" property="pointrate" jdbcType="INTEGER" />
-		<result column="ExtID" property="extid" jdbcType="INTEGER" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -106,7 +106,7 @@
 		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR},
 		#{discount,jdbcType=DECIMAL}, #{birthdaydiscount,jdbcType=DECIMAL},
 		#{pointrate,jdbcType=INTEGER},
-		#{extid,jdbcType=INTEGER})
+		#{extid,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MViptype"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -208,7 +208,7 @@
 				#{pointrate,jdbcType=INTEGER},
 			</if>
 			<if test="extid != null">
-				#{extid,jdbcType=INTEGER},
+				#{extid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -265,7 +265,7 @@
 				PointRate = #{pointrate,jdbcType=INTEGER},
 			</if>
 			<if test="extid != null">
-				ExtID = #{extid,jdbcType=INTEGER},
+				ExtID = #{extid,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
@@ -286,7 +286,7 @@
 		Discount = #{discount,jdbcType=DECIMAL},
 		BirthdayDiscount = #{birthdaydiscount,jdbcType=DECIMAL},
 		PointRate = #{pointrate,jdbcType=INTEGER},
-		ExtID = #{extid,jdbcType=INTEGER}
+		ExtID = #{extid,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

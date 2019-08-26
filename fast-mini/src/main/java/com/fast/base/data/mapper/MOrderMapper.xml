@@ -58,7 +58,7 @@
 			jdbcType="INTEGER" />
 		<result column="RetuenPayStatus" property="retuenpaystatus"
 			jdbcType="TINYINT" />
-		<result column="ExtID" property="extid" jdbcType="INTEGER" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="ResultMapWithBLOBs" type="com.fast.base.data.entity.MOrder"
 		extends="BaseResultMap">
@@ -211,7 +211,7 @@
 		#{useflag,jdbcType=TINYINT},
 		#{status,jdbcType=TINYINT}, #{miniprogramid,jdbcType=INTEGER},
 		#{publicplatformid,jdbcType=INTEGER},
-		#{retuenpaystatus,jdbcType=TINYINT}, #{extid,jdbcType=INTEGER},
+		#{retuenpaystatus,jdbcType=TINYINT}, #{extid,jdbcType=VARCHAR},
 		#{receiveraddress,jdbcType=LONGVARCHAR}
 		)
 	</insert>
@@ -504,7 +504,7 @@
 				#{retuenpaystatus,jdbcType=TINYINT},
 			</if>
 			<if test="extid != null">
-				#{extid,jdbcType=INTEGER},
+				#{extid,jdbcType=VARCHAR},
 			</if>
 			<if test="receiveraddress != null">
 				#{receiveraddress,jdbcType=LONGVARCHAR},
@@ -657,7 +657,7 @@
 				RetuenPayStatus = #{retuenpaystatus,jdbcType=TINYINT},
 			</if>
 			<if test="extid != null">
-				ExtID = #{extid,jdbcType=INTEGER},
+				ExtID = #{extid,jdbcType=VARCHAR},
 			</if>
 			<if test="receiveraddress != null">
 				ReceiverAddress = #{receiveraddress,jdbcType=LONGVARCHAR},
@@ -712,7 +712,7 @@
 		MiniprogramID = #{miniprogramid,jdbcType=INTEGER},
 		PublicplatformID = #{publicplatformid,jdbcType=INTEGER},
 		RetuenPayStatus = #{retuenpaystatus,jdbcType=TINYINT},
-		ExtID = #{extid,jdbcType=INTEGER},
+		ExtID = #{extid,jdbcType=VARCHAR},
 		ReceiverAddress = #{receiveraddress,jdbcType=LONGVARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -763,7 +763,7 @@
 		MiniprogramID = #{miniprogramid,jdbcType=INTEGER},
 		PublicplatformID = #{publicplatformid,jdbcType=INTEGER},
 		RetuenPayStatus = #{retuenpaystatus,jdbcType=TINYINT},
-		ExtID = #{extid,jdbcType=INTEGER}
+		ExtID = #{extid,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

@@ -3,11 +3,13 @@ package com.fast.controller.ext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.base.Result;
+import com.fast.service.ext.IExtMaintService;
 
 import net.sf.json.JSONObject;
 
@@ -19,6 +21,9 @@ import net.sf.json.JSONObject;
 @RequestMapping(value = "/ext", produces = "application/json; charset=utf-8")
 @Controller
 public class ExtController {
+	
+	@Autowired
+	IExtMaintService iExtMaintService;
 	
 	/**
 	 * 同步
@@ -33,9 +38,7 @@ public class ExtController {
 		
 		try {
 			String type = request.getParameter("type");
-			Result result = new Result();
-			result.setErrcode(Integer.valueOf(0));
-			result.setMessage("synchronize success");
+			Result result = iExtMaintService.synchronize(type);
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
 		} catch (Exception e) {

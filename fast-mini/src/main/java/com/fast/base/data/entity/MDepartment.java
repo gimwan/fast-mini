@@ -59,7 +59,7 @@ public class MDepartment implements Serializable {
 
     private String memo;
 
-    private Integer extid;
+    private String extid;
 
     public Integer getId() {
         return id;
@@ -237,11 +237,11 @@ public class MDepartment implements Serializable {
         this.memo = memo;
     }
 
-    public Integer getExtid() {
+    public String getExtid() {
         return extid;
     }
 
-    public void setExtid(Integer extid) {
+    public void setExtid(String extid) {
         this.extid = extid;
     }
 }

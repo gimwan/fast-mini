@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MExtsystemMapper;
@@ -51,35 +52,7 @@ public class ExtSystemMaintServiceImpl implements IExtSystemMaintService, Serial
 				return result;
 			}
 			
-			Date now = new Date();
-			MExtsystem mExtsystem = new MExtsystem();
-			extsystem.setUpdatedtime(now);
-			if (extsystem.getId() != null) {
-				mExtsystem = extsystemMapper.selectByPrimaryKey(extsystem.getId());
-				BeanUtil.copyPropertiesIgnoreNull(extsystem, mExtsystem);
-				mExtsystem.setModifier(user.getName());
-				mExtsystem.setModifytime(now);
-				int changeNum = extsystemMapper.updateByPrimaryKeySelective(mExtsystem);
-				if (changeNum > 0) {
-					result.setErrcode(0);
-					result.setId(mExtsystem.getId());
-					result.setMessage("保存成功");
-				} else {
-					result.setMessage("保存失败");
-				}
-			} else {
-				BeanUtil.copyPropertiesIgnoreNull(extsystem, mExtsystem);
-				mExtsystem.setCreator(user.getName());
-				mExtsystem.setCreatetime(now);
-				int key = extsystemMapper.insertSelective(mExtsystem);
-				if (key > 0) {
-					result.setErrcode(0);
-					result.setId(mExtsystem.getId());
-					result.setMessage("新增成功");
-				} else {
-					result.setMessage("新增失败");
-				}
-			}
+			result = save(extsystem, user);
 			
 			if (Common.isActive(result)) {
 				Result r = iDataService.one("extsystem", result.getId());
@@ -92,6 +65,62 @@ public class ExtSystemMaintServiceImpl implements IExtSystemMaintService, Serial
 			FastLog.error("调用ExtSystemMaintServiceImpl.changeExtSystem报错：", e);
 		}
 
+		return result;
+	}
+	
+	/**
+	 * 保存
+	 * @param extsystem
+	 * @param user
+	 * @return
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public Result save(MExtsystem extsystem, MUser user) {
+		Result result = new Result();
+		Date now = new Date();
+		MExtsystem mExtsystem = new MExtsystem();
+		extsystem.setUpdatedtime(now);
+		if (extsystem.getId() != null) {
+			mExtsystem = extsystemMapper.selectByPrimaryKey(extsystem.getId());
+			BeanUtil.copyPropertiesIgnoreNull(extsystem, mExtsystem);
+			mExtsystem.setModifier(user.getName());
+			mExtsystem.setModifytime(now);
+			int changeNum = extsystemMapper.updateByPrimaryKeySelective(mExtsystem);
+			if (changeNum > 0) {
+				result.setErrcode(0);
+				result.setId(mExtsystem.getId());
+				result.setMessage("保存成功");
+			} else {
+				result.setMessage("保存失败");
+			}
+		} else {
+			BeanUtil.copyPropertiesIgnoreNull(extsystem, mExtsystem);
+			mExtsystem.setCreator(user.getName());
+			mExtsystem.setCreatetime(now);
+			int key = extsystemMapper.insertSelective(mExtsystem);
+			if (key > 0) {
+				result.setErrcode(0);
+				result.setId(mExtsystem.getId());
+				result.setMessage("新增成功");
+			} else {
+				result.setMessage("新增失败");
+			}
+		}
+		
+		if (Common.isActive(result)) {
+			if (mExtsystem.getActive().intValue() == 1) {
+				MExtsystemExample example = new MExtsystemExample();
+				example.createCriteria().andActiveEqualTo(Byte.valueOf("1")).andIdNotEqualTo(mExtsystem.getId());
+				List<MExtsystem> list = extsystemMapper.selectByExample(example);
+				for (int i = 0; i < list.size(); i++) {
+					MExtsystem ext = list.get(i);
+					ext.setActive(Byte.valueOf("0"));
+					ext.setUpdatedtime(now);
+					extsystemMapper.updateByPrimaryKeySelective(ext);
+				}
+			}
+		}
+		
 		return result;
 	}
 

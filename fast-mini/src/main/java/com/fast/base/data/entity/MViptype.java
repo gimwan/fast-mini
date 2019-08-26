@@ -46,7 +46,7 @@ public class MViptype implements Serializable {
 
     private Integer pointrate;
 
-    private Integer extid;
+    private String extid;
 
     public Integer getId() {
         return id;
@@ -168,11 +168,11 @@ public class MViptype implements Serializable {
         this.pointrate = pointrate;
     }
 
-    public Integer getExtid() {
+    public String getExtid() {
         return extid;
     }
 
-    public void setExtid(Integer extid) {
+    public void setExtid(String extid) {
         this.extid = extid;
     }
 }

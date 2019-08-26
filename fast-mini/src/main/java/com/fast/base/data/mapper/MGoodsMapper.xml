@@ -37,7 +37,7 @@
 			jdbcType="INTEGER" />
 		<result column="SmallCategory" property="smallcategory"
 			jdbcType="INTEGER" />
-		<result column="ExtID" property="extid" jdbcType="INTEGER" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -141,7 +141,7 @@
 		#{describe,jdbcType=VARCHAR},
 		#{bigcategory,jdbcType=INTEGER}, #{middlecategory,jdbcType=INTEGER},
 		#{smallcategory,jdbcType=INTEGER},
-		#{extid,jdbcType=INTEGER})
+		#{extid,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MGoods"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -333,7 +333,7 @@
 				#{smallcategory,jdbcType=INTEGER},
 			</if>
 			<if test="extid != null">
-				#{extid,jdbcType=INTEGER},
+				#{extid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -435,7 +435,7 @@
 				SmallCategory = #{smallcategory,jdbcType=INTEGER},
 			</if>
 			<if test="extid != null">
-				ExtID = #{extid,jdbcType=INTEGER},
+				ExtID = #{extid,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
@@ -471,7 +471,7 @@
 		BigCategory = #{bigcategory,jdbcType=INTEGER},
 		MiddleCategory = #{middlecategory,jdbcType=INTEGER},
 		SmallCategory = #{smallcategory,jdbcType=INTEGER},
-		ExtID = #{extid,jdbcType=INTEGER}
+		ExtID = #{extid,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

@@ -136,7 +136,7 @@ public class CommonUtil {
 			inputStream.close();
 			inputStream = null;
 			conn.disconnect();
-			jsonObject = JSONObject.fromObject(buffer.toString());
+			jsonObject = JSONObject.fromObject(buffer.toString());			
 			System.out.println("/////======result======/////");
 			System.out.println(buffer.toString());
 			System.out.println("/////======result======/////");

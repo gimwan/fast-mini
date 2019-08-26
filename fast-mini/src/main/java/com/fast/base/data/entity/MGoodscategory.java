@@ -41,7 +41,7 @@ public class MGoodscategory implements Serializable {
 
     private Integer parentid;
 
-    private Integer extid;
+    private String extid;
 
     public Integer getId() {
         return id;
@@ -147,11 +147,11 @@ public class MGoodscategory implements Serializable {
         this.parentid = parentid;
     }
 
-    public Integer getExtid() {
+    public String getExtid() {
         return extid;
     }
 
-    public void setExtid(Integer extid) {
+    public void setExtid(String extid) {
         this.extid = extid;
     }
 }

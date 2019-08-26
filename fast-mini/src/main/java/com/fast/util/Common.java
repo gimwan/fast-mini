@@ -36,7 +36,6 @@ import com.fast.system.RedisCache;
 public class Common {
 	/**
 	 * 判断变量是否为空
-	 * 
 	 * @param s
 	 * @return
 	 */
@@ -61,6 +60,11 @@ public class Common {
 		}
 	}
 	
+	/**
+	 * 获取当前登录者身份
+	 * @param request
+	 * @return
+	 */
 	public static MUser currentUser(HttpServletRequest request) {
 		MUser user = null;
 		
@@ -168,23 +172,29 @@ public class Common {
 	 * @return
 	 */
 	public static String getRealIp() throws SocketException {
-		String localip = null;// 本地IP，如果没有配置外网IP则返回它
-		String netip = null;// 外网IP
+		// 本地IP，如果没有配置外网IP则返回它
+		String localip = null;
+		// 外网IP
+		String netip = null;
 
 		Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
 		InetAddress ip = null;
-		boolean finded = false;// 是否找到外网IP
+		// 是否找到外网IP
+		boolean finded = false;
 		while (netInterfaces.hasMoreElements() && !finded) {
 			NetworkInterface ni = netInterfaces.nextElement();
 			Enumeration<InetAddress> address = ni.getInetAddresses();
 			while (address.hasMoreElements()) {
 				ip = address.nextElement();
-				if (!ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {// 外网IP
+				// 外网IP
+				if (!ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {
 					netip = ip.getHostAddress();
 					finded = true;
 					break;
-				} else if (ip.isSiteLocalAddress() && !ip.isLoopbackAddress()
-						&& ip.getHostAddress().indexOf(":") == -1) {// 内网IP
+				}
+				// 内网IP
+				else if (ip.isSiteLocalAddress() && !ip.isLoopbackAddress()
+						&& ip.getHostAddress().indexOf(":") == -1) {
 					localip = ip.getHostAddress();
 				}
 			}
@@ -289,7 +299,6 @@ public class Common {
 				return data;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -321,7 +330,6 @@ public class Common {
 	 * @return 返回资源的二进制数据 @
 	 */
 	public static byte[] readInputStream(InputStream inputStream) {
-
 		// 定义一个输出流向内存输出数据
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		// 定义一个缓冲区
@@ -345,7 +353,6 @@ public class Common {
 				return null;
 			}
 		}
-
 		// 得到数据后返回
 		return byteArrayOutputStream.toByteArray();
 
