@@ -1,6 +1,7 @@
 package com.fast.service;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MDepartment;
 
 /**
  * 门店管理
@@ -14,5 +15,12 @@ public interface IDepartmentService {
 	 * @return
 	 */
 	public Result department();
+	
+	/**
+	 * 重置门店省市区
+	 * @param department
+	 * @return
+	 */
+	public MDepartment resetDepartmentRegion(MDepartment department);
 
 }

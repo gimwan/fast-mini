@@ -144,6 +144,82 @@ public class ExtServiceImpl implements IExtService, Serializable {
 	}
 	
 	@Override
+	public Result categoryList(MExtsystem extsystem) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/category/list";
+			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.categoryList报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result categoryOne(MExtsystem extsystem, String extid) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/category/one";
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("id", extid);
+			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.categoryOne报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result midcategoryList(MExtsystem extsystem) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/midcategory/list";
+			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.midcategoryList报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result midcategoryOne(MExtsystem extsystem, String extid) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/midcategory/one";
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("id", extid);
+			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.midcategoryOne报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
 	public Result departmentList(MExtsystem extsystem) {
 		Result result = new Result();
 
@@ -322,6 +398,14 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			// 品牌
 			else if ("brandlist".equalsIgnoreCase(type)) {
 				result = brandList(extsystem);
+			}
+			// 大类
+			else if ("categorylist".equalsIgnoreCase(type)) {
+				result = categoryList(extsystem);
+			}
+			// 中类
+			else if ("midcategorylist".equalsIgnoreCase(type)) {
+				result = midcategoryList(extsystem);
 			}
 			// 门店
 			else if ("departmentlist".equalsIgnoreCase(type)) {

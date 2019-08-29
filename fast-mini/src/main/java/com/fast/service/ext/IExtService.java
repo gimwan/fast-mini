@@ -56,6 +56,36 @@ public interface IExtService {
 	public Result brandOne(MExtsystem extsystem, String extid);
 	
 	/**
+	 * 所有大类
+	 * @param extsystem
+	 * @return
+	 */
+	public Result categoryList(MExtsystem extsystem);
+	
+	/**
+	 * 单个大类
+	 * @param extsystem
+	 * @param extid
+	 * @return
+	 */
+	public Result categoryOne(MExtsystem extsystem, String extid);
+	
+	/**
+	 * 所有中类
+	 * @param extsystem
+	 * @return
+	 */
+	public Result midcategoryList(MExtsystem extsystem);
+	
+	/**
+	 * 单个中类
+	 * @param extsystem
+	 * @param extid
+	 * @return
+	 */
+	public Result midcategoryOne(MExtsystem extsystem, String extid);
+	
+	/**
 	 * 所有门店
 	 * @param extsystem
 	 * @return
