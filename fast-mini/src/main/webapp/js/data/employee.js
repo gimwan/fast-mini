@@ -16,7 +16,7 @@ common.bindVue = function() {
                 showEditBox(-1, null);
             },
             synchronize: function() {
-            	synchronize('employee',loadData());
+            	synchronize('employeelist',loadData);
 			},
             del: function () {
             	layer.confirm('确定删除？', {

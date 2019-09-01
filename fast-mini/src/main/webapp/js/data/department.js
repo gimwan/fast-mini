@@ -15,7 +15,7 @@ common.bindVue = function() {
                 showEditBox(-1, null);
             },
             synchronize: function() {
-            	synchronize('department',loadData());
+            	synchronize('departmentlist',loadData);
 			},
             del: function () {
             	let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");

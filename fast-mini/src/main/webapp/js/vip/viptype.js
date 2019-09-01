@@ -12,7 +12,7 @@ common.bindVue = function() {
         },
         methods : {
             synchronize: function() {
-            	synchronize('viptype',loadData());
+            	synchronize('viptypelist',loadData);
 			},
             add: function () {
                 showEditBox(-1, null);

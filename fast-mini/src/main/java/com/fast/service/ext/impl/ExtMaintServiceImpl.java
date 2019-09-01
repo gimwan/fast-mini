@@ -5,13 +5,14 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MBrandMapper;
 import com.fast.base.data.dao.MColorMapper;
@@ -93,42 +94,42 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 		try {
 			Result r = iExtService.synchronizeQuery(type);
 			if (Common.isActive(r)) {
-				List<HashMap<String, Object>> list = (List<HashMap<String, Object>>) r.getData();
+				JSONArray array = (JSONArray) r.getData();
 				// 颜色
 				if ("colorlist".equalsIgnoreCase(type)) {
-					result = saveColor(list);
+					result = saveColor(array);
 				}
 				// 尺码
 				else if ("sizelist".equalsIgnoreCase(type)) {
-					result = saveSize(list);
+					result = saveSize(array);
 				}
 				// 品牌
 				else if ("brandlist".equalsIgnoreCase(type)) {
-					result = saveBrand(list);
+					result = saveBrand(array);
 				}
 				// 大类
 				else if ("categorylist".equalsIgnoreCase(type)) {
-					result = saveCategory(list);
+					result = saveCategory(array);
 				}
 				// 中类
 				else if ("midcategorylist".equalsIgnoreCase(type)) {
-					result = saveMidCategory(list);
+					result = saveMidCategory(array);
 				}
 				// 门店
 				else if ("departmentlist".equalsIgnoreCase(type)) {
-					result = saveDepartment(list);
+					result = saveDepartment(array);
 				}
 				// 员工
 				else if ("employeelist".equalsIgnoreCase(type)) {
-					result = saveEmployee(list);
+					result = saveEmployee(array);
 				}
 				// 会员等级
 				else if ("viptypelist".equalsIgnoreCase(type)) {
-					result = saveViptype(list);
+					result = saveViptype(array);
 				}
 				// 优惠券
 				else if ("couponlist".equalsIgnoreCase(type)) {
-					result = saveCoupon(list);
+					result = saveCoupon(array);
 				}
 			}
 		} catch (Exception e) {
@@ -145,15 +146,15 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Result saveColor(List<HashMap<String, Object>> list) {
+	public Result saveColor(JSONArray array) {
 		Result result = new Result();
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
 				Date now = new Date();
-				HashMap<String, Object> map = list.get(i);
-				String extid = map.get("id") == null ? "" : map.get("id").toString().trim();
-				String code = map.get("code") == null ? "" : map.get("code").toString().trim();
-				String name = map.get("name") == null ? "" : map.get("name").toString().trim();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String code = json.get("code") == null ? "" : json.getString("code").trim();
+				String name = json.get("name") == null ? "" : json.getString("name").trim();
 				
 				MColor color = new MColor();
 				MColorExample example = new MColorExample();
@@ -178,9 +179,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				color.setExtid(extid);
 				color.setUpdatedtime(now);
 				if (color.getId() != null) {
-					colorMapper.insertSelective(color);
-				} else {
 					colorMapper.updateByPrimaryKeySelective(color);
+				} else {
+					colorMapper.insertSelective(color);
 				}
 			}
 		}
@@ -195,15 +196,15 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Result saveSize(List<HashMap<String, Object>> list) {
+	public Result saveSize(JSONArray array) {
 		Result result = new Result();
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
 				Date now = new Date();
-				HashMap<String, Object> map = list.get(i);
-				String extid = map.get("id") == null ? "" : map.get("id").toString().trim();
-				String code = map.get("code") == null ? "" : map.get("code").toString().trim();
-				String name = map.get("name") == null ? "" : map.get("name").toString().trim();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String code = json.get("code") == null ? "" : json.getString("code").trim();
+				String name = json.get("name") == null ? "" : json.getString("name").trim();
 				
 				MSize size = new MSize();
 				MSizeExample example = new MSizeExample();
@@ -228,9 +229,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				size.setExtid(extid);
 				size.setUpdatedtime(now);
 				if (size.getId() != null) {
-					sizeMapper.insertSelective(size);
-				} else {
 					sizeMapper.updateByPrimaryKeySelective(size);
+				} else {
+					sizeMapper.insertSelective(size);
 				}
 			}
 		}
@@ -245,15 +246,15 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Result saveBrand(List<HashMap<String, Object>> list) {
+	public Result saveBrand(JSONArray array) {
 		Result result = new Result();
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
 				Date now = new Date();
-				HashMap<String, Object> map = list.get(i);
-				String extid = map.get("id") == null ? "" : map.get("id").toString().trim();
-				String code = map.get("code") == null ? "" : map.get("code").toString().trim();
-				String name = map.get("name") == null ? "" : map.get("name").toString().trim();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String code = json.get("code") == null ? "" : json.getString("code").trim();
+				String name = json.get("name") == null ? "" : json.getString("name").trim();
 				
 				MBrand brand = new MBrand();
 				MBrandExample example = new MBrandExample();
@@ -278,9 +279,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				brand.setExtid(extid);
 				brand.setUpdatedtime(now);
 				if (brand.getId() != null) {
-					brandMapper.insertSelective(brand);
-				} else {
 					brandMapper.updateByPrimaryKeySelective(brand);
+				} else {
+					brandMapper.insertSelective(brand);
 				}
 			}
 		}
@@ -295,15 +296,15 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Result saveCategory(List<HashMap<String, Object>> list) {
+	public Result saveCategory(JSONArray array) {
 		Result result = new Result();
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
 				Date now = new Date();
-				HashMap<String, Object> map = list.get(i);
-				String extid = map.get("id") == null ? "" : map.get("id").toString().trim();
-				String code = map.get("code") == null ? "" : map.get("code").toString().trim();
-				String name = map.get("name") == null ? "" : map.get("name").toString().trim();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String code = json.get("code") == null ? "" : json.getString("code").trim();
+				String name = json.get("name") == null ? "" : json.getString("name").trim();
 				
 				MGoodscategory category = new MGoodscategory();
 				MGoodscategoryExample example = new MGoodscategoryExample();
@@ -329,9 +330,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				category.setGrade(Byte.valueOf("1"));
 				category.setUpdatedtime(now);
 				if (category.getId() != null) {
-					goodscategoryMapper.insertSelective(category);
-				} else {
 					goodscategoryMapper.updateByPrimaryKeySelective(category);
+				} else {
+					goodscategoryMapper.insertSelective(category);
 				}
 			}
 		}
@@ -346,16 +347,16 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Result saveMidCategory(List<HashMap<String, Object>> list) {
+	public Result saveMidCategory(JSONArray array) {
 		Result result = new Result();
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
 				Date now = new Date();
-				HashMap<String, Object> map = list.get(i);
-				String extid = map.get("id") == null ? "" : map.get("id").toString().trim();
-				String code = map.get("code") == null ? "" : map.get("code").toString().trim();
-				String name = map.get("name") == null ? "" : map.get("name").toString().trim();
-				String parentid = map.get("parentid") == null ? "" : map.get("parentid").toString().trim();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String code = json.get("code") == null ? "" : json.getString("code").trim();
+				String name = json.get("name") == null ? "" : json.getString("name").trim();
+				String parentid = json.get("parentid") == null ? "" : json.getString("parentid").trim();
 				
 				MGoodscategory category = new MGoodscategory();
 				MGoodscategoryExample example = new MGoodscategoryExample();
@@ -393,9 +394,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				}
 				
 				if (category.getId() != null) {
-					goodscategoryMapper.insertSelective(category);
-				} else {
 					goodscategoryMapper.updateByPrimaryKeySelective(category);
+				} else {
+					goodscategoryMapper.insertSelective(category);
 				}
 			}
 		}
@@ -410,21 +411,21 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Result saveDepartment(List<HashMap<String, Object>> list) {
+	public Result saveDepartment(JSONArray array) {
 		Result result = new Result();
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
 				Date now = new Date();
-				HashMap<String, Object> map = list.get(i);
-				String extid = map.get("id") == null ? "" : map.get("id").toString().trim();
-				String code = map.get("code") == null ? "" : map.get("code").toString().trim();
-				String name = map.get("name") == null ? "" : map.get("name").toString().trim();
-				String province = map.get("province") == null ? "" : map.get("province").toString().trim();
-				String city = map.get("city") == null ? "" : map.get("city").toString().trim();
-				String county = map.get("county") == null ? "" : map.get("county").toString().trim();
-				String address = map.get("address") == null ? "" : map.get("address").toString().trim();
-				String contacts = map.get("contacts") == null ? "" : map.get("contacts").toString().trim();
-				String phone = map.get("phone") == null ? "" : map.get("phone").toString().trim();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String code = json.get("code") == null ? "" : json.getString("code").trim();
+				String name = json.get("name") == null ? "" : json.getString("name").trim();
+				String province = json.get("province") == null ? "" : json.getString("province").trim();
+				String city = json.get("city") == null ? "" : json.getString("city").trim();
+				String county = json.get("county") == null ? "" : json.getString("county").trim();
+				String address = json.get("address") == null ? "" : json.getString("address").trim();
+				String contacts = json.get("contacts") == null ? "" : json.getString("contacts").trim();
+				String phone = json.get("phone") == null ? "" : json.getString("phone").trim();
 				
 				MDepartment department = new MDepartment();
 				MDepartmentExample example = new MDepartmentExample();
@@ -471,9 +472,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				department = iDepartmentService.resetDepartmentRegion(department);
 				
 				if (department.getId() != null) {
-					departmentMapper.insertSelective(department);
-				} else {
 					departmentMapper.updateByPrimaryKeySelective(department);
+				} else {
+					departmentMapper.insertSelective(department);
 				}
 			}
 		}
@@ -488,18 +489,18 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Result saveEmployee(List<HashMap<String, Object>> list) {
+	public Result saveEmployee(JSONArray array) {
 		Result result = new Result();
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
 				Date now = new Date();
-				HashMap<String, Object> map = list.get(i);
-				String extid = map.get("id") == null ? "" : map.get("id").toString().trim();
-				String code = map.get("code") == null ? "" : map.get("code").toString().trim();
-				String name = map.get("name") == null ? "" : map.get("name").toString().trim();
-				String sex = map.get("sex") == null ? "0" : map.get("sex").toString().trim();
-				String departmentcode = map.get("departmentcode") == null ? "" : map.get("departmentcode").toString().trim();
-				String mobilephone = map.get("mobilephone") == null ? "" : map.get("mobilephone").toString().trim();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String code = json.get("code") == null ? "" : json.getString("code").trim();
+				String name = json.get("name") == null ? "" : json.getString("name").trim();
+				String sex = json.get("sex") == null ? "0" : json.getString("sex").trim();
+				String departmentcode = json.get("departmentcode") == null ? "" : json.getString("departmentcode").trim();
+				String mobilephone = json.get("mobilephone") == null ? "" : json.getString("mobilephone").trim();
 				
 				MEmployee employee = new MEmployee();
 				MEmployeeExample example = new MEmployeeExample();
@@ -540,9 +541,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				}
 				
 				if (employee.getId() != null) {
-					employeeMapper.insertSelective(employee);
-				} else {
 					employeeMapper.updateByPrimaryKeySelective(employee);
+				} else {
+					employeeMapper.insertSelective(employee);
 				}
 			}
 		}
@@ -557,19 +558,19 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Result saveViptype(List<HashMap<String, Object>> list) {
+	public Result saveViptype(JSONArray array) {
 		Result result = new Result();
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
 				Date now = new Date();
-				HashMap<String, Object> map = list.get(i);
-				String extid = map.get("id") == null ? "" : map.get("id").toString().trim();
-				String code = map.get("code") == null ? "" : map.get("code").toString().trim();
-				String name = map.get("name") == null ? "" : map.get("name").toString().trim();
-				String grade = map.get("grade") == null ? "1" : map.get("grade").toString().trim();
-				String discount = map.get("discount") == null ? "1" : map.get("discount").toString().trim();
-				String birthdaydiscount = map.get("birthdaydiscount") == null ? "1" : map.get("birthdaydiscount").toString().trim();
-				String pointrate = map.get("pointrate") == null ? "0" : map.get("pointrate").toString().trim();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String code = json.get("code") == null ? "" : json.getString("code").trim();
+				String name = json.get("name") == null ? "" : json.getString("name").trim();
+				String grade = json.get("grade") == null ? "1" : json.getString("grade").trim();
+				String discount = json.get("discount") == null ? "1" : json.getString("discount").trim();
+				String birthdaydiscount = json.get("birthdaydiscount") == null ? "1" : json.getString("birthdaydiscount").trim();
+				String pointrate = json.get("pointrate") == null ? "0" : json.getString("pointrate").trim();
 				
 				MViptype viptype = new MViptype();
 				MViptypeExample example = new MViptypeExample();
@@ -593,15 +594,15 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				}
 				
 				viptype.setGrade(Integer.valueOf(grade));
-				viptype.setDiscount(new BigDecimal(discount));
-				viptype.setBirthdaydiscount(new BigDecimal(birthdaydiscount));
+				viptype.setDiscount(new BigDecimal(discount).divide(BigDecimal.TEN));
+				viptype.setBirthdaydiscount(new BigDecimal(birthdaydiscount).divide(BigDecimal.TEN));
 				viptype.setPointrate(Integer.valueOf(pointrate));
 				viptype.setExtid(extid);
 				viptype.setUpdatedtime(now);
 				if (viptype.getId() != null) {
-					viptypeMapper.insertSelective(viptype);
-				} else {
 					viptypeMapper.updateByPrimaryKeySelective(viptype);
+				} else {
+					viptypeMapper.insertSelective(viptype);
 				}
 			}
 		}
@@ -616,21 +617,21 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	 * @return
 	 */
 	@Transactional(rollbackFor = Exception.class)
-	public Result saveCoupon(List<HashMap<String, Object>> list) {
+	public Result saveCoupon(JSONArray array) {
 		Result result = new Result();
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
 				Date now = new Date();
-				HashMap<String, Object> map = list.get(i);
-				String extid = map.get("id") == null ? "" : map.get("id").toString().trim();
-				String code = map.get("code") == null ? "" : map.get("code").toString().trim();
-				String name = map.get("name") == null ? "" : map.get("name").toString().trim();
-				String amount = map.get("amount") == null ? "0" : map.get("amount").toString().trim();
-				String enableamount = map.get("enableamount") == null ? "0" : map.get("enableamount").toString().trim();
-				String limitquantity = map.get("limitquantity") == null ? "0" : map.get("limitquantity").toString().trim();
-				String totalquantity = map.get("totalquantity") == null ? "0" : map.get("totalquantity").toString().trim();
-				String begintime = map.get("begintime") == null ? "" : map.get("begintime").toString().trim();
-				String edtime = map.get("edtime") == null ? "" : map.get("edtime").toString().trim();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String code = json.get("code") == null ? "" : json.getString("code").trim();
+				String name = json.get("name") == null ? "" : json.getString("name").trim();
+				String amount = json.get("amount") == null ? "0" : json.getString("amount").trim();
+				String enableamount = json.get("enableamount") == null ? "0" : json.getString("enableamount").trim();
+				String limitquantity = json.get("limitquantity") == null ? "0" : json.getString("limitquantity").trim();
+				String totalquantity = json.get("totalquantity") == null ? "0" : json.getString("totalquantity").trim();
+				String begintime = json.get("begintime") == null ? "" : json.getString("begintime").trim();
+				String edtime = json.get("edtime") == null ? "" : json.getString("edtime").trim();
 				
 				MCoupon coupon = new MCoupon();
 				MCouponExample example = new MCouponExample();
@@ -675,9 +676,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				coupon.setExtid(extid);
 				coupon.setUpdatedtime(now);
 				if (coupon.getId() != null) {
-					couponMapper.insertSelective(coupon);
-				} else {
 					couponMapper.updateByPrimaryKeySelective(coupon);
+				} else {
+					couponMapper.insertSelective(coupon);
 				}
 			}
 		}

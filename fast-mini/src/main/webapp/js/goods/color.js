@@ -12,7 +12,7 @@ common.bindVue = function() {
         },
         methods : {
             synchronize: function() {
-            	synchronize('color',loadData());
+            	synchronize('colorlist',loadData);
 			},
 			add: function () {
                 showEditBox(-1, null);

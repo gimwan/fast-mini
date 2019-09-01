@@ -12,7 +12,7 @@ common.bindVue = function() {
         },
         methods : {
             synchronize: function() {
-            	synchronize('size',loadData());
+            	synchronize('sizelist',loadData);
 			},
             add: function () {
                 showEditBox(-1, null);

@@ -24,7 +24,7 @@ common.bindVue = function() {
         },
         methods : {
         	synchronize: function() {
-        		//synchronize('goodscategory',loadData());
+        		synchronize('categorylist',loadData);
 			},
             edit: function(event) {
                 if (event) {
@@ -74,7 +74,7 @@ common.bindVue = function() {
         },
         methods : {
         	synchronize: function() {
-				
+        		console.log(2);
 			},
             edit: function(event) {
                 if (event) {
@@ -95,7 +95,7 @@ common.bindVue = function() {
         },
         methods : {
         	synchronize: function() {
-				
+        		console.log(3);
 			},
             edit: function(event) {
                 if (event) {
@@ -117,7 +117,7 @@ common.bindVue = function() {
         },
         methods : {
         	synchronize: function() {
-				
+        		synchronize('midcategorylist',loadData);
 			},
             add: function () {
                 showEditBox(-1, null);
@@ -161,7 +161,7 @@ common.bindVue = function() {
         },
         methods : {
         	synchronize: function() {
-				
+        		console.log(5);
 			},
             add: function () {
                 showEditBox(-1, null);

@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -86,12 +87,6 @@ public class CommonUtil {
 	public static JSONObject httpsRequest(String requestUrl, String requestMethod, String outputStr) {
 		JSONObject jsonObject = null;
 		try {
-			System.out.println("/////======postdata======/////");
-			System.out.println(requestUrl);
-			System.out.println(requestMethod);
-			System.out.println(outputStr);
-			System.out.println("/////======postdata======/////");
-
 			// 创建SSLContext对象，并使用我们指定的信任管理器初始化
 			TrustManager[] tm = { new MyX509TrustManager() };
 			SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
@@ -136,16 +131,71 @@ public class CommonUtil {
 			inputStream.close();
 			inputStream = null;
 			conn.disconnect();
-			jsonObject = JSONObject.fromObject(buffer.toString());			
-			System.out.println("/////======result======/////");
-			System.out.println(buffer.toString());
-			System.out.println("/////======result======/////");
+			jsonObject = JSONObject.fromObject(buffer.toString());	
 			return jsonObject;
 		} catch (ConnectException ce) {
 			FastLog.error("连接超时：{}", ce);
+			ce.printStackTrace();
 			return httpsRequest(requestUrl, requestMethod, outputStr);
 		} catch (Exception e) {
 			FastLog.error("https请求异常：{}", e);
+			e.printStackTrace();
+			return jsonObject;
+		}
+	}
+	
+	public static JSONObject httpRequest(String requestUrl,
+			String requestMethod, String outputStr) {
+		JSONObject jsonObject = null;
+		try {
+			URL url = new URL(requestUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setDoInput(true);
+			conn.setUseCaches(false);
+			conn.setRequestProperty("Content-Type", "application/json"); 
+			// 设置请求方式（GET/POST）
+			conn.setRequestMethod(requestMethod);
+
+			if ("GET".equalsIgnoreCase(requestMethod)) {
+				conn.connect();
+			}
+
+			// 当outputStr不为null时向输出流写数据
+			if (null != outputStr) {
+				OutputStream outputStream = conn.getOutputStream();
+				// 注意编码格式
+				outputStream.write(outputStr.getBytes("UTF-8"));
+				outputStream.close();
+			}
+
+			// 从输入流读取返回内容
+			InputStream inputStream = conn.getInputStream();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream, "utf-8");
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+			String str = null;
+			StringBuffer buffer = new StringBuffer();
+			while ((str = bufferedReader.readLine()) != null) {
+				buffer.append(str);
+			}
+
+			// 释放资源
+			bufferedReader.close();
+			inputStreamReader.close();
+			inputStream.close();
+			inputStream = null;
+			conn.disconnect();
+			jsonObject = JSONObject.fromObject(buffer.toString());
+			return jsonObject;
+		} catch (ConnectException ce) {
+			FastLog.error("连接超时：{}", ce);
+			ce.printStackTrace();
+			return jsonObject;
+		} catch (Exception e) {
+			FastLog.error("http请求异常：{}", e);
+			e.printStackTrace();
 			return jsonObject;
 		}
 	}

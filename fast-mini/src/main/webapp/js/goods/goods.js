@@ -16,7 +16,7 @@ common.bindVue = function() {
         },
         methods : {
             synchronize: function() {
-            	synchronize('goods',loadData());
+            	//synchronize('goods',loadData());
 			},
 			add: function () {
                 showEditBox(-1, null);

@@ -12,7 +12,7 @@ common.bindVue = function() {
         },
         methods : {
             synchronize: function() {
-            	synchronize('goodsgrouping',loadData());
+            	//synchronize('grouplist',loadData());
 			},
             add: function () {
                 showEditBox(-1, null);

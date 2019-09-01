@@ -35,7 +35,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 
 		try {
 			String url = extsystem.getServeraddress() + "/api/color/list";
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", null);
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -55,7 +55,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			String url = extsystem.getServeraddress() + "/api/color/one";
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", extid);
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -73,7 +73,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 
 		try {
 			String url = extsystem.getServeraddress() + "/api/size/list";
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", null);
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -93,7 +93,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			String url = extsystem.getServeraddress() + "/api/size/one";
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", extid);
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -111,7 +111,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 
 		try {
 			String url = extsystem.getServeraddress() + "/api/brand/list";
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", null);
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -131,7 +131,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			String url = extsystem.getServeraddress() + "/api/brand/one";
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", extid);
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -149,7 +149,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 
 		try {
 			String url = extsystem.getServeraddress() + "/api/category/list";
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", null);
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -169,7 +169,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			String url = extsystem.getServeraddress() + "/api/category/one";
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", extid);
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -187,7 +187,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 
 		try {
 			String url = extsystem.getServeraddress() + "/api/midcategory/list";
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", null);
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -207,7 +207,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			String url = extsystem.getServeraddress() + "/api/midcategory/one";
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", extid);
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -225,7 +225,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 
 		try {
 			String url = extsystem.getServeraddress() + "/api/department/list";
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", null);
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -245,7 +245,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			String url = extsystem.getServeraddress() + "/api/department/one";
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", extid);
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -263,7 +263,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 
 		try {
 			String url = extsystem.getServeraddress() + "/api/employee/list";
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", null);
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -283,7 +283,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			String url = extsystem.getServeraddress() + "/api/employee/one";
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", extid);
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -301,7 +301,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 
 		try {
 			String url = extsystem.getServeraddress() + "/api/viptype/list";
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", null);
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -321,7 +321,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			String url = extsystem.getServeraddress() + "/api/viptype/one";
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", extid);
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -339,7 +339,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 
 		try {
 			String url = extsystem.getServeraddress() + "/api/coupon/list";
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", null);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", null);
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}
@@ -359,7 +359,7 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			String url = extsystem.getServeraddress() + "/api/coupon/one";
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", extid);
-			JSONObject object = CommonUtil.httpsRequest(url, "POST", jsonObject.toString());
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
 				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 			}

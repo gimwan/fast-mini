@@ -250,12 +250,12 @@
 				<div class="layui-tab-item">
 					<div class="operating ">
 						<div class="layui-btn-group smallBtn">
-							<button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add" v-bind:data-extsystem="config.value" v-if="config.value!=1">
+							<button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add" v-bind:data-extsystem="config.value">
 					          <i class="layui-icon layui-icon-add-1"></i>
 					        </button>
-					        <button class="layui-btn layui-btn-sm synchronize" title="同步" v-on:click="synchronize" v-bind:data-extsystem="config.value" v-else>
+					        <!-- <button class="layui-btn layui-btn-sm synchronize" title="同步" v-on:click="synchronize" v-bind:data-extsystem="config.value" v-else>
 					          <i class="layui-icon layui-icon-refresh"></i>
-					        </button>
+					        </button> -->
 					        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
 					          <i class="layui-icon layui-icon-delete"></i>
 					        </button>

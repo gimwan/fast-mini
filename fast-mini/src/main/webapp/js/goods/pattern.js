@@ -12,7 +12,7 @@ common.bindVue = function() {
         },
         methods : {
             synchronize: function() {
-            	synchronize('pattern',loadData());
+            	synchronize('patternlist',loadData);
 			},
             add: function () {
                 showEditBox(-1, null);

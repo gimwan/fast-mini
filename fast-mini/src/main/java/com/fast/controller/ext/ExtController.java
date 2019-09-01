@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.base.Result;
 import com.fast.service.ext.IExtMaintService;
+import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
 
@@ -39,6 +40,9 @@ public class ExtController {
 		try {
 			String type = request.getParameter("type");
 			Result result = iExtMaintService.synchronize(type);
+			if (Common.isEmpty(result.getMessage())) {
+				result.setMessage("同步失败");
+			}
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
 		} catch (Exception e) {

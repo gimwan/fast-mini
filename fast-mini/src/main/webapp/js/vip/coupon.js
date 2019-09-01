@@ -12,7 +12,7 @@ common.bindVue = function() {
         },
         methods : {
             synchronize: function() {
-            	synchronize('coupon',loadData());
+            	synchronize('couponlist',loadData);
 			},
             add: function () {
                 showEditBox(-1, null);

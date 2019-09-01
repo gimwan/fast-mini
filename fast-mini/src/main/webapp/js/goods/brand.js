@@ -3,6 +3,7 @@ let brandVm;
 let btnVm;
 
 common.bindVue = function() {
+	console.log('brand');
 	refreshConfig("7001");
 	
 	btnVm = new Vue({
@@ -12,7 +13,7 @@ common.bindVue = function() {
         },
         methods : {
             synchronize: function() {
-            	synchronize('brand',loadData());
+            	synchronize('brandlist',loadData);
 			},
             add: function () {
                 showEditBox(-1, null);

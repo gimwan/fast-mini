@@ -468,13 +468,12 @@ function synchronize(type, fn) {
 		        	data.type = type;
 		        	api.load(basePath + 'ext/synchronize','post',data,function (result) {
 		        		if (result.errcode == 0) {
-		        			layer.close(synchronizeIndex);
 		        			common.tips(result.message);
 		        			if (!!fn) {
 								try {
 									let func = eval(fn);
 									if (func && typeof (func) == "function") {
-										func(obj.curr);
+										func();
 									}
 								} catch (e) {
 									console.log(e);
@@ -483,6 +482,7 @@ function synchronize(type, fn) {
 		        		} else {
 		        			common.error(result.message);
 						}
+		        		layer.close(synchronizeIndex);
 		        	});
 		        }
 			});
