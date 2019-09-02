@@ -19,8 +19,14 @@ import com.fast.base.data.dao.MColorMapper;
 import com.fast.base.data.dao.MCouponMapper;
 import com.fast.base.data.dao.MDepartmentMapper;
 import com.fast.base.data.dao.MEmployeeMapper;
+import com.fast.base.data.dao.MExtsystemMapper;
+import com.fast.base.data.dao.MGoodsMapper;
 import com.fast.base.data.dao.MGoodscategoryMapper;
+import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.dao.MSizeMapper;
+import com.fast.base.data.dao.MVipMapper;
+import com.fast.base.data.dao.MVipaccountMapper;
+import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MBrand;
 import com.fast.base.data.entity.MBrandExample;
@@ -32,13 +38,23 @@ import com.fast.base.data.entity.MDepartment;
 import com.fast.base.data.entity.MDepartmentExample;
 import com.fast.base.data.entity.MEmployee;
 import com.fast.base.data.entity.MEmployeeExample;
+import com.fast.base.data.entity.MExtsystem;
+import com.fast.base.data.entity.MExtsystemExample;
+import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodscategory;
 import com.fast.base.data.entity.MGoodscategoryExample;
+import com.fast.base.data.entity.MGoodssku;
+import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MSize;
 import com.fast.base.data.entity.MSizeExample;
+import com.fast.base.data.entity.MVip;
+import com.fast.base.data.entity.MVipExample;
+import com.fast.base.data.entity.MVipaccount;
+import com.fast.base.data.entity.MVipmini;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
 import com.fast.service.IDepartmentService;
+import com.fast.service.IVipService;
 import com.fast.service.ext.IExtMaintService;
 import com.fast.service.ext.IExtService;
 import com.fast.system.log.FastLog;
@@ -83,6 +99,24 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	
 	@Autowired
 	IDepartmentService iDepartmentService;
+	
+	@Autowired
+	MGoodsMapper goodsMapper;
+	
+	@Autowired
+	MExtsystemMapper extsystemMapper;
+	
+	@Autowired
+	MGoodsskuMapper goodsskuMapper;
+	
+	@Autowired
+	MVipMapper vipMapper;
+	
+	@Autowired
+	MVipaccountMapper vipaccountMapper;
+	
+	@Autowired
+	IVipService iVipService;
 
 	/**
 	 * 同步数据
@@ -681,6 +715,246 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 					couponMapper.insertSelective(coupon);
 				}
 			}
+		}
+		result.setErrcode(Integer.valueOf(0));
+		result.setMessage("同步成功");
+		return result;
+	}
+
+	@Override
+	public Result syncGoods(Integer id) {
+		Result result = new Result();
+
+		try {
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> list = extsystemMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				extsystem = list.get(0);
+			}
+			if (extsystem != null) {
+				MGoods goods = goodsMapper.selectByPrimaryKey(id);
+				if (!Common.isEmpty(goods.getExtid())) {
+					Result r = iExtService.stockOne(extsystem, goods.getExtid());
+					if (Common.isActive(r)) {
+						JSONArray array = (JSONArray) r.getData();
+						result = saveStock(goods, array);
+					}
+				}
+			}			
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.syncGoods报错：", e);
+		}
+
+		return result;
+	}
+	
+	/**
+	 * 同步库存
+	 * @param goods
+	 * @param array
+	 * @return
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public Result saveStock(MGoods goods, JSONArray array) {
+		Result result = new Result();
+		if (array != null && array.size() > 0) {
+			for (int i = 0; i < array.size(); i++) {
+				Date now = new Date();
+				JSONObject json = array.getJSONObject(i);
+				String extid = json.get("id") == null ? "" : json.getString("id").trim();
+				String sizeid = json.get("sizeid") == null ? "" : json.getString("sizeid").trim();
+				String colorid = json.get("colorid") == null ? "" : json.getString("colorid").trim();
+				String barcode = json.get("barcode") == null ? "0" : json.getString("barcode").trim();
+				String quantity = json.get("quantity") == null ? "0" : json.getString("quantity").trim();
+				String ianumber = json.get("ianumber") == null ? "" : json.getString("ianumber").trim();
+				String extbarcode = json.get("extbarcode") == null ? "" : json.getString("extbarcode").trim();
+				
+				MGoodssku sku = new MGoodssku();
+				MGoodsskuExample example = new MGoodsskuExample();
+				example.createCriteria().andExtidEqualTo(extid);
+				List<MGoodssku> skuList = goodsskuMapper.selectByExample(example);
+				if (skuList != null && skuList.size() > 0) {
+					sku = skuList.get(0);
+					sku.setModifytime(now);
+					sku.setModifier("system");
+				} else {
+					sku.setCreatetime(now);
+					sku.setCreator("system");
+				}
+				if (!Common.isEmpty(quantity)) {
+					sku.setQuantity(Long.valueOf(quantity));
+				}
+				if (!Common.isEmpty(barcode)) {
+					sku.setBarcode(barcode);
+				}
+				if (!Common.isEmpty(ianumber)) {
+					sku.setIanumber(ianumber);
+				}
+				if (!Common.isEmpty(extbarcode)) {
+					sku.setExtbarcode(extbarcode);
+				}
+				sku.setGoodsid(goods.getId());
+				sku.setColorid(Integer.valueOf(colorid));
+				sku.setSizeid(Integer.valueOf(sizeid));
+				sku.setPatternid(Integer.valueOf(1));
+				sku.setExtid(extid);
+				sku.setUpdatedtime(now);
+				if (sku.getId() != null) {
+					goodsskuMapper.updateByPrimaryKeySelective(sku);
+				} else {
+					goodsskuMapper.insertSelective(sku);
+				}
+			}
+		}
+		result.setErrcode(Integer.valueOf(0));
+		result.setMessage("同步成功");
+		return result;
+	}
+
+	@Override
+	public Result syncVip(Integer id) {
+		Result result = new Result();
+
+		try {
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> list = extsystemMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				extsystem = list.get(0);
+			}
+			if (extsystem != null) {
+				MVip vip = vipMapper.selectByPrimaryKey(id);
+				if (!Common.isEmpty(vip.getMobilephone())) {
+					Result r = iExtService.vipOne(extsystem, vip.getMobilephone());
+					if (Common.isActive(r)) {
+						JSONObject object = JSONObject.parseObject(r.getData().toString());
+						result = saveVip(vip, object);
+					}
+				}
+			}			
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.syncVip报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public Result saveVip(MVip vip, JSONObject json) {
+		Result result = new Result();
+		if (json != null && !json.isEmpty()) {
+			Date now = new Date();
+			String extid = json.get("id") == null ? "" : json.getString("id").trim();
+			String code = json.get("code") == null ? "" : json.getString("code").trim();
+			String name = json.get("name") == null ? "" : json.getString("name").trim();
+			String sex = json.get("sex") == null ? "0" : json.getString("sex").trim();
+			String viptypeid = json.get("viptypeid") == null ? "0" : json.getString("viptypeid").trim();
+			String nickname = json.get("nickname") == null ? "" : json.getString("nickname").trim();
+			String birthday = json.get("birthday") == null ? "" : json.getString("birthday").trim();
+			String province = json.get("province") == null ? "" : json.getString("province").trim();
+			String city = json.get("city") == null ? "" : json.getString("city").trim();
+			String county = json.get("county") == null ? "" : json.getString("county").trim();
+			String departmentid = json.get("departmentid") == null ? "" : json.getString("departmentid").trim();
+			String registtime = json.get("registtime") == null ? "" : json.getString("registtime").trim();
+			String recommendercode = json.get("recommendercode") == null ? "" : json.getString("recommendercode").trim();
+			String point = json.get("point") == null ? "0" : json.getString("point").trim();			
+			String deposit = json.get("deposit") == null ? "0" : json.getString("deposit").trim();
+			
+			vip.setExtid(extid);
+			vip.setCode(code);
+			if (!Common.isEmpty(sex)) {
+				vip.setSex(Byte.valueOf(sex));
+			}
+			if (!Common.isEmpty(name)) {
+				vip.setName(name);
+			}
+			if (!Common.isEmpty(nickname)) {
+				vip.setNickname(nickname);
+			}
+			if (!Common.isEmpty(viptypeid)) {
+				MViptypeExample viptypeExample = new MViptypeExample();
+				viptypeExample.createCriteria().andExtidEqualTo(extid);
+				viptypeExample.setOrderByClause(" useflag desc");
+				List<MViptype> viptypesList = viptypeMapper.selectByExample(viptypeExample);
+				if (viptypesList != null && viptypesList.size() > 0) {
+					vip.setTypeid(viptypesList.get(0).getId());
+				}
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			if (!Common.isEmpty(birthday)) {
+				try {
+					vip.setBirthday(sdf.parse(birthday));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if (!Common.isEmpty(province)) {
+				vip.setProvince(province);
+			}
+			if (!Common.isEmpty(city)) {
+				vip.setCity(city);
+			}
+			if (!Common.isEmpty(county)) {
+				vip.setCounty(county);
+			}
+			if (!Common.isEmpty(departmentid)) {
+				MDepartmentExample departmentExample = new MDepartmentExample();
+				departmentExample.createCriteria().andExtidEqualTo(departmentid);
+				departmentExample.setOrderByClause(" useflag desc");
+				List<MDepartment> departmentsList = departmentMapper.selectByExample(departmentExample);
+				if (departmentsList != null && departmentsList.size() > 0) {
+					vip.setDepartmentid(departmentsList.get(0).getId());
+				}
+			}
+			if (!Common.isEmpty(registtime)) {
+				try {
+					vip.setRegisttime(sdf.parse(registtime));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			if (!Common.isEmpty(recommendercode)) {
+				MVipExample vipExample = new MVipExample();
+				vipExample.createCriteria().andCodeEqualTo(recommendercode);
+				vipExample.setOrderByClause(" useflag desc");
+				List<MVip> vipsList = vipMapper.selectByExample(vipExample);
+				if (vipsList != null && vipsList.size() > 0) {
+					vip.setRecommenderid(vipsList.get(0).getId());
+				}
+			}
+			
+			vip = iVipService.resetVipRegion(vip);
+			if (vip.getId() != null) {
+				vipMapper.updateByPrimaryKeySelective(vip);
+			} else {
+				vipMapper.insertSelective(vip);
+			}
+			// 更新账户信息
+			MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(vip.getId());
+			if (vipaccount != null && vipaccount.getId() != null) {
+				vipaccount.setPoint(Integer.valueOf(point));
+				vipaccount.setDeposit(new BigDecimal(deposit));
+				vipaccount.setModifier("system");
+				vipaccount.setModifytime(now);
+				vipaccount.setUpdatedtime(now);
+				vipaccountMapper.updateByPrimaryKeySelective(vipaccount);
+			} else {
+				vipaccount = new MVipaccount();
+				vipaccount.setId(vip.getId());
+				vipaccount.setPoint(Integer.valueOf(point));
+				vipaccount.setDeposit(new BigDecimal(deposit));
+				vipaccount.setCreatetime(now);
+				vipaccount.setCreator("system");
+				vipaccount.setUpdatedtime(now);
+				vipaccountMapper.insertSelective(vipaccount);
+			}
+			// 同步优惠券
+			
 		}
 		result.setErrcode(Integer.valueOf(0));
 		result.setMessage("同步成功");

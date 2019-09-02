@@ -1,5 +1,7 @@
 package com.fast.controller.ext;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,7 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.base.Result;
+import com.fast.base.data.dao.MExtsystemMapper;
+import com.fast.base.data.entity.MExtsystem;
+import com.fast.base.data.entity.MExtsystemExample;
 import com.fast.service.ext.IExtMaintService;
+import com.fast.service.ext.IExtService;
 import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
@@ -25,6 +31,12 @@ public class ExtController {
 	
 	@Autowired
 	IExtMaintService iExtMaintService;
+	
+	@Autowired
+	IExtService iExtService;
+	
+	@Autowired
+	MExtsystemMapper extsystemMapper;
 	
 	/**
 	 * 同步
@@ -43,6 +55,29 @@ public class ExtController {
 			if (Common.isEmpty(result.getMessage())) {
 				result.setMessage("同步失败");
 			}
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 获取商品信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/sync/goods")
+	@ResponseBody
+	public String syncgoods(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {			
+			String code = request.getParameter("code");
+			Result result = iExtService.queryGoodsByCode(code);	
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
 		} catch (Exception e) {

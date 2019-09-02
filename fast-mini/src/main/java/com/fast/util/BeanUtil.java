@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +42,32 @@ public class BeanUtil {
 	
 	public static HashMap<String, Object> convertObjToMap(Object obj) {
 		HashMap<String, Object> reMap = new HashMap<String, Object>();
+		if (obj == null)
+			return null;
+		Field[] fields = obj.getClass().getDeclaredFields();
+		try {
+			for (int i = 0; i < fields.length; i++) {
+				try {
+					Field f = obj.getClass().getDeclaredField(fields[i].getName());
+					f.setAccessible(true);
+					Object o = f.get(obj);
+					reMap.put(fields[i].getName().toLowerCase(), o);
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
+		return reMap;
+	}
+	
+	public static LinkedHashMap<String, Object> convertObjToLinkedHashMap(Object obj) {
+		LinkedHashMap<String, Object> reMap = new LinkedHashMap<String, Object>();
 		if (obj == null)
 			return null;
 		Field[] fields = obj.getClass().getDeclaredFields();
