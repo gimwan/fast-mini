@@ -154,6 +154,11 @@ function showEditBox(idx,data) {
 }
 
 function createElement(data) {
+	let sync = 0;
+	if (config != null && config != undefined && config.value == 1) {
+		sync = 1;
+	}
+	
 	let d = {
 		id : "",
 	    code : "",
@@ -197,7 +202,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">编号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"code\">"+
-				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\"/>"+
+				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -205,7 +210,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">名称</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"name\">"+
-				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\">"+
@@ -214,7 +219,7 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"departmentid\">"+
 				                "<input type=\"text\" data-id=\""+d.departmentid+"\" value=\""+d.department+"\" " +
-				                		"data-url=\"./data/page?table=department\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+				                		"data-url=\"./data/page?table=department\" class=\"layui-input value\" readonly=\"readonly\" "+(sync == 1 ? "disabled='disabled'" : "")+"/>" +
 				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 				            "</div>"+
 				        "</div>"+
@@ -223,7 +228,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">手机号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"mobilephone\">"+
-				                "<input type=\"text\" value=\""+d.mobilephone+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"text\" value=\""+d.mobilephone+"\" class=\"layui-input value\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
@@ -232,8 +237,8 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value layui-form-item\" data-field=\"sex\">"+
 				                "<div class=\"layui-input-block\">" +
-				                	"<input type=\"radio\" name=\"sex\" value=\"1\" title=\"男\" "+(d.sex==1?'checked':'')+" class=\"layui-input value\">" +
-				                	"<input type=\"radio\" name=\"sex\" value=\"2\" title=\"女\" "+(d.sex!=1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"sex\" value=\"1\" title=\"男\" "+(d.sex==1?'checked':'')+" class=\"layui-input value\" "+(sync == 1 ? "disabled='disabled'" : "")+">" +
+				                	"<input type=\"radio\" name=\"sex\" value=\"2\" title=\"女\" "+(d.sex!=1?'checked':'')+" class=\"layui-input value\" "+(sync == 1 ? "disabled='disabled'" : "")+">" +
 				                "</div>" +
 				            "</div>"+
 				        "</div>"+

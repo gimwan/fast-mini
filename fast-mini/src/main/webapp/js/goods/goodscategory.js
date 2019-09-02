@@ -310,6 +310,11 @@ function setData(pageView) {
 }
 
 function createElement(data) {
+	let sync = 0;
+	if (config != null && config != undefined && config.value == 1) {
+		sync = 1;
+	}
+	
 	let d = {
 		id : "",
 		code : "",
@@ -358,7 +363,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">编号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"code\">"+
-				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\"/>"+
+				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -366,7 +371,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">名称</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"name\">"+
-				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" image=\"1\" need=\"0\" key=\"0\">"+
