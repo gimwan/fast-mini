@@ -16,6 +16,7 @@ import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IGoodsMaintService;
 import com.fast.service.IGoodsService;
+import com.fast.service.ext.IExtMaintService;
 import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
@@ -34,6 +35,9 @@ public class GoodsController {
 	
 	@Autowired
 	IGoodsMaintService iGoodsMaintService;
+	
+	@Autowired
+	IExtMaintService iExtMaintService;
 	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
@@ -114,6 +118,11 @@ public class GoodsController {
 			MUser user = Common.currentUser(request);
 			if (user != null) {
 				result = iGoodsMaintService.changeGoods(goods, user);
+				
+				// 外部接口同步
+				if (Common.isActive(result)) {
+					iExtMaintService.syncGoods(result.getId());
+				}
 			} else {
 				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");

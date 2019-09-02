@@ -59,7 +59,7 @@ function showEditBox(idx) {
 					        "<span class=\"title\"><label class=\"name\">"+config[idx].name+"</label>：</span>"+
 					    "</div>"+
 					    "<div class=\"edit-value\" data-field=\"value\">"+
-					        "<input "+(config[idx].code=='4001'?'type=\"number\"':'type=\"text\"')+" value=\""+config[idx].value+"\" class=\"layui-input value focus\"/>"+
+					        "<input "+((config[idx].code=='4001' || config[idx].code=='7002')?'type=\"number\"':'type=\"text\"')+" value=\""+config[idx].value+"\" class=\"layui-input value focus\"/>"+
 					    "</div>"+
 					"</div>";
 	} else if (config[idx].type == 2) {

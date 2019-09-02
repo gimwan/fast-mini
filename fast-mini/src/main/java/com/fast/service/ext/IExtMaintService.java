@@ -15,5 +15,19 @@ public interface IExtMaintService {
 	 * @return
 	 */
 	public Result synchronize(String type);
+	
+	/**
+	 * 同步商品数据
+	 * @param id
+	 * @return
+	 */
+	public Result syncGoods(Integer id);
+	
+	/**
+	 * 同步会员数据
+	 * @param id
+	 * @return
+	 */
+	public Result syncVip(Integer id);
 
 }

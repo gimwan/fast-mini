@@ -146,10 +146,49 @@ public interface IExtService {
 	public Result couponOne(MExtsystem extsystem, String extid);
 	
 	/**
+	 * 单个商品
+	 * @param extsystem
+	 * @param code
+	 * @return
+	 */
+	public Result goodsOne(MExtsystem extsystem, String code);
+	
+	/**
+	 * 商品sku
+	 * @param extsystem
+	 * @param exrid
+	 * @return
+	 */
+	public Result stockOne(MExtsystem extsystem, String exrid);
+	
+	/**
+	 * 单个会员
+	 * @param extsystem
+	 * @param mobilephone
+	 * @return
+	 */
+	public Result vipOne(MExtsystem extsystem, String mobilephone);
+	
+	/**
+	 * 会员优惠券
+	 * @param extsystem
+	 * @param mobilephone
+	 * @return
+	 */
+	public Result vipcouponOne(MExtsystem extsystem, String mobilephone);
+	
+	/**
 	 * 查询数据
 	 * @param type
 	 * @return
 	 */
 	public Result synchronizeQuery(String type);
+	
+	/**
+	 * 按编号查询商品信息
+	 * @param code
+	 * @return
+	 */
+	public Result queryGoodsByCode(String code);
 
 }

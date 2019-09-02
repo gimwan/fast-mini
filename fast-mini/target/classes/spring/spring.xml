@@ -51,6 +51,7 @@
         <!-- Spring 2.0 可以用 AspectJ 的语法定义 Pointcut，这里自定义要拦截方法的包所在 -->  
         <aop:advisor id="methodTimeLog" advice-ref="methodTimeAdvice" pointcut="execution(* com.fast.service.impl..*.*(..))"/>
         <aop:advisor id="methodTimeLog2" advice-ref="methodTimeAdvice" pointcut="execution(* com.fast.controller..*.*(..))"/>
+        <aop:advisor id="methodTimeLog3" advice-ref="methodTimeAdvice" pointcut="execution(* com.fast.service.impl.ext..*.*(..))"/>
     </aop:config>
 	
 	<!-- redis连接池配置-->

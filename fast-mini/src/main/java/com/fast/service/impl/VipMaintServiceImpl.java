@@ -27,6 +27,7 @@ import com.fast.service.IConfigService;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipMaintService;
 import com.fast.service.IVipService;
+import com.fast.service.ext.IExtMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
 
@@ -65,6 +66,9 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	
 	@Autowired
 	IConfigService iConfigService;
+	
+	@Autowired
+	IExtMaintService iExtMaintService;
 
 	@Override
 	public Result bind(String appid, String openid, MVip vip) {
@@ -135,6 +139,8 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			mVipaccountMapper.insertSelective(vipaccount);
 		}
 		resetVipMini(vip, appid, openid);
+		// 同步会员信息
+		syncVip(vip.getId());
 		return vip;
 	}
 	
@@ -384,6 +390,14 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 		}
 		
 		return result;
+	}
+	
+	public void syncVip(Integer vipid) {
+		try {
+			iExtMaintService.syncVip(vipid);
+		} catch (Exception e) {
+			FastLog.error("调用VipMaintServiceImpl.syncVip报错：", e);
+		}
 	}
 
 }

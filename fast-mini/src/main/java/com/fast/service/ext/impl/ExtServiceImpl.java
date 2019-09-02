@@ -1,17 +1,26 @@
 package com.fast.service.ext.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MExtsystemMapper;
+import com.fast.base.data.dao.MGoodsMapper;
 import com.fast.base.data.entity.MExtsystem;
 import com.fast.base.data.entity.MExtsystemExample;
+import com.fast.base.data.entity.MGoods;
+import com.fast.base.data.entity.MGoodsExample;
 import com.fast.service.ext.IExtService;
+import com.fast.service.impl.DataServiceImpl;
 import com.fast.system.log.FastLog;
+import com.fast.util.BeanUtil;
+import com.fast.util.Common;
 import com.fast.util.CommonUtil;
 
 import net.sf.json.JSONObject;
@@ -28,6 +37,12 @@ public class ExtServiceImpl implements IExtService, Serializable {
 	
 	@Autowired
 	MExtsystemMapper extsystemMapper;
+	
+	@Autowired
+	MGoodsMapper goodsMapper;
+	
+	@Autowired
+	DataServiceImpl dataServiceImpl;
 
 	@Override
 	public Result colorList(MExtsystem extsystem) {
@@ -372,6 +387,86 @@ public class ExtServiceImpl implements IExtService, Serializable {
 	}
 	
 	@Override
+	public Result goodsOne(MExtsystem extsystem, String code) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/goods/one";
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("code", code);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.goodsOne报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result stockOne(MExtsystem extsystem, String extid) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/stock/one";
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("goodsid", extid);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.stockOne报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result vipOne(MExtsystem extsystem, String mobilephone) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/vip/one";
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("mobilephone", mobilephone);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.vipOne报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result vipcouponOne(MExtsystem extsystem, String mobilephone) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/vip/couponList";
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("mobilephone", mobilephone);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.vipcouponOne报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
 	public Result synchronizeQuery(String type) {
 		Result result = new Result();
 
@@ -426,6 +521,54 @@ public class ExtServiceImpl implements IExtService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用ExtServiceImpl.synchronize报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryGoodsByCode(String code) {
+		Result result = new Result();
+
+		try {
+			MGoodsExample goodsExample = new MGoodsExample();
+			goodsExample.createCriteria().andCodeEqualTo(code.trim());
+			List<MGoods> goodsList = goodsMapper.selectByExample(goodsExample);
+			if (goodsList != null && goodsList.size() > 0) {
+				result.setMessage("商品已存在");
+				return result;
+			}
+			
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> list = extsystemMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				extsystem = list.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			Result r = goodsOne(extsystem, code);
+			if (Common.isActive(r)) {
+				MGoods goods = JSON.parseObject(r.getData().toString(), MGoods.class);
+				if (goods.getId() != null) {
+					goods.setExtid(goods.getId().toString());
+					goods.setId(null);
+				}
+				
+				LinkedHashMap<String, Object> map = BeanUtil.convertObjToLinkedHashMap(goods);
+				List<LinkedHashMap<String, Object>> datas = new ArrayList<>();
+				datas.add(map);
+				datas = CommonUtil.transformUpperCase(datas);
+				datas = dataServiceImpl.completeGoods(datas);
+				result.setErrcode(Integer.valueOf(0));
+				result.setData(datas.get(0));
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.queryGoodsByCode报错：", e);
 		}
 
 		return result;

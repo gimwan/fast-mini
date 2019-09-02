@@ -17,6 +17,7 @@ common.bindVue = function() {
         methods : {
             synchronize: function() {
             	//synchronize('goods',loadData());
+            	showEditBox(-1, null);
 			},
 			add: function () {
                 showEditBox(-1, null);
@@ -208,13 +209,77 @@ function setData(pageView) {
 }
 
 /**
+ * 获取商品信息
+ * @param obj
+ * @returns
+ */
+function syncGoods(obj) {
+	let id = $(".edit-view .edit-box .edit-item .edit-value[data-field='id'] .value").val();
+	if (id != null && id != undefined && $.trim(id) != "") {
+		return;
+	}
+	console.log(goods);
+	let data = {};
+	data.code = $(obj).val();
+	
+	common.showLoading();
+    api.load('./ext/sync/goods','post',data, function(result) {
+        if (result.errcode == 0) {
+        	var d = result.data;
+        	replaceData(d);
+        } else {
+            common.error(result.message);
+        }
+        common.closeLoading();
+    });
+}
+
+/**
+ * 替换数据
+ * @param data
+ * @returns
+ */
+function replaceData(data) {
+	for (const key in data) {
+		if (data[key] != null && $.trim(data[key]) != null) {
+			if (key == "brandid") {
+	        	$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").attr("data-id",data.brandid);
+	        	$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").attr("value",data.brand);
+	        	$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").val(data.brand);
+			} else if (key == "bigcategory") {
+				$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").attr("data-id",data.bigcategory);
+	        	$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").attr("value",data.bigcategoryname);
+	        	$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").val(data.bigcategoryname);
+			} else if (key == "middlecategory") {
+				$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").attr("data-id",data.middlecategory);
+	        	$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").attr("value",data.middlecategoryname);
+	        	$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").val(data.middlecategoryname);
+			} else if (key == "smallcategory") {
+				$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").attr("data-id",data.smallcategory);
+	        	$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").attr("value",data.smallcategoryname);
+	        	$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").val(data.smallcategoryname);
+			} else {
+				$(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").val(data[key]);
+		        $(".edit-view .edit-box .edit-item .edit-value[data-field='"+key+"'] .value").attr("value",data[key]);
+			}
+		}
+    }
+}
+
+/**
  * 新增/编辑页元素
  * @param data 商品数据
  * @returns
  */
 function createElement(data) {
+	let sync = 0;
+	if (config != null && config != undefined && config.value == 1) {
+		sync = 1;
+	}
+	
 	let d = {
 		id : "",
+		extid: "",
 		code : "",
 		name : "",
 		brandid : "",
@@ -254,12 +319,20 @@ function createElement(data) {
 				                "<input type=\"text\" value=\""+d.id+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
+				        "<div class=\"edit-item\" need=\"0\" key=\"0\" hidden>"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">EXTID</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"extid\">"+
+				                "<input type=\"text\" value=\""+d.extid+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">编号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"code\">"+
-				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\"/>"+
+				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\" "+(sync == 1 ? "onkeydown='syncGoods(this)'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -267,7 +340,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">名称</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"name\">"+
-				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\">"+
@@ -276,7 +349,7 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"brandid\">"+
 				                "<input type=\"text\" data-id=\""+d.brandid+"\" value=\""+d.brand+"\" " +
-				                		"data-url=\"./data/page?table=brand\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+				                		"data-url=\"./data/page?table=brand\" class=\"layui-input value\" readonly=\"readonly\" "+(sync == 1 ? "disabled='disabled'" : "")+"/>" +
 				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 				            "</div>"+
 				        "</div>"+
@@ -287,17 +360,17 @@ function createElement(data) {
 				            "<div class=\"cascade-value\">" +
 					            "<div class=\"edit-value\" data-field=\"bigcategory\">"+
 					                "<input type=\"text\" data-id=\""+d.bigcategory+"\" value=\""+d.bigcategoryname+"\" " +
-					                		"data-url=\"./goodscategory/list?grade=1&pagesize=100\" data-grade=\"1\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                		"data-url=\"./goodscategory/list?grade=1&pagesize=100\" data-grade=\"1\" class=\"layui-input value\" readonly=\"readonly\" "+(sync == 1 ? "disabled='disabled'" : "")+"/>" +
 					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 					            "</div>"+
 					            "<div class=\"edit-value\" data-field=\"middlecategory\">"+
 					                "<input type=\"text\" data-id=\""+d.middlecategory+"\" value=\""+d.middlecategoryname+"\" " +
-					                		"data-url=\"./goodscategory/list?grade=2&pagesize=100\" data-grade=\"2\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                		"data-url=\"./goodscategory/list?grade=2&pagesize=100\" data-grade=\"2\" class=\"layui-input value\" readonly=\"readonly\" "+(sync == 1 ? "disabled='disabled'" : "")+"/>" +
 					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 					            "</div>"+
 					            "<div class=\"edit-value\" data-field=\"smallcategory\">"+
 					                "<input type=\"text\" data-id=\""+d.smallcategory+"\" value=\""+d.smallcategoryname+"\" " +
-					                		"data-url=\"./goodscategory/list?grade=3&pagesize=100\" data-grade=\"3\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+					                		"data-url=\"./goodscategory/list?grade=3&pagesize=100\" data-grade=\"3\" class=\"layui-input value\" readonly=\"readonly\" "+(sync == 1 ? "disabled='disabled'" : "")+"/>" +
 					                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 					            "</div>" +
 				            "</div>"+
@@ -307,7 +380,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">采购价</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"purchaseprice\">"+
-				                "<input type=\"number\" value=\""+d.purchaseprice+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.purchaseprice+"\" class=\"layui-input value\" "+(sync == 1 ? "disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" money=\"1\" key=\"0\">"+
@@ -315,7 +388,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">标准价</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"baseprice\">"+
-				                "<input type=\"number\" value=\""+d.baseprice+"\" class=\"layui-input value\"/>"+
+				                "<input type=\"number\" value=\""+d.baseprice+"\" class=\"layui-input value\" "+(sync == 1 ? "disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" money=\"1\" key=\"0\">"+
@@ -720,13 +793,21 @@ function showSKUBox(id) {
     	if (result.errcode == 0) {
     		let datas = result.data;
     		let skuDiv = createSKUElement(datas);
-    	    
+    		
+    		let sync = 0;
+    		if (config != null && config != undefined && config.value == 1) {
+    			sync = 1;
+    		}
+    	    let btns = ['保存','取消','添加'];
+    	    if (sync == 1) {
+    	    	btns = ['保存','取消'];
+			}
     	    layer.open({
     	        type: 1,
     	        title: "<label style='font-weight:600;'>库存</label>",
     	        content: skuDiv,
     	        area: ['900px', '600px'],
-    	        btn: ['保存','取消','添加'],
+    	        btn: btns,
     	        btn1: function (index, layero) {
     	        	let skudatas = catchSkuData(id);
     	        	if ("error" == skudatas) {
