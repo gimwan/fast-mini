@@ -16,9 +16,6 @@ import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.dao.MViptypeMapper;
-import com.fast.base.data.entity.MConfigExample;
-import com.fast.base.data.entity.MRegion;
-import com.fast.base.data.entity.MRegionExample;
 import com.fast.base.data.entity.MVip;
 import com.fast.base.data.entity.MVipExample;
 import com.fast.base.data.entity.MVipaccount;
@@ -103,7 +100,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 				}
 			}
 			vip.setUseflag(Byte.valueOf("1"));
-			vip = resetVipRegion(vip);			
+			vip = iVipService.resetVipRegion(vip);			
 			
 			vip = saveVip(appid, openid, vip);
 			
@@ -253,42 +250,6 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	}
 	
 	/**
-	 * 记录省市id
-	 * @param vip
-	 * @return
-	 */
-	public MVip resetVipRegion(MVip vip) {
-		if (!Common.isEmpty(vip.getProvince())) {
-			MRegionExample regionExample = new MRegionExample();
-			regionExample.createCriteria().andTypeEqualTo(Byte.valueOf("2")).andNameLike("%"+vip.getProvince()+"%");
-			List<MRegion> regions = mRegionMapper.selectByExample(regionExample);
-			if (regions != null && regions.size() > 0) {
-				vip.setProvince(regions.get(0).getName());
-				vip.setProvinceid(regions.get(0).getId());
-			}
-		}
-		if (!Common.isEmpty(vip.getCity())) {
-			MRegionExample regionExample = new MRegionExample();
-			regionExample.createCriteria().andTypeEqualTo(Byte.valueOf("3")).andNameLike("%"+vip.getCity()+"%");
-			List<MRegion> regions = mRegionMapper.selectByExample(regionExample);
-			if (regions != null && regions.size() > 0) {
-				vip.setCity(regions.get(0).getName());
-				vip.setCityid(regions.get(0).getId());
-			}
-		}
-		if (!Common.isEmpty(vip.getCounty())) {
-			MRegionExample regionExample = new MRegionExample();
-			regionExample.createCriteria().andTypeEqualTo(Byte.valueOf("4")).andNameLike("%"+vip.getCounty()+"%");
-			List<MRegion> regions = mRegionMapper.selectByExample(regionExample);
-			if (regions != null && regions.size() > 0) {
-				vip.setCounty(regions.get(0).getName());
-				vip.setCityid(regions.get(0).getId());
-			}
-		}
-		return vip;
-	}
-	
-	/**
 	 * 记录openid、unionid
 	 * @param vip
 	 * @param appid
@@ -410,7 +371,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 				}
 				
 				if (resetRegin) {
-					vip = resetVipRegion(vip);
+					vip = iVipService.resetVipRegion(vip);
 				}
 				
 				mVipMapper.updateByPrimaryKeySelective(vip);

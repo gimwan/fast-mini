@@ -1,22 +1,23 @@
 let employee = [];
 let employeeVm;
+let btnVm;
 
 common.bindVue = function() {
-    employeeVm = new Vue({
-        el : ".employeePage",
+	console.log('employee');
+	refreshConfig("7001");
+	
+	btnVm = new Vue({
+        el : ".operating",
         data : {
-            employee: employee
+        	config: config
         },
         methods : {
-            edit: function(event) {
-                if (event) {
-                    let index = $(event.target).parents("tr").data("index");
-                    showEditBox(index,employee[index]);
-                }
-            },
             add: function () {
                 showEditBox(-1, null);
             },
+            synchronize: function() {
+            	synchronize('employeelist',loadData);
+			},
             del: function () {
             	layer.confirm('确定删除？', {
             		btn: ['确定','取消'],
@@ -42,6 +43,21 @@ common.bindVue = function() {
                         });
 					}
             	});
+            }
+        }
+    });
+	
+    employeeVm = new Vue({
+        el : ".employee-data",
+        data : {
+            employee: employee
+        },
+        methods : {
+            edit: function(event) {
+                if (event) {
+                    let index = $(event.target).parents("tr").data("index");
+                    showEditBox(index,employee[index]);
+                }
             },
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);

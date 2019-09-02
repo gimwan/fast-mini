@@ -4,10 +4,18 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Id;
+
+@Entity
+@Table(name = "m_order")
 public class MOrder implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
+	@Id
     private Integer id;
 
     private String no;
@@ -99,6 +107,8 @@ public class MOrder implements Serializable {
     private Integer publicplatformid;
 
     private Byte retuenpaystatus;
+
+    private String extid;
 
     private String receiveraddress;
 
@@ -468,6 +478,14 @@ public class MOrder implements Serializable {
 
     public void setRetuenpaystatus(Byte retuenpaystatus) {
         this.retuenpaystatus = retuenpaystatus;
+    }
+
+    public String getExtid() {
+        return extid;
+    }
+
+    public void setExtid(String extid) {
+        this.extid = extid;
     }
 
     public String getReceiveraddress() {

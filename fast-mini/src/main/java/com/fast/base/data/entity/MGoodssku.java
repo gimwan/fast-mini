@@ -4,10 +4,18 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Id;
+
+@Entity
+@Table(name = "m_goodssku")
 public class MGoodssku implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
+	@Id
     private Integer id;
 
     private Integer goodsid;
@@ -41,6 +49,8 @@ public class MGoodssku implements Serializable {
     private Date updatedtime;
 
     private Byte useflag;
+
+    private String extid;
 
     public Integer getId() {
         return id;
@@ -176,5 +186,13 @@ public class MGoodssku implements Serializable {
 
     public void setUseflag(Byte useflag) {
         this.useflag = useflag;
+    }
+
+    public String getExtid() {
+        return extid;
+    }
+
+    public void setExtid(String extid) {
+        this.extid = extid;
     }
 }

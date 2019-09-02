@@ -13,6 +13,7 @@
 		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
 		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
 		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -48,7 +49,7 @@
 	<sql id="Base_Column_List">
 		ID, Code, Name, CreateTime, Creator, ModifyTime, Modifier, UpdatedTime,
 		UseFlag,
-		Memo
+		Memo, ExtID
 	</sql>
 	<select id="selectByExample" resultMap="BaseResultMap"
 		parameterType="com.fast.base.data.entity.MGoodsgroupingExample">
@@ -88,13 +89,13 @@
 		insert into m_goodsgrouping (ID, Code, Name,
 		CreateTime, Creator, ModifyTime,
 		Modifier, UpdatedTime, UseFlag,
-		Memo)
+		Memo, ExtID)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP},
 		#{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP},
 		#{useflag,jdbcType=TINYINT},
-		#{memo,jdbcType=VARCHAR})
+		#{memo,jdbcType=VARCHAR}, #{extid,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MGoodsgrouping"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -130,6 +131,9 @@
 			<if test="memo != null">
 				Memo,
 			</if>
+			<if test="extid != null">
+				ExtID,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -161,6 +165,9 @@
 			</if>
 			<if test="memo != null">
 				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="extid != null">
+				#{extid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -201,6 +208,9 @@
 			<if test="memo != null">
 				Memo = #{memo,jdbcType=VARCHAR},
 			</if>
+			<if test="extid != null">
+				ExtID = #{extid,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -214,7 +224,8 @@
 		Modifier = #{modifier,jdbcType=VARCHAR},
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
 		UseFlag = #{useflag,jdbcType=TINYINT},
-		Memo = #{memo,jdbcType=VARCHAR}
+		Memo = #{memo,jdbcType=VARCHAR},
+		ExtID = #{extid,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

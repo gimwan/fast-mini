@@ -16,6 +16,7 @@
 		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
 		<result column="Memo" property="memo" jdbcType="VARCHAR" />
 		<result column="ParentID" property="parentid" jdbcType="INTEGER" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -51,7 +52,7 @@
 	<sql id="Base_Column_List">
 		ID, Code, Name, Grade, PhotoUrl, CreateTime, Creator, ModifyTime,
 		Modifier, UpdatedTime,
-		UseFlag, Memo, ParentID
+		UseFlag, Memo, ParentID, ExtID
 	</sql>
 	<select id="selectByExample" resultMap="BaseResultMap"
 		parameterType="com.fast.base.data.entity.MGoodscategoryExample">
@@ -92,14 +93,14 @@
 		Grade, PhotoUrl, CreateTime,
 		Creator, ModifyTime, Modifier,
 		UpdatedTime, UseFlag, Memo,
-		ParentID)
+		ParentID, ExtID)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{grade,jdbcType=TINYINT}, #{photourl,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
 		#{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP},
 		#{modifier,jdbcType=VARCHAR},
 		#{updatedtime,jdbcType=TIMESTAMP}, #{useflag,jdbcType=TINYINT}, #{memo,jdbcType=VARCHAR},
-		#{parentid,jdbcType=INTEGER})
+		#{parentid,jdbcType=INTEGER}, #{extid,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MGoodscategory"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -144,6 +145,9 @@
 			<if test="parentid != null">
 				ParentID,
 			</if>
+			<if test="extid != null">
+				ExtID,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -184,6 +188,9 @@
 			</if>
 			<if test="parentid != null">
 				#{parentid,jdbcType=INTEGER},
+			</if>
+			<if test="extid != null">
+				#{extid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -233,6 +240,9 @@
 			<if test="parentid != null">
 				ParentID = #{parentid,jdbcType=INTEGER},
 			</if>
+			<if test="extid != null">
+				ExtID = #{extid,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -249,7 +259,8 @@
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
 		UseFlag = #{useflag,jdbcType=TINYINT},
 		Memo = #{memo,jdbcType=VARCHAR},
-		ParentID = #{parentid,jdbcType=INTEGER}
+		ParentID = #{parentid,jdbcType=INTEGER},
+		ExtID = #{extid,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

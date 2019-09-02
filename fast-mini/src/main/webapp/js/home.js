@@ -1,5 +1,11 @@
 let menu = [];
 let menuVm;
+let config = {
+	id: 0,
+	code: '',
+	name: '',
+	value: ''
+};
 
 document.onreadystatechange = function() {
     if(document.readyState == "interactive"){
@@ -413,6 +419,73 @@ function logout() {
 		    api.load(basePath + 'logout','post',{},function (result) {
 		    	window.location.reload();
 		    });
+		}
+	});
+}
+
+function refreshConfig(code) {
+	let data = {};
+	data.code = code;
+	api.load(basePath + 'config/one','post',data,function (result) {
+		if (result.errcode == 0) {
+			let data = result.data;
+			if (data != null && data != undefined && data != "") {
+		    	for (const key in data) {
+		            if (config.hasOwnProperty(key)) {
+		            	config[key] = data[key];
+		            }
+		        }
+		    }
+		}
+	});
+}
+
+function synchronize(type, fn) {
+	layer.confirm('确定同步？', {
+		btn: ['确定','取消'],
+		btn1 : function(index, layero) {
+			let confirmIdx = index;
+			let editDiv = "<div class=\"edit-view synchronize-view\">"+
+						    "<div class=\"edit-box\">"+
+							    "<div class=\"edit-item\">"+
+						            "<div class=\"edit-value\" data-field=\"code\">"+
+						                "<div class=\"layui-icon layui-icon-refresh\"></div>"+
+						            "</div>"+
+						        "</div>"+
+						    "</div>"+
+						  "</div>";
+			layer.open({
+		        type: 1,
+		        title: '同步中',
+		        content: editDiv,
+		        area: ['260px', '140px'],
+		        success: function (layero, index) {
+		        	layer.close(confirmIdx);
+		        	synchronizeIndex = index;
+		        	$(layero).find(".layui-layer-setwin").hide();
+		        	// 同步数据
+		        	let data = {};
+		        	data.type = type;
+		        	api.load(basePath + 'ext/synchronize','post',data,function (result) {
+		        		if (result.errcode == 0) {
+		        			common.tips(result.message);
+		        			if (!!fn) {
+								try {
+									let func = eval(fn);
+									if (func && typeof (func) == "function") {
+										func();
+									}
+								} catch (e) {
+									console.log(e);
+								}
+							}
+		        		} else {
+		        			common.error(result.message);
+						}
+		        		layer.close(synchronizeIndex);
+		        	});
+		        }
+			});
 		}
 	});
 }

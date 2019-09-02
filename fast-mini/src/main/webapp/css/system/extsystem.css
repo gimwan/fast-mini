@@ -1,0 +1,56 @@
+.extsystemPage .operating {
+	margin: 0px 15px;
+}
+
+.extsystemPage .operating .layui-btn-group button {
+	margin-right: 10px !important;
+}
+
+.extsystemPage .layui-table-view .layui-table-box .layui-table-header span {
+	font-weight: 600;
+}
+
+.extsystemPage .layui-table-view .layui-table-box tr .item {
+	width: 100px;
+	min-width: 100px;
+	max-width: 100px;
+	border-top-width: 0;
+	border-left-width: 0;
+	border-right-width: 0;
+	border-bottom-width: 1px;
+}
+
+.extsystemPage .layui-table-view .layui-table-box tr .name {
+	min-width: 180px;
+	max-width: 180px;
+}
+
+.extsystemPage .layui-table-view .layui-table-box tr .useflag {
+	min-width: 80px;
+	max-width: 80px;
+}
+
+.extsystemPage .layui-table-view .layui-table-box tr .active {
+	min-width: 80px;
+	max-width: 80px;
+}
+
+.extsystemPage .layui-table-view .layui-table-box tr .memo {
+	width: 100%;
+}
+
+.extsystemPage .layui-table-view .layui-table-box tr .creator, .extsystemPage .layui-table-view .layui-table-box tr .modifier
+	{
+	min-width: 120px;
+	max-width: 120px;
+}
+
+.extsystemPage .layui-table-view .layui-table-box tr .time-item {
+	min-width: 200px;
+	max-width: 200px;
+}
+
+.extsystemPage .layui-table-view .layui-table-box .extsystem-data {
+	overflow-y: auto;
+	overflow-x: hidden;
+}

@@ -1,19 +1,19 @@
 let pattern = [];
 let patternVm;
+let btnVm;
 
 common.bindVue = function() {
-    patternVm = new Vue({
-        el : ".patternPage",
-        data : {
-            pattern: pattern
+	refreshConfig("7001");
+	
+	btnVm = new Vue({
+		el : ".operating",
+		data : {
+			config: config
         },
         methods : {
-            edit: function(event) {
-                if (event) {
-                    let index = $(event.target).parents("tr").data("index");
-                    showEditBox(index,pattern[index]);
-                }
-            },
+            synchronize: function() {
+            	synchronize('patternlist',loadData);
+			},
             add: function () {
                 showEditBox(-1, null);
             },
@@ -43,6 +43,21 @@ common.bindVue = function() {
             			
             		}
             	});
+            }
+        }
+	});
+	
+    patternVm = new Vue({
+        el : ".pattern-data",
+        data : {
+            pattern: pattern
+        },
+        methods : {
+            edit: function(event) {
+                if (event) {
+                    let index = $(event.target).parents("tr").data("index");
+                    showEditBox(index,pattern[index]);
+                }
             },
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MVipMapper">
-	<cache type="com.fast.system.RedisCache"/>
+	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MVip">
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="Code" property="code" jdbcType="VARCHAR" />
@@ -33,6 +33,7 @@
 		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
 		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
 		<result column="TypeID" property="typeid" jdbcType="INTEGER" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -48,8 +49,7 @@
 									and ${criterion.condition} #{criterion.value}
 								</when>
 								<when test="criterion.betweenValue">
-									and ${criterion.condition} #{criterion.value}
-									and
+									and ${criterion.condition} #{criterion.value} and
 									#{criterion.secondValue}
 								</when>
 								<when test="criterion.listValue">
@@ -67,16 +67,13 @@
 		</where>
 	</sql>
 	<sql id="Base_Column_List">
-		ID, Code, Name, Sex, MobilePhone, PhotoUrl, NickName,
-		Birthday,
+		ID, Code, Name, Sex, MobilePhone, PhotoUrl, NickName, Birthday,
 		ProvinceID, Province,
-		CityID, City, CountyID, County,
-		DepartmentID, RecommenderID, Source,
+		CityID, City, CountyID, County, DepartmentID, RecommenderID, Source,
 		RegistTime,
-		ValidDate, UnionID,
-		GuideID, Memo, CreateTime, Creator, ModifyTime, Modifier,
+		ValidDate, UnionID, GuideID, Memo, CreateTime, Creator, ModifyTime, Modifier,
 		UpdatedTime,
-		UseFlag, TypeID
+		UseFlag, TypeID, ExtID
 	</sql>
 	<select id="selectByExample" resultMap="BaseResultMap"
 		parameterType="com.fast.base.data.entity.MVipExample">
@@ -113,39 +110,33 @@
 	</delete>
 	<insert id="insert" parameterType="com.fast.base.data.entity.MVip"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into m_vip
-		(ID, Code, Name,
+		insert into m_vip (ID, Code, Name,
 		Sex, MobilePhone, PhotoUrl,
-		NickName, Birthday,
-		ProvinceID,
+		NickName, Birthday, ProvinceID,
 		Province, CityID, City,
 		CountyID, County, DepartmentID,
 		RecommenderID, Source, RegistTime,
 		ValidDate, UnionID, GuideID,
-		Memo,
-		CreateTime, Creator,
+		Memo, CreateTime, Creator,
 		ModifyTime, Modifier, UpdatedTime,
-		UseFlag, TypeID)
+		UseFlag, TypeID, ExtID
+		)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
-		#{sex,jdbcType=TINYINT},
-		#{mobilephone,jdbcType=VARCHAR}, #{photourl,jdbcType=VARCHAR},
+		#{sex,jdbcType=TINYINT}, #{mobilephone,jdbcType=VARCHAR}, #{photourl,jdbcType=VARCHAR},
 		#{nickname,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP},
 		#{provinceid,jdbcType=INTEGER},
-		#{province,jdbcType=VARCHAR},
-		#{cityid,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR}, #{cityid,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR},
 		#{countyid,jdbcType=INTEGER}, #{county,jdbcType=VARCHAR},
 		#{departmentid,jdbcType=INTEGER},
-		#{recommenderid,jdbcType=INTEGER},
-		#{source,jdbcType=TINYINT}, #{registtime,jdbcType=TIMESTAMP},
+		#{recommenderid,jdbcType=INTEGER}, #{source,jdbcType=TINYINT}, #{registtime,jdbcType=TIMESTAMP},
 		#{validdate,jdbcType=TIMESTAMP}, #{unionid,jdbcType=VARCHAR},
 		#{guideid,jdbcType=INTEGER},
-		#{memo,jdbcType=VARCHAR},
-		#{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
+		#{memo,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
 		#{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
 		#{updatedtime,jdbcType=TIMESTAMP},
-		#{useflag,jdbcType=TINYINT},
-		#{typeid,jdbcType=INTEGER})
+		#{useflag,jdbcType=TINYINT}, #{typeid,jdbcType=INTEGER}, #{extid,jdbcType=VARCHAR}
+		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MVip"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -238,6 +229,9 @@
 			<if test="typeid != null">
 				TypeID,
 			</if>
+			<if test="extid != null">
+				ExtID,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -326,6 +320,9 @@
 			</if>
 			<if test="typeid != null">
 				#{typeid,jdbcType=INTEGER},
+			</if>
+			<if test="extid != null">
+				#{extid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -423,55 +420,43 @@
 			<if test="typeid != null">
 				TypeID = #{typeid,jdbcType=INTEGER},
 			</if>
+			<if test="extid != null">
+				ExtID = #{extid,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MVip">
 		update m_vip
-		set
-		Code = #{code,jdbcType=VARCHAR},
+		set Code = #{code,jdbcType=VARCHAR},
 		Name = #{name,jdbcType=VARCHAR},
-		Sex =
-		#{sex,jdbcType=TINYINT},
+		Sex = #{sex,jdbcType=TINYINT},
 		MobilePhone = #{mobilephone,jdbcType=VARCHAR},
 		PhotoUrl = #{photourl,jdbcType=VARCHAR},
-		NickName =
-		#{nickname,jdbcType=VARCHAR},
-		Birthday =
-		#{birthday,jdbcType=TIMESTAMP},
-		ProvinceID =
-		#{provinceid,jdbcType=INTEGER},
-		Province =
-		#{province,jdbcType=VARCHAR},
+		NickName = #{nickname,jdbcType=VARCHAR},
+		Birthday = #{birthday,jdbcType=TIMESTAMP},
+		ProvinceID = #{provinceid,jdbcType=INTEGER},
+		Province = #{province,jdbcType=VARCHAR},
 		CityID = #{cityid,jdbcType=INTEGER},
-		City
-		= #{city,jdbcType=VARCHAR},
+		City = #{city,jdbcType=VARCHAR},
 		CountyID = #{countyid,jdbcType=INTEGER},
 		County = #{county,jdbcType=VARCHAR},
-		DepartmentID =
-		#{departmentid,jdbcType=INTEGER},
-		RecommenderID =
-		#{recommenderid,jdbcType=INTEGER},
+		DepartmentID = #{departmentid,jdbcType=INTEGER},
+		RecommenderID = #{recommenderid,jdbcType=INTEGER},
 		Source = #{source,jdbcType=TINYINT},
 		RegistTime = #{registtime,jdbcType=TIMESTAMP},
-		ValidDate =
-		#{validdate,jdbcType=TIMESTAMP},
+		ValidDate = #{validdate,jdbcType=TIMESTAMP},
 		UnionID = #{unionid,jdbcType=VARCHAR},
 		GuideID = #{guideid,jdbcType=INTEGER},
 		Memo = #{memo,jdbcType=VARCHAR},
 		CreateTime = #{createtime,jdbcType=TIMESTAMP},
-		Creator =
-		#{creator,jdbcType=VARCHAR},
-		ModifyTime =
-		#{modifytime,jdbcType=TIMESTAMP},
-		Modifier =
-		#{modifier,jdbcType=VARCHAR},
-		UpdatedTime =
-		#{updatedtime,jdbcType=TIMESTAMP},
-		UseFlag =
-		#{useflag,jdbcType=TINYINT},
-		TypeID = #{typeid,jdbcType=INTEGER}
-		where
-		ID = #{id,jdbcType=INTEGER}
+		Creator = #{creator,jdbcType=VARCHAR},
+		ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
+		Modifier = #{modifier,jdbcType=VARCHAR},
+		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+		UseFlag = #{useflag,jdbcType=TINYINT},
+		TypeID = #{typeid,jdbcType=INTEGER},
+		ExtID = #{extid,jdbcType=VARCHAR}
+		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

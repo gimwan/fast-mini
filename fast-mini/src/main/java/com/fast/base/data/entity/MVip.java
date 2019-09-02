@@ -3,10 +3,18 @@ package com.fast.base.data.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Id;
+
+@Entity
+@Table(name = "m_vip")
 public class MVip implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
+	@Id
     private Integer id;
 
     private String code;
@@ -64,6 +72,8 @@ public class MVip implements Serializable {
     private Byte useflag;
 
     private Integer typeid;
+
+    private String extid;
 
     public Integer getId() {
         return id;
@@ -295,5 +305,13 @@ public class MVip implements Serializable {
 
     public void setTypeid(Integer typeid) {
         this.typeid = typeid;
+    }
+
+    public String getExtid() {
+        return extid;
+    }
+
+    public void setExtid(String extid) {
+        this.extid = extid;
     }
 }

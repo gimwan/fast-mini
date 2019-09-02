@@ -1,19 +1,20 @@
 let brand = [];
 let brandVm;
+let btnVm;
 
 common.bindVue = function() {
-    brandVm = new Vue({
-        el : ".brandPage",
-        data : {
-            brand: brand
+	console.log('brand');
+	refreshConfig("7001");
+	
+	btnVm = new Vue({
+		el : ".operating",
+		data : {
+			config: config
         },
         methods : {
-            edit: function(event) {
-                if (event) {
-                    let index = $(event.target).parents("tr").data("index");
-                    showEditBox(index,brand[index]);
-                }
-            },
+            synchronize: function() {
+            	synchronize('brandlist',loadData);
+			},
             add: function () {
                 showEditBox(-1, null);
             },
@@ -42,6 +43,21 @@ common.bindVue = function() {
                         });
             		}
             	});
+            }
+        }
+	});
+	
+    brandVm = new Vue({
+        el : ".brand-data",
+        data : {
+            brand: brand
+        },
+        methods : {
+            edit: function(event) {
+                if (event) {
+                    let index = $(event.target).parents("tr").data("index");
+                    showEditBox(index,brand[index]);
+                }
             },
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);

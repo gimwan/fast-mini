@@ -11,11 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
+import com.fast.base.data.dao.MRegionMapper;
 import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.dao.MViptypeMapper;
+import com.fast.base.data.entity.MRegion;
+import com.fast.base.data.entity.MRegionExample;
 import com.fast.base.data.entity.MVip;
 import com.fast.base.data.entity.MVipExample;
 import com.fast.base.data.entity.MVipaccount;
@@ -59,6 +62,9 @@ public class VipServiceImpl implements IVipService, Serializable {
 	
 	@Autowired
 	MViptypeMapper viptypeMapper;
+	
+	@Autowired
+	MRegionMapper regionMapper;
 	
 	@Override
 	public Result vip() {
@@ -335,6 +341,38 @@ public class VipServiceImpl implements IVipService, Serializable {
 		}
 
 		return result;
+	}
+	
+	@Override
+	public MVip resetVipRegion(MVip vip) {
+		if (!Common.isEmpty(vip.getProvince())) {
+			MRegionExample regionExample = new MRegionExample();
+			regionExample.createCriteria().andTypeEqualTo(Byte.valueOf("2")).andNameLike("%"+vip.getProvince()+"%");
+			List<MRegion> regions = regionMapper.selectByExample(regionExample);
+			if (regions != null && regions.size() > 0) {
+				vip.setProvince(regions.get(0).getName());
+				vip.setProvinceid(regions.get(0).getId());
+			}
+		}
+		if (!Common.isEmpty(vip.getCity())) {
+			MRegionExample regionExample = new MRegionExample();
+			regionExample.createCriteria().andTypeEqualTo(Byte.valueOf("3")).andNameLike("%"+vip.getCity()+"%");
+			List<MRegion> regions = regionMapper.selectByExample(regionExample);
+			if (regions != null && regions.size() > 0) {
+				vip.setCity(regions.get(0).getName());
+				vip.setCityid(regions.get(0).getId());
+			}
+		}
+		if (!Common.isEmpty(vip.getCounty())) {
+			MRegionExample regionExample = new MRegionExample();
+			regionExample.createCriteria().andTypeEqualTo(Byte.valueOf("4")).andNameLike("%"+vip.getCounty()+"%");
+			List<MRegion> regions = regionMapper.selectByExample(regionExample);
+			if (regions != null && regions.size() > 0) {
+				vip.setCounty(regions.get(0).getName());
+				vip.setCityid(regions.get(0).getId());
+			}
+		}
+		return vip;
 	}
 
 }

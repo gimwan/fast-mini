@@ -1,19 +1,19 @@
 let viptype = [];
 let viptypeVm;
+let btnVm;
 
 common.bindVue = function() {
-    viptypeVm = new Vue({
-        el : ".viptypePage",
-        data : {
-            viptype: viptype
+	refreshConfig("7001");
+	
+	btnVm = new Vue({
+		el : ".operating",
+		data : {
+			config: config
         },
         methods : {
-            edit: function(event) {
-                if (event) {
-                    let index = $(event.target).parents("tr").data("index");
-                    showEditBox(index,viptype[index]);
-                }
-            },
+            synchronize: function() {
+            	synchronize('viptypelist',loadData);
+			},
             add: function () {
                 showEditBox(-1, null);
             },
@@ -42,6 +42,21 @@ common.bindVue = function() {
                         });
             		}
             	});
+            }
+        }
+	});
+	
+    viptypeVm = new Vue({
+        el : ".viptype-data",
+        data : {
+            viptype: viptype
+        },
+        methods : {
+            edit: function(event) {
+                if (event) {
+                    let index = $(event.target).parents("tr").data("index");
+                    showEditBox(index,viptype[index]);
+                }
             },
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);

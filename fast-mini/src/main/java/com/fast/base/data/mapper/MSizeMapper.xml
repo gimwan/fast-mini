@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MSizeMapper">
-	<cache type="com.fast.system.RedisCache"/>
+	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MSize">
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="Code" property="code" jdbcType="VARCHAR" />
@@ -13,6 +13,7 @@
 		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
 		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
 		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -47,7 +48,8 @@
 	</sql>
 	<sql id="Base_Column_List">
 		ID, Code, Name, Memo, CreateTime, Creator, ModifyTime, Modifier,
-		UpdatedTime, UseFlag
+		UpdatedTime, UseFlag,
+		ExtID
 	</sql>
 	<select id="selectByExample" resultMap="BaseResultMap"
 		parameterType="com.fast.base.data.entity.MSizeExample">
@@ -87,13 +89,13 @@
 		insert into m_size (ID, Code, Name,
 		Memo, CreateTime, Creator,
 		ModifyTime, Modifier, UpdatedTime,
-		UseFlag)
+		UseFlag, ExtID)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{memo,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
 		#{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR},
 		#{updatedtime,jdbcType=TIMESTAMP},
-		#{useflag,jdbcType=TINYINT})
+		#{useflag,jdbcType=TINYINT}, #{extid,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MSize"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -129,6 +131,9 @@
 			<if test="useflag != null">
 				UseFlag,
 			</if>
+			<if test="extid != null">
+				ExtID,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -160,6 +165,9 @@
 			</if>
 			<if test="useflag != null">
 				#{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="extid != null">
+				#{extid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -200,6 +208,9 @@
 			<if test="useflag != null">
 				UseFlag = #{useflag,jdbcType=TINYINT},
 			</if>
+			<if test="extid != null">
+				ExtID = #{extid,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -213,7 +224,8 @@
 		ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
 		Modifier = #{modifier,jdbcType=VARCHAR},
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-		UseFlag = #{useflag,jdbcType=TINYINT}
+		UseFlag = #{useflag,jdbcType=TINYINT},
+		ExtID = #{extid,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

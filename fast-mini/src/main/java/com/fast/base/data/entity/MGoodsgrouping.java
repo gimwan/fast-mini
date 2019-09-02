@@ -3,10 +3,18 @@ package com.fast.base.data.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Id;
+
+@Entity
+@Table(name = "m_goodsgrouping")
 public class MGoodsgrouping implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
+	@Id
     private Integer id;
 
     private String code;
@@ -26,6 +34,8 @@ public class MGoodsgrouping implements Serializable {
     private Byte useflag;
 
     private String memo;
+
+    private String extid;
 
     public Integer getId() {
         return id;
@@ -105,5 +115,13 @@ public class MGoodsgrouping implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public String getExtid() {
+        return extid;
+    }
+
+    public void setExtid(String extid) {
+        this.extid = extid;
     }
 }

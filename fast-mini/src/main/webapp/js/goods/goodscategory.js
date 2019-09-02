@@ -11,15 +11,21 @@ let chilescategory = [];
 let parentcategory1Vm;
 let parentcategory2Vm;
 let chilescategoryVm;
+let smallBtnVm;
 
 common.bindVue = function() {
-	console.log('category')
+	refreshConfig("7001");
+	
 	bigcategoryVm = new Vue({
         el : ".big",
         data : {
-        	bigcategory: bigcategory
+        	bigcategory: bigcategory,
+        	config: config
         },
         methods : {
+        	synchronize: function() {
+        		synchronize('categorylist',loadData);
+			},
             edit: function(event) {
                 if (event) {
                     let index = $(event.target).parents("tr").data("index");
@@ -67,6 +73,9 @@ common.bindVue = function() {
         	middlecategory: middlecategory
         },
         methods : {
+        	synchronize: function() {
+        		console.log(2);
+			},
             edit: function(event) {
                 if (event) {
                     let index = $(event.target).parents("tr").data("index");
@@ -85,6 +94,9 @@ common.bindVue = function() {
         	smallcategory: smallcategory
         },
         methods : {
+        	synchronize: function() {
+        		console.log(3);
+			},
             edit: function(event) {
                 if (event) {
                     let index = $(event.target).parents("tr").data("index");
@@ -100,9 +112,13 @@ common.bindVue = function() {
 	parentcategory1Vm = new Vue({
         el : ".parentCategory1",
         data : {
-        	parentcategory: parentcategory
+        	parentcategory: parentcategory,
+        	config: config
         },
         methods : {
+        	synchronize: function() {
+        		synchronize('midcategorylist',loadData);
+			},
             add: function () {
                 showEditBox(-1, null);
             },
@@ -135,6 +151,46 @@ common.bindVue = function() {
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);
 				return date;
+            }
+        }
+    });
+	smallBtnVm = new Vue({
+        el : ".smallBtn",
+        data : {
+        	config: config
+        },
+        methods : {
+        	synchronize: function() {
+        		console.log(5);
+			},
+            add: function () {
+                showEditBox(-1, null);
+            },
+            del: function () {
+            	let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").attr("data-id");
+            	let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").attr("data-index");
+            	if (id == null || id == undefined || $.trim(id) == "") {
+            		common.warn("请选择删除项");
+                    return false;
+            	}
+            	layer.confirm('确定删除？', {
+            		btn: ['确定','取消'],
+            		btn1 : function(index, layero) {
+            			var data = {};
+            			data['id'] = id;
+                    	common.showLoading();
+                        api.load('./goodscategory/delete','post',data, function(result) {
+                            if (result.errcode == 0) {
+                            	smallcategory.splice(deleteIndex);
+                                
+                                common.tips(result.message);
+                            } else {
+                                common.error(result.message);
+                            }
+                            common.closeLoading();
+                        });
+            		}
+            	});
             }
         }
     });
@@ -423,33 +479,6 @@ function bigPatternCategory() {
 
 function smallAdd() {
 	showEditBox(-1, null);
-}
-
-function smallDel() {
-	let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").attr("data-id");
-	let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").attr("data-index");
-	if (id == null || id == undefined || $.trim(id) == "") {
-		common.warn("请选择删除项");
-        return false;
-	}
-	layer.confirm('确定删除？', {
-		btn: ['确定','取消'],
-		btn1 : function(index, layero) {
-			var data = {};
-			data['id'] = id;
-        	common.showLoading();
-            api.load('./goodscategory/delete','post',data, function(result) {
-                if (result.errcode == 0) {
-                	smallcategory.splice(deleteIndex);
-                    
-                    common.tips(result.message);
-                } else {
-                    common.error(result.message);
-                }
-                common.closeLoading();
-            });
-		}
-	});
 }
 
 function configUpload() {

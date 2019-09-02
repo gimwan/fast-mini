@@ -88,7 +88,17 @@ function showEditBox(idx) {
 					    "</div>"+
 					"</div>";
 	} else if (config[idx].type == 4) {
-		
+		editDiv += "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
+						"<div class=\"edit-title\">"+
+					        "<span class=\"title\"><label class=\"name\">"+config[idx].name+"</label>：</span>"+
+					    "</div>"+
+				        "<div class=\"edit-value layui-form-item\" data-field=\"value\">"+
+				            "<div class=\"layui-input-block\">" +
+				            	"<input type=\"radio\" name=\"useflag\" value=\"1\" title=\"是\" "+(config[idx].value==1?'checked':'')+" class=\"layui-input value\">" +
+				            	"<input type=\"radio\" name=\"useflag\" value=\"0\" title=\"否\" "+(config[idx].value!=1?'checked':'')+" class=\"layui-input value\">" +
+				            "</div>" +
+				        "</div>"+
+				    "</div>";
 	} else if (config[idx].type == 5) {
 		editDiv += "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
 				        "<div class=\"edit-title\">"+
@@ -145,6 +155,8 @@ function showEditBox(idx) {
             			$(".edit-view .focus").val(color);
             	    }
             	});
+			} else if (config[idx].type == 4) {
+				layuiForm.render();
 			} else if (config[idx].type == 5) {
 				layuiUpload.render({
 				    elem: '#imagebox',

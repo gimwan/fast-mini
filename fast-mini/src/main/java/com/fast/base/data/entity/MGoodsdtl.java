@@ -3,10 +3,18 @@ package com.fast.base.data.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Id;
+
+@Entity
+@Table(name = "m_goodsdtl")
 public class MGoodsdtl implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
+	@Id
     private Integer id;
 
     private Integer goodsid;

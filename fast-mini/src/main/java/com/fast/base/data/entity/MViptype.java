@@ -4,10 +4,18 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Id;
+
+@Entity
+@Table(name = "m_viptype")
 public class MViptype implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
+	@Id
     private Integer id;
 
     private String code;
@@ -37,6 +45,8 @@ public class MViptype implements Serializable {
     private BigDecimal birthdaydiscount;
 
     private Integer pointrate;
+
+    private String extid;
 
     public Integer getId() {
         return id;
@@ -156,5 +166,13 @@ public class MViptype implements Serializable {
 
     public void setPointrate(Integer pointrate) {
         this.pointrate = pointrate;
+    }
+
+    public String getExtid() {
+        return extid;
+    }
+
+    public void setExtid(String extid) {
+        this.extid = extid;
     }
 }

@@ -134,7 +134,7 @@ public class MicropageMaintServiceImpl implements IMicropageMaintService, Serial
 		if (Common.isActive(result)) {
 			if (mMicropage.getHomeflag().intValue() == 1) {
 				MMicropageExample example = new MMicropageExample();
-				example.createCriteria().andPublicplatformidEqualTo(mMicropage.getPublicplatformid()).andHomeflagEqualTo(Byte.valueOf("1")).andIdNotEqualTo(micropage.getId());
+				example.createCriteria().andPublicplatformidEqualTo(mMicropage.getPublicplatformid()).andHomeflagEqualTo(Byte.valueOf("1")).andIdNotEqualTo(mMicropage.getId());
 				List<MMicropage> list = micropageMapper.selectByExample(example);
 				for (int i = 0; i < list.size(); i++) {
 					MMicropage micro = list.get(i);

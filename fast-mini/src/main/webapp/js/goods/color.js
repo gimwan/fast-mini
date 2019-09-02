@@ -1,20 +1,20 @@
 let color = [];
 let colorVm;
+let btnVm;
 
 common.bindVue = function() {
-    colorVm = new Vue({
-        el : ".colorPage",
-        data : {
-            color: color
+	refreshConfig("7001");
+	
+	btnVm = new Vue({
+		el : ".operating",
+		data : {
+			config: config
         },
         methods : {
-            edit: function(event) {
-                if (event) {
-                    let index = $(event.target).parents("tr").data("index");
-                    showEditBox(index,color[index]);
-                }
-            },
-            add: function () {
+            synchronize: function() {
+            	synchronize('colorlist',loadData);
+			},
+			add: function () {
                 showEditBox(-1, null);
             },
             del: function () {
@@ -42,6 +42,21 @@ common.bindVue = function() {
                         });
             		}
             	});
+            }
+        }
+	});
+	
+    colorVm = new Vue({
+        el : ".color-data",
+        data : {
+            color: color
+        },
+        methods : {
+            edit: function(event) {
+                if (event) {
+                    let index = $(event.target).parents("tr").data("index");
+                    showEditBox(index,color[index]);
+                }
             },
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);

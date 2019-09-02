@@ -1,6 +1,7 @@
 package com.fast.service;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MVip;
 
 /**
  * 会员
@@ -81,4 +82,11 @@ public interface IVipService {
 	 * @return
 	 */
 	public Result queryVipDPC(String appid, String openid);
+	
+	/**
+	 * 重置会员省市区
+	 * @param vip
+	 * @return
+	 */
+	public MVip resetVipRegion(MVip vip);
 }

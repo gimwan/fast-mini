@@ -2,7 +2,6 @@ package com.fast.base.data.dao;
 
 import com.fast.base.data.entity.MSize;
 import com.fast.base.data.entity.MSizeExample;
-
 import java.util.List;
 
 import org.apache.ibatis.annotations.Options;
@@ -27,5 +26,4 @@ public interface MSizeMapper {
     int updateByPrimaryKeySelective(MSize record);
 
     int updateByPrimaryKey(MSize record);
-    
 }

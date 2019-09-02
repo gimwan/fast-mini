@@ -4,10 +4,18 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Id;
+
+@Entity
+@Table(name = "m_coupon")
 public class MCoupon implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
+	@Id
     private Integer id;
 
     private String code;
@@ -45,6 +53,8 @@ public class MCoupon implements Serializable {
     private Byte suittype;
 
     private Integer effectivetime;
+
+    private String extid;
 
     public Integer getId() {
         return id;
@@ -196,5 +206,13 @@ public class MCoupon implements Serializable {
 
     public void setEffectivetime(Integer effectivetime) {
         this.effectivetime = effectivetime;
+    }
+
+    public String getExtid() {
+        return extid;
+    }
+
+    public void setExtid(String extid) {
+        this.extid = extid;
     }
 }

@@ -4,10 +4,18 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.Id;
+
+@Entity
+@Table(name = "m_goods")
 public class MGoods implements Serializable {
 	
 	private static final long serialVersionUID = 71148004875517941L;
 	
+	@Id
     private Integer id;
 
     private String code;
@@ -67,6 +75,8 @@ public class MGoods implements Serializable {
     private Integer middlecategory;
 
     private Integer smallcategory;
+
+    private String extid;
 
     public Integer getId() {
         return id;
@@ -306,5 +316,13 @@ public class MGoods implements Serializable {
 
     public void setSmallcategory(Integer smallcategory) {
         this.smallcategory = smallcategory;
+    }
+
+    public String getExtid() {
+        return extid;
+    }
+
+    public void setExtid(String extid) {
+        this.extid = extid;
     }
 }

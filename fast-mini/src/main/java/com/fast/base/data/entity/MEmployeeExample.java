@@ -1084,6 +1084,76 @@ public class MEmployeeExample {
             addCriterion("Memo not between", value1, value2, "memo");
             return (Criteria) this;
         }
+
+        public Criteria andExtidIsNull() {
+            addCriterion("ExtID is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidIsNotNull() {
+            addCriterion("ExtID is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidEqualTo(String value) {
+            addCriterion("ExtID =", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidNotEqualTo(String value) {
+            addCriterion("ExtID <>", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidGreaterThan(String value) {
+            addCriterion("ExtID >", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidGreaterThanOrEqualTo(String value) {
+            addCriterion("ExtID >=", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidLessThan(String value) {
+            addCriterion("ExtID <", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidLessThanOrEqualTo(String value) {
+            addCriterion("ExtID <=", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidLike(String value) {
+            addCriterion("ExtID like", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidNotLike(String value) {
+            addCriterion("ExtID not like", value, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidIn(List<String> values) {
+            addCriterion("ExtID in", values, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidNotIn(List<String> values) {
+            addCriterion("ExtID not in", values, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidBetween(String value1, String value2) {
+            addCriterion("ExtID between", value1, value2, "extid");
+            return (Criteria) this;
+        }
+
+        public Criteria andExtidNotBetween(String value1, String value2) {
+            addCriterion("ExtID not between", value1, value2, "extid");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fast.base.data.dao.MDepartmentMapper">
-	<cache type="com.fast.system.RedisCache"/>
+	<cache type="com.fast.system.RedisCache" />
 	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MDepartment">
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="Code" property="code" jdbcType="VARCHAR" />
@@ -25,6 +25,7 @@
 		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
 		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
 		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -61,7 +62,7 @@
 		ID, Code, Name, TypeID, Province, ProvinceID, City, CityID, County,
 		CountyID, Address,
 		Longitude, Latitude, Contacts, Phone, CreateTime, Creator, ModifyTime, Modifier,
-		UseFlag, UpdatedTime, Memo
+		UseFlag, UpdatedTime, Memo, ExtID
 	</sql>
 	<select id="selectByExample" resultMap="BaseResultMap"
 		parameterType="com.fast.base.data.entity.MDepartmentExample">
@@ -105,7 +106,7 @@
 		Latitude, Contacts, Phone,
 		CreateTime, Creator, ModifyTime,
 		Modifier, UseFlag, UpdatedTime,
-		Memo)
+		Memo, ExtID)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{typeid,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, #{provinceid,jdbcType=INTEGER},
@@ -117,7 +118,7 @@
 		#{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP},
 		#{modifier,jdbcType=VARCHAR}, #{useflag,jdbcType=TINYINT},
 		#{updatedtime,jdbcType=TIMESTAMP},
-		#{memo,jdbcType=VARCHAR})
+		#{memo,jdbcType=VARCHAR}, #{extid,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MDepartment"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -189,6 +190,9 @@
 			<if test="memo != null">
 				Memo,
 			</if>
+			<if test="extid != null">
+				ExtID,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -256,6 +260,9 @@
 			</if>
 			<if test="memo != null">
 				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="extid != null">
+				#{extid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -332,6 +339,9 @@
 			<if test="memo != null">
 				Memo = #{memo,jdbcType=VARCHAR},
 			</if>
+			<if test="extid != null">
+				ExtID = #{extid,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -357,7 +367,8 @@
 		Modifier = #{modifier,jdbcType=VARCHAR},
 		UseFlag = #{useflag,jdbcType=TINYINT},
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
-		Memo = #{memo,jdbcType=VARCHAR}
+		Memo = #{memo,jdbcType=VARCHAR},
+		ExtID = #{extid,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>
