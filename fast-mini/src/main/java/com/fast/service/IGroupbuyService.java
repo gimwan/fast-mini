@@ -23,6 +23,13 @@ public interface IGroupbuyService {
 	public Result groupbuyDetail(Integer groupbuyid);
 	
 	/**
+	 * 查询拼团活动
+	 * @param appid
+	 * @return
+	 */
+	public Result queryGroupBuy(String appid);
+	
+	/**
 	 * 查询拼团中的活动
 	 * @param appid
 	 * @return
@@ -43,5 +50,14 @@ public interface IGroupbuyService {
 	 * @return
 	 */
 	public Result queryGroupbuyDetail(Integer groupbuyid, Integer goodsid);
-
+	
+	/**
+	 * 商品库存
+	 * @param groupbuyid
+	 * @param goodsid
+	 * @param appid
+	 * @param openid
+	 * @return
+	 */
+	public Result queryGoodsStock(Integer groupbuyid, Integer goodsid, String appid, String openid);
 }

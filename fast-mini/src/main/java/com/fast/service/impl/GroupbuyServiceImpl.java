@@ -14,11 +14,14 @@ import org.springframework.stereotype.Service;
 import com.fast.base.Result;
 import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MGroupbuyMapper;
+import com.fast.base.data.dao.MGroupbuydtlMapper;
 import com.fast.base.data.entity.MGroupbuy;
 import com.fast.base.data.entity.MGroupbuyExample;
+import com.fast.base.data.entity.MGroupbuydtl;
 import com.fast.base.data.entity.MGroupbuydtlExample;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.service.IDataService;
+import com.fast.service.IGoodsService;
 import com.fast.service.IGroupbuyService;
 import com.fast.service.IMiniProgramService;
 import com.fast.system.log.FastLog;
@@ -40,6 +43,9 @@ public class GroupbuyServiceImpl implements IGroupbuyService, Serializable {
 	MGroupbuyMapper groupbuyMapper;
 	
 	@Autowired
+	MGroupbuydtlMapper groupbuydtlMapper;
+	
+	@Autowired
 	DataMapper dataMapper;
 	
 	@Autowired
@@ -47,6 +53,9 @@ public class GroupbuyServiceImpl implements IGroupbuyService, Serializable {
 	
 	@Autowired
 	IMiniProgramService iMiniProgramService;
+	
+	@Autowired
+	IGoodsService iGoodsService;
 
 	@Override
 	public Result groupbuy() {
@@ -81,6 +90,37 @@ public class GroupbuyServiceImpl implements IGroupbuyService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用GroupbuyServiceImpl.groupbuyDetail报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result queryGroupBuy(String appid) {
+		Result result = new Result();
+
+		try {
+			HashMap<String, Object> data = new HashMap<>();			
+			HashMap<String, Object> active = new HashMap<>();
+			HashMap<String, Object> soon = new HashMap<>();
+			
+			Result r = queryActiveGroupBuy(appid);
+			if (Common.isActive(r)) {
+				active = (HashMap<String, Object>) r.getData();
+			}
+			data.put("active", active);
+			
+			r = querySoonGroupBuy(appid);
+			if (Common.isActive(r)) {
+				soon = (HashMap<String, Object>) r.getData();
+			}
+			data.put("soon", soon);
+			
+			result.setData(data);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GroupbuyServiceImpl.queryGroupBuy报错：", e);
 		}
 
 		return result;
@@ -124,7 +164,7 @@ public class GroupbuyServiceImpl implements IGroupbuyService, Serializable {
 							+ "inner join m_order bb on aa.orderid=bb.id "
 							+ "where bb.status>2 and bb.kind=3 and bb.marketingid="+groupbuy.getId()+" "
 							+ "group by aa.goodsid) c on c.goodsid=a.goodsid "
-							+ "where b.useflag=1 and b.onsale=1 and b.kind=1 and a.groupbuyid="+groupbuy.getId();
+							+ "where b.useflag=1 and b.onsale=1 and b.kind=1 and b.onlyshow<>1 and a.groupbuyid="+groupbuy.getId();
 					List<LinkedHashMap<String, Object>> goods = dataMapper.pageList(sql);
 					data.put("detail", goods);
 				}
@@ -177,7 +217,7 @@ public class GroupbuyServiceImpl implements IGroupbuyService, Serializable {
 							+ "inner join m_order bb on aa.orderid=bb.id "
 							+ "where bb.status>2 and bb.kind=3 and bb.marketingid="+groupbuy.getId()+" "
 							+ "group by aa.goodsid) c on c.goodsid=a.goodsid "
-							+ "where b.useflag=1 and b.onsale=1 and b.kind=1 and a.groupbuyid="+groupbuy.getId();
+							+ "where b.useflag=1 and b.onsale=1 and b.kind=1 and b.onlyshow<>1 and a.groupbuyid="+groupbuy.getId();
 					List<LinkedHashMap<String, Object>> goods = dataMapper.pageList(sql);
 					data.put("detail", goods);
 				}
@@ -210,7 +250,7 @@ public class GroupbuyServiceImpl implements IGroupbuyService, Serializable {
 			}
 			
 			String sql = "select a.groupbuyid,a.goodsid,b.code,b.name,b.photourl,b.price as saleprice,a.price,"
-					+ "case when b.useflag=1 and b.onsale=1 then 1 else 0 end as onsale,b.showcolor,b.showsize,b.showpattern "
+					+ "case when b.useflag=1 and b.onsale=1 and b.onlyshow<>1 then 1 else 0 end as onsale,b.showcolor,b.showsize,b.showpattern "
 					+ "from m_groupbuydtl a "
 					+ "inner join m_goods b on a.goodsid=b.id "
 					+ "where b.kind=1 and a.groupbuyid=" + groupbuy.getId();
@@ -292,6 +332,42 @@ public class GroupbuyServiceImpl implements IGroupbuyService, Serializable {
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用GroupbuyServiceImpl.queryGroupbuyDetail报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryGoodsStock(Integer groupbuyid, Integer goodsid, String appid, String openid) {
+		Result result = new Result();
+
+		try {
+			Result r = iGoodsService.queryGoodsStock(goodsid, appid, openid);
+			if (Common.isActive(r)) {
+				HashMap<String, Object> map = (HashMap<String, Object>) r.getData();
+				if (map != null) {
+					MGroupbuydtlExample example = new MGroupbuydtlExample();
+					example.createCriteria().andGroupbuyidEqualTo(groupbuyid).andGoodsidEqualTo(goodsid);
+					List<MGroupbuydtl> list = groupbuydtlMapper.selectByExample(example);
+					if (list != null && list.size() > 0) {
+						MGroupbuydtl groupbuydtl = list.get(0);
+						map.put("saleprice", map.get("price") == null ? 0 : map.get("price"));
+						map.put("price", groupbuydtl.getPrice());
+						List<HashMap<String, Object>> stockList = (List<HashMap<String, Object>>) map.get("stocklist");
+						for (int i = 0; i < stockList.size(); i++) {
+							HashMap<String, Object> stock = stockList.get(i);
+							stock.put("saleprice", stock.get("price") == null ? 0 : stock.get("price"));
+							stock.put("price", groupbuydtl.getPrice());
+						}
+					}
+				}
+				result.setData(map);
+				result.setErrcode(Integer.valueOf(0));
+				result.setId(r.getId());
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用GroupbuyServiceImpl.queryGoodsStock报错：", e);
 		}
 
 		return result;

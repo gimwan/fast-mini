@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.base.Result;
 import com.fast.service.IGroupbuyService;
+import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
 
@@ -23,6 +24,32 @@ public class Groupbuy extends MiniMaster {
 	
 	@Autowired
 	IGroupbuyService iGroupbuyService;
+	
+	/**
+	 * 查询拼团活动
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/groupbuy")
+	@ResponseBody
+	public String groupbuy(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			r = iGroupbuyService.queryGroupBuy(appid);
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
 	
 	/**
 	 * 拼团中
@@ -92,6 +119,42 @@ public class Groupbuy extends MiniMaster {
 			String groupbuyid = request.getParameter("groupbuyid");
 			String goodsid = request.getParameter("goodsid");
 			r = iGroupbuyService.queryGroupbuyDetail(Integer.valueOf(groupbuyid), Integer.valueOf(goodsid));
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 拼团商品库存
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/groupbuy/stock")
+	@ResponseBody
+	public String sku(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String openid = request.getParameter("openid");
+			String appid = request.getParameter("appid");
+			String goodsid = request.getParameter("goodsid");
+			String groupbuyid = request.getParameter("groupbuyid");
+			if (Common.isEmpty(openid)) {
+				openid = "";
+			}
+			if (Common.isEmpty(appid)) {
+				appid = "";
+			}
+			
+			r = iGroupbuyService.queryGoodsStock(Integer.valueOf(groupbuyid), Integer.valueOf(goodsid), appid, openid);
 		} catch (Exception e) {
 			e.printStackTrace();
 			r.setMessage(e.getMessage());

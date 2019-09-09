@@ -13,8 +13,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MGroupbuyMapper;
 import com.fast.base.data.dao.MGroupbuydtlMapper;
-import com.fast.base.data.entity.MGoodssku;
-import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MGroupbuy;
 import com.fast.base.data.entity.MGroupbuyExample;
 import com.fast.base.data.entity.MGroupbuydtl;

@@ -78,19 +78,23 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	cursor: pointer;
 }
 
 .sku-view .sku-table .d-name input {
-	border:none;
+	border: none;
 	color: gray;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	cursor: default;
 }
 
-.sku-view .sku-table .d-baseprice input, .sku-view .sku-table .d-saleprice input {
+.sku-view .sku-table .d-baseprice input, .sku-view .sku-table .d-saleprice input
+	{
 	color: gray;
-	border:none;
+	border: none;
+	cursor: default;
 }
 
 .sku-view .sku-table .d-baseprice, .sku-view .sku-table .d-saleprice,
