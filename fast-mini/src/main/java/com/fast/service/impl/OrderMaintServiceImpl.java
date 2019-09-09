@@ -246,6 +246,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			vipaccount.setPoint(point);
 			vippointrecord.setPoint(order.getPoint());
 			vippointrecord.setNewpoint(point);
+			vippointrecordMapper.insertSelective(vippointrecord);
 			isUpdate = true;
 		}
 		if (order.getDeposit() != null && order.getDeposit().compareTo(BigDecimal.ZERO) > 0) {
@@ -253,12 +254,11 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			vipaccount.setDeposit(deposit);
 			vipdepositrecord.setDeposit(order.getDeposit());
 			vipdepositrecord.setNewdeposit(deposit);
+			vipdepositrecordMapper.insertSelective(vipdepositrecord);
 			isUpdate = true;
 		}
 		if (isUpdate) {
 			vipaccountMapper.updateByPrimaryKeySelective(vipaccount);
-			vipdepositrecordMapper.insertSelective(vipdepositrecord);
-			vippointrecordMapper.insertSelective(vippointrecord);
 		}
 		
 		MVipcartExample vipcartExample = new MVipcartExample();

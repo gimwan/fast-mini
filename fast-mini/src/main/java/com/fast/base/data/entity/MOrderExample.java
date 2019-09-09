@@ -3065,6 +3065,256 @@ public class MOrderExample {
             addCriterion("ExtID not between", value1, value2, "extid");
             return (Criteria) this;
         }
+
+        public Criteria andMarketingidIsNull() {
+            addCriterion("MarketingID is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidIsNotNull() {
+            addCriterion("MarketingID is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidEqualTo(Integer value) {
+            addCriterion("MarketingID =", value, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidNotEqualTo(Integer value) {
+            addCriterion("MarketingID <>", value, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidGreaterThan(Integer value) {
+            addCriterion("MarketingID >", value, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("MarketingID >=", value, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidLessThan(Integer value) {
+            addCriterion("MarketingID <", value, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidLessThanOrEqualTo(Integer value) {
+            addCriterion("MarketingID <=", value, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidIn(List<Integer> values) {
+            addCriterion("MarketingID in", values, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidNotIn(List<Integer> values) {
+            addCriterion("MarketingID not in", values, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidBetween(Integer value1, Integer value2) {
+            addCriterion("MarketingID between", value1, value2, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketingidNotBetween(Integer value1, Integer value2) {
+            addCriterion("MarketingID not between", value1, value2, "marketingid");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagIsNull() {
+            addCriterion("DistributionFlag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagIsNotNull() {
+            addCriterion("DistributionFlag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagEqualTo(Byte value) {
+            addCriterion("DistributionFlag =", value, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagNotEqualTo(Byte value) {
+            addCriterion("DistributionFlag <>", value, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagGreaterThan(Byte value) {
+            addCriterion("DistributionFlag >", value, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagGreaterThanOrEqualTo(Byte value) {
+            addCriterion("DistributionFlag >=", value, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagLessThan(Byte value) {
+            addCriterion("DistributionFlag <", value, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagLessThanOrEqualTo(Byte value) {
+            addCriterion("DistributionFlag <=", value, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagIn(List<Byte> values) {
+            addCriterion("DistributionFlag in", values, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagNotIn(List<Byte> values) {
+            addCriterion("DistributionFlag not in", values, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagBetween(Byte value1, Byte value2) {
+            addCriterion("DistributionFlag between", value1, value2, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionflagNotBetween(Byte value1, Byte value2) {
+            addCriterion("DistributionFlag not between", value1, value2, "distributionflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerIsNull() {
+            addCriterion("Distributioner is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerIsNotNull() {
+            addCriterion("Distributioner is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerEqualTo(String value) {
+            addCriterion("Distributioner =", value, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerNotEqualTo(String value) {
+            addCriterion("Distributioner <>", value, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerGreaterThan(String value) {
+            addCriterion("Distributioner >", value, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerGreaterThanOrEqualTo(String value) {
+            addCriterion("Distributioner >=", value, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerLessThan(String value) {
+            addCriterion("Distributioner <", value, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerLessThanOrEqualTo(String value) {
+            addCriterion("Distributioner <=", value, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerLike(String value) {
+            addCriterion("Distributioner like", value, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerNotLike(String value) {
+            addCriterion("Distributioner not like", value, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerIn(List<String> values) {
+            addCriterion("Distributioner in", values, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerNotIn(List<String> values) {
+            addCriterion("Distributioner not in", values, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerBetween(String value1, String value2) {
+            addCriterion("Distributioner between", value1, value2, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributionerNotBetween(String value1, String value2) {
+            addCriterion("Distributioner not between", value1, value2, "distributioner");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeIsNull() {
+            addCriterion("DistributionTime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeIsNotNull() {
+            addCriterion("DistributionTime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeEqualTo(Date value) {
+            addCriterion("DistributionTime =", value, "distributiontime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeNotEqualTo(Date value) {
+            addCriterion("DistributionTime <>", value, "distributiontime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeGreaterThan(Date value) {
+            addCriterion("DistributionTime >", value, "distributiontime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("DistributionTime >=", value, "distributiontime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeLessThan(Date value) {
+            addCriterion("DistributionTime <", value, "distributiontime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeLessThanOrEqualTo(Date value) {
+            addCriterion("DistributionTime <=", value, "distributiontime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeIn(List<Date> values) {
+            addCriterion("DistributionTime in", values, "distributiontime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeNotIn(List<Date> values) {
+            addCriterion("DistributionTime not in", values, "distributiontime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeBetween(Date value1, Date value2) {
+            addCriterion("DistributionTime between", value1, value2, "distributiontime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDistributiontimeNotBetween(Date value1, Date value2) {
+            addCriterion("DistributionTime not between", value1, value2, "distributiontime");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

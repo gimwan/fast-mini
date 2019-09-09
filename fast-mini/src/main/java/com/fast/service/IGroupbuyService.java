@@ -21,5 +21,27 @@ public interface IGroupbuyService {
 	 * @return
 	 */
 	public Result groupbuyDetail(Integer groupbuyid);
+	
+	/**
+	 * 查询拼团中的活动
+	 * @param appid
+	 * @return
+	 */
+	public Result queryActiveGroupBuy(String appid);
+	
+	/**
+	 * 查询即将开始的拼团活动
+	 * @param appid
+	 * @return
+	 */
+	public Result querySoonGroupBuy(String appid);
+	
+	/**
+	 * 拼团活动明细
+	 * @param groupbuyid
+	 * @param goodsid
+	 * @return
+	 */
+	public Result queryGroupbuyDetail(Integer groupbuyid, Integer goodsid);
 
 }

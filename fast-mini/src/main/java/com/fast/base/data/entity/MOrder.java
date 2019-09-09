@@ -110,6 +110,14 @@ public class MOrder implements Serializable {
 
     private String extid;
 
+    private Integer marketingid;
+
+    private Byte distributionflag;
+
+    private String distributioner;
+
+    private Date distributiontime;
+
     private String receiveraddress;
 
     public Integer getId() {
@@ -486,6 +494,38 @@ public class MOrder implements Serializable {
 
     public void setExtid(String extid) {
         this.extid = extid;
+    }
+
+    public Integer getMarketingid() {
+        return marketingid;
+    }
+
+    public void setMarketingid(Integer marketingid) {
+        this.marketingid = marketingid;
+    }
+
+    public Byte getDistributionflag() {
+        return distributionflag;
+    }
+
+    public void setDistributionflag(Byte distributionflag) {
+        this.distributionflag = distributionflag;
+    }
+
+    public String getDistributioner() {
+        return distributioner;
+    }
+
+    public void setDistributioner(String distributioner) {
+        this.distributioner = distributioner;
+    }
+
+    public Date getDistributiontime() {
+        return distributiontime;
+    }
+
+    public void setDistributiontime(Date distributiontime) {
+        this.distributiontime = distributiontime;
     }
 
     public String getReceiveraddress() {

@@ -59,6 +59,13 @@
 		<result column="RetuenPayStatus" property="retuenpaystatus"
 			jdbcType="TINYINT" />
 		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
+		<result column="MarketingID" property="marketingid" jdbcType="INTEGER" />
+		<result column="DistributionFlag" property="distributionflag"
+			jdbcType="TINYINT" />
+		<result column="Distributioner" property="distributioner"
+			jdbcType="VARCHAR" />
+		<result column="DistributionTime" property="distributiontime"
+			jdbcType="TIMESTAMP" />
 	</resultMap>
 	<resultMap id="ResultMapWithBLOBs" type="com.fast.base.data.entity.MOrder"
 		extends="BaseResultMap">
@@ -109,7 +116,7 @@
 		ModifyTime,
 		Modifier, UpdatedTime, UseFlag, Status, MiniprogramID, PublicplatformID,
 		RetuenPayStatus,
-		ExtID
+		ExtID, MarketingID, DistributionFlag, Distributioner, DistributionTime
 	</sql>
 	<sql id="Blob_Column_List">
 		ReceiverAddress
@@ -184,8 +191,9 @@
 		CreateTime, Creator, ModifyTime,
 		Modifier, UpdatedTime, UseFlag,
 		Status, MiniprogramID, PublicplatformID,
-		RetuenPayStatus, ExtID, ReceiverAddress
-		)
+		RetuenPayStatus, ExtID, MarketingID,
+		DistributionFlag, Distributioner, DistributionTime,
+		ReceiverAddress)
 		values (#{id,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR},
 		#{kind,jdbcType=INTEGER},
 		#{source,jdbcType=INTEGER}, #{vipid,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER},
@@ -212,8 +220,10 @@
 		#{status,jdbcType=TINYINT}, #{miniprogramid,jdbcType=INTEGER},
 		#{publicplatformid,jdbcType=INTEGER},
 		#{retuenpaystatus,jdbcType=TINYINT}, #{extid,jdbcType=VARCHAR},
-		#{receiveraddress,jdbcType=LONGVARCHAR}
-		)
+		#{marketingid,jdbcType=INTEGER},
+		#{distributionflag,jdbcType=TINYINT}, #{distributioner,jdbcType=VARCHAR},
+		#{distributiontime,jdbcType=TIMESTAMP},
+		#{receiveraddress,jdbcType=LONGVARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MOrder"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -360,6 +370,18 @@
 			<if test="extid != null">
 				ExtID,
 			</if>
+			<if test="marketingid != null">
+				MarketingID,
+			</if>
+			<if test="distributionflag != null">
+				DistributionFlag,
+			</if>
+			<if test="distributioner != null">
+				Distributioner,
+			</if>
+			<if test="distributiontime != null">
+				DistributionTime,
+			</if>
 			<if test="receiveraddress != null">
 				ReceiverAddress,
 			</if>
@@ -505,6 +527,18 @@
 			</if>
 			<if test="extid != null">
 				#{extid,jdbcType=VARCHAR},
+			</if>
+			<if test="marketingid != null">
+				#{marketingid,jdbcType=INTEGER},
+			</if>
+			<if test="distributionflag != null">
+				#{distributionflag,jdbcType=TINYINT},
+			</if>
+			<if test="distributioner != null">
+				#{distributioner,jdbcType=VARCHAR},
+			</if>
+			<if test="distributiontime != null">
+				#{distributiontime,jdbcType=TIMESTAMP},
 			</if>
 			<if test="receiveraddress != null">
 				#{receiveraddress,jdbcType=LONGVARCHAR},
@@ -659,6 +693,18 @@
 			<if test="extid != null">
 				ExtID = #{extid,jdbcType=VARCHAR},
 			</if>
+			<if test="marketingid != null">
+				MarketingID = #{marketingid,jdbcType=INTEGER},
+			</if>
+			<if test="distributionflag != null">
+				DistributionFlag = #{distributionflag,jdbcType=TINYINT},
+			</if>
+			<if test="distributioner != null">
+				Distributioner = #{distributioner,jdbcType=VARCHAR},
+			</if>
+			<if test="distributiontime != null">
+				DistributionTime = #{distributiontime,jdbcType=TIMESTAMP},
+			</if>
 			<if test="receiveraddress != null">
 				ReceiverAddress = #{receiveraddress,jdbcType=LONGVARCHAR},
 			</if>
@@ -713,6 +759,10 @@
 		PublicplatformID = #{publicplatformid,jdbcType=INTEGER},
 		RetuenPayStatus = #{retuenpaystatus,jdbcType=TINYINT},
 		ExtID = #{extid,jdbcType=VARCHAR},
+		MarketingID = #{marketingid,jdbcType=INTEGER},
+		DistributionFlag = #{distributionflag,jdbcType=TINYINT},
+		Distributioner = #{distributioner,jdbcType=VARCHAR},
+		DistributionTime = #{distributiontime,jdbcType=TIMESTAMP},
 		ReceiverAddress = #{receiveraddress,jdbcType=LONGVARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -763,7 +813,11 @@
 		MiniprogramID = #{miniprogramid,jdbcType=INTEGER},
 		PublicplatformID = #{publicplatformid,jdbcType=INTEGER},
 		RetuenPayStatus = #{retuenpaystatus,jdbcType=TINYINT},
-		ExtID = #{extid,jdbcType=VARCHAR}
+		ExtID = #{extid,jdbcType=VARCHAR},
+		MarketingID = #{marketingid,jdbcType=INTEGER},
+		DistributionFlag = #{distributionflag,jdbcType=TINYINT},
+		Distributioner = #{distributioner,jdbcType=VARCHAR},
+		DistributionTime = #{distributiontime,jdbcType=TIMESTAMP}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

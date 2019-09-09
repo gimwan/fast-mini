@@ -2,8 +2,6 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -14,8 +12,6 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.entity.MMiniprogram;
-import com.fast.base.data.entity.MVipcoupon;
-import com.fast.base.data.entity.MVipcouponExample;
 import com.fast.base.data.entity.MVipmini;
 import com.fast.base.page.PagingView;
 import com.fast.service.IMiniProgramService;

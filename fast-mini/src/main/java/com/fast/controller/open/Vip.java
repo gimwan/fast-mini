@@ -15,7 +15,9 @@ import com.fast.service.IVipAddressMaintService;
 import com.fast.service.IVipAddressService;
 import com.fast.service.IVipCouponMaintService;
 import com.fast.service.IVipCouponService;
+import com.fast.service.IVipDepositRecordService;
 import com.fast.service.IVipMaintService;
+import com.fast.service.IVipPointRecordService;
 import com.fast.service.IVipService;
 import com.fast.service.IVipcartMaintService;
 import com.fast.service.IVipcartService;
@@ -54,6 +56,12 @@ public class Vip extends MiniMaster {
 	
 	@Autowired
 	IVipCouponService iVipCouponService;
+	
+	@Autowired
+	IVipPointRecordService iVipPointRecordService;
+	
+	@Autowired
+	IVipDepositRecordService iVipDepositRecordService;
 	
 	/**
 	 * 默认登录
@@ -666,6 +674,84 @@ public class Vip extends MiniMaster {
 			page.setPageSize(Integer.valueOf(pageSize).intValue());
 			
 			r = iVipCouponService.queryVipCoupon(appid, openid, Integer.valueOf(type.trim()), page);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 积分记录
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/point/record")
+	@ResponseBody
+	public String pointrecord(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String pageNo = request.getParameter("pageno");
+			String pageSize = request.getParameter("pagesize");
+			if (Common.isEmpty(pageNo)) {
+				pageNo = "1";
+			}
+			if (Common.isEmpty(pageSize)) {
+				pageSize = "15";
+			}
+			PagingView page = new PagingView(Integer.valueOf(pageNo));
+			page.setPageSize(Integer.valueOf(pageSize).intValue());
+			
+			r = iVipPointRecordService.queryVipPointRecordByOpenid(appid, openid, page);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 储值记录
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/deposit/record")
+	@ResponseBody
+	public String depositrecord(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String pageNo = request.getParameter("pageno");
+			String pageSize = request.getParameter("pagesize");
+			if (Common.isEmpty(pageNo)) {
+				pageNo = "1";
+			}
+			if (Common.isEmpty(pageSize)) {
+				pageSize = "15";
+			}
+			PagingView page = new PagingView(Integer.valueOf(pageNo));
+			page.setPageSize(Integer.valueOf(pageSize).intValue());
+			
+			r = iVipDepositRecordService.queryVipDepositRecordByOpenid(appid, openid, page);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -79,10 +79,10 @@ public class GroupbuyMaintServiceImpl implements IGroupbuyMaintService, Serializ
 			// 开始时间小于当前活动结束时间、结束时间大于当前活动结束时间
 			example = new MGroupbuyExample();
 			if (groupbuy.getId() != null) {				
-				example.createCriteria().andBegintimeLessThanOrEqualTo(groupbuy.getEndtime())
+				example.createCriteria().andBegintimeLessThan(groupbuy.getEndtime())
 						.andEndtimeGreaterThan(groupbuy.getEndtime()).andIdNotEqualTo(groupbuy.getId());
 			} else {
-				example.createCriteria().andBegintimeLessThanOrEqualTo(groupbuy.getEndtime())
+				example.createCriteria().andBegintimeLessThan(groupbuy.getEndtime())
 						.andEndtimeGreaterThan(groupbuy.getEndtime());
 			}
 			list = groupbuyMapper.selectByExample(example);
