@@ -186,5 +186,29 @@ public class FieldUploadController {
 		
 		return r;
 	}
+	
+	/**
+	 * 参数
+	 * @param request
+	 * @param response
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping("/field/marketing")
+	@ResponseBody
+	public String marketing(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) {
+		String r = "";
+		
+		try {
+			Result result = iFieldUploadService.uploadpMarketingPhoto(request, file);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
 
 }

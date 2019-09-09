@@ -5,10 +5,11 @@ let layuiUpload;
 let layPage;
 let layCarousel;
 let layColorpicker;
+let layDate;
 let loadIndex;
 let basePath = $("base").attr("href");
 
-layui.use(['layer', 'element', 'form', 'upload', 'laypage', 'carousel', 'colorpicker'], function () {
+layui.use(['layer', 'element', 'form', 'upload', 'laypage', 'carousel', 'colorpicker', 'laydate'], function () {
     layer = layui.layer;
     layuiElement = layui.element;
     layuiForm = layui.form;
@@ -16,6 +17,7 @@ layui.use(['layer', 'element', 'form', 'upload', 'laypage', 'carousel', 'colorpi
     layCarousel = layui.carousel;
     layuiUpload = layui.upload;
     layColorpicker = layui.colorpicker;
+    layDate = layui.laydate;
 });
 
 let common = new Vue({

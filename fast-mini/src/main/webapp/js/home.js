@@ -73,6 +73,7 @@ document.onreadystatechange = function() {
             	        			name = goods.photourl;
     							}
             	        		$(".popup .popuped").attr("data-id",id);
+            	        		$(".popup .popuped").attr("data-data",id);
             	        		$(".popup .popuped").val(name).change();
             	        		$(".popup .popuped").removeClass("popuped");
         					}

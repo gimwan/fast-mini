@@ -2,7 +2,9 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MBrandMapper;
 import com.fast.base.data.dao.MColorMapper;
 import com.fast.base.data.dao.MDepartmentMapper;
+import com.fast.base.data.dao.MGoodsMapper;
 import com.fast.base.data.dao.MGoodscategoryMapper;
 import com.fast.base.data.dao.MLogisticsMapper;
 import com.fast.base.data.dao.MPatternMapper;
@@ -28,6 +31,8 @@ import com.fast.base.data.entity.MColor;
 import com.fast.base.data.entity.MColorExample;
 import com.fast.base.data.entity.MDepartment;
 import com.fast.base.data.entity.MDepartmentExample;
+import com.fast.base.data.entity.MGoods;
+import com.fast.base.data.entity.MGoodsExample;
 import com.fast.base.data.entity.MGoodscategory;
 import com.fast.base.data.entity.MGoodscategoryExample;
 import com.fast.base.data.entity.MLogistics;
@@ -90,6 +95,9 @@ public class DataServiceImpl implements IDataService, Serializable {
 	
 	@Autowired
 	MLogisticsMapper logisticsMapper;
+	
+	@Autowired
+	MGoodsMapper goodsMapper;
 
 	@Override
 	public Result pageList(PagingView page, String tableName) {
@@ -159,6 +167,12 @@ public class DataServiceImpl implements IDataService, Serializable {
 		}
 		else if ("config".endsWith(tableName)) {
 			list = completeConfig(list);
+		}
+		else if ("groupbuy".endsWith(tableName)) {
+			list = completeGroupbuy(list);
+		}
+		else if ("groupbuydtl".endsWith(tableName)) {
+			list = completeGroupbuydtl(list);
 		}
 		
 		return list;
@@ -633,6 +647,112 @@ public class DataServiceImpl implements IDataService, Serializable {
 						}
 					}
 				}
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 补全groupbuy
+	 * @param list
+	 * @return
+	 */
+	public List<LinkedHashMap<String, Object>> completeGroupbuy(List<LinkedHashMap<String, Object>> list) {
+		List<Integer> publicplatformidList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).put("publicplatform", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("publicplatformid")))) {
+				publicplatformidList.add(Integer.valueOf(list.get(i).get("publicplatformid").toString()));
+			} else {
+				list.get(i).put("publicplatformid", "");
+			}
+			
+			int active = 0;
+			try {
+				String begintime = list.get(i).get("begintime") == null ? "" : list.get(i).get("begintime").toString();
+				String endtime = list.get(i).get("endtime") == null ? "" : list.get(i).get("endtime").toString();
+				Date begindate = null;
+				Date enddate = null;
+				Date now = new Date();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				if (begintime != null && !"".equals(begintime.trim())) {
+					begindate = simpleDateFormat.parse(begintime.trim());
+				}
+				if (endtime != null && !"".equals(endtime.trim())) {
+					enddate = simpleDateFormat.parse(endtime.trim());
+				}
+				if (begindate.getTime() >= now.getTime() && enddate.getTime() > now.getTime()) {
+					active = 1;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			list.get(i).put("active", active);
+		}
+		if (publicplatformidList.size() > 0) {
+			MPublicplatformExample example = new MPublicplatformExample();
+			example.createCriteria().andIdIn(publicplatformidList);
+			List<MPublicplatform> data = publicplatformMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("publicplatformid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("publicplatform", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if ("".equals(list.get(i).get("publicplatform").toString())) {
+				list.get(i).put("publicplatformid", "");
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 补全groupbuydtl
+	 * @param list
+	 * @return
+	 */
+	public List<LinkedHashMap<String, Object>> completeGroupbuydtl(List<LinkedHashMap<String, Object>> list) {
+		List<Integer> goodsidList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).put("code", "");
+			list.get(i).put("name", "");
+			list.get(i).put("photourl", "");
+			list.get(i).put("baseprice", "");
+			list.get(i).put("saleprice", "");
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("goodsid")))) {
+				goodsidList.add(Integer.valueOf(list.get(i).get("goodsid").toString()));
+			} else {
+				list.get(i).put("goodsid", "");
+			}
+		}
+		if (goodsidList.size() > 0) {
+			MGoodsExample example = new MGoodsExample();
+			example.createCriteria().andIdIn(goodsidList);
+			List<MGoods> data = goodsMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("goodsid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("code", data.get(j).getCode());
+							list.get(i).put("name", data.get(j).getName());
+							list.get(i).put("photourl", data.get(j).getPhotourl());
+							list.get(i).put("baseprice", data.get(j).getBaseprice());
+							list.get(i).put("saleprice", data.get(j).getPrice());							
+							break;
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i < list.size(); i++) {
+			if ("".equals(list.get(i).get("code").toString())) {
+				list.get(i).put("goodsid", "");
 			}
 		}
 		return list;

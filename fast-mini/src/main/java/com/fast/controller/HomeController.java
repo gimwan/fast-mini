@@ -188,6 +188,21 @@ public class HomeController {
 			main.put("sub", sub);
 			list.add(main);
 			
+			main = new HashMap<String, Object>();
+			main.put("name", "营销管理");
+			main.put("link", "");
+			sub = new ArrayList<HashMap<String,Object>>();
+			map = new HashMap<String, Object>();
+			map.put("name", "拼团");
+			map.put("link", "groupbuy");
+			sub.add(map);
+			map = new HashMap<String, Object>();
+			map.put("name", "秒杀");
+			map.put("link", "seckill");
+			sub.add(map);
+			main.put("sub", sub);
+			list.add(main);
+			
 			result.setData(list);
 			result.setErrcode(Integer.valueOf(0));
 			JSONObject jsonObject = JSONObject.fromObject(result);

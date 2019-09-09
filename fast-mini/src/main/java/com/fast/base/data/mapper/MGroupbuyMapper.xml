@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fast.base.data.dao.MGroupbuyMapper">
+	<cache type="com.fast.system.RedisCache" />
+	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MGroupbuy">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="Code" property="code" jdbcType="VARCHAR" />
+		<result column="Name" property="name" jdbcType="VARCHAR" />
+		<result column="BeginTime" property="begintime" jdbcType="TIMESTAMP" />
+		<result column="EndTime" property="endtime" jdbcType="TIMESTAMP" />
+		<result column="PublicPlatformID" property="publicplatformid"
+			jdbcType="INTEGER" />
+		<result column="MiniProgramID" property="miniprogramid"
+			jdbcType="INTEGER" />
+		<result column="Minimum" property="minimum" jdbcType="INTEGER" />
+		<result column="OrderNumber" property="ordernumber" jdbcType="INTEGER" />
+		<result column="OrderAmount" property="orderamount" jdbcType="DECIMAL" />
+		<result column="PhotoUrl" property="photourl" jdbcType="VARCHAR" />
+		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
+		<result column="Memo" property="memo" jdbcType="VARCHAR" />
+		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="Creator" property="creator" jdbcType="VARCHAR" />
+		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
+		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		ID, Code, Name, BeginTime, EndTime, PublicPlatformID, MiniProgramID,
+		Minimum, OrderNumber,
+		OrderAmount, PhotoUrl, UseFlag, Memo, CreateTime, Creator, ModifyTime, Modifier,
+		UpdatedTime
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.fast.base.data.entity.MGroupbuyExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		'false' as QUERYID,
+		<include refid="Base_Column_List" />
+		from m_groupbuy
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from m_groupbuy
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from m_groupbuy
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.fast.base.data.entity.MGroupbuyExample">
+		delete from m_groupbuy
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.fast.base.data.entity.MGroupbuy"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_groupbuy (ID, Code, Name,
+		BeginTime, EndTime, PublicPlatformID,
+		MiniProgramID, Minimum, OrderNumber,
+		OrderAmount, PhotoUrl, UseFlag,
+		Memo, CreateTime, Creator,
+		ModifyTime, Modifier, UpdatedTime
+		)
+		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{begintime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{publicplatformid,jdbcType=INTEGER},
+		#{miniprogramid,jdbcType=INTEGER}, #{minimum,jdbcType=INTEGER},
+		#{ordernumber,jdbcType=INTEGER},
+		#{orderamount,jdbcType=DECIMAL}, #{photourl,jdbcType=VARCHAR}, #{useflag,jdbcType=TINYINT},
+		#{memo,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
+		#{creator,jdbcType=VARCHAR},
+		#{modifytime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MGroupbuy"
+		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into m_groupbuy
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="code != null">
+				Code,
+			</if>
+			<if test="name != null">
+				Name,
+			</if>
+			<if test="begintime != null">
+				BeginTime,
+			</if>
+			<if test="endtime != null">
+				EndTime,
+			</if>
+			<if test="publicplatformid != null">
+				PublicPlatformID,
+			</if>
+			<if test="miniprogramid != null">
+				MiniProgramID,
+			</if>
+			<if test="minimum != null">
+				Minimum,
+			</if>
+			<if test="ordernumber != null">
+				OrderNumber,
+			</if>
+			<if test="orderamount != null">
+				OrderAmount,
+			</if>
+			<if test="photourl != null">
+				PhotoUrl,
+			</if>
+			<if test="useflag != null">
+				UseFlag,
+			</if>
+			<if test="memo != null">
+				Memo,
+			</if>
+			<if test="createtime != null">
+				CreateTime,
+			</if>
+			<if test="creator != null">
+				Creator,
+			</if>
+			<if test="modifytime != null">
+				ModifyTime,
+			</if>
+			<if test="modifier != null">
+				Modifier,
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="begintime != null">
+				#{begintime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endtime != null">
+				#{endtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="publicplatformid != null">
+				#{publicplatformid,jdbcType=INTEGER},
+			</if>
+			<if test="miniprogramid != null">
+				#{miniprogramid,jdbcType=INTEGER},
+			</if>
+			<if test="minimum != null">
+				#{minimum,jdbcType=INTEGER},
+			</if>
+			<if test="ordernumber != null">
+				#{ordernumber,jdbcType=INTEGER},
+			</if>
+			<if test="orderamount != null">
+				#{orderamount,jdbcType=DECIMAL},
+			</if>
+			<if test="photourl != null">
+				#{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="useflag != null">
+				#{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				#{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifier != null">
+				#{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="updatedtime != null">
+				#{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.fast.base.data.entity.MGroupbuyExample"
+		resultType="java.lang.Integer">
+		select count(*) from m_groupbuy
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MGroupbuy">
+		update m_groupbuy
+		<set>
+			<if test="code != null">
+				Code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				Name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="begintime != null">
+				BeginTime = #{begintime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endtime != null">
+				EndTime = #{endtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="publicplatformid != null">
+				PublicPlatformID = #{publicplatformid,jdbcType=INTEGER},
+			</if>
+			<if test="miniprogramid != null">
+				MiniProgramID = #{miniprogramid,jdbcType=INTEGER},
+			</if>
+			<if test="minimum != null">
+				Minimum = #{minimum,jdbcType=INTEGER},
+			</if>
+			<if test="ordernumber != null">
+				OrderNumber = #{ordernumber,jdbcType=INTEGER},
+			</if>
+			<if test="orderamount != null">
+				OrderAmount = #{orderamount,jdbcType=DECIMAL},
+			</if>
+			<if test="photourl != null">
+				PhotoUrl = #{photourl,jdbcType=VARCHAR},
+			</if>
+			<if test="useflag != null">
+				UseFlag = #{useflag,jdbcType=TINYINT},
+			</if>
+			<if test="memo != null">
+				Memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				CreateTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				Creator = #{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifier != null">
+				Modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="updatedtime != null">
+				UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MGroupbuy">
+		update m_groupbuy
+		set Code = #{code,jdbcType=VARCHAR},
+		Name = #{name,jdbcType=VARCHAR},
+		BeginTime = #{begintime,jdbcType=TIMESTAMP},
+		EndTime = #{endtime,jdbcType=TIMESTAMP},
+		PublicPlatformID = #{publicplatformid,jdbcType=INTEGER},
+		MiniProgramID = #{miniprogramid,jdbcType=INTEGER},
+		Minimum = #{minimum,jdbcType=INTEGER},
+		OrderNumber = #{ordernumber,jdbcType=INTEGER},
+		OrderAmount = #{orderamount,jdbcType=DECIMAL},
+		PhotoUrl = #{photourl,jdbcType=VARCHAR},
+		UseFlag = #{useflag,jdbcType=TINYINT},
+		Memo = #{memo,jdbcType=VARCHAR},
+		CreateTime = #{createtime,jdbcType=TIMESTAMP},
+		Creator = #{creator,jdbcType=VARCHAR},
+		ModifyTime = #{modifytime,jdbcType=TIMESTAMP},
+		Modifier = #{modifier,jdbcType=VARCHAR},
+		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>
