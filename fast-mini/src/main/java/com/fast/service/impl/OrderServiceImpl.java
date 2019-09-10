@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.xml.crypto.Data;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +44,6 @@ import com.fast.service.IVipMiniService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
 import com.fast.util.CommonUtil;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 /**
  * 订单
@@ -519,6 +516,45 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
 			FastLog.error("调用OrderServiceImpl.queryOrderDetail报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result groupbuyCalculation(Integer groupbuyid, Integer skuid, Integer quantity) {
+		Result result = new Result();
+
+		try {
+			String sql = "select a.id,a.goodsid,a.colorid,a.patternid,a.sizeid,isnull(a.quantity,0) as stockqty,"+quantity+" as quantity,"
+					+ "b.code,b.name,b.photourl,isnull(b.price,0) as saleprice,isnull(b.baseprice,0) as baseprice,"
+					+ "b.showcolor,b.showpattern,b.showsize,c.name as color,d.name as pattern,e.name as size,"
+					+ "f.groupbuyid,isnull(f.price,0) as price,isnull(f.price,0)*"+quantity+" as amount,isnull(f.price,0)*"+quantity+" as paymoney,"
+					+ "isnull(b.baseprice,0)*"+quantity+" as baseamount,isnull(b.price,0)*"+quantity+" as saleamount "
+					+ "from m_goodssku a "
+					+ "inner join m_goods b on a.goodsid=b.id "
+					+ "left join m_color c on a.colorid=c.id "
+					+ "left join m_pattern d on a.patternid=d.id "
+					+ "left join m_size e on a.sizeid=e.id "
+					+ "inner join m_groupbuydtl f on f.goodsid=a.goodsid"
+					+ "where a.id=" + skuid + " and f.groupbuyid=" + groupbuyid;
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list == null || list.size() < 1) {
+				result.setMessage("商品数据无效");
+				return result;
+			}
+			Integer stockqty = Integer.valueOf(list.get(0).get("stockqty").toString());
+			if (quantity.intValue() > stockqty.intValue() || stockqty.intValue() < 1) {
+				result.setMessage("商品库存不足");
+				return result;
+			}
+			
+			result.setErrcode(Integer.valueOf(0));
+			result.setData(list.get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderServiceImpl.groupbuyCalculation报错：", e);
 		}
 
 		return result;

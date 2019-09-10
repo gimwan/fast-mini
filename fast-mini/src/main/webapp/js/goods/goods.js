@@ -736,7 +736,7 @@ function configUploadInst() {
 	uploadInst = layuiUpload.render({
 	    elem: '.layui-upload-drag',
 	    url: './upload/field/goodsthumbnail',
-	    size: 500,
+	    size: 200,
 	    multiple: false,
 	    done: function(res, index, upload){
 	    	// 上传完毕回调
@@ -759,7 +759,7 @@ function configImageUploadInst() {
 	uploadInst = layuiUpload.render({
 	    elem: '.layui-upload-drag',
 	    url: './upload/field/goodsdtl',
-	    size: 500,
+	    size: 200,
 	    multiple: false,
 	    done: function(res, index, upload){
 	    	// 上传完毕回调

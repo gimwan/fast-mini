@@ -58,5 +58,14 @@ public interface IOrderService {
 	 * @return
 	 */
 	public Result queryOrderDetail(Integer id);
+	
+	/**
+	 * 拼团订单结算计算
+	 * @param groupbuyid
+	 * @param skuid
+	 * @param quantity
+	 * @return
+	 */
+	public Result groupbuyCalculation(Integer groupbuyid, Integer skuid, Integer quantity);
 
 }

@@ -336,5 +336,127 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	
 		return result;
 	}
+	
+	@Override
+	public Result createGroupbuyOrder(String appid, Integer vipid, Integer skuid, Integer quantity, Integer groupbuyid, Integer addressid) {
+		Result result = new Result();
+
+		try {
+			MVipaddress vipaddress = vipaddressMapper.selectByPrimaryKey(addressid);
+			if (vipaddress == null || vipaddress.getId() == null) {
+				result.setMessage("收货地址无效");
+				return result;
+			}
+			Integer miniprogramid = 0;
+			Integer publicplatformid = 0;
+			Result r = iMiniProgramService.queryMiniprogramByAppid(appid);
+			if (Common.isActive(r)) {
+				MMiniprogram miniprogram = (MMiniprogram) r.getData();
+				miniprogramid = miniprogram.getId();
+				publicplatformid = miniprogram.getPublicplatformid();
+			} else {
+				return r;
+			}
+			
+			r = iOrderService.groupbuyCalculation(groupbuyid, skuid, quantity);
+			if (Common.isActive(r)) {
+				LinkedHashMap<String, Object> payInfo = (LinkedHashMap<String, Object>) r.getData();
+				BigDecimal amount = new BigDecimal(payInfo.get("amount").toString());
+				BigDecimal payMoney = new BigDecimal(payInfo.get("paymoney").toString());
+				BigDecimal baseAmount = new BigDecimal(payInfo.get("baseamount").toString());
+				BigDecimal saleAmount = new BigDecimal(payInfo.get("saleamount").toString());
+				
+				Date now = new Date();
+				MOrder order = new MOrder();
+				order.setNo(String.valueOf(System.currentTimeMillis()));
+				order.setKind(Integer.valueOf(3));
+				order.setSource(Integer.valueOf(1));
+				order.setVipid(vipid);
+				order.setQuantity(quantity);
+				order.setAmount(amount);
+				order.setBaseamount(baseAmount);
+				order.setSaleamount(saleAmount);
+				order.setDiscount(BigDecimal.ONE);
+				order.setDiscountmoney(BigDecimal.ZERO);
+				order.setDeposit(BigDecimal.ZERO);
+				order.setPoint(Integer.valueOf(0));
+				order.setPointrate(Integer.valueOf(0));
+				order.setPointmoney(BigDecimal.ZERO);
+				order.setCouponid(Integer.valueOf(0));
+				order.setCouponmoney(BigDecimal.ZERO);
+				order.setPaymoney(payMoney);
+				order.setFreight(BigDecimal.ZERO);
+				order.setPaystatus(Byte.valueOf("0"));
+				order.setDeliverytype(Byte.valueOf("1"));
+				order.setReceiver(vipaddress.getReceiver());
+				order.setReceiverphone(vipaddress.getPhone());
+				order.setReceiverprovince(vipaddress.getProvince());
+				order.setReceivercity(vipaddress.getCity());
+				order.setReceivercounty(vipaddress.getCounty());
+				order.setReceiveraddress(vipaddress.getAddress());
+				order.setCreatetime(now);
+				order.setMarketingid(groupbuyid);
+				order.setCreator("system");
+				order.setUpdatedtime(now);
+				order.setUseflag(Byte.valueOf("1"));
+				
+				if (order.getPaymoney().compareTo(BigDecimal.ZERO) > 0) {
+					order.setStatus(Byte.valueOf("1"));
+				} else {
+					order.setStatus(Byte.valueOf("2"));
+					order.setPaystatus(Byte.valueOf("2"));
+					order.setPaytime(now);
+				}
+				
+				order.setMiniprogramid(miniprogramid);
+				order.setPublicplatformid(publicplatformid);
+				order.setRetuenpaystatus(Byte.valueOf("0"));
+				
+				order = saveGroupbuyOrder(order, payInfo);
+				result.setId(order.getId());
+				result.setErrcode(Integer.valueOf(0));
+			} else {
+				result = r;
+				return result;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.createOrder报错：", e);
+		}
+	
+		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public MOrder saveGroupbuyOrder(MOrder order, LinkedHashMap<String, Object> goods) {
+		orderMapper.insertSelective(order);
+		
+		MOrderdtl orderdtl = new MOrderdtl();
+		orderdtl.setOrderid(order.getId());
+		orderdtl.setGoodsid(Integer.valueOf(goods.get("goodsid").toString()));
+		orderdtl.setColorid(Integer.valueOf(goods.get("colorid").toString()));
+		orderdtl.setPatternid(Integer.valueOf(goods.get("patternid").toString()));
+		orderdtl.setSizeid(Integer.valueOf(goods.get("sizeid").toString()));
+		orderdtl.setQuantity(Integer.valueOf(goods.get("quantity").toString()));
+		orderdtl.setPrice(new BigDecimal(goods.get("price").toString()));
+		orderdtl.setBaseprice(new BigDecimal(goods.get("baseprice").toString()));
+		orderdtl.setAmount(new BigDecimal(goods.get("amount").toString()));
+		orderdtl.setSaleprice(new BigDecimal(goods.get("saleprice").toString()));
+		orderdtl.setBaseamount(new BigDecimal(goods.get("baseamount").toString()));
+		orderdtl.setSaleamount(new BigDecimal(goods.get("saleamount").toString()));
+		orderdtl.setCreatetime(order.getCreatetime());
+		orderdtl.setCreator(order.getCreator());
+		orderdtl.setUpdatedtime(order.getUpdatedtime());
+		orderdtl.setUseflag(Byte.valueOf("1"));
+		orderdtlMapper.insertSelective(orderdtl);
+		// 扣减库存
+		MGoodssku goodssku = goodsskuMapper.selectByPrimaryKey(Integer.valueOf(goods.get("id").toString()));
+		Integer quantity = goodssku.getQuantity().intValue() - orderdtl.getQuantity().intValue();
+		goodssku.setQuantity(Long.valueOf(quantity.toString()));
+		goodsskuMapper.updateByPrimaryKeySelective(goodssku);
+		
+		return order;
+	}
 
 }

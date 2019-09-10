@@ -12,33 +12,7 @@ common.bindVue = function() {
         methods : {
             add: function () {
                 showEditBox(-1, null);
-            }/*,
-            del: function () {
-    			let id = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("id");
-    			let deleteIndex = $(".layui-table-view .layui-table-box .layui-table-body table .selected").data("index");
-            	if (id == null || id == undefined || $.trim(id) == "") {
-            		common.warn("请选择删除项");
-                    return false;
-				}
-            	layer.confirm('确定删除？', {
-            		btn: ['确定','取消'],
-            		btn1 : function(index, layero) {
-        				var data = {};
-        				data['id'] = id;
-                    	common.showLoading();
-                        api.load('./groupbuy/delete','post',data, function(result) {
-                            if (result.errcode == 0) {
-                            	groupbuy.splice(deleteIndex);
-                                
-                                common.tips(result.message);
-                            } else {
-                                common.error(result.message);
-                            }
-                            common.closeLoading();
-                        });
-            		}
-            	});
-            }*/
+            }
         }
 	});
 	
@@ -133,7 +107,7 @@ function setData(pageView) {
     }
 }
 
-function showEditBox(idx,data) {
+function showEditBox(idx, data) {
 	let editDiv = createElement(data);
 	
 	let boxTitle = "<label style='font-weight:600;'>修改</label>";
@@ -208,6 +182,8 @@ function createElement(data) {
 	    useflag : "1",
 	    publicplatformid : "",
 	    publicplatform : "",
+	    active: 0,
+	    over: 0,
 	    memo : ""
     };
     if (data != null && data != undefined && data != "") {
@@ -217,6 +193,14 @@ function createElement(data) {
             }
         }
     }
+    let active = d.active;
+    if (d.useflag != 1) {
+    	active = 0;
+	}
+    if (d.over == 1) {
+    	active = 0;
+	}
+    
 	let element = "<div class=\"edit-view\">"+
 				    "<div class=\"edit-box\">"+
 				        "<div class=\"edit-item\" need=\"0\" key=\"1\" hidden>"+
@@ -232,7 +216,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">编号</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"code\">"+
-				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\" />"+
+				                "<input type=\"text\" value=\""+d.code+"\" class=\"layui-input value focus\" "+(active == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -240,7 +224,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">名称</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"name\">"+
-				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\" />"+
+				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\" "+(active == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -248,7 +232,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">生效时间</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"begintime\">"+
-				                "<input type=\"text\" value=\""+common.formatDate(d.begintime)+"\" id=\"beginDate\" class=\"layui-input timechoosed value\" readonly=\"readonly\" />"+
+				                "<input type=\"text\" value=\""+common.formatDate(d.begintime)+"\" id=\"beginDate\" class=\"layui-input timechoosed value\" readonly=\"readonly\" "+(active == 1 ? "disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -256,7 +240,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">失效时间</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"endtime\">"+
-				                "<input type=\"text\" value=\""+common.formatDate(d.endtime)+"\" id=\"endDate\" class=\"layui-input timechoosed value\" readonly=\"readonly\" />"+
+				                "<input type=\"text\" value=\""+common.formatDate(d.endtime)+"\" id=\"endDate\" class=\"layui-input timechoosed value\" readonly=\"readonly\" "+(active == 1 ? "disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
@@ -264,7 +248,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">成团人数</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"minimum\">"+
-				                "<input type=\"number\" value=\""+d.minimum+"\" class=\"layui-input value\" />"+
+				                "<input type=\"number\" value=\""+d.minimum+"\" class=\"layui-input value\" "+(active == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\">"+
@@ -273,7 +257,7 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"publicplatformid\">"+
 				                "<input type=\"text\" data-id=\""+d.publicplatformid+"\" value=\""+d.publicplatform+"\" " +
-				                		"data-url=\"./data/page?table=publicplatform\" class=\"layui-input value\" readonly=\"readonly\" />" +
+				                		"data-url=\"./data/page?table=publicplatform\" class=\"layui-input value\" readonly=\"readonly\" "+(active == 1 ? "disabled='disabled'" : "")+"/>" +
 				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
 				            "</div>"+
 				        "</div>"+
@@ -323,7 +307,7 @@ function configImageUploadInst() {
 	uploadInst = layuiUpload.render({
 	    elem: '.layui-upload-drag',
 	    url: './upload/field/marketing',
-	    size: 500,
+	    size: 200,
 	    multiple: false,
 	    done: function(res, index, upload){
 	    	// 上传完毕回调
@@ -340,13 +324,24 @@ function configImageUploadInst() {
 
 function showGoodsBox(id,index) {
 	common.showLoading();	
+	let gd = groupbuy[index];
+	let active = gd.active;
+	if (gd.useflag != 1) {
+		active = 0;
+	}
+	if (gd.over == 1) {
+    	active = 0;
+	}
 	let da = {};
 	da.groupbuyid = id;
     api.load('./groupbuy/detail','post', da, function(result) {
     	if (result.errcode == 0) {
     		let datas = result.data;
-    		let goodsDiv = createGoodsElement(datas);    		
+    		let goodsDiv = createGoodsElement(datas, active);
     	    let btns = ['保存','取消','添加'];
+    	    if (active == 1) {
+    	    	btns = ['保存','取消'];
+			}
     	    layer.open({
     	        type: 1,
     	        title: "<label style='font-weight:600;'>商品</label>",
@@ -354,6 +349,10 @@ function showGoodsBox(id,index) {
     	        area: ['900px', '600px'],
     	        btn: btns,
     	        btn1: function (index, layero) {
+    	        	if (active == 1) {
+    	        		layer.close(index);
+    	        		return false;
+    	        	}
     	        	let goodsdatas = catchGoodsData(id);
     	        	if ("error" == goodsdatas) {
 						return false;
@@ -396,7 +395,7 @@ function showGoodsBox(id,index) {
     });
 }
 
-function createGoodsElement(data) {
+function createGoodsElement(data, active) {
 	let tr = "";
 	
 	if (data != null) {
@@ -406,14 +405,14 @@ function createGoodsElement(data) {
 						"<td class=\"d-code\">" +
 							"<div class=\"popup\">" +
 								"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">编号<span></div>" +
-								"<input type=\"text\" class=\"layui-input value code\" goods=\"1\" data-id=\""+data[i].goodsid+"\" value=\""+data[i].code+"\" data-url=\"./data/page?table=color\" onChange=\"chooseGoods(this)\" readonly=\"readonly\"/>" +
+								"<input type=\"text\" class=\"layui-input value code\" goods=\"1\" data-id=\""+data[i].goodsid+"\" value=\""+data[i].code+"\" data-url=\"./data/page?table=color\" onChange=\"chooseGoods(this)\" readonly=\"readonly\" "+(active==1?"disabled='disabled;'":"")+"/>" +
 							"</div>" +
 						"</td>" +
 						"<td class=\"d-name\"><input type=\"text\" class=\"layui-input value name\" value=\""+(data[i].name==null?'':data[i].name)+"\" readonly=\"readonly\" /></td>" +
 						"<td class=\"d-baseprice\"><input type=\"text\" class=\"layui-input value baseprice\" value=\""+(data[i].baseprice==null?'':data[i].baseprice)+"\" readonly=\"readonly\"/></td>" +
 						"<td class=\"d-saleprice\"><input type=\"text\" class=\"layui-input value saleprice\" value=\""+(data[i].saleprice==null?'':data[i].saleprice)+"\" readonly=\"readonly\" /></td>" +
-						"<td class=\"d-price\"><input type=\"number\" class=\"layui-input value price\" value=\""+(data[i].price==null?'':data[i].price)+"\" /></td>" +
-						"<td class=\"d-operation operationBtn\"><i class=\"layui-icon layui-icon-delete\" onclick='deleteTr(this)'></i></td>" +
+						"<td class=\"d-price\"><input type=\"number\" class=\"layui-input value price\" value=\""+(data[i].price==null?'':data[i].price)+"\" "+(active==1?"readonly='readonly' disabled='disabled;'":"")+"/></td>" +
+						"<td class=\"d-operation operationBtn\"><i class=\"layui-icon layui-icon-delete\" onclick='deleteTr(this)' "+(active==1?"style='display:none;'":"")+"></i></td>" +
 					"</tr>";
 		}
 	}

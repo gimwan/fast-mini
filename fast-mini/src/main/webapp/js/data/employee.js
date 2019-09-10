@@ -272,7 +272,7 @@ function configUpload() {
 	layuiUpload.render({
 	    elem: '.layui-upload-drag',
 	    url: './upload/field/employee',
-	    size: 1024,
+	    size: 200,
 	    multiple: false,
 	    done: function(res, index, upload){
 	    	// 上传完毕回调

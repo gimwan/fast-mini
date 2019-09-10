@@ -13,10 +13,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MGroupbuyMapper;
 import com.fast.base.data.dao.MGroupbuydtlMapper;
+import com.fast.base.data.dao.MOrderMapper;
 import com.fast.base.data.entity.MGroupbuy;
 import com.fast.base.data.entity.MGroupbuyExample;
 import com.fast.base.data.entity.MGroupbuydtl;
 import com.fast.base.data.entity.MGroupbuydtlExample;
+import com.fast.base.data.entity.MOrder;
+import com.fast.base.data.entity.MOrderExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.IDataService;
 import com.fast.service.IGroupbuyMaintService;
@@ -43,6 +46,9 @@ public class GroupbuyMaintServiceImpl implements IGroupbuyMaintService, Serializ
 	
 	@Autowired
 	IDataService iDataService;
+	
+	@Autowired
+	MOrderMapper orderMapper;
 
 	@Override
 	public Result changeGroupbuy(MGroupbuy groupbuy, MUser user) {
@@ -138,6 +144,13 @@ public class GroupbuyMaintServiceImpl implements IGroupbuyMaintService, Serializ
 		Result result = new Result();
 
 		try {
+			MOrderExample example = new MOrderExample();
+			example.createCriteria().andKindEqualTo(Integer.valueOf(3)).andMarketingidEqualTo(id);
+			List<MOrder> list = orderMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				result.setMessage("删除失败！此活动已关联相关数据");
+				return result;
+			}
 			result = delete(id);
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());

@@ -161,7 +161,7 @@ function showEditBox(idx) {
 				layuiUpload.render({
 				    elem: '#imagebox',
 				    url: './upload/field/config',
-				    size: 1024,
+				    size: 200,
 				    multiple: false,
 				    done: function(res, index, upload){
 				    	// 上传完毕回调

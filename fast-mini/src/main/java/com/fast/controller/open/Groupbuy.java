@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.base.Result;
 import com.fast.service.IGroupbuyService;
+import com.fast.service.IOrderMaintService;
+import com.fast.service.IOrderService;
 import com.fast.util.Common;
 
 import net.sf.json.JSONObject;
@@ -24,6 +26,12 @@ public class Groupbuy extends MiniMaster {
 	
 	@Autowired
 	IGroupbuyService iGroupbuyService;
+	
+	@Autowired
+	IOrderService iOrderService;
+	
+	@Autowired
+	IOrderMaintService iOrderMaintService;
 	
 	/**
 	 * 查询拼团活动
@@ -155,6 +163,69 @@ public class Groupbuy extends MiniMaster {
 			}
 			
 			r = iGroupbuyService.queryGoodsStock(Integer.valueOf(groupbuyid), Integer.valueOf(goodsid), appid, openid);
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 结算计算
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/groupbuy/calculation")
+	@ResponseBody
+	public String calculation(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String skuid = request.getParameter("skuid");
+			String quantity = request.getParameter("quantity");
+			String groupbuyid = request.getParameter("groupbuyid");
+			
+			r = iOrderService.groupbuyCalculation(Integer.valueOf(groupbuyid), Integer.valueOf(skuid), Integer.valueOf(quantity));
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 生成拼团订单
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/groupbuy/create")
+	@ResponseBody
+	public String create(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String vipid = request.getParameter("vipid");
+			String skuid = request.getParameter("skuid");
+			String quantity = request.getParameter("quantity");
+			String groupbuyid = request.getParameter("groupbuyid");
+			String addressid = request.getParameter("addressid");
+			
+			r = iOrderMaintService.createGroupbuyOrder(appid, Integer.valueOf(vipid.trim()),
+					Integer.valueOf(skuid.trim()), Integer.valueOf(quantity.trim()), Integer.valueOf(groupbuyid.trim()),
+					Integer.valueOf(addressid.trim()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			r.setMessage(e.getMessage());

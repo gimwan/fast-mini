@@ -127,7 +127,7 @@
 													title="商品" v-on:click="goods">商品</button>
 												<button
 													class="layui-btn layui-btn-danger layui-btn-xs del"
-													title="删除" v-on:click="del">删除</button>
+													title="删除" v-on:click="del" v-if="(g.useflag!=1 || g.active!=1) && g.over!=1">删除</button>
 											</div>
 										</td>
 									</tr>

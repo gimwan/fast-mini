@@ -119,27 +119,12 @@ public class WechatPayServiceImpl implements IWechatPayService, Serializable {
 				result.setMessage("查询不到会员");
 				return result;
 			}
-			//MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(vip.getId());
+			
 			MOrder order = orderMapper.selectByPrimaryKey(id);
 			if (order == null || order.getId() == null) {
 				result.setMessage("订单记录不存在");
 				return result;
 			}
-			/*if (order.getCouponid() != null && order.getCouponid().intValue() > 0) {
-				MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(id);
-				if (vipcoupon.getUseflag().intValue() == 1) {
-					result.setMessage("优惠券已使用");
-					return result;
-				}
-			}
-			if (vipaccount.getPoint() < order.getPoint()) {
-				result.setMessage("积分不足");
-				return result;
-			}
-			if (order.getDeposit().compareTo(vipaccount.getDeposit()) > 0) {
-				result.setMessage("储值不足");
-				return result;
-			}*/
 			
 			String body = publicplatform.getBody();
 			if (Common.isEmpty(body)) {

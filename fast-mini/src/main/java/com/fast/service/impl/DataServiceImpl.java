@@ -668,6 +668,7 @@ public class DataServiceImpl implements IDataService, Serializable {
 			}
 			
 			int active = 0;
+			int over = 0;
 			try {
 				String begintime = list.get(i).get("begintime") == null ? "" : list.get(i).get("begintime").toString();
 				String endtime = list.get(i).get("endtime") == null ? "" : list.get(i).get("endtime").toString();
@@ -681,13 +682,17 @@ public class DataServiceImpl implements IDataService, Serializable {
 				if (endtime != null && !"".equals(endtime.trim())) {
 					enddate = simpleDateFormat.parse(endtime.trim());
 				}
-				if (begindate.getTime() >= now.getTime() && enddate.getTime() > now.getTime()) {
+				if (begindate.getTime() <= now.getTime() && enddate.getTime() > now.getTime()) {
 					active = 1;
+				}
+				if (enddate.getTime() < now.getTime()) {
+					over = 1;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			list.get(i).put("active", active);
+			list.get(i).put("over", over);
 		}
 		if (publicplatformidList.size() > 0) {
 			MPublicplatformExample example = new MPublicplatformExample();

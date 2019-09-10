@@ -40,5 +40,17 @@ public interface IOrderMaintService {
 	 * @return
 	 */
 	public Result changeOrderStatus(MUser user, Integer orderid, Integer logisticsid, String logisticsno);
+	
+	/**
+	 * 生成拼团订单
+	 * @param appid
+	 * @param vipid
+	 * @param skuid
+	 * @param quantity
+	 * @param groupbuyid
+	 * @param addressid
+	 * @return
+	 */
+	public Result createGroupbuyOrder(String appid, Integer vipid, Integer skuid, Integer quantity, Integer groupbuyid, Integer addressid);
 
 }
