@@ -11,7 +11,7 @@ public class QuartzTask {
 	@Autowired
 	IOrderMaintService iOrderMaintService;
 	
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 	
 	public void execute() {
 		System.out.println("定时任务开始，" + dateFormat.format(System.currentTimeMillis()));
