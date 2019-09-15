@@ -66,6 +66,8 @@
 			jdbcType="VARCHAR" />
 		<result column="DistributionTime" property="distributiontime"
 			jdbcType="TIMESTAMP" />
+		<result column="CancelTime" property="canceltime" jdbcType="TIMESTAMP" />
+		<result column="Canceler" property="canceler" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="ResultMapWithBLOBs" type="com.fast.base.data.entity.MOrder"
 		extends="BaseResultMap">
@@ -116,7 +118,9 @@
 		ModifyTime,
 		Modifier, UpdatedTime, UseFlag, Status, MiniprogramID, PublicplatformID,
 		RetuenPayStatus,
-		ExtID, MarketingID, DistributionFlag, Distributioner, DistributionTime
+		ExtID, MarketingID, DistributionFlag, Distributioner, DistributionTime,
+		CancelTime,
+		Canceler
 	</sql>
 	<sql id="Blob_Column_List">
 		ReceiverAddress
@@ -193,7 +197,8 @@
 		Status, MiniprogramID, PublicplatformID,
 		RetuenPayStatus, ExtID, MarketingID,
 		DistributionFlag, Distributioner, DistributionTime,
-		ReceiverAddress)
+		CancelTime, Canceler, ReceiverAddress
+		)
 		values (#{id,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR},
 		#{kind,jdbcType=INTEGER},
 		#{source,jdbcType=INTEGER}, #{vipid,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER},
@@ -223,7 +228,9 @@
 		#{marketingid,jdbcType=INTEGER},
 		#{distributionflag,jdbcType=TINYINT}, #{distributioner,jdbcType=VARCHAR},
 		#{distributiontime,jdbcType=TIMESTAMP},
-		#{receiveraddress,jdbcType=LONGVARCHAR})
+		#{canceltime,jdbcType=TIMESTAMP}, #{canceler,jdbcType=VARCHAR},
+		#{receiveraddress,jdbcType=LONGVARCHAR}
+		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MOrder"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -382,6 +389,12 @@
 			<if test="distributiontime != null">
 				DistributionTime,
 			</if>
+			<if test="canceltime != null">
+				CancelTime,
+			</if>
+			<if test="canceler != null">
+				Canceler,
+			</if>
 			<if test="receiveraddress != null">
 				ReceiverAddress,
 			</if>
@@ -539,6 +552,12 @@
 			</if>
 			<if test="distributiontime != null">
 				#{distributiontime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="canceltime != null">
+				#{canceltime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="canceler != null">
+				#{canceler,jdbcType=VARCHAR},
 			</if>
 			<if test="receiveraddress != null">
 				#{receiveraddress,jdbcType=LONGVARCHAR},
@@ -705,6 +724,12 @@
 			<if test="distributiontime != null">
 				DistributionTime = #{distributiontime,jdbcType=TIMESTAMP},
 			</if>
+			<if test="canceltime != null">
+				CancelTime = #{canceltime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="canceler != null">
+				Canceler = #{canceler,jdbcType=VARCHAR},
+			</if>
 			<if test="receiveraddress != null">
 				ReceiverAddress = #{receiveraddress,jdbcType=LONGVARCHAR},
 			</if>
@@ -763,6 +788,8 @@
 		DistributionFlag = #{distributionflag,jdbcType=TINYINT},
 		Distributioner = #{distributioner,jdbcType=VARCHAR},
 		DistributionTime = #{distributiontime,jdbcType=TIMESTAMP},
+		CancelTime = #{canceltime,jdbcType=TIMESTAMP},
+		Canceler = #{canceler,jdbcType=VARCHAR},
 		ReceiverAddress = #{receiveraddress,jdbcType=LONGVARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -817,7 +844,9 @@
 		MarketingID = #{marketingid,jdbcType=INTEGER},
 		DistributionFlag = #{distributionflag,jdbcType=TINYINT},
 		Distributioner = #{distributioner,jdbcType=VARCHAR},
-		DistributionTime = #{distributiontime,jdbcType=TIMESTAMP}
+		DistributionTime = #{distributiontime,jdbcType=TIMESTAMP},
+		CancelTime = #{canceltime,jdbcType=TIMESTAMP},
+		Canceler = #{canceler,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

@@ -89,4 +89,29 @@ http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
 		<property name="pathMatcher" ref="caseInsensitivePathMatcher"></property>
 	</bean>
+	
+	<!-- 要调用的工作类 -->
+    <bean id="quartzTask" class="com.fast.task.QuartzTask"/> 
+    <!-- 将需要执行的定时任务注入JOB中。 -->
+    <bean id="testJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="quartzTask"/>
+        <!-- 任务类中需要执行的方法 -->
+        <property name="targetMethod" value="execute"/>
+        <!-- 上一次未执行完成的，要等待有再执行。 -->
+        <property name="concurrent" value="false"/>
+    </bean> 
+    <!-- 定义trigger 触发器 [30秒执行一次]-->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="testJob"/>
+        <property name="cronExpression" value="*/30 * * * * ?"/>
+    </bean> 
+    <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+    <bean id="startQuertz" lazy-init="false" autowire="no"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger" />
+            </list>
+        </property>
+    </bean>
 </beans>

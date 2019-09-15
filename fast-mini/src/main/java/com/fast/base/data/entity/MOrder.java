@@ -118,6 +118,10 @@ public class MOrder implements Serializable {
 
     private Date distributiontime;
 
+    private Date canceltime;
+
+    private String canceler;
+
     private String receiveraddress;
 
     public Integer getId() {
@@ -526,6 +530,22 @@ public class MOrder implements Serializable {
 
     public void setDistributiontime(Date distributiontime) {
         this.distributiontime = distributiontime;
+    }
+
+    public Date getCanceltime() {
+        return canceltime;
+    }
+
+    public void setCanceltime(Date canceltime) {
+        this.canceltime = canceltime;
+    }
+
+    public String getCanceler() {
+        return canceler;
+    }
+
+    public void setCanceler(String canceler) {
+        this.canceler = canceler;
     }
 
     public String getReceiveraddress() {

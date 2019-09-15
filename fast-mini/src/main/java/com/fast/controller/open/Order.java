@@ -213,5 +213,32 @@ public class Order extends MiniMaster {
 		
 		return result;
 	}
+	
+	/**
+	 * 取消订单
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/order/cancel")
+	@ResponseBody
+	public String cancel(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String id = request.getParameter("id");
+			
+			r = iOrderMaintService.cancelOrder(Integer.valueOf(id));
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
 
 }

@@ -1,5 +1,7 @@
 package com.fast.service;
 
+import java.math.BigDecimal;
+
 import com.fast.base.Result;
 
 import net.sf.json.JSONObject;
@@ -32,5 +34,13 @@ public interface IWechatPayService {
 	 */
 	public JSONObject payment(String appid, String openid, String partner, String key, String out_trade_no,
 			String total_fee, String spbill_create_ip, String body, String notifyUrl);
+	
+	/**
+	 * 订单退款
+	 * @param orderid
+	 * @param refundMoney
+	 * @return
+	 */
+	public Result orderRefund(Integer orderid, BigDecimal refundMoney);
 
 }

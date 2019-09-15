@@ -7,11 +7,16 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -30,8 +35,6 @@ import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MOrder;
 import com.fast.base.data.entity.MPublicplatform;
 import com.fast.base.data.entity.MVip;
-import com.fast.base.data.entity.MVipaccount;
-import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipmini;
 import com.fast.base.data.entity.MVipminiExample;
 import com.fast.service.IMiniProgramService;
@@ -39,6 +42,7 @@ import com.fast.service.IVipService;
 import com.fast.service.IWechatPayService;
 import com.fast.service.IWechatService;
 import com.fast.system.log.FastLog;
+import com.fast.util.ClientCustomSSL;
 import com.fast.util.Common;
 import com.fast.util.CommonUtil;
 
@@ -123,6 +127,16 @@ public class WechatPayServiceImpl implements IWechatPayService, Serializable {
 			MOrder order = orderMapper.selectByPrimaryKey(id);
 			if (order == null || order.getId() == null) {
 				result.setMessage("订单记录不存在");
+				return result;
+			}
+			
+			if (order.getStatus().intValue() == 0) {
+				result.setMessage("订单已取消");
+				return result;
+			}
+			
+			if (order.getStatus().intValue() != 1) {
+				result.setMessage("订单非待付款状态");
 				return result;
 			}
 			
@@ -264,6 +278,93 @@ public class WechatPayServiceImpl implements IWechatPayService, Serializable {
 		}
 
 		return prepay_id;
+	}
+	
+	@Override
+	public Result orderRefund(Integer orderid, BigDecimal refundMoney) {
+		Result result = new Result();
+		HashMap<String, Object> map = new HashMap<>();
+		try {
+			MOrder order = orderMapper.selectByPrimaryKey(orderid);
+			order.setRetuenpaystatus(Byte.valueOf("1"));
+			orderMapper.updateByPrimaryKeySelective(order);
+			MPublicplatform publicplatform = publicplatformMapper.selectByPrimaryKey(order.getPublicplatformid());
+			
+			// 公众账号 ID
+			String appid = publicplatform.getAppid();
+			// 商户号
+			String mch_id = publicplatform.getMchid();
+			// 商户密钥
+			String key = publicplatform.getMchkey();
+			// 随机字符串
+			String nonce_str = String.valueOf(System.currentTimeMillis() / 1000);			
+			// 商户订单号
+			String out_trade_no = order.getNo();			
+			// 商户退款单号
+			String out_refund_no = String.valueOf(System.currentTimeMillis());			
+			// 订单总金额，单位为分
+			BigDecimal total_fee = order.getPaymoney().multiply(new BigDecimal(100));
+			total_fee = total_fee.setScale(0, BigDecimal.ROUND_UP);			
+			// 退款总金额，单位为分
+			BigDecimal refund_fee = refundMoney.multiply(new BigDecimal(100));
+			refund_fee = refund_fee.setScale(0, BigDecimal.ROUND_DOWN);			
+			// 操作员帐号, 默认为商户号
+			String op_user_id = mch_id;
+			
+			// 退款资金来源
+			// REFUND_SOURCE_UNSETTLED_FUNDS---未结算资金退款（默认使用未结算资金退款）
+			// REFUND_SOURCE_RECHARGE_FUNDS---可用余额退款
+			String refund_account = "REFUND_SOURCE_RECHARGE_FUNDS";
+			
+			// 签名
+			SortedMap<String, String> sortedMap = new TreeMap<String, String>();
+			sortedMap.put("appid", appid);
+			sortedMap.put("mch_id", mch_id);
+			sortedMap.put("out_trade_no", out_trade_no);
+			sortedMap.put("out_refund_no", out_refund_no);
+			sortedMap.put("total_fee", total_fee.toString());
+			sortedMap.put("refund_account", refund_account);
+			sortedMap.put("refund_fee", refund_fee.toString());
+			sortedMap.put("op_user_id", op_user_id);
+			sortedMap.put("nonce_str", nonce_str);
+			String sign = CommonUtil.createSign(sortedMap, key);
+			
+			String xml = "<xml>" 
+					+ "<appid>" + appid + "</appid>" 
+					+ "<mch_id>" + mch_id + "</mch_id>"
+					+ "<out_trade_no>" + out_trade_no + "</out_trade_no>"
+					+ "<out_refund_no>" + out_refund_no + "</out_refund_no>"
+					+ "<total_fee>" + total_fee + "</total_fee>"
+					+ "<refund_account>" + refund_account + "</refund_account>"
+					+ "<refund_fee>" + refund_fee + "</refund_fee>"
+					+ "<op_user_id>" + op_user_id + "</op_user_id>"
+					+ "<nonce_str>" + nonce_str + "</nonce_str>"
+					+ "<sign><![CDATA[" + sign + "]]></sign>" 
+					+ "</xml>";
+			
+			String URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+			try {
+				String xmlString = ClientCustomSSL.doRefund(URL, xml,mch_id);				
+				Document doc = DocumentHelper.parseText(xmlString);				
+				for (Iterator iterator = doc.getRootElement().elementIterator(); iterator.hasNext();) {
+	            	Element element = (Element) iterator.next();
+	            	System.out.println(element.getName()+":"+element.getStringValue());
+	            	map.put(element.getName(), element.getText());
+	            }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			result.setData(map);
+			result.setErrcode(Integer.valueOf(0));
+			FastLog.debug(com.alibaba.fastjson.JSONObject.toJSONString(map));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用WechatPayServiceImpl.orderRefund报错：", e);
+		}
+		
+		return result;
 	}
 
 }

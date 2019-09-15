@@ -84,9 +84,9 @@ public class OrderController {
 	 * @param micropage
 	 * @return
 	 */
-	@RequestMapping("/change")
+	@RequestMapping("/deliver")
 	@ResponseBody
-	public String change(HttpServletRequest request, HttpServletResponse response, MMicropage micropage) {
+	public String deliver(HttpServletRequest request, HttpServletResponse response, MMicropage micropage) {
 		String r = "";
 		
 		try {
@@ -97,7 +97,7 @@ public class OrderController {
 				String id = request.getParameter("id");
 				String logisticsid = request.getParameter("logisticsid");
 				String logisticsno = request.getParameter("logisticsno");
-				result = iOrderMaintService.changeOrderStatus(user, Integer.valueOf(id.trim()), Integer.valueOf(logisticsid.trim()), logisticsno.trim());
+				result = iOrderMaintService.deliverOrder(user, Integer.valueOf(id.trim()), Integer.valueOf(logisticsid.trim()), logisticsno.trim());
 			} else {
 				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");

@@ -32,14 +32,14 @@ public interface IOrderMaintService {
 	public Result afterPay(String orderno, String wechatno);
 	
 	/**
-	 * 修改订单状态
+	 * 订单发货
 	 * @param user
 	 * @param orderid
 	 * @param logisticsid
 	 * @param logisticsno
 	 * @return
 	 */
-	public Result changeOrderStatus(MUser user, Integer orderid, Integer logisticsid, String logisticsno);
+	public Result deliverOrder(MUser user, Integer orderid, Integer logisticsid, String logisticsno);
 	
 	/**
 	 * 生成拼团订单
@@ -52,5 +52,19 @@ public interface IOrderMaintService {
 	 * @return
 	 */
 	public Result createGroupbuyOrder(String appid, Integer vipid, Integer skuid, Integer quantity, Integer groupbuyid, Integer addressid);
+	
+	/**
+	 * 定时任务
+	 * 自动取消订单
+	 * @return
+	 */
+	public Result cancelOrderTask();
+	
+	/**
+	 * 取消订单
+	 * @param orderid
+	 * @return
+	 */
+	public Result cancelOrder(Integer orderid);
 
 }

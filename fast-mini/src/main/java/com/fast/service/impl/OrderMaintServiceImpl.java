@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
+import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.dao.MOrderMapper;
 import com.fast.base.data.dao.MOrderdtlMapper;
@@ -23,10 +24,12 @@ import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.dao.MVipdepositrecordMapper;
 import com.fast.base.data.dao.MVippointrecordMapper;
 import com.fast.base.data.entity.MGoodssku;
+import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MOrder;
 import com.fast.base.data.entity.MOrderExample;
 import com.fast.base.data.entity.MOrderdtl;
+import com.fast.base.data.entity.MOrderdtlExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipaddress;
@@ -34,11 +37,15 @@ import com.fast.base.data.entity.MVipcartExample;
 import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipdepositrecord;
 import com.fast.base.data.entity.MVippointrecord;
+import com.fast.service.IConfigService;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IOrderMaintService;
 import com.fast.service.IOrderService;
+import com.fast.service.IWechatPayService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
+
+import net.sf.json.JSONObject;
 
 /**
  * 订单
@@ -82,6 +89,18 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	
 	@Autowired
 	MVipcartMapper vipcartMapper;
+	
+	@Autowired
+	IConfigService iConfigService;
+	
+	@Autowired
+	DataMapper dataMapper;
+	
+	@Autowired
+	IWechatPayService iWechatPayService;
+	
+	// 订单自动取消任务锁
+	private boolean cancelOrderTaskLock = false;
 	
 	@Override
 	public Result createOrder(String appid, Integer vipid, String cartid, Integer addressid, Integer couponid,
@@ -244,7 +263,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		if (order.getPoint() != null && order.getPoint().intValue() > 0) {			
 			Integer point = vipaccount.getPoint() - order.getPoint();			
 			vipaccount.setPoint(point);
-			vippointrecord.setPoint(order.getPoint());
+			vippointrecord.setPoint(order.getPoint() * -1);
 			vippointrecord.setNewpoint(point);
 			vippointrecordMapper.insertSelective(vippointrecord);
 			isUpdate = true;
@@ -252,7 +271,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		if (order.getDeposit() != null && order.getDeposit().compareTo(BigDecimal.ZERO) > 0) {
 			BigDecimal deposit = vipaccount.getDeposit().subtract(order.getDeposit());
 			vipaccount.setDeposit(deposit);
-			vipdepositrecord.setDeposit(order.getDeposit());
+			vipdepositrecord.setDeposit(order.getDeposit().multiply(new BigDecimal("-1")));
 			vipdepositrecord.setNewdeposit(deposit);
 			vipdepositrecordMapper.insertSelective(vipdepositrecord);
 			isUpdate = true;
@@ -305,7 +324,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	}
 
 	@Override
-	public Result changeOrderStatus(MUser user, Integer orderid, Integer logisticsid, String logisticsno) {
+	public Result deliverOrder(MUser user, Integer orderid, Integer logisticsid, String logisticsno) {
 		Result result = new Result();
 
 		try {
@@ -457,6 +476,192 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		goodsskuMapper.updateByPrimaryKeySelective(goodssku);
 		
 		return order;
+	}
+
+	@Override
+	public Result cancelOrderTask() {
+		System.out.println("订单自动取消开始...");
+		Result result = new Result();
+
+		try {
+			if (cancelOrderTaskLock) {
+				result.setMessage("任务进行中");
+				return result;
+			}
+			// 订单自动取消时间（分）
+			Result r = iConfigService.queryConfigValueByCode("4001");
+			String min = "";
+			if (Common.isActive(r)) {
+				min = (String) r.getData();
+			}
+			if (Common.isEmpty(min)) {
+				result.setMessage("获取订单自动取消时间参数错误");
+				return result;
+			}
+			
+			cancelOrderTaskLock = true;
+			
+			String sql = "select * from m_order where status=1 and datediff(minute, createtime, getdate())>=" + min + " order by createtime asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					try {
+						JSONObject object = JSONObject.fromObject(list.get(i));
+						MOrder order = (MOrder) JSONObject.toBean(object, MOrder.class);
+						changeOrder(order);
+					} catch (Exception e) {
+						FastLog.error("调用OrderMaintServiceImpl.cancelOrderTask修改订单状态报错：", e);
+						continue;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.cancelOrderTask报错：", e);
+		} finally {
+			cancelOrderTaskLock = false;
+		}
+		
+		System.out.println("订单自动取消结束...");
+		return result;
+	}
+
+	@Override
+	public Result cancelOrder(Integer orderid) {
+		Result result = new Result();
+		
+		try {
+			MOrder order = orderMapper.selectByPrimaryKey(orderid);
+			if (order == null || order.getId() == null) {
+				result.setMessage("订单不存在");
+				return result;
+			}
+			if (order.getStatus().intValue() == 0) {
+				result.setMessage("订单已取消");
+				return result;
+			}
+			
+			changeOrder(order);
+			
+			result.setId(orderid);
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.cancelOrder报错：", e);
+		}
+		
+		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	private void changeOrder(MOrder order) {
+		Date now = new Date();
+		
+		MOrderdtlExample example = new MOrderdtlExample();
+		example.createCriteria().andOrderidEqualTo(order.getId());
+		List<MOrderdtl> dtlList = orderdtlMapper.selectByExample(example);
+		if (dtlList != null && dtlList.size() > 0) {
+			for (int j = 0; j < dtlList.size(); j++) {
+				MOrderdtl orderdtl = dtlList.get(j);
+				
+				// 加回库存
+				// 秒杀
+				if (order.getKind().intValue() == 4) {
+					
+				}
+				// 正常、拼团
+				else {
+					MGoodsskuExample skuExample = new MGoodsskuExample();
+					skuExample.createCriteria().andGoodsidEqualTo(orderdtl.getGoodsid())
+							.andColoridEqualTo(orderdtl.getColorid())
+							.andPatternidEqualTo(orderdtl.getPatternid())
+							.andSizeidEqualTo(orderdtl.getSizeid());
+					List<MGoodssku> skuList = goodsskuMapper.selectByExample(skuExample);
+					if (skuList != null && skuList.size() > 0) {
+						for (int k = 0; k < skuList.size(); j++) {
+							MGoodssku goodssku = skuList.get(k);
+							Integer quantity = goodssku.getQuantity().intValue() + orderdtl.getQuantity().intValue();
+							goodssku.setQuantity(Long.valueOf(quantity.toString()));
+							goodsskuMapper.updateByPrimaryKeySelective(goodssku);
+						}
+					}
+				}
+			}			
+		}
+		
+		// 返还优惠券
+		if (order.getCouponid() != null && order.getCouponid().intValue() > 0) {
+			MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(order.getCouponid());
+			if (vipcoupon != null && vipcoupon.getId() != null && vipcoupon.getUseflag().intValue() != 1) {
+				vipcoupon.setUseflag(Byte.valueOf("0"));
+				vipcouponMapper.updateByPrimaryKeySelective(vipcoupon);
+			}
+		}
+		
+		// 加回积分、储值，记录积分、储值流水
+		boolean isUpdate = false;
+		MVippointrecord vippointrecord = new MVippointrecord();
+		vippointrecord.setVipid(order.getVipid());
+		vippointrecord.setType(Byte.valueOf("2"));
+		vippointrecord.setRefid(order.getId());
+		vippointrecord.setUpdatedtime(now);
+		MVipdepositrecord vipdepositrecord = new MVipdepositrecord();
+		vipdepositrecord.setVipid(order.getVipid());
+		vipdepositrecord.setType(Byte.valueOf("2"));
+		vipdepositrecord.setRefid(order.getId());
+		vipdepositrecord.setUpdatedtime(now);
+		MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(order.getVipid());
+		if (order.getPoint() != null && order.getPoint().intValue() > 0) {
+			Integer point = vipaccount.getPoint() + order.getPoint();
+			vipaccount.setPoint(point);
+			vippointrecord.setPoint(order.getPoint());
+			vippointrecord.setNewpoint(point);
+			vippointrecordMapper.insertSelective(vippointrecord);
+			isUpdate = true;
+		}
+		if (order.getDeposit() != null && order.getDeposit().compareTo(BigDecimal.ZERO) > 0) {
+			BigDecimal deposit = vipaccount.getDeposit().add(order.getDeposit());
+			vipaccount.setDeposit(deposit);
+			vipdepositrecord.setDeposit(order.getDeposit());
+			vipdepositrecord.setNewdeposit(deposit);
+			vipdepositrecordMapper.insertSelective(vipdepositrecord);
+			isUpdate = true;
+		}
+		if (isUpdate) {
+			vipaccountMapper.updateByPrimaryKeySelective(vipaccount);
+		}
+		
+		// 已付款
+		if (order.getStatus().intValue() == 2 && order.getPaymoney().compareTo(BigDecimal.ZERO) > 0 && order.getPaystatus().intValue() == 2) {
+			if (!Common.isEmpty(order.getWechatpayno())) {
+				// 微信退款
+				boolean isRefund = refund(order);
+				if (isRefund) {
+					order.setRetuenpaystatus(Byte.valueOf("2"));
+				}
+			}
+		}
+		
+		order.setStatus(Byte.valueOf("0"));
+		order.setCanceltime(now);
+		order.setCanceler("system");
+		order.setUpdatedtime(now);
+		orderMapper.updateByPrimaryKeySelective(order);
+	}
+	
+	private Boolean refund(MOrder order) {
+		boolean isRefund = false;
+		Result result = iWechatPayService.orderRefund(order.getId(), order.getPaymoney());
+		if (Common.isActive(result)) {
+			HashMap<String, Object> map = (HashMap<String, Object>) result.getData();
+			String result_code = map.get("result_code").toString().trim();
+			if ("SUCCESS".equals(result_code)) {
+				isRefund = true;
+			}
+		}
+		return isRefund;
 	}
 
 }
