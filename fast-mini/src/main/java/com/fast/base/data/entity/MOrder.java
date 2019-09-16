@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "m_order")
@@ -54,6 +55,7 @@ public class MOrder implements Serializable {
 
     private BigDecimal freight;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date paytime;
 
     private String wechatpayno;
@@ -80,18 +82,22 @@ public class MOrder implements Serializable {
 
     private String deliverer;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date deliverertime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivertime;
 
     private String memo;
 
     private String remark;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
 
     private String creator;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifytime;
 
     private String modifier;
@@ -116,8 +122,10 @@ public class MOrder implements Serializable {
 
     private String distributioner;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date distributiontime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date canceltime;
 
     private String canceler;

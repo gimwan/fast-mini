@@ -344,7 +344,7 @@ public class WechatPayServiceImpl implements IWechatPayService, Serializable {
 			
 			String URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";
 			try {
-				String xmlString = ClientCustomSSL.doRefund(URL, xml,mch_id);				
+				String xmlString = ClientCustomSSL.doRefund(URL, xml,mch_id,publicplatform.getCertpath());				
 				Document doc = DocumentHelper.parseText(xmlString);				
 				for (Iterator iterator = doc.getRootElement().elementIterator(); iterator.hasNext();) {
 	            	Element element = (Element) iterator.next();

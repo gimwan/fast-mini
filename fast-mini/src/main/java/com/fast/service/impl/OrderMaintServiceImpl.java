@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.DataMapper;
+import com.fast.base.data.dao.MExtsystemMapper;
 import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.dao.MOrderMapper;
 import com.fast.base.data.dao.MOrderdtlMapper;
@@ -23,6 +24,8 @@ import com.fast.base.data.dao.MVipcartMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.dao.MVipdepositrecordMapper;
 import com.fast.base.data.dao.MVippointrecordMapper;
+import com.fast.base.data.entity.MExtsystem;
+import com.fast.base.data.entity.MExtsystemExample;
 import com.fast.base.data.entity.MGoodssku;
 import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MMiniprogram;
@@ -42,8 +45,11 @@ import com.fast.service.IMiniProgramService;
 import com.fast.service.IOrderMaintService;
 import com.fast.service.IOrderService;
 import com.fast.service.IWechatPayService;
+import com.fast.service.ext.IExtMaintService;
+import com.fast.service.ext.IExtService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
+import com.fast.util.CommonUtil;
 
 import net.sf.json.JSONObject;
 
@@ -99,8 +105,21 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	@Autowired
 	IWechatPayService iWechatPayService;
 	
+	@Autowired
+	IExtService iExtService;
+	
+	@Autowired
+	IExtMaintService iExtMaintService;
+	
+	@Autowired
+	MExtsystemMapper extsystemMapper;
+	
 	// 订单自动取消任务锁
 	private boolean cancelOrderTaskLock = false;
+	// 推送订单任务锁
+	private boolean pushOrderTaskLock = false;
+	// 推送订单任务锁
+	private boolean changeOrderStatusTaskLock = false;
 	
 	@Override
 	public Result createOrder(String appid, Integer vipid, String cartid, Integer addressid, Integer couponid,
@@ -322,6 +341,37 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	
 		return result;
 	}
+	
+	@Override
+	public Result distributionOrder(MUser user, Integer orderid, Integer delivererDepartmentID) {
+		Result result = new Result();
+
+		try {
+			MOrder order = orderMapper.selectByPrimaryKey(orderid);
+			if (order != null && order.getId() != null) {
+				Date now = new Date();
+				// 配货
+				if (order.getStatus().intValue() == 2 && (order.getDistributionflag() == null || order.getDistributionflag().intValue() != 1)) {
+					order.setDelivererdepartmentid(delivererDepartmentID);
+					order.setDistributionflag(Byte.valueOf("1"));
+					order.setDistributioner(user.getName());
+					order.setDistributiontime(now);
+					order.setUpdatedtime(now);
+					orderMapper.updateByPrimaryKeySelective(order);
+					
+					result.setErrcode(Integer.valueOf(0));
+					result.setId(order.getId());
+					result.setMessage("配货成功");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.distributionOrder报错：", e);
+		}
+	
+		return result;
+	}
 
 	@Override
 	public Result deliverOrder(MUser user, Integer orderid, Integer logisticsid, String logisticsno) {
@@ -332,7 +382,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			if (order != null && order.getId() != null) {
 				Date now = new Date();
 				// 发货
-				if (order.getStatus().intValue() == 2) {
+				if (order.getStatus().intValue() == 2 && order.getDistributionflag().intValue() == 1) {
 					order.setLogisticsid(logisticsid);
 					order.setLogisticsno(logisticsno.trim());
 					order.setStatus(Byte.valueOf("3"));
@@ -504,12 +554,13 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			String sql = "select * from m_order where status=1 and datediff(minute, createtime, getdate())>=" + min + " order by createtime asc";
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
 				for (int i = 0; i < list.size(); i++) {
 					try {
-						JSONObject object = JSONObject.fromObject(list.get(i));
-						MOrder order = (MOrder) JSONObject.toBean(object, MOrder.class);
+						MOrder order = orderMapper.selectByPrimaryKey(Integer.valueOf(list.get(i).get("id").toString()));
 						changeOrder(order);
 					} catch (Exception e) {
+						System.out.println("订单自动取消失败：orderid="+list.get(i).get("id").toString());
 						FastLog.error("调用OrderMaintServiceImpl.cancelOrderTask修改订单状态报错：", e);
 						continue;
 					}
@@ -580,7 +631,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 							.andSizeidEqualTo(orderdtl.getSizeid());
 					List<MGoodssku> skuList = goodsskuMapper.selectByExample(skuExample);
 					if (skuList != null && skuList.size() > 0) {
-						for (int k = 0; k < skuList.size(); j++) {
+						for (int k = 0; k < skuList.size(); k++) {
 							MGoodssku goodssku = skuList.get(k);
 							Integer quantity = goodssku.getQuantity().intValue() + orderdtl.getQuantity().intValue();
 							goodssku.setQuantity(Long.valueOf(quantity.toString()));
@@ -662,6 +713,135 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			}
 		}
 		return isRefund;
+	}
+	
+	@Override
+	public Result pushOrderTask() {
+		System.out.println("推送订单开始...");
+		Result result = new Result();
+
+		try {
+			if (pushOrderTaskLock) {
+				result.setMessage("任务进行中");
+				return result;
+			}
+			
+			pushOrderTaskLock = true;
+			
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(example);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			String sql = "select * from m_order where status>=3 and (extid is null or extid='') order by deliverertime asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
+				for (int i = 0; i < list.size(); i++) {
+					try {
+						Result r = iExtMaintService.putOrder(extsystem, Integer.valueOf(list.get(i).get("id").toString()));
+						if (Common.isActive(r)) {
+							/*com.alibaba.fastjson.JSONObject jObject = com.alibaba.fastjson.JSONObject.parseObject(r.getData().toString());
+							if (jObject != null && !jObject.isEmpty()) {
+								String extid = jObject.get("id") == null ? "" : jObject.getString("id");
+								if (!Common.isEmpty(extid)) {
+									JSONObject object = JSONObject.fromObject(list.get(i));
+									MOrder order = (MOrder) JSONObject.toBean(object, MOrder.class);
+									order.setExtid(extid);
+									order.setUpdatedtime(new Date());
+									orderMapper.updateByPrimaryKeySelective(order);
+								}
+							}*/
+						} else {
+							System.out.println("推送订单失败：orderid="+list.get(i).get("id").toString());
+						}
+					} catch (Exception e) {
+						System.out.println("推送订单失败：orderid="+list.get(i).get("id").toString());
+						FastLog.error("调用OrderMaintServiceImpl.pushOrderTask推送订单报错：", e);
+						continue;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.pushOrderTask报错：", e);
+		} finally {
+			pushOrderTaskLock = false;
+		}
+		
+		System.out.println("推送订单结束...");
+		return result;
+	}
+	
+	@Override
+	public Result changeOrderStatusTask() {
+		System.out.println("更新订单状态开始...");
+		Result result = new Result();
+
+		try {
+			if (changeOrderStatusTaskLock) {
+				result.setMessage("任务进行中");
+				return result;
+			}
+			
+			changeOrderStatusTaskLock = true;
+			
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(example);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			String sql = "select * from m_order where status=2 and distributionflag=1 and (extid is null or extid='') order by distributiontime asc,createtime asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
+				for (int i = 0; i < list.size(); i++) {
+					try {
+						Result r = iExtService.queryOrderStatus(extsystem, list.get(i).get("no").toString());
+						if (Common.isActive(r)) {
+							com.alibaba.fastjson.JSONObject jObject = com.alibaba.fastjson.JSONObject.parseObject(r.getData().toString());
+							if (jObject != null && !jObject.isEmpty()) {
+								String state = jObject.get("state") == null ? "" : jObject.getString("state");
+								if (!Common.isEmpty(state) && "已完成".equals(state)) {
+									MOrder order = orderMapper.selectByPrimaryKey(Integer.valueOf(list.get(i).get("id").toString()));
+									order.setStatus(Byte.valueOf("3"));
+									order.setUpdatedtime(new Date());
+									orderMapper.updateByPrimaryKeySelective(order);
+								}
+							}
+						} else {
+							System.out.println("查询订单状态失败：orderno="+list.get(i).get("no").toString());
+						}
+					} catch (Exception e) {
+						System.out.println("更新订单状态失败：orderid="+list.get(i).get("id").toString());
+						FastLog.error("调用OrderMaintServiceImpl.changeOrderStatusTask更新订单状态报错：", e);
+						continue;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.changeOrderStatusTask报错：", e);
+		} finally {
+			changeOrderStatusTaskLock = false;
+		}
+		
+		System.out.println("更新订单状态结束...");
+		return result;
 	}
 
 }

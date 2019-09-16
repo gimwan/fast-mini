@@ -14,20 +14,25 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MRegionMapper;
 import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
+import com.fast.base.data.dao.MVipaddressMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.dao.MViptypeMapper;
+import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MRegion;
 import com.fast.base.data.entity.MRegionExample;
 import com.fast.base.data.entity.MVip;
 import com.fast.base.data.entity.MVipExample;
 import com.fast.base.data.entity.MVipaccount;
+import com.fast.base.data.entity.MVipaddress;
+import com.fast.base.data.entity.MVipaddressExample;
 import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipcouponExample;
 import com.fast.base.data.entity.MVipmini;
 import com.fast.base.data.entity.MVipminiExample;
 import com.fast.base.data.entity.MViptype;
 import com.fast.service.IMiniProgramService;
+import com.fast.service.IVipMiniService;
 import com.fast.service.IVipService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
@@ -65,6 +70,12 @@ public class VipServiceImpl implements IVipService, Serializable {
 	
 	@Autowired
 	MRegionMapper regionMapper;
+	
+	@Autowired
+	IVipMiniService iVipMiniService;
+	
+	@Autowired
+	MVipaddressMapper vipaddressMapper;
 	
 	@Override
 	public Result vip() {
@@ -373,6 +384,65 @@ public class VipServiceImpl implements IVipService, Serializable {
 			}
 		}
 		return vip;
+	}
+
+	@Override
+	public Result queryVipDefaultAddress(String appid, String openid) {
+		Result result = new Result();
+
+		try {
+			if (Common.isEmpty(openid)) {
+				result.setMessage("openid无效");
+				return result;
+			}
+			MMiniprogram miniprogram = new MMiniprogram();
+			Result r = iMiniProgramService.queryMiniprogramByAppid(appid);
+			if (Common.isActive(r)) {
+				miniprogram = (MMiniprogram) r.getData();
+			} else {
+				return r;
+			}
+			MVipmini vipmini = new MVipmini();
+			r = iVipMiniService.queryVipMiniByOpenid(miniprogram.getId(), openid);
+			if (Common.isActive(r)) {
+				vipmini = (MVipmini) r.getData();
+			} else {
+				return r;
+			}
+			
+			MVipaddress vipaddress = new MVipaddress();
+			MVipaddressExample example = new MVipaddressExample();
+			example.createCriteria().andVipidEqualTo(vipmini.getVipid());
+			example.setOrderByClause(" isdefault desc");
+			List<MVipaddress> list = vipaddressMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				vipaddress = list.get(0);
+			} else {
+				result.setErrcode(Integer.valueOf(2));
+				result.setMessage("无收货地址");
+				return result;
+			}
+			
+			HashMap<String, Object> map = (HashMap<String, Object>) result.getData();
+			map.put("receiver", vipaddress.getReceiver() == null ? "" : vipaddress.getReceiver());
+			map.put("phone", vipaddress.getPhone() == null ? "" : vipaddress.getPhone());
+			String province = vipaddress.getProvince() == null ? "" : vipaddress.getProvince();
+			String city = vipaddress.getCity() == null ? "" : vipaddress.getCity();
+			String county = vipaddress.getCounty() == null ? "" : vipaddress.getCounty();
+			String address = vipaddress.getAddress() == null ? "" : vipaddress.getAddress();
+			map.put("address", province+city+county+address);
+			map.put("addressid", vipaddress.getId());
+			map.put("isdefault", vipaddress.getIsdefault());
+			result.setData(map);
+			result.setId(vipaddress.getId());
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipServiceImpl.queryVipDefaultAddress报错：", e);
+		}
+
+		return result;
 	}
 
 }

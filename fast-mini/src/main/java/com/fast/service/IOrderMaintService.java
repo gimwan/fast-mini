@@ -32,6 +32,15 @@ public interface IOrderMaintService {
 	public Result afterPay(String orderno, String wechatno);
 	
 	/**
+	 * 配货
+	 * @param user
+	 * @param orderid
+	 * @param delivererDepartmentID
+	 * @return
+	 */
+	public Result distributionOrder(MUser user, Integer orderid, Integer delivererDepartmentID);
+	
+	/**
 	 * 订单发货
 	 * @param user
 	 * @param orderid
@@ -59,6 +68,20 @@ public interface IOrderMaintService {
 	 * @return
 	 */
 	public Result cancelOrderTask();
+	
+	/**
+	 * 定时任务
+	 * 推送订单
+	 * @return
+	 */
+	public Result pushOrderTask();
+	
+	/**
+	 * 定时任务
+	 * 更新订单状态
+	 * @return
+	 */
+	public Result changeOrderStatusTask();
 	
 	/**
 	 * 取消订单

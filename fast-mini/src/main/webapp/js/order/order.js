@@ -88,6 +88,8 @@ function createElement(data) {
 		discountmoney: 0,
 		logistics: '',
 		logisticsno: '',
+		marketing: '',
+		delivererdepartment: '',
 		remark: '',
 		memo : '',
 		details: []
@@ -149,7 +151,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">性质</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\">"+
-				            	"<span class=\"value\">"+(d.kind==2?'兑换':'销售')+"</span>"+
+				            	"<span class=\"value\">"+(d.kind==2?'兑换':(d.kind==3?'拼团':(d.kind==4?'秒杀':'销售')))+"</span>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\">"+
@@ -194,6 +196,14 @@ function createElement(data) {
 				        "</div>"+
 				        "<div class=\"edit-item\">"+
 				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">发货门店</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\">"+
+				            	"<span class=\"value\">"+d.delivererdepartment+"</span>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\">"+
+				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">发货人</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\">"+
@@ -222,6 +232,14 @@ function createElement(data) {
 				            "</div>"+
 				            "<div class=\"edit-value\">"+
 				            	"<span class=\"value\">"+d.logisticsno+"</span>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">活动名称</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\">"+
+				            	"<span class=\"value\">"+d.marketing+"</span>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item memo\">"+
@@ -334,7 +352,9 @@ function showEditBox(idx,data) {
 	let boxTitle = "<label style='font-weight:600;'>明细</label>";
 	
 	var btnOperation = ['关闭'];
-	if (data.status == 2) {
+	if (data.status == 2 && data.distributionflag != 1) {
+		btnOperation = ['配货','关闭'];
+	} else if (data.status == 2 && data.distributionflag == 1) {
 		btnOperation = ['发货','关闭'];
 	}
     
@@ -345,8 +365,10 @@ function showEditBox(idx,data) {
         area: ['1100px', '800px'],
         btn: btnOperation,
         btn1: function (index, layero) {
-            if (data.status == 2) {
-            	chooseLogistics(data.id, index);
+            if (data.status == 2 && data.distributionflag != 1) {
+            	chooseDelivererDepartment(data.id, index);
+			} else if (data.status == 2 && data.distributionflag == 1) {
+				chooseLogistics(data.id, index);
             	return false;
 			} else {
 				layer.close(index);
@@ -403,7 +425,63 @@ function chooseLogistics(orderid, idx) {
                 return;
             }
             common.showLoading();
-            api.load('./order/change','post',data, function(result) {
+            api.load('./order/deliver','post',data, function(result) {
+                if (result.errcode == 0) {
+                	layer.close(index);
+                	layer.close(idx);
+                	common.tips(result.message);
+                	loadData();
+                } else {
+                    common.error(result.message);
+                }
+                common.closeLoading();
+            });
+            
+        },
+        success: function () {
+        	// 重新刷新form
+        	layuiForm.render();
+        }
+        
+    });
+}
+
+function chooseDelivererDepartment(orderid, idx) {
+	var delivererDepartmentView = "<div class=\"edit-view\">"+
+						    "<div class=\"edit-box\">"+
+							    "<div class=\"edit-item\" need=\"1\" key=\"1\" style='width: 100%;display:none;'>"+
+						            "<div class=\"edit-title\">"+
+						                "<span class=\"title\"><label class=\"name\">ID</label>：</span>"+
+						            "</div>"+
+						            "<div class=\"edit-value\" data-field=\"id\" style=\"display: block;\">"+
+						                "<input type=\"text\" value=\""+orderid+"\" class=\"layui-input value\"/>"+
+						            "</div>"+
+						        "</div>"+
+							    "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\" style=\"width: 100%;\">"+
+						            "<div class=\"edit-title\" style=\"text-align:left;\">"+
+						                "<span class=\"title\"><label class=\"name\">发货门店</label>：</span>"+
+						            "</div>"+
+						            "<div class=\"edit-value\" data-field=\"delivererdepartmentid\" style=\"display: block;\">"+
+						                "<input type=\"text\" data-id=\"\" value=\"\" " +
+						                		"data-url=\"./data/page?table=department\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+						                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
+						            "</div>"+
+						        "</div>"+
+							 "</div>" +
+						"</div>";
+	layer.open({
+        type: 1,
+        title: "发货门店",
+        content: delivererDepartmentView,
+        area: ['500px', '250px'],
+        btn: ["确定","关闭"],
+        btn1: function (index, layero) {
+        	let data = catchBoxValue();
+            if (data == '') {
+                return;
+            }
+            common.showLoading();
+            api.load('./order/distribution','post',data, function(result) {
                 if (result.errcode == 0) {
                 	layer.close(index);
                 	layer.close(idx);

@@ -100,10 +100,10 @@ http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
         <!-- 上一次未执行完成的，要等待有再执行。 -->
         <property name="concurrent" value="false"/>
     </bean> 
-    <!-- 定义trigger 触发器 [30秒执行一次]-->
+    <!-- 定义trigger 触发器 [58秒执行一次]-->
     <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="testJob"/>
-        <property name="cronExpression" value="*/30 * * * * ?"/>
+        <property name="cronExpression" value="*/58 * * * * ?"/>
     </bean> 
     <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
     <bean id="startQuertz" lazy-init="false" autowire="no"

@@ -60,6 +60,17 @@ public interface IOrderService {
 	public Result queryOrderDetail(Integer id);
 	
 	/**
+	 * 结算页数据
+	 * @param appid
+	 * @param openid
+	 * @param groupbuyid 
+	 * @param skuid 
+	 * @param quantity 
+	 * @return
+	 */
+	public Result groupbuyOrderConfirmData(String appid, String openid, Integer groupbuyid, Integer skuid, Integer quantity);
+	
+	/**
 	 * 拼团订单结算计算
 	 * @param groupbuyid
 	 * @param skuid

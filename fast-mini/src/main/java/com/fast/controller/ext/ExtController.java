@@ -1,7 +1,5 @@
 package com.fast.controller.ext;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,8 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MExtsystemMapper;
-import com.fast.base.data.entity.MExtsystem;
-import com.fast.base.data.entity.MExtsystemExample;
 import com.fast.service.ext.IExtMaintService;
 import com.fast.service.ext.IExtService;
 import com.fast.util.Common;

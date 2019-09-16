@@ -182,6 +182,14 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 				}
 				goods.put("parameter", parameter);
 				
+				String stocknum = "0";
+				sql = "select isnull(sum(quantity),0) as stock from m_goodssku where goodsid=" + id + " and quantity>0";
+				List<LinkedHashMap<String, Object>> stock = dataMapper.pageList(sql);
+				if (stock != null && stock.size() > 0) {
+					stocknum = stock.get(0).get("stock") == null ? "0" : stock.get(0).get("stock").toString().trim();
+				}
+				goods.put("stock", stocknum);
+				
 				result.setData(goods);
 				result.setErrcode(Integer.valueOf(0));
 			} else {

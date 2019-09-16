@@ -3,6 +3,7 @@ package com.fast.service.impl;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -11,11 +12,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
+import com.fast.base.data.dao.DataMapper;
+import com.fast.base.data.dao.MExtsystemMapper;
 import com.fast.base.data.dao.MRegionMapper;
 import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.dao.MViptypeMapper;
+import com.fast.base.data.entity.MExtsystem;
+import com.fast.base.data.entity.MExtsystemExample;
 import com.fast.base.data.entity.MVip;
 import com.fast.base.data.entity.MVipExample;
 import com.fast.base.data.entity.MVipaccount;
@@ -30,6 +35,7 @@ import com.fast.service.IVipService;
 import com.fast.service.ext.IExtMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
+import com.fast.util.CommonUtil;
 
 import net.sf.json.JSONObject;
 
@@ -69,6 +75,15 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	
 	@Autowired
 	IExtMaintService iExtMaintService;
+	
+	@Autowired
+	MExtsystemMapper extsystemMapper;
+	
+	@Autowired
+	DataMapper dataMapper;
+	
+	// 推送任务锁
+	private boolean pushVipTaskLock = false;
 
 	@Override
 	public Result bind(String appid, String openid, MVip vip) {
@@ -398,6 +413,61 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 		} catch (Exception e) {
 			FastLog.error("调用VipMaintServiceImpl.syncVip报错：", e);
 		}
+	}
+
+	@Override
+	public Result pushVipTask() {
+		System.out.println("推送会员开始...");
+		Result result = new Result();
+
+		try {
+			if (pushVipTaskLock) {
+				result.setMessage("任务进行中");
+				return result;
+			}
+			
+			pushVipTaskLock = true;
+			
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(example);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			String sql = "select * from m_vip where useflag=1 and (extid is null or extid='') order by id asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
+				for (int i = 0; i < list.size(); i++) {
+					try {
+						Result r = iExtMaintService.putVip(extsystem, Integer.valueOf(list.get(i).get("id").toString()));
+						if (Common.isActive(r)) {
+							
+						} else {
+							System.out.println("推送会员失败：vipid="+list.get(i).get("id").toString());
+						}
+					} catch (Exception e) {
+						System.out.println("推送会员失败：vipid="+list.get(i).get("id").toString());
+						FastLog.error("调用VipMaintServiceImpl.pushVipTask推送会员报错：", e);
+						continue;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipMaintServiceImpl.pushVipTask报错：", e);
+		} finally {
+			pushVipTaskLock = false;
+		}
+		
+		System.out.println("推送会员结束...");
+		return result;
 	}
 
 }

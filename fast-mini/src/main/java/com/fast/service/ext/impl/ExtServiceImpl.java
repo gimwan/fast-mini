@@ -574,4 +574,24 @@ public class ExtServiceImpl implements IExtService, Serializable {
 		return result;
 	}
 
+	@Override
+	public Result queryOrderStatus(MExtsystem extsystem, String no) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/POSSales/getOrderFlag";
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("no", no);
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.queryOrderStatus报错：", e);
+		}
+
+		return result;
+	}
+
 }

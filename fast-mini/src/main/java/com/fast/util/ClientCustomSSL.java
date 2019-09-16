@@ -18,11 +18,11 @@ import org.apache.http.util.EntityUtils;
 
 public class ClientCustomSSL {
 	
-	public static String doRefund(String url,String data,String password) throws Exception {
+	public static String doRefund(String url,String data,String password, String sslPath) throws Exception {
     	// 注意PKCS12证书 是从微信商户平台-》账户设置-》 API安全 中下载的
         KeyStore keyStore  = KeyStore.getInstance("PKCS12");
         //P12文件目录
-        FileInputStream instream = new FileInputStream(new File("D:/apiclient_cert.p12"));
+        FileInputStream instream = new FileInputStream(new File(sslPath));
         
         try {
         	//这里写密码..默认是你的MCHID

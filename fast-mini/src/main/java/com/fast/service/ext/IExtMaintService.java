@@ -1,6 +1,7 @@
 package com.fast.service.ext;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MExtsystem;
 
 /**
  * 外部接口
@@ -29,5 +30,29 @@ public interface IExtMaintService {
 	 * @return
 	 */
 	public Result syncVip(Integer id);
+	
+	/**
+	 * 推送订单
+	 * @param extsystem
+	 * @param id
+	 * @return
+	 */
+	public Result putOrder(MExtsystem extsystem, Integer id);
+	
+	/**
+	 * 推送会员
+	 * @param extsystem
+	 * @param id
+	 * @return
+	 */
+	public Result putVip(MExtsystem extsystem, Integer id);
+	
+	/**
+	 * 修改会员信息
+	 * @param extsystem
+	 * @param id
+	 * @return
+	 */
+	public Result changeVipInfo(MExtsystem extsystem, Integer id);
 
 }

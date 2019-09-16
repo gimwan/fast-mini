@@ -112,7 +112,7 @@ public class Groupbuy extends MiniMaster {
 	}
 	
 	/**
-	 * 即将开始
+	 * 拼团商品明细
 	 * @param request
 	 * @param response
 	 * @return
@@ -163,6 +163,37 @@ public class Groupbuy extends MiniMaster {
 			}
 			
 			r = iGroupbuyService.queryGoodsStock(Integer.valueOf(groupbuyid), Integer.valueOf(goodsid), appid, openid);
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 结算页默认值
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/groupbuy/order")
+	@ResponseBody
+	public String order(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String skuid = request.getParameter("skuid");
+			String quantity = request.getParameter("quantity");
+			String groupbuyid = request.getParameter("groupbuyid");
+			
+			r = iOrderService.groupbuyOrderConfirmData(appid, openid, Integer.valueOf(groupbuyid), Integer.valueOf(skuid), Integer.valueOf(quantity));
 		} catch (Exception e) {
 			e.printStackTrace();
 			r.setMessage(e.getMessage());

@@ -191,11 +191,9 @@ public class CommonUtil {
 			return jsonObject;
 		} catch (ConnectException ce) {
 			FastLog.error("连接超时：{}", ce);
-			ce.printStackTrace();
 			return jsonObject;
 		} catch (Exception e) {
 			FastLog.error("http请求异常：{}", e);
-			e.printStackTrace();
 			return jsonObject;
 		}
 	}

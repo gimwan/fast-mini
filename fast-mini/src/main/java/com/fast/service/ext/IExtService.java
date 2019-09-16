@@ -190,5 +190,13 @@ public interface IExtService {
 	 * @return
 	 */
 	public Result queryGoodsByCode(String code);
+	
+	/**
+	 * 查询订单状态
+	 * @param extsystem
+	 * @param no
+	 * @return
+	 */
+	public Result queryOrderStatus(MExtsystem extsystem, String no);
 
 }

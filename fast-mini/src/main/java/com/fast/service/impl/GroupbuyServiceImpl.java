@@ -250,10 +250,16 @@ public class GroupbuyServiceImpl implements IGroupbuyService, Serializable {
 			}
 			
 			String sql = "select a.groupbuyid,a.goodsid,b.code,b.name,b.photourl,b.price as saleprice,a.price,"
-					+ "case when b.useflag=1 and b.onsale=1 and b.onlyshow<>1 then 1 else 0 end as onsale,b.showcolor,b.showsize,b.showpattern "
+					+ "case when b.useflag=1 and b.onsale=1 and b.onlyshow<>1 then 1 else 0 end as onsale,b.showcolor,b.showsize,b.showpattern,"
+					+ "isnull(c.groupnum,0) as groupnum "
 					+ "from m_groupbuydtl a "
 					+ "inner join m_goods b on a.goodsid=b.id "
-					+ "where b.kind=1 and a.groupbuyid=" + groupbuy.getId();
+					+ "left join (select aa.goodsid,count(bb.id) as groupnum "
+					+ "from m_orderdtl aa "
+					+ "inner join m_order bb on aa.orderid=bb.id "
+					+ "where bb.status>2 and bb.kind=3 and bb.marketingid="+groupbuy.getId()+" "
+					+ "group by aa.goodsid) c on c.goodsid=a.goodsid "
+					+ "where b.kind=1 and a.goodsid=" + goodsid + " and a.groupbuyid=" + groupbuy.getId();
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
 				LinkedHashMap<String, Object> goods = list.get(0);
@@ -322,6 +328,14 @@ public class GroupbuyServiceImpl implements IGroupbuyService, Serializable {
 					parameter.add(parameterMap);
 				}
 				goods.put("parameter", parameter);
+				
+				String stocknum = "0";
+				sql = "select isnull(sum(quantity),0) as stock from m_goodssku where goodsid=" + goodsid + " and quantity>0";
+				List<LinkedHashMap<String, Object>> stock = dataMapper.pageList(sql);
+				if (stock != null && stock.size() > 0) {
+					stocknum = stock.get(0).get("stock") == null ? "0" : stock.get(0).get("stock").toString().trim();
+				}
+				goods.put("stock", stocknum);
 				
 				result.setData(goods);
 				result.setErrcode(Integer.valueOf(0));

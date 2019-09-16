@@ -33,6 +33,14 @@ public interface IVipMaintService {
 	 * @param gender  性别
 	 * @return
 	 */
-	public Result updateVipInfo(String appid, String openid, String name, String nickname, String birthday, String province, String city, String county, String avatarurl, String gender);
+	public Result updateVipInfo(String appid, String openid, String name, String nickname, String birthday,
+			String province, String city, String county, String avatarurl, String gender);
+	
+	/**
+	 * 定时任务
+	 * 推送会员
+	 * @return
+	 */
+	public Result pushVipTask();
 
 }

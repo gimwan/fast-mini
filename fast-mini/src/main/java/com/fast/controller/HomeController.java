@@ -196,10 +196,10 @@ public class HomeController {
 			map.put("name", "拼团");
 			map.put("link", "groupbuy");
 			sub.add(map);
-			map = new HashMap<String, Object>();
+			/*map = new HashMap<String, Object>();
 			map.put("name", "秒杀");
 			map.put("link", "seckill");
-			sub.add(map);
+			sub.add(map);*/
 			main.put("sub", sub);
 			list.add(main);
 			

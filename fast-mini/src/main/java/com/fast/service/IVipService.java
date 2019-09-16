@@ -89,4 +89,12 @@ public interface IVipService {
 	 * @return
 	 */
 	public MVip resetVipRegion(MVip vip);
+	
+	/**
+	 * 会员默认地址
+	 * @param appid
+	 * @param openid
+	 * @return
+	 */
+	public Result queryVipDefaultAddress(String appid, String openid);
 }

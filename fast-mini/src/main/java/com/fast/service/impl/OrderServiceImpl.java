@@ -330,23 +330,28 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			}
 			
 			// 使用积分
-			BigDecimal pointMoney = new BigDecimal(point.toString()).divide(new BigDecimal(pointRate.toString()), 2, BigDecimal.ROUND_HALF_UP);
-			if (usepoint != null && usepoint.intValue() == 1) {
-				if (pointRate.intValue() > 0) {
+			BigDecimal pointMoney = BigDecimal.ZERO;
+			if (pointRate == null || pointRate.intValue() == 0) {
+				point = 0;
+			} else {
+				pointMoney = new BigDecimal(point.toString()).divide(new BigDecimal(pointRate.toString()), 2, BigDecimal.ROUND_HALF_UP);
+				if (usepoint != null && usepoint.intValue() == 1) {
+					if (pointRate.intValue() > 0) {
+						if (pointMoney.compareTo(paymoney) > 0) {
+							pointMoney = paymoney;
+							paymoney = BigDecimal.ZERO;
+						} else {
+							paymoney = paymoney.subtract(pointMoney);
+						}
+						point = pointMoney.multiply(new BigDecimal(pointRate.toString())).setScale(0, BigDecimal.ROUND_UP).intValue();
+					} else {
+						point = 0;
+					}
+				} else {
 					if (pointMoney.compareTo(paymoney) > 0) {
 						pointMoney = paymoney;
-						paymoney = BigDecimal.ZERO;
-					} else {
-						paymoney = paymoney.subtract(pointMoney);
+						point = pointMoney.multiply(new BigDecimal(pointRate.toString())).setScale(0, BigDecimal.ROUND_UP).intValue();
 					}
-					point = pointMoney.multiply(new BigDecimal(pointRate.toString())).setScale(0, BigDecimal.ROUND_UP).intValue();
-				} else {
-					point = 0;
-				}
-			} else {
-				if (pointMoney.compareTo(paymoney) > 0) {
-					pointMoney = paymoney;
-					point = pointMoney.multiply(new BigDecimal(pointRate.toString())).setScale(0, BigDecimal.ROUND_UP).intValue();
 				}
 			}
 			
@@ -536,7 +541,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 					+ "left join m_color c on a.colorid=c.id "
 					+ "left join m_pattern d on a.patternid=d.id "
 					+ "left join m_size e on a.sizeid=e.id "
-					+ "inner join m_groupbuydtl f on f.goodsid=a.goodsid"
+					+ "inner join m_groupbuydtl f on f.goodsid=a.goodsid "
 					+ "where a.id=" + skuid + " and f.groupbuyid=" + groupbuyid;
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list == null || list.size() < 1) {
@@ -558,6 +563,69 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 		}
 
 		return result;
+	}
+
+	@Override
+	public Result groupbuyOrderConfirmData(String appid, String openid, Integer groupbuyid, Integer skuid,
+			Integer quantity) {
+
+		Result result = new Result();
+
+		try {
+			if (Common.isEmpty(openid)) {
+				result.setMessage("openid无效");
+				return result;
+			}
+			MMiniprogram miniprogram = new MMiniprogram();
+			Result r = iMiniProgramService.queryMiniprogramByAppid(appid);
+			if (Common.isActive(r)) {
+				miniprogram = (MMiniprogram) r.getData();
+			} else {
+				return r;
+			}
+			MVipmini vipmini = new MVipmini();
+			r = iVipMiniService.queryVipMiniByOpenid(miniprogram.getId(), openid);
+			if (Common.isActive(r)) {
+				vipmini = (MVipmini) r.getData();
+			} else {
+				return r;
+			}
+			MVipaddress vipaddress = new MVipaddress();
+			MVipaddressExample example = new MVipaddressExample();
+			example.createCriteria().andVipidEqualTo(vipmini.getVipid());
+			example.setOrderByClause(" isdefault desc");
+			List<MVipaddress> list = vipaddressMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				vipaddress = list.get(0);
+			} else {
+				result.setErrcode(Integer.valueOf(2));
+				result.setMessage("无收货地址");
+				return result;
+			}
+			
+			result = groupbuyCalculation(groupbuyid, skuid, quantity);
+			if (Common.isActive(result)) {
+				LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) result.getData();
+				map.put("receiver", vipaddress.getReceiver() == null ? "" : vipaddress.getReceiver());
+				map.put("phone", vipaddress.getPhone() == null ? "" : vipaddress.getPhone());
+				String province = vipaddress.getProvince() == null ? "" : vipaddress.getProvince();
+				String city = vipaddress.getCity() == null ? "" : vipaddress.getCity();
+				String county = vipaddress.getCounty() == null ? "" : vipaddress.getCounty();
+				String address = vipaddress.getAddress() == null ? "" : vipaddress.getAddress();
+				map.put("address", province+city+county+address);
+				map.put("addressid", vipaddress.getId());
+				map.put("isdefault", vipaddress.getIsdefault());
+				result.setData(map);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderServiceImpl.groupbuyOrderConfirmData报错：", e);
+		}
+
+		return result;
+	
 	}
 
 }

@@ -364,6 +364,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 									setDtlList.get(j).put("goodsname", goodsname);
 									setDtlList.get(j).put("price", price);
 									setDtlList.get(j).put("point", point);
+									setDtlList.get(j).put("kind", type);
 									setDtlList.get(j).put("type", type);
 									setDtlList.get(j).put("list", subList);
 									setDtlList.get(j).put("categoryone", categoryone);

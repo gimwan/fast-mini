@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fast.base.Result;
+import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MBrandMapper;
 import com.fast.base.data.dao.MColorMapper;
 import com.fast.base.data.dao.MCouponMapper;
@@ -23,11 +25,12 @@ import com.fast.base.data.dao.MExtsystemMapper;
 import com.fast.base.data.dao.MGoodsMapper;
 import com.fast.base.data.dao.MGoodscategoryMapper;
 import com.fast.base.data.dao.MGoodsskuMapper;
+import com.fast.base.data.dao.MOrderMapper;
+import com.fast.base.data.dao.MOrderdtlMapper;
 import com.fast.base.data.dao.MSizeMapper;
 import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
-import com.fast.base.data.dao.MVipminiMapper;
 import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MBrand;
 import com.fast.base.data.entity.MBrandExample;
@@ -46,6 +49,7 @@ import com.fast.base.data.entity.MGoodscategory;
 import com.fast.base.data.entity.MGoodscategoryExample;
 import com.fast.base.data.entity.MGoodssku;
 import com.fast.base.data.entity.MGoodsskuExample;
+import com.fast.base.data.entity.MOrder;
 import com.fast.base.data.entity.MSize;
 import com.fast.base.data.entity.MSizeExample;
 import com.fast.base.data.entity.MVip;
@@ -53,7 +57,6 @@ import com.fast.base.data.entity.MVipExample;
 import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipcouponExample;
-import com.fast.base.data.entity.MVipmini;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
 import com.fast.service.IDepartmentService;
@@ -62,6 +65,7 @@ import com.fast.service.ext.IExtMaintService;
 import com.fast.service.ext.IExtService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
+import com.fast.util.CommonUtil;
 
 /**
  * 外部接口
@@ -123,6 +127,15 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	
 	@Autowired
 	MVipcouponMapper vipcouponMapper;
+	
+	@Autowired
+	MOrderMapper orderMapper;
+	
+	@Autowired
+	MOrderdtlMapper orderdtlMapper;
+	
+	@Autowired
+	DataMapper dataMapper;
 
 	/**
 	 * 同步数据
@@ -1066,6 +1079,197 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				}
 			}
 		}
+		
+		return result;
+	}
+
+	@Override
+	public Result putOrder(MExtsystem extsystem, Integer id) {
+		Result result = new Result();
+
+		try {
+			MOrder order = orderMapper.selectByPrimaryKey(id);
+			if (order != null && order.getId() != null) {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("no", order.getNo());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String createtime = "";
+				try {
+					createtime = sdf.format(order.getCreatetime());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				jsonObject.put("date", createtime);
+				
+				MVip vip = vipMapper.selectByPrimaryKey(order.getVipid());
+				jsonObject.put("vipCode", vip.getCode());
+				
+				MDepartment department = departmentMapper.selectByPrimaryKey(order.getDelivererdepartmentid());
+				jsonObject.put("departmentID", department.getExtid());
+				
+				jsonObject.put("employeeID", "");
+				jsonObject.put("cardType", "微信");
+				jsonObject.put("qtySum", order.getQuantity());
+				jsonObject.put("amtSum", order.getAmount());
+				jsonObject.put("type", "销售单");
+				jsonObject.put("editor", "");
+				jsonObject.put("auditFlag", (order.getDeliverytype().intValue() == 2 ? 0 : 1));
+				
+				String sql = "select a.id,b.extid as goodsID,c.extid as colorID,d.id as patternID,e.extid as sizeID,a.quantity,a.amount "
+						+ "from m_orderdtl a "
+						+ "inner join m_goods b on a.goodsid=b.id "
+						+ "inner join m_color c on a.colorid=c.id "
+						+ "inner join m_pattern d on a.patternid=d.id "
+						+ "inner join m_size e on a.sizeid=e.id "
+						+ "where a.orderid=" + order.getId();
+				List<LinkedHashMap<String, Object>> dtlList = dataMapper.pageList(sql);				
+				jsonObject.put("goodsData", dtlList);
+				
+				String url = extsystem.getServeraddress() + "/api/posSales/create";
+				net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+				if (object != null) {
+					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+					if (Common.isActive(result)) {
+						String extid = result.getId() == null ? "" : result.getId().toString();
+						if (Common.isEmpty(extid)) {
+							order.setExtid(extid);
+							order.setUpdatedtime(new Date());
+							orderMapper.updateByPrimaryKeySelective(order);
+						}
+						/*Result r = iExtService.queryOrderStatus(extsystem, order.getNo());
+						if (Common.isActive(r)) {
+							JSONObject jObject = JSONObject.parseObject(r.getData().toString());
+							if (jObject != null && !jObject.isEmpty()) {
+								String extid = jObject.get("id") == null ? "" : jObject.getString("id");
+								if (!Common.isEmpty(extid)) {
+									order.setExtid(extid);
+									order.setUpdatedtime(new Date());
+									orderMapper.updateByPrimaryKeySelective(order);
+								}
+							}
+						}*/
+					}
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.putOrder报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result putVip(MExtsystem extsystem, Integer id) {
+		Result result = new Result();
+
+		try {
+			MVip vip = vipMapper.selectByPrimaryKey(id);
+			if (vip != null) {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("vipCode", vip.getCode());
+				jsonObject.put("vipName", vip.getName());
+				jsonObject.put("mobilePhone", vip.getMobilephone());
+				
+				MDepartment department = departmentMapper.selectByPrimaryKey(vip.getDepartmentid());
+				jsonObject.put("departmentID", department.getExtid());
+				
+				jsonObject.put("sex", (vip.getSex().intValue() == 1 ? "男" : (vip.getSex().intValue() == 2 ? "女" : "")));
+				
+				MViptype viptype = viptypeMapper.selectByPrimaryKey(vip.getTypeid());
+				jsonObject.put("vipTypeID", viptype.getExtid());
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				if (vip.getBirthday() != null) {					
+					String birthday = "";
+					try {
+						birthday = sdf.format(vip.getBirthday());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					jsonObject.put("birthDay", birthday);
+				}
+				String registtime = "";
+				try {
+					registtime = sdf.format(vip.getRegisttime());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				jsonObject.put("enrollmentDate", registtime);
+				
+				jsonObject.put("province", vip.getProvince());
+				jsonObject.put("city", vip.getCity());
+				jsonObject.put("county", vip.getCounty());
+				
+				String url = extsystem.getServeraddress() + "/api/vip/create";
+				net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+				if (object != null) {
+					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+					if (Common.isActive(result)) {
+						String extid = result.getId() == null ? "" : result.getId().toString();
+						if (Common.isEmpty(extid)) {
+							vip.setExtid(extid.trim());
+							vip.setUpdatedtime(new Date());
+							vipMapper.updateByPrimaryKeySelective(vip);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.putVip报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result changeVipInfo(MExtsystem extsystem, Integer id) {
+		Result result = new Result();
+
+		try {
+			MVip vip = vipMapper.selectByPrimaryKey(id);
+			if (vip != null) {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("vipCode", vip.getCode());
+				jsonObject.put("vipName", vip.getName());
+				
+				jsonObject.put("sex", (vip.getSex().intValue() == 1 ? "男" : (vip.getSex().intValue() == 2 ? "女" : "")));
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				if (vip.getBirthday() != null) {					
+					String birthday = "";
+					try {
+						birthday = sdf.format(vip.getBirthday());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					jsonObject.put("birthDay", birthday);
+				}
+				
+				jsonObject.put("Province", vip.getProvince());
+				jsonObject.put("city", vip.getCity());
+				jsonObject.put("county", vip.getCounty());
+				
+				String url = extsystem.getServeraddress() + "/api/vip/create";
+				net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+				if (object != null) {
+					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+					/*if (Common.isActive(result)) {
+						String extid = result.getId() == null ? "" : result.getId().toString();
+						if (Common.isEmpty(extid)) {
+							vip.setExtid(extid.trim());
+							vip.setUpdatedtime(new Date());
+							vipMapper.updateByPrimaryKeySelective(vip);
+						}
+					}*/
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.changeVipInfo报错：", e);
+		}
+
 		return result;
 	}
 

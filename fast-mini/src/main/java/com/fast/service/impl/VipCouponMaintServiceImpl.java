@@ -52,6 +52,10 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 		try {
 			
 			MCoupon coupon = couponMapper.selectByPrimaryKey(couponID);
+			if (coupon == null || coupon.getId() == null) {
+				result.setMessage("优惠券不存在");
+				return result;
+			}
 			
 			if (coupon.getTotalquantity() != null && coupon.getTotalquantity().intValue() > 0) {
 				MVipcouponExample example = new MVipcouponExample();

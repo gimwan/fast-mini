@@ -198,7 +198,7 @@ function createElement(data) {
     	active = 0;
 	}
     if (d.over == 1) {
-    	active = 0;
+    	active = 1;
 	}
     
 	let element = "<div class=\"edit-view\">"+
@@ -330,7 +330,7 @@ function showGoodsBox(id,index) {
 		active = 0;
 	}
 	if (gd.over == 1) {
-    	active = 0;
+    	active = 1;
 	}
 	let da = {};
 	da.groupbuyid = id;

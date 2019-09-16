@@ -763,5 +763,34 @@ public class Vip extends MiniMaster {
 		
 		return result;
 	}
+	
+	/**
+	 * 会员默认地址
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/address/default")
+	@ResponseBody
+	public String defaultaddress(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			
+			r = iVipService.queryVipDefaultAddress(appid, openid);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
 
 }

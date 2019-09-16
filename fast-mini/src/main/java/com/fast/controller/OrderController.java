@@ -78,7 +78,7 @@ public class OrderController {
 	}
 	
 	/**
-	 * 修改订单状态
+	 * 发货
 	 * @param request
 	 * @param response
 	 * @param micropage
@@ -98,6 +98,40 @@ public class OrderController {
 				String logisticsid = request.getParameter("logisticsid");
 				String logisticsno = request.getParameter("logisticsno");
 				result = iOrderMaintService.deliverOrder(user, Integer.valueOf(id.trim()), Integer.valueOf(logisticsid.trim()), logisticsno.trim());
+			} else {
+				result.setErrcode(Integer.valueOf(88));
+				result.setMessage("当前登入者已失效");
+			}
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 配货
+	 * @param request
+	 * @param response
+	 * @param micropage
+	 * @return
+	 */
+	@RequestMapping("/distribution")
+	@ResponseBody
+	public String distribution(HttpServletRequest request, HttpServletResponse response, MMicropage micropage) {
+		String r = "";
+		
+		try {
+			Result result = new Result();
+			
+			MUser user = Common.currentUser(request);
+			if (user != null) {
+				String id = request.getParameter("id");
+				String delivererdepartmentid = request.getParameter("delivererdepartmentid");
+				result = iOrderMaintService.distributionOrder(user, Integer.valueOf(id.trim()), Integer.valueOf(delivererdepartmentid.trim()));
 			} else {
 				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");

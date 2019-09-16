@@ -145,14 +145,14 @@
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="dt.type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<!-- <option value="4" v-if="dt.type==3" selected>小程序页面</option>
-											<option value="4" v-else>小程序页面</option> -->
+											<option value="4" v-if="dt.type==4" selected>拼团</option>
+											<option value="4" v-else>拼团</option>
 										</select>
 									</div>
 								</div>
 								<div class="selectItem">
 									<label class="layui-form-label layui-inline selectTitle"
-										v-if="dt.type==1||dt.type==2||dt.type==3||dt.type==4">{{dt.type==1?'微页面':(dt.type==2?'商品分组':(dt.type==3?'商品分类':(dt.type==4?'小程序页面':'')))}}：</label>
+										v-if="dt.type==1||dt.type==2||dt.type==3">{{dt.type==1?'微页面':(dt.type==2?'商品分组':(dt.type==3?'商品分类':''))}}：</label>
 									<div class="layui-input-inline selectBox popup" v-if="dt.type==1">
 										<div class="edit-title" style="display:none;"><span class="name">微页面</span></div>
 										<input type="text" v-bind:data-id="dt.first" v-bind:value="dt.grouping"
@@ -197,11 +197,11 @@
 											</div>
 										</div>
 									</div>
-									<div class="layui-input-inline selectBox" v-else-if="dt.type==4">
+									<!-- <div class="layui-input-inline selectBox" v-else-if="dt.type==4">
 										<input type="text" name="targetpath" class="layui-input"
 											onblur="saveTargetPath(this)" v-bind:value="dt.targetpath"
 											v-bind:data-pindex="index" v-bind:data-index="i">
-									</div>
+									</div> -->
 								</div>
 							</div>
 						</form>
@@ -232,13 +232,13 @@
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="dt.type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<!-- <option value="4" v-if="dt.type==3" selected>小程序页面</option>
-											<option value="4" v-else>小程序页面</option> -->
+											<option value="4" v-if="dt.type==4" selected>拼团</option>
+											<option value="4" v-else>拼团</option>
 										</select>
 									</div>
 								</div>
 								<div class="selectItem">
-									<label class="layui-form-label layui-inline selectTitle" v-if="dt.type==1||dt.type==2||dt.type==3||dt.type==4">{{dt.type==1?'微页面':(dt.type==2?'商品分组':(dt.type==3?'商品分类':(dt.type==4?'小程序页面':'')))}}：</label>
+									<label class="layui-form-label layui-inline selectTitle" v-if="dt.type==1||dt.type==2||dt.type==3">{{dt.type==1?'微页面':(dt.type==2?'商品分组':(dt.type==3?'商品分类':''))}}：</label>
 									<div class="layui-input-inline selectBox popup" v-if="dt.type==1">
 										<div class="edit-title" style="display:none;"><span class="name">微页面</span></div>
 										<input type="text" v-bind:data-id="dt.first" v-bind:value="dt.grouping"
@@ -283,11 +283,11 @@
 											</div>
 										</div>
 									</div>
-									<div class="layui-input-inline selectBox" v-else-if="dt.type==4">
+									<!-- <div class="layui-input-inline selectBox" v-else-if="dt.type==4">
 										<input type="text" name="targetpath" class="layui-input"
 											onblur="saveTargetPath(this)" v-bind:value="dt.targetpath"
 											v-bind:data-pindex="index" v-bind:data-index="i">
-									</div>
+									</div> -->
 								</div>
 							</div>
 						</form>
@@ -332,14 +332,14 @@
 											<option value="2" v-else>商品分组</option>
 											<option value="3" v-if="e.detail[0].type==3" selected>商品分类</option>
 											<option value="3" v-else>商品分类</option>
-											<!-- <option value="4" v-if="e.detail[0].type==4" selected>小程序页面</option>
-											<option value="4" v-else>小程序页面</option> -->
+											<option value="4" v-if="e.detail[0].type==4" selected>拼团</option>
+											<option value="4" v-else>拼团</option>
 										</select>
 									</div>
 								</div>
 								<div class="selectItem">
 									<label class="layui-form-label layui-inline selectTitle"
-										v-if="e.detail[0].type==1||e.detail[0].type==2||e.detail[0].type==3||e.detail[0].type==4">{{e.detail[0].type==1?'微页面':(e.detail[0].type==2?'商品分组':(e.detail[0].type==3?'商品分类':(e.detail[0].type==4?'小程序页面':'')))}}：</label>
+										v-if="e.detail[0].type==1||e.detail[0].type==2||e.detail[0].type==3">{{e.detail[0].type==1?'微页面':(e.detail[0].type==2?'商品分组':(e.detail[0].type==3?'商品分类':''))}}：</label>
 									<div class="layui-input-inline selectBox popup" v-if="e.detail[0].type==1">
 										<div class="edit-title" style="display:none;"><span class="name">微页面</span></div>
 										<input type="text" v-bind:data-id="e.detail[0].first" v-bind:value="dt.grouping"
@@ -384,11 +384,11 @@
 											</div>
 										</div>
 									</div>
-									<div class="layui-input-inline selectBox" v-else-if="e.detail[0].type==4">
+									<!-- <div class="layui-input-inline selectBox" v-else-if="e.detail[0].type==4">
 										<input type="text" name="targetpath" class="layui-input"
 											onblur="saveTargetPath(this)" v-bind:value="e.detail[0].targetpath"
 											v-bind:data-pindex="index" v-bind:data-index="0">
-									</div>
+									</div> -->
 								</div>
 							</div>
 						</form>

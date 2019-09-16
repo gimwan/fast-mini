@@ -18,6 +18,7 @@ import com.fast.base.data.dao.MColorMapper;
 import com.fast.base.data.dao.MDepartmentMapper;
 import com.fast.base.data.dao.MGoodsMapper;
 import com.fast.base.data.dao.MGoodscategoryMapper;
+import com.fast.base.data.dao.MGroupbuyMapper;
 import com.fast.base.data.dao.MLogisticsMapper;
 import com.fast.base.data.dao.MPatternMapper;
 import com.fast.base.data.dao.MPublicplatformMapper;
@@ -35,6 +36,8 @@ import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodsExample;
 import com.fast.base.data.entity.MGoodscategory;
 import com.fast.base.data.entity.MGoodscategoryExample;
+import com.fast.base.data.entity.MGroupbuy;
+import com.fast.base.data.entity.MGroupbuyExample;
 import com.fast.base.data.entity.MLogistics;
 import com.fast.base.data.entity.MLogisticsExample;
 import com.fast.base.data.entity.MPattern;
@@ -98,6 +101,9 @@ public class DataServiceImpl implements IDataService, Serializable {
 	
 	@Autowired
 	MGoodsMapper goodsMapper;
+	
+	@Autowired
+	MGroupbuyMapper groupbuyMapper;
 
 	@Override
 	public Result pageList(PagingView page, String tableName) {
@@ -547,9 +553,15 @@ public class DataServiceImpl implements IDataService, Serializable {
 	public List<LinkedHashMap<String, Object>> completeOrder(List<LinkedHashMap<String, Object>> list) {
 		List<Integer> vipidList = new ArrayList<>();
 		List<Integer> logisticsidList = new ArrayList<>();
+		List<Integer> delivererDepartmentIDList = new ArrayList<>();
+		List<Integer> groupbuyidList = new ArrayList<>();
+		List<Integer> seckillidList = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
+			Integer kind = list.get(i).get("kind") == null ? 1 : Integer.valueOf(list.get(i).get("kind").toString());
 			list.get(i).put("vip", "");
 			list.get(i).put("vipphone", "");
+			list.get(i).put("marketing", "");
+			list.get(i).put("delivererdepartment", "");
 			if (!Common.isEmpty(String.valueOf(list.get(i).get("vipid")))) {
 				vipidList.add(Integer.valueOf(list.get(i).get("vipid").toString()));
 			} else {
@@ -562,6 +574,21 @@ public class DataServiceImpl implements IDataService, Serializable {
 			} else {
 				list.get(i).put("logisticsid", "");
 				list.get(i).put("logistics", "");
+			}
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("marketingid")))) {
+				if (kind.intValue() == 3) {
+					groupbuyidList.add(Integer.valueOf(list.get(i).get("marketingid").toString()));
+				} else if (kind.intValue() == 4) {
+					seckillidList.add(Integer.valueOf(list.get(i).get("marketingid").toString()));
+				}
+				
+			} else {
+				list.get(i).put("marketing", "");
+			}
+			if (!Common.isEmpty(String.valueOf(list.get(i).get("delivererdepartmentid")))) {
+				delivererDepartmentIDList.add(Integer.valueOf(list.get(i).get("delivererdepartmentid").toString()));
+			} else {
+				list.get(i).put("delivererdepartment", "");
 			}
 		}
 		if (vipidList.size() > 0) {
@@ -587,9 +614,42 @@ public class DataServiceImpl implements IDataService, Serializable {
 			if (data != null && data.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					for (int j = 0; j < data.size(); j++) {
-						if (list.get(i).get("logisticsid").toString().equals(data.get(j).getId().toString())) {
+						if (list.get(i).get("logisticsid") != null && list.get(i).get("logisticsid").toString().equals(data.get(j).getId().toString())) {
 							list.get(i).put("logistics", data.get(j).getName());
 							break;
+						}
+					}
+				}
+			}
+		}
+		if (delivererDepartmentIDList.size() > 0) {
+			MDepartmentExample example = new MDepartmentExample();
+			example.createCriteria().andIdIn(delivererDepartmentIDList);
+			List<MDepartment> data = departmentMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < data.size(); j++) {
+						if (list.get(i).get("delivererdepartmentid") != null && list.get(i).get("delivererdepartmentid").toString().equals(data.get(j).getId().toString())) {
+							list.get(i).put("delivererdepartment", data.get(j).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (groupbuyidList.size() > 0) {
+			MGroupbuyExample example = new MGroupbuyExample();
+			example.createCriteria().andIdIn(groupbuyidList);
+			List<MGroupbuy> data = groupbuyMapper.selectByExample(example);
+			if (data != null && data.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					Integer kind = list.get(i).get("kind") == null ? 1 : Integer.valueOf(list.get(i).get("kind").toString());
+					if (kind.intValue() == 3) {
+						for (int j = 0; j < data.size(); j++) {
+							if (list.get(i).get("marketingid") != null && list.get(i).get("marketingid").toString().equals(data.get(j).getId().toString())) {
+								list.get(i).put("marketing", data.get(j).getName());
+								break;
+							}
 						}
 					}
 				}
@@ -601,6 +661,12 @@ public class DataServiceImpl implements IDataService, Serializable {
 			}
 			if ("".equals(list.get(i).get("logistics").toString())) {
 				list.get(i).put("logisticsid", "");
+			}
+			if ("".equals(list.get(i).get("delivererdepartment").toString())) {
+				list.get(i).put("delivererdepartmentid", "");
+			}
+			if ("".equals(list.get(i).get("marketing").toString())) {
+				list.get(i).put("marketingid", "");
 			}
 			// 明细
 			String detailSql = "select a.*,b.code,b.name,b.photourl,c.name as color,d.name as pattern,e.name as size "
