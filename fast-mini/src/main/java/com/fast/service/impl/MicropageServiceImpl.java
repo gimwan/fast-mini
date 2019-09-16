@@ -225,7 +225,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 											MGoodsgrouping goodsgrouping = goodsgroupingMapper.selectByPrimaryKey(Integer.valueOf(first));
 											if (goodsgrouping != null && goodsgrouping.getId() > 0) {
 												grouping = goodsgrouping.getName();
-												sql = "select top 4 * from m_goods where useflag=1 and id in (select goodsid from m_goodsingroup where groupingid="+goodsgrouping.getId()+") order by id";
+												sql = "select top 4 * from m_goods where useflag=1 and onsale=1 and id in (select goodsid from m_goodsingroup where groupingid="+goodsgrouping.getId()+") order by id";
 												List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
 												goodsList = CommonUtil.transformUpperCase(goodsList);
 												for (int k = 0; k < goodsList.size(); k++) {
@@ -248,7 +248,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												if (goodscategory != null && goodscategory.getId() > 0) {
 													category = goodscategory.getName();
 													categorythree = goodscategory.getName();
-													sql = "select top 4 * from m_goods where useflag=1 and smallcategory="+goodscategory.getId()+" order by id";
+													sql = "select top 4 * from m_goods where useflag=1 and onsale=1 and smallcategory="+goodscategory.getId()+" order by id";
 													List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
 													goodsList = CommonUtil.transformUpperCase(goodsList);
 													for (int k = 0; k < goodsList.size(); k++) {
@@ -283,7 +283,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												if (goodscategory != null && goodscategory.getId() > 0) {
 													category = goodscategory.getName();
 													categorytwo = goodscategory.getName();
-													sql = "select top 4 * from m_goods where useflag=1 and middlecategory="+goodscategory.getId()+" order by id";
+													sql = "select top 4 * from m_goods where useflag=1 and onsale=1 and middlecategory="+goodscategory.getId()+" order by id";
 													List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
 													goodsList = CommonUtil.transformUpperCase(goodsList);
 													for (int k = 0; k < goodsList.size(); k++) {
@@ -309,7 +309,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 												if (goodscategory != null && goodscategory.getId() > 0) {
 													category = goodscategory.getName();
 													categoryone = goodscategory.getName();
-													sql = "select top 4 * from m_goods where useflag=1 and bigcategory="+goodscategory.getId()+" order by id";
+													sql = "select top 4 * from m_goods where useflag=1 and onsale=1 and bigcategory="+goodscategory.getId()+" order by id";
 													List<LinkedHashMap<String, Object>> goodsList = dataMapper.pageList(sql);
 													goodsList = CommonUtil.transformUpperCase(goodsList);
 													for (int k = 0; k < goodsList.size(); k++) {
