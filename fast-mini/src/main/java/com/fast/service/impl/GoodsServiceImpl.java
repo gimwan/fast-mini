@@ -18,15 +18,18 @@ import com.fast.base.data.dao.MGoodscategoryMapper;
 import com.fast.base.data.dao.MGoodsgroupingMapper;
 import com.fast.base.data.dao.MGoodsingroupMapper;
 import com.fast.base.data.dao.MGoodsskuMapper;
+import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodsExample;
 import com.fast.base.data.entity.MGoodscategory;
 import com.fast.base.data.entity.MGoodscategoryExample;
 import com.fast.base.data.entity.MGoodsingroup;
 import com.fast.base.data.entity.MGoodsingroupExample;
+import com.fast.base.data.entity.MViptype;
 import com.fast.base.page.PagingView;
 import com.fast.service.IDataService;
 import com.fast.service.IGoodsService;
+import com.fast.service.IVipService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
 import com.fast.util.Common;
@@ -62,6 +65,12 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 	
 	@Autowired
 	MGoodsingroupMapper goodsingroupMapper;
+	
+	@Autowired
+	IVipService iVipService;
+	
+	@Autowired
+	MViptypeMapper viptypeMapper;
 
 	@Override
 	public Result goods() {
@@ -117,12 +126,30 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 				return result;
 			}
 			
+			// 会员折扣
+			BigDecimal discount = BigDecimal.ONE;
+			if (!Common.isEmpty(openid)) {
+				Result r = iVipService.queryVipByOpenid(appid, openid);
+				if (Common.isActive(r)) {
+					HashMap<String, Object> map = (HashMap<String, Object>) r.getData();
+					MViptype viptype = viptypeMapper.selectByPrimaryKey(Integer.valueOf(map.get("typeid").toString()));
+					if (viptype != null && viptype.getId() != null) {
+						discount = viptype.getDiscount() == null ? BigDecimal.ONE : viptype.getDiscount();
+					}
+				}
+			}			
+			
 			String sql = "select * from m_goods where id=" + id;
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
 				list = CommonUtil.transformUpperCase(list);
 				list = iDataService.completeData(list, "goods");
 				LinkedHashMap<String, Object> goods = list.get(0);
+				
+				BigDecimal price = goods.get("price") == null ? BigDecimal.ZERO : new BigDecimal(goods.get("price").toString().trim());
+				BigDecimal newPrice = price.multiply(discount).setScale(2, BigDecimal.ROUND_HALF_UP);
+				goods.put("price", newPrice);
+				
 				// 主图/明细图
 				List<Object> mainPhoto = new ArrayList<>();
 				List<Object> detailPhoto = new ArrayList<>();

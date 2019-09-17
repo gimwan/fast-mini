@@ -240,5 +240,32 @@ public class Order extends MiniMaster {
 		
 		return result;
 	}
+	
+	/**
+	 * 确认收货
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/order/receipt")
+	@ResponseBody
+	public String receipt(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String id = request.getParameter("id");
+			
+			r = iOrderMaintService.receiptOrder(Integer.valueOf(id));
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
 
 }

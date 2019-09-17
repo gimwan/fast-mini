@@ -592,11 +592,16 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 				result.setMessage("订单已取消");
 				return result;
 			}
+			if (order.getStatus().intValue() >= 3) {
+				result.setMessage("订单已发货");
+				return result;
+			}
 			
 			changeOrder(order);
 			
 			result.setId(orderid);
 			result.setErrcode(Integer.valueOf(0));
+			result.setMessage("取消成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
@@ -841,6 +846,44 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		}
 		
 		System.out.println("更新订单状态结束...");
+		return result;
+	}
+
+	@Override
+	public Result receiptOrder(Integer orderid) {
+		Result result = new Result();
+
+		try {
+			MOrder order = orderMapper.selectByPrimaryKey(orderid);
+			if (order == null || order.getId() == null) {
+				result.setMessage("订单不存在");
+				return result;
+			}
+			if (order.getStatus().intValue() == 0) {
+				result.setMessage("订单已取消");
+				return result;
+			}
+			if (order.getStatus().intValue() < 3) {
+				result.setMessage("订单未发货");
+				return result;
+			}
+			if (order.getStatus().intValue() == 3) {
+				Date now = new Date();
+				order.setStatus(Byte.valueOf("4"));
+				order.setReceivertime(now);
+				order.setUpdatedtime(now);
+				orderMapper.updateByPrimaryKeySelective(order);
+				
+				result.setErrcode(Integer.valueOf(0));
+				result.setId(orderid);
+				result.setMessage("收货成功");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.receiptOrder报错：", e);
+		}
+		
 		return result;
 	}
 

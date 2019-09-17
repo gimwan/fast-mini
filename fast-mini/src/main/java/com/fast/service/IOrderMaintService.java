@@ -89,5 +89,12 @@ public interface IOrderMaintService {
 	 * @return
 	 */
 	public Result cancelOrder(Integer orderid);
+	
+	/**
+	 * 确认收货
+	 * @param orderid
+	 * @return
+	 */
+	public Result receiptOrder(Integer orderid);
 
 }
