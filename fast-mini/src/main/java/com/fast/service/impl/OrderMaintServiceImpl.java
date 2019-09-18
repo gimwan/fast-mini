@@ -22,10 +22,6 @@ import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipaddressMapper;
 import com.fast.base.data.dao.MVipcartMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
-import com.fast.base.data.dao.MVipdepositrecordMapper;
-import com.fast.base.data.dao.MVippointrecordMapper;
-import com.fast.base.data.entity.MExtsystem;
-import com.fast.base.data.entity.MExtsystemExample;
 import com.fast.base.data.entity.MGoodssku;
 import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MMiniprogram;
@@ -38,20 +34,17 @@ import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipaddress;
 import com.fast.base.data.entity.MVipcartExample;
 import com.fast.base.data.entity.MVipcoupon;
-import com.fast.base.data.entity.MVipdepositrecord;
-import com.fast.base.data.entity.MVippointrecord;
 import com.fast.service.IConfigService;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IOrderMaintService;
 import com.fast.service.IOrderService;
+import com.fast.service.IVipDepositRecordMaintService;
+import com.fast.service.IVipPointRecordMaintService;
 import com.fast.service.IWechatPayService;
 import com.fast.service.ext.IExtMaintService;
 import com.fast.service.ext.IExtService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
-import com.fast.util.CommonUtil;
-
-import net.sf.json.JSONObject;
 
 /**
  * 订单
@@ -82,10 +75,10 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	MVipaccountMapper vipaccountMapper;
 	
 	@Autowired
-	MVipdepositrecordMapper vipdepositrecordMapper;
+	IVipDepositRecordMaintService iVipDepositRecordMaintService;
 	
 	@Autowired
-	MVippointrecordMapper vippointrecordMapper;
+	IVipPointRecordMaintService iVipPointRecordMaintService;
 	
 	@Autowired
 	MVipcouponMapper vipcouponMapper;
@@ -114,12 +107,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	@Autowired
 	MExtsystemMapper extsystemMapper;
 	
-	// 订单自动取消任务锁
-	private boolean cancelOrderTaskLock = false;
-	// 推送订单任务锁
-	private boolean pushOrderTaskLock = false;
-	// 推送订单任务锁
-	private boolean changeOrderStatusTaskLock = false;
+	
 	
 	@Override
 	public Result createOrder(String appid, Integer vipid, String cartid, Integer addressid, Integer couponid,
@@ -268,31 +256,19 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		}
 		// 扣减积分、储值，记录积分、储值流水
 		boolean isUpdate = false;
-		MVippointrecord vippointrecord = new MVippointrecord();
-		vippointrecord.setVipid(order.getVipid());
-		vippointrecord.setType(Byte.valueOf("1"));
-		vippointrecord.setRefid(order.getId());
-		vippointrecord.setUpdatedtime(order.getUpdatedtime());
-		MVipdepositrecord vipdepositrecord = new MVipdepositrecord();
-		vipdepositrecord.setVipid(order.getVipid());
-		vipdepositrecord.setType(Byte.valueOf("1"));
-		vipdepositrecord.setRefid(order.getId());
-		vipdepositrecord.setUpdatedtime(order.getUpdatedtime());
 		MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(order.getVipid());
+		boolean updatePoint = false;
 		if (order.getPoint() != null && order.getPoint().intValue() > 0) {			
 			Integer point = vipaccount.getPoint() - order.getPoint();			
 			vipaccount.setPoint(point);
-			vippointrecord.setPoint(order.getPoint() * -1);
-			vippointrecord.setNewpoint(point);
-			vippointrecordMapper.insertSelective(vippointrecord);
+			updatePoint = true;
 			isUpdate = true;
 		}
+		boolean updateDeposit = false;
 		if (order.getDeposit() != null && order.getDeposit().compareTo(BigDecimal.ZERO) > 0) {
 			BigDecimal deposit = vipaccount.getDeposit().subtract(order.getDeposit());
 			vipaccount.setDeposit(deposit);
-			vipdepositrecord.setDeposit(order.getDeposit().multiply(new BigDecimal("-1")));
-			vipdepositrecord.setNewdeposit(deposit);
-			vipdepositrecordMapper.insertSelective(vipdepositrecord);
+			updateDeposit = true;
 			isUpdate = true;
 		}
 		if (isUpdate) {
@@ -303,7 +279,30 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		vipcartExample.createCriteria().andVipidEqualTo(order.getVipid()).andIdIn(cartidList);
 		vipcartMapper.deleteByExample(vipcartExample);
 		
+		if (updatePoint) {
+			markdownVipPointRecord(order.getVipid(), order.getPoint() * -1, vipaccount.getPoint(), order.getId(), 1);
+		}
+		if (updateDeposit) {
+			markdownVipDepositRecord(order.getVipid(), order.getDeposit().multiply(new BigDecimal(-1)), vipaccount.getDeposit(), order.getId(), 1);
+		}
+		
 		return order;
+	}
+	
+	private void markdownVipPointRecord(Integer vipid, Integer point, Integer surplusPoint, Integer refid, Integer type) {
+		try {
+			iVipPointRecordMaintService.markdownVipPointRecord(vipid, point, surplusPoint, refid, type);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Integer type) {
+		try {
+			iVipDepositRecordMaintService.markdownVipDepositRecord(vipid, deposit, surplusDeposit, refid, type);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -529,56 +528,6 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	}
 
 	@Override
-	public Result cancelOrderTask() {
-		System.out.println("订单自动取消开始...");
-		Result result = new Result();
-
-		try {
-			if (cancelOrderTaskLock) {
-				result.setMessage("任务进行中");
-				return result;
-			}
-			// 订单自动取消时间（分）
-			Result r = iConfigService.queryConfigValueByCode("4001");
-			String min = "";
-			if (Common.isActive(r)) {
-				min = (String) r.getData();
-			}
-			if (Common.isEmpty(min)) {
-				result.setMessage("获取订单自动取消时间参数错误");
-				return result;
-			}
-			
-			cancelOrderTaskLock = true;
-			
-			String sql = "select * from m_order where status=1 and datediff(minute, createtime, getdate())>=" + min + " order by createtime asc";
-			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
-			if (list != null && list.size() > 0) {
-				list = CommonUtil.transformUpperCase(list);
-				for (int i = 0; i < list.size(); i++) {
-					try {
-						MOrder order = orderMapper.selectByPrimaryKey(Integer.valueOf(list.get(i).get("id").toString()));
-						changeOrder(order);
-					} catch (Exception e) {
-						System.out.println("订单自动取消失败：orderid="+list.get(i).get("id").toString());
-						FastLog.error("调用OrderMaintServiceImpl.cancelOrderTask修改订单状态报错：", e);
-						continue;
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.setMessage(e.getMessage());
-			FastLog.error("调用OrderMaintServiceImpl.cancelOrderTask报错：", e);
-		} finally {
-			cancelOrderTaskLock = false;
-		}
-		
-		System.out.println("订单自动取消结束...");
-		return result;
-	}
-
-	@Override
 	public Result cancelOrder(Integer orderid) {
 		Result result = new Result();
 		
@@ -597,7 +546,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 				return result;
 			}
 			
-			changeOrder(order);
+			rollbackOrder(order);
 			
 			result.setId(orderid);
 			result.setErrcode(Integer.valueOf(0));
@@ -611,8 +560,9 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		return result;
 	}
 	
+	@Override
 	@Transactional(rollbackFor = Exception.class)
-	private void changeOrder(MOrder order) {
+	public void rollbackOrder(MOrder order) {
 		Date now = new Date();
 		
 		MOrderdtlExample example = new MOrderdtlExample();
@@ -657,32 +607,20 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		}
 		
 		// 加回积分、储值，记录积分、储值流水
-		boolean isUpdate = false;
-		MVippointrecord vippointrecord = new MVippointrecord();
-		vippointrecord.setVipid(order.getVipid());
-		vippointrecord.setType(Byte.valueOf("2"));
-		vippointrecord.setRefid(order.getId());
-		vippointrecord.setUpdatedtime(now);
-		MVipdepositrecord vipdepositrecord = new MVipdepositrecord();
-		vipdepositrecord.setVipid(order.getVipid());
-		vipdepositrecord.setType(Byte.valueOf("2"));
-		vipdepositrecord.setRefid(order.getId());
-		vipdepositrecord.setUpdatedtime(now);
+		boolean isUpdate = false;	
 		MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(order.getVipid());
+		boolean updatePoint = false;
 		if (order.getPoint() != null && order.getPoint().intValue() > 0) {
 			Integer point = vipaccount.getPoint() + order.getPoint();
 			vipaccount.setPoint(point);
-			vippointrecord.setPoint(order.getPoint());
-			vippointrecord.setNewpoint(point);
-			vippointrecordMapper.insertSelective(vippointrecord);
+			updatePoint = true;
 			isUpdate = true;
 		}
+		boolean updateDeposit = false;
 		if (order.getDeposit() != null && order.getDeposit().compareTo(BigDecimal.ZERO) > 0) {
 			BigDecimal deposit = vipaccount.getDeposit().add(order.getDeposit());
 			vipaccount.setDeposit(deposit);
-			vipdepositrecord.setDeposit(order.getDeposit());
-			vipdepositrecord.setNewdeposit(deposit);
-			vipdepositrecordMapper.insertSelective(vipdepositrecord);
+			updateDeposit = true;
 			isUpdate = true;
 		}
 		if (isUpdate) {
@@ -705,6 +643,13 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		order.setCanceler("system");
 		order.setUpdatedtime(now);
 		orderMapper.updateByPrimaryKeySelective(order);
+		
+		if (updatePoint) {
+			markdownVipPointRecord(order.getVipid(), order.getPoint(), vipaccount.getPoint(), order.getId(), 2);
+		}
+		if (updateDeposit) {
+			markdownVipDepositRecord(order.getVipid(), order.getDeposit(), vipaccount.getDeposit(), order.getId(), 2);
+		}
 	}
 	
 	private Boolean refund(MOrder order) {
@@ -718,135 +663,6 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			}
 		}
 		return isRefund;
-	}
-	
-	@Override
-	public Result pushOrderTask() {
-		System.out.println("推送订单开始...");
-		Result result = new Result();
-
-		try {
-			if (pushOrderTaskLock) {
-				result.setMessage("任务进行中");
-				return result;
-			}
-			
-			pushOrderTaskLock = true;
-			
-			MExtsystem extsystem = null;
-			MExtsystemExample example = new MExtsystemExample();
-			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
-			List<MExtsystem> extList = extsystemMapper.selectByExample(example);
-			if (extList != null && extList.size() > 0) {
-				extsystem = extList.get(0);
-			}
-			if (extsystem == null) {
-				result.setMessage("接口配置错误");
-				return result;
-			}
-			String sql = "select * from m_order where status>=3 and (extid is null or extid='') order by deliverertime asc";
-			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
-			if (list != null && list.size() > 0) {
-				list = CommonUtil.transformUpperCase(list);
-				for (int i = 0; i < list.size(); i++) {
-					try {
-						Result r = iExtMaintService.putOrder(extsystem, Integer.valueOf(list.get(i).get("id").toString()));
-						if (Common.isActive(r)) {
-							/*com.alibaba.fastjson.JSONObject jObject = com.alibaba.fastjson.JSONObject.parseObject(r.getData().toString());
-							if (jObject != null && !jObject.isEmpty()) {
-								String extid = jObject.get("id") == null ? "" : jObject.getString("id");
-								if (!Common.isEmpty(extid)) {
-									JSONObject object = JSONObject.fromObject(list.get(i));
-									MOrder order = (MOrder) JSONObject.toBean(object, MOrder.class);
-									order.setExtid(extid);
-									order.setUpdatedtime(new Date());
-									orderMapper.updateByPrimaryKeySelective(order);
-								}
-							}*/
-						} else {
-							System.out.println("推送订单失败：orderid="+list.get(i).get("id").toString());
-						}
-					} catch (Exception e) {
-						System.out.println("推送订单失败：orderid="+list.get(i).get("id").toString());
-						FastLog.error("调用OrderMaintServiceImpl.pushOrderTask推送订单报错：", e);
-						continue;
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.setMessage(e.getMessage());
-			FastLog.error("调用OrderMaintServiceImpl.pushOrderTask报错：", e);
-		} finally {
-			pushOrderTaskLock = false;
-		}
-		
-		System.out.println("推送订单结束...");
-		return result;
-	}
-	
-	@Override
-	public Result changeOrderStatusTask() {
-		System.out.println("更新订单状态开始...");
-		Result result = new Result();
-
-		try {
-			if (changeOrderStatusTaskLock) {
-				result.setMessage("任务进行中");
-				return result;
-			}
-			
-			changeOrderStatusTaskLock = true;
-			
-			MExtsystem extsystem = null;
-			MExtsystemExample example = new MExtsystemExample();
-			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
-			List<MExtsystem> extList = extsystemMapper.selectByExample(example);
-			if (extList != null && extList.size() > 0) {
-				extsystem = extList.get(0);
-			}
-			if (extsystem == null) {
-				result.setMessage("接口配置错误");
-				return result;
-			}
-			String sql = "select * from m_order where status=2 and distributionflag=1 and (extid is null or extid='') order by distributiontime asc,createtime asc";
-			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
-			if (list != null && list.size() > 0) {
-				list = CommonUtil.transformUpperCase(list);
-				for (int i = 0; i < list.size(); i++) {
-					try {
-						Result r = iExtService.queryOrderStatus(extsystem, list.get(i).get("no").toString());
-						if (Common.isActive(r)) {
-							com.alibaba.fastjson.JSONObject jObject = com.alibaba.fastjson.JSONObject.parseObject(r.getData().toString());
-							if (jObject != null && !jObject.isEmpty()) {
-								String state = jObject.get("state") == null ? "" : jObject.getString("state");
-								if (!Common.isEmpty(state) && "已完成".equals(state)) {
-									MOrder order = orderMapper.selectByPrimaryKey(Integer.valueOf(list.get(i).get("id").toString()));
-									order.setStatus(Byte.valueOf("3"));
-									order.setUpdatedtime(new Date());
-									orderMapper.updateByPrimaryKeySelective(order);
-								}
-							}
-						} else {
-							System.out.println("查询订单状态失败：orderno="+list.get(i).get("no").toString());
-						}
-					} catch (Exception e) {
-						System.out.println("更新订单状态失败：orderid="+list.get(i).get("id").toString());
-						FastLog.error("调用OrderMaintServiceImpl.changeOrderStatusTask更新订单状态报错：", e);
-						continue;
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.setMessage(e.getMessage());
-			FastLog.error("调用OrderMaintServiceImpl.changeOrderStatusTask报错：", e);
-		} finally {
-			changeOrderStatusTaskLock = false;
-		}
-		
-		System.out.println("更新订单状态结束...");
-		return result;
 	}
 
 	@Override

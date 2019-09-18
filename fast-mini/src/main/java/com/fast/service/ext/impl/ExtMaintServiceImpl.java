@@ -59,7 +59,9 @@ import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipcouponExample;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
+import com.fast.service.IConfigService;
 import com.fast.service.IDepartmentService;
+import com.fast.service.IOrderMaintService;
 import com.fast.service.IVipService;
 import com.fast.service.ext.IExtMaintService;
 import com.fast.service.ext.IExtService;
@@ -136,6 +138,21 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	
 	@Autowired
 	DataMapper dataMapper;
+	
+	@Autowired
+	IConfigService iConfigService;
+	
+	@Autowired
+	IOrderMaintService iOrderMaintService;
+	
+	// 推送任务锁
+	private boolean pushVipTaskLock = false;
+	// 订单自动取消任务锁
+	private boolean cancelOrderTaskLock = false;
+	// 推送订单任务锁
+	private boolean pushOrderTaskLock = false;
+	// 推送订单任务锁
+	private boolean changeOrderStatusTaskLock = false;
 
 	/**
 	 * 同步数据
@@ -1109,8 +1126,8 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				
 				jsonObject.put("employeeID", "");
 				jsonObject.put("cardType", "微信");
-				jsonObject.put("qtySum", order.getQuantity());
-				jsonObject.put("amtSum", order.getAmount());
+				jsonObject.put("quantitySum", order.getQuantity());
+				jsonObject.put("amountSum", order.getAmount());
 				jsonObject.put("type", "销售单");
 				jsonObject.put("editor", "");
 				jsonObject.put("auditFlag", (order.getDeliverytype().intValue() == 2 ? 0 : 1));
@@ -1167,8 +1184,8 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 			MVip vip = vipMapper.selectByPrimaryKey(id);
 			if (vip != null) {
 				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("vipCode", vip.getCode());
-				jsonObject.put("vipName", vip.getName());
+				jsonObject.put("code", vip.getCode());
+				jsonObject.put("vip", vip.getName());
 				jsonObject.put("mobilePhone", vip.getMobilephone());
 				
 				MDepartment department = departmentMapper.selectByPrimaryKey(vip.getDepartmentid());
@@ -1224,34 +1241,92 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	}
 
 	@Override
-	public Result changeVipInfo(MExtsystem extsystem, Integer id) {
+	public Result changeVipInfo(Integer id) {
 		Result result = new Result();
 
 		try {
-			MVip vip = vipMapper.selectByPrimaryKey(id);
+			changeVipInfoThread thread = new changeVipInfoThread();
+            thread.setVipid(id);
+            Thread t = new Thread(thread);
+            t.start();
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.changeVipInfo报错：", e);
+		}
+
+		return result;
+	}
+	
+	public class changeVipInfoThread implements Runnable {
+		private Integer vipid;
+		
+		public Integer getVipid() {
+			return vipid;
+		}
+
+		public void setVipid(Integer vipid) {
+			this.vipid = vipid;
+		}
+
+		@Override
+		public void run() {
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> list = extsystemMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				extsystem = list.get(0);
+			}
+			if (extsystem != null) {
+				MVip vip = vipMapper.selectByPrimaryKey(vipid);
+				if (vip != null) {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("code", vip.getCode());
+					jsonObject.put("vip", vip.getName());
+					
+					jsonObject.put("sex", (vip.getSex().intValue() == 1 ? "男" : (vip.getSex().intValue() == 2 ? "女" : "")));
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					if (vip.getBirthday() != null) {					
+						String birthday = "";
+						try {
+							birthday = sdf.format(vip.getBirthday());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						jsonObject.put("birthDay", birthday);
+					}
+					
+					jsonObject.put("province", vip.getProvince());
+					jsonObject.put("city", vip.getCity());
+					jsonObject.put("county", vip.getCounty());
+					
+					String url = extsystem.getServeraddress() + "/api/vip/update";
+					net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+					if (object != null) {
+						
+					}
+				}
+			}			
+		}
+	}
+
+	@Override
+	public Result changeVipPoint(MExtsystem extsystem, Integer vipid, Integer point, String reason) {
+		Result result = new Result();
+
+		try {
+			MVip vip = vipMapper.selectByPrimaryKey(vipid);
 			if (vip != null) {
 				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("vipCode", vip.getCode());
-				jsonObject.put("vipName", vip.getName());
+				jsonObject.put("vipID", vip.getExtid());
+				jsonObject.put("deductSalesPoint", point);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				jsonObject.put("deductDate", sdf.format(new Date()));
+				jsonObject.put("style", (point.intValue()>0?2:1));
+				jsonObject.put("deductReason", reason);
 				
-				jsonObject.put("sex", (vip.getSex().intValue() == 1 ? "男" : (vip.getSex().intValue() == 2 ? "女" : "")));
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				if (vip.getBirthday() != null) {					
-					String birthday = "";
-					try {
-						birthday = sdf.format(vip.getBirthday());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					jsonObject.put("birthDay", birthday);
-				}
-				
-				jsonObject.put("Province", vip.getProvince());
-				jsonObject.put("city", vip.getCity());
-				jsonObject.put("county", vip.getCounty());
-				
-				String url = extsystem.getServeraddress() + "/api/vip/create";
+				String url = extsystem.getServeraddress() + "/api/vip/pointChange";
 				net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 				if (object != null) {
 					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
@@ -1267,9 +1342,269 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
-			FastLog.error("调用ExtMaintServiceImpl.changeVipInfo报错：", e);
+			FastLog.error("调用ExtMaintServiceImpl.changeVipPoint报错：", e);
 		}
 
+		return result;
+	}
+
+	@Override
+	public Result changeVipDeposit(MExtsystem extsystem, Integer vipid, BigDecimal deposit, String reason) {
+		Result result = new Result();
+
+		try {
+			MVip vip = vipMapper.selectByPrimaryKey(vipid);
+			if (vip != null) {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("vipID", vip.getExtid());
+				jsonObject.put("depositAmount", deposit);
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				jsonObject.put("deductDate", sdf.format(new Date()));
+				jsonObject.put("memo", reason);
+				
+				String url = extsystem.getServeraddress() + "/api/vip/storeValueChange";
+				net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+				if (object != null) {
+					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+					/*if (Common.isActive(result)) {
+						String extid = result.getId() == null ? "" : result.getId().toString();
+						if (Common.isEmpty(extid)) {
+							vip.setExtid(extid.trim());
+							vip.setUpdatedtime(new Date());
+							vipMapper.updateByPrimaryKeySelective(vip);
+						}
+					}*/
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.changeVipDeposit报错：", e);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public Result pushVipTask() {
+		System.out.println("推送会员开始...");
+		Result result = new Result();
+
+		try {
+			if (pushVipTaskLock) {
+				result.setMessage("任务进行中");
+				return result;
+			}
+			
+			pushVipTaskLock = true;
+			
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(example);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			String sql = "select * from m_vip where useflag=1 and (extid is null or extid='') order by id asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
+				for (int i = 0; i < list.size(); i++) {
+					try {
+						Result r = putVip(extsystem, Integer.valueOf(list.get(i).get("id").toString()));
+						if (Common.isActive(r)) {
+							
+						} else {
+							System.out.println("推送会员失败：vipid="+list.get(i).get("id").toString());
+						}
+					} catch (Exception e) {
+						System.out.println("推送会员失败：vipid="+list.get(i).get("id").toString());
+						FastLog.error("调用VipMaintServiceImpl.pushVipTask推送会员报错：", e);
+						continue;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipMaintServiceImpl.pushVipTask报错：", e);
+		} finally {
+			pushVipTaskLock = false;
+		}
+		
+		System.out.println("推送会员结束...");
+		return result;
+	}
+	
+	@Override
+	public Result cancelOrderTask() {
+		System.out.println("订单自动取消开始...");
+		Result result = new Result();
+
+		try {
+			if (cancelOrderTaskLock) {
+				result.setMessage("任务进行中");
+				return result;
+			}
+			// 订单自动取消时间（分）
+			Result r = iConfigService.queryConfigValueByCode("4001");
+			String min = "";
+			if (Common.isActive(r)) {
+				min = (String) r.getData();
+			}
+			if (Common.isEmpty(min)) {
+				result.setMessage("获取订单自动取消时间参数错误");
+				return result;
+			}
+			
+			cancelOrderTaskLock = true;
+			
+			String sql = "select * from m_order where status=1 and datediff(minute, createtime, getdate())>=" + min + " order by createtime asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
+				for (int i = 0; i < list.size(); i++) {
+					try {
+						MOrder order = orderMapper.selectByPrimaryKey(Integer.valueOf(list.get(i).get("id").toString()));
+						iOrderMaintService.rollbackOrder(order);
+					} catch (Exception e) {
+						System.out.println("订单自动取消失败：orderid="+list.get(i).get("id").toString());
+						FastLog.error("调用OrderMaintServiceImpl.cancelOrderTask修改订单状态报错：", e);
+						continue;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.cancelOrderTask报错：", e);
+		} finally {
+			cancelOrderTaskLock = false;
+		}
+		
+		System.out.println("订单自动取消结束...");
+		return result;
+	}
+	
+	@Override
+	public Result pushOrderTask() {
+		System.out.println("推送订单开始...");
+		Result result = new Result();
+
+		try {
+			if (pushOrderTaskLock) {
+				result.setMessage("任务进行中");
+				return result;
+			}
+			
+			pushOrderTaskLock = true;
+			
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(example);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			String sql = "select * from m_order where status>=3 and (extid is null or extid='') order by deliverertime asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
+				for (int i = 0; i < list.size(); i++) {
+					try {
+						Result r = putOrder(extsystem, Integer.valueOf(list.get(i).get("id").toString()));
+						if (Common.isActive(r)) {
+							
+						} else {
+							System.out.println("推送订单失败：orderid="+list.get(i).get("id").toString());
+						}
+					} catch (Exception e) {
+						System.out.println("推送订单失败：orderid="+list.get(i).get("id").toString());
+						FastLog.error("调用OrderMaintServiceImpl.pushOrderTask推送订单报错：", e);
+						continue;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.pushOrderTask报错：", e);
+		} finally {
+			pushOrderTaskLock = false;
+		}
+		
+		System.out.println("推送订单结束...");
+		return result;
+	}
+	
+	@Override
+	public Result changeOrderStatusTask() {
+		System.out.println("更新订单状态开始...");
+		Result result = new Result();
+
+		try {
+			if (changeOrderStatusTaskLock) {
+				result.setMessage("任务进行中");
+				return result;
+			}
+			
+			changeOrderStatusTaskLock = true;
+			
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(example);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			String sql = "select * from m_order where status=2 and distributionflag=1 and (extid is null or extid='') order by distributiontime asc,createtime asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				list = CommonUtil.transformUpperCase(list);
+				for (int i = 0; i < list.size(); i++) {
+					try {
+						Result r = iExtService.queryOrderStatus(extsystem, list.get(i).get("no").toString());
+						if (Common.isActive(r)) {
+							com.alibaba.fastjson.JSONObject jObject = com.alibaba.fastjson.JSONObject.parseObject(r.getData().toString());
+							if (jObject != null && !jObject.isEmpty()) {
+								String state = jObject.get("state") == null ? "" : jObject.getString("state");
+								if (!Common.isEmpty(state) && "已完成".equals(state)) {
+									MOrder order = orderMapper.selectByPrimaryKey(Integer.valueOf(list.get(i).get("id").toString()));
+									order.setStatus(Byte.valueOf("3"));
+									order.setUpdatedtime(new Date());
+									orderMapper.updateByPrimaryKeySelective(order);
+								}
+							}
+						} else {
+							System.out.println("查询订单状态失败：orderno="+list.get(i).get("no").toString());
+						}
+					} catch (Exception e) {
+						System.out.println("更新订单状态失败：orderid="+list.get(i).get("id").toString());
+						FastLog.error("调用OrderMaintServiceImpl.changeOrderStatusTask更新订单状态报错：", e);
+						continue;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.changeOrderStatusTask报错：", e);
+		} finally {
+			changeOrderStatusTaskLock = false;
+		}
+		
+		System.out.println("更新订单状态结束...");
 		return result;
 	}
 

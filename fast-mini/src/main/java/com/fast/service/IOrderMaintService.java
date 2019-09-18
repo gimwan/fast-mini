@@ -1,6 +1,7 @@
 package com.fast.service;
 
 import com.fast.base.Result;
+import com.fast.base.data.entity.MOrder;
 import com.fast.base.data.entity.MUser;
 
 /**
@@ -63,32 +64,17 @@ public interface IOrderMaintService {
 	public Result createGroupbuyOrder(String appid, Integer vipid, Integer skuid, Integer quantity, Integer groupbuyid, Integer addressid);
 	
 	/**
-	 * 定时任务
-	 * 自动取消订单
-	 * @return
-	 */
-	public Result cancelOrderTask();
-	
-	/**
-	 * 定时任务
-	 * 推送订单
-	 * @return
-	 */
-	public Result pushOrderTask();
-	
-	/**
-	 * 定时任务
-	 * 更新订单状态
-	 * @return
-	 */
-	public Result changeOrderStatusTask();
-	
-	/**
 	 * 取消订单
 	 * @param orderid
 	 * @return
 	 */
 	public Result cancelOrder(Integer orderid);
+	
+	/**
+	 * 回滚订单相关数据
+	 * @param order
+	 */
+	public void rollbackOrder(MOrder order);
 	
 	/**
 	 * 确认收货

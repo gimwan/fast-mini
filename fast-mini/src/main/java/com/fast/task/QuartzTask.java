@@ -4,16 +4,12 @@ import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fast.service.IOrderMaintService;
-import com.fast.service.IVipMaintService;
+import com.fast.service.ext.IExtMaintService;
 
 public class QuartzTask {
 	
 	@Autowired
-	IVipMaintService iVipMaintService;
-	
-	@Autowired
-	IOrderMaintService iOrderMaintService;
+	IExtMaintService iExtMaintService;
 	
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 	
@@ -22,13 +18,13 @@ public class QuartzTask {
 		
 		try {
 			// 推送会员
-			iVipMaintService.pushVipTask();
+			iExtMaintService.pushVipTask();
 			// 订单自动取消
-			iOrderMaintService.cancelOrderTask();
+			iExtMaintService.cancelOrderTask();
 			// 推送订单
-			iOrderMaintService.pushOrderTask();
+			iExtMaintService.pushOrderTask();
 			// 更新订单状态
-			//iOrderMaintService.changeOrderStatusTask();
+			//iExtMaintService.changeOrderStatusTask();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

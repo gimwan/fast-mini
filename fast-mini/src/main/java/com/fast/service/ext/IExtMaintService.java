@@ -1,5 +1,7 @@
 package com.fast.service.ext;
 
+import java.math.BigDecimal;
+
 import com.fast.base.Result;
 import com.fast.base.data.entity.MExtsystem;
 
@@ -49,10 +51,57 @@ public interface IExtMaintService {
 	
 	/**
 	 * 修改会员信息
-	 * @param extsystem
 	 * @param id
 	 * @return
 	 */
-	public Result changeVipInfo(MExtsystem extsystem, Integer id);
+	public Result changeVipInfo(Integer id);
+	
+	/**
+	 * 会员积分变动
+	 * @param extsystem
+	 * @param vipid
+	 * @param point
+	 * @param reason
+	 * @return
+	 */
+	public Result changeVipPoint(MExtsystem extsystem, Integer vipid, Integer point, String reason);
+	
+	/**
+	 * 会员储值变动
+	 * @param extsystem
+	 * @param vipid
+	 * @param deposit
+	 * @param reason
+	 * @return
+	 */
+	public Result changeVipDeposit(MExtsystem extsystem, Integer vipid, BigDecimal deposit, String reason);
+	
+	/**
+	 * 定时任务
+	 * 推送会员
+	 * @return
+	 */
+	public Result pushVipTask();
+	
+	/**
+	 * 定时任务
+	 * 自动取消订单
+	 * @return
+	 */
+	public Result cancelOrderTask();
+	
+	/**
+	 * 定时任务
+	 * 推送订单
+	 * @return
+	 */
+	public Result pushOrderTask();
+	
+	/**
+	 * 定时任务
+	 * 更新订单状态
+	 * @return
+	 */
+	public Result changeOrderStatusTask();
 
 }
