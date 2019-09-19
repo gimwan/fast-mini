@@ -88,7 +88,7 @@ public class SizeMaintServiceImpl implements ISizeMaintService, Serializable {
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("size", result.getId());
+				Result r = iDataService.one("size", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

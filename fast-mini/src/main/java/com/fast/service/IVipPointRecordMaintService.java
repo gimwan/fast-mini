@@ -16,8 +16,9 @@ public interface IVipPointRecordMaintService {
 	 * @param surplusPoint
 	 * @param refid
 	 * @param type
+	 * @param reason
 	 * @return
 	 */
-	public Result markdownVipPointRecord(Integer vipid, Integer point, Integer surplusPoint, Integer refid, Integer type);
+	public Result markdownVipPointRecord(Integer vipid, Integer point, Integer surplusPoint, Integer refid, Integer type, String reason);
 
 }

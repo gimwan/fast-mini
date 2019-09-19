@@ -46,22 +46,22 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
-	MVipMapper mVipMapper;
+	MVipMapper vipMapper;
 	
 	@Autowired
-	MVipaccountMapper mVipaccountMapper;
+	MVipaccountMapper vipaccountMapper;
 	
 	@Autowired
-	MVipminiMapper mVipminiMapper;
+	MVipminiMapper vipminiMapper;
 	
 	@Autowired
-	MRegionMapper mRegionMapper;
+	MRegionMapper regionMapper;
 	
 	@Autowired
 	IMiniProgramService iMiniProgramService;
 	
 	@Autowired
-	MViptypeMapper mViptypeMapper;
+	MViptypeMapper viptypeMapper;
 	
 	@Autowired
 	IVipService iVipService;
@@ -89,7 +89,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			if (vip.getTypeid() == null) {
 				MViptypeExample example = new MViptypeExample();
 				example.createCriteria().andDefaultflagEqualTo(Byte.valueOf("1"));
-				List<MViptype> list = mViptypeMapper.selectByExample(example);
+				List<MViptype> list = viptypeMapper.selectByExample(example);
 				if (list != null && list.size() > 0) {
 					vip.setTypeid(list.get(0).getId());
 				} else {
@@ -116,6 +116,9 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			
 			vip = saveVip(appid, openid, vip);
 			
+			// 取最新会员信息
+			vip = vipMapper.selectByPrimaryKey(vip.getId());
+			
 			result.setErrcode(Integer.valueOf(0));
 			result.setData(vip);
 			result.setId(vip.getId());
@@ -130,21 +133,21 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	@Transactional(rollbackFor = Exception.class)
 	public MVip saveVip(String appid, String openid, MVip vip) {
 		if (vip.getId() != null) {
-			mVipMapper.updateByPrimaryKeySelective(vip);
+			vipMapper.updateByPrimaryKeySelective(vip);
 		} else {
 			String code = newCode(1);
 			vip.setCode(code);
-			mVipMapper.insertSelective(vip);
+			vipMapper.insertSelective(vip);
 		}
 		
-		MVipaccount vipaccount = mVipaccountMapper.selectByPrimaryKey(vip.getId());
+		MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(vip.getId());
 		if (vipaccount == null || vipaccount.getId() == null) {
 			vipaccount = new MVipaccount();
 			vipaccount.setId(vip.getId());
 			vipaccount.setCreatetime(vip.getUpdatedtime());
 			vipaccount.setCreator("system");
 			vipaccount.setUpdatedtime(vip.getUpdatedtime());
-			mVipaccountMapper.insertSelective(vipaccount);
+			vipaccountMapper.insertSelective(vipaccount);
 		}
 		resetVipMini(vip, appid, openid);
 		// 同步会员信息
@@ -161,7 +164,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	public MVip resetVip(MVip vip, Date now) {
 		MVipExample example = new MVipExample();
 		example.createCriteria().andMobilephoneEqualTo(vip.getMobilephone());
-		List<MVip> list = mVipMapper.selectByExample(example);
+		List<MVip> list = vipMapper.selectByExample(example);
 		if (list != null && list.size() > 0) {
 			MVip mVip = list.get(0);
 			mVip.setNickname(vip.getNickname());
@@ -233,7 +236,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 				}
 				MVipExample example = new MVipExample();
 				example.createCriteria().andCodeEqualTo(codeBuf.toString()+code);
-				List<MVip> list = mVipMapper.selectByExample(example);
+				List<MVip> list = vipMapper.selectByExample(example);
 				if (list == null || list.size() < 1) {
 					codeBuf.append(code);
 					break;
@@ -242,7 +245,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 		} else {
 			MVipExample example = new MVipExample();
 			example.setOrderByClause(" code desc");
-			List<MVip> list = mVipMapper.selectByExample(example);
+			List<MVip> list = vipMapper.selectByExample(example);
 			if (list != null && list.size() > 0) {
 				codeBuf.append(this.incCode(list.get(0).getCode(), "", len));
 			} else {
@@ -277,7 +280,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 				if (miniprogramid != null) {
 					MVipminiExample example = new MVipminiExample();
 					example.createCriteria().andMiniprogramidEqualTo(miniprogramid).andVipidEqualTo(vip.getId());
-					List<MVipmini> list = mVipminiMapper.selectByExample(example);
+					List<MVipmini> list = vipminiMapper.selectByExample(example);
 					if (list != null && list.size() > 0) {
 						MVipmini mVipmini = list.get(0);
 						if (Common.isEmpty(mVipmini.getUnionid())) {
@@ -287,11 +290,11 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 							mVipmini.setOpenid(openid);
 						}
 						mVipmini.setUpdatedtime(new Date());
-						mVipminiMapper.updateByPrimaryKeySelective(mVipmini);
+						vipminiMapper.updateByPrimaryKeySelective(mVipmini);
 					} else {
 						example = new MVipminiExample();
 						example.createCriteria().andMiniprogramidEqualTo(miniprogramid).andOpenidEqualTo(openid);
-						list = mVipminiMapper.selectByExample(example);
+						list = vipminiMapper.selectByExample(example);
 						if (list != null && list.size() > 0) {
 							MVipmini mVipmini = list.get(0);
 							if (!Common.isEmpty(mVipmini.getUnionid())) {
@@ -299,13 +302,13 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 							}
 							mVipmini.setVipid(vip.getId());
 							mVipmini.setUpdatedtime(new Date());
-							mVipminiMapper.updateByPrimaryKeySelective(mVipmini);
+							vipminiMapper.updateByPrimaryKeySelective(mVipmini);
 						} else {
 							boolean add = true;
 							if (!Common.isEmpty(vip.getUnionid())) {
 								example = new MVipminiExample();
 								example.createCriteria().andMiniprogramidEqualTo(miniprogramid).andUnionidEqualTo(vip.getUnionid());
-								list = mVipminiMapper.selectByExample(example);
+								list = vipminiMapper.selectByExample(example);
 								if (list != null && list.size() > 0) {
 									MVipmini mVipmini = list.get(0);
 									if (!Common.isEmpty(openid)) {
@@ -313,7 +316,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 									}
 									mVipmini.setVipid(vip.getId());
 									mVipmini.setUpdatedtime(new Date());
-									mVipminiMapper.updateByPrimaryKeySelective(mVipmini);
+									vipminiMapper.updateByPrimaryKeySelective(mVipmini);
 									add = false;
 								}
 							}
@@ -328,7 +331,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 								}
 								mVipmini.setMiniprogramid(miniprogramid);
 								mVipmini.setUpdatedtime(new Date());
-								mVipminiMapper.insertSelective(mVipmini);
+								vipminiMapper.insertSelective(mVipmini);
 							}
 						}
 					}
@@ -388,7 +391,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 					vip = iVipService.resetVipRegion(vip);
 				}
 				
-				mVipMapper.updateByPrimaryKeySelective(vip);
+				vipMapper.updateByPrimaryKeySelective(vip);
 				
 				syncVipData(vip.getId());
 				

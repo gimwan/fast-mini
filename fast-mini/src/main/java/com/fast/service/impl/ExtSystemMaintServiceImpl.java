@@ -55,7 +55,7 @@ public class ExtSystemMaintServiceImpl implements IExtSystemMaintService, Serial
 			result = save(extsystem, user);
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("extsystem", result.getId());
+				Result r = iDataService.one("extsystem", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

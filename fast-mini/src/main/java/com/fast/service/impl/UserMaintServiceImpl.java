@@ -81,7 +81,7 @@ public class UserMaintServiceImpl implements IUserMaintService, Serializable {
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("user", result.getId());
+				Result r = iDataService.one("user", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

@@ -126,7 +126,7 @@ public class GroupbuyMaintServiceImpl implements IGroupbuyMaintService, Serializ
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("groupbuy", result.getId());
+				Result r = iDataService.one("groupbuy", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

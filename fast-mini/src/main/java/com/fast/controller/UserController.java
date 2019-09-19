@@ -91,7 +91,7 @@ public class UserController {
 			r = jsonObject.toString();
 			
 			if (result.getErrcode().intValue() == 0) {
-				if (result.getId().intValue() == currentUser.getId().intValue()) {
+				if (Integer.valueOf(result.getId().toString()).intValue() == currentUser.getId().intValue()) {
 					request.getSession().setAttribute("user",result.getData());
 					String sessionid = request.getSession().getId();
 					RedisCache.set(sessionid, result.getData());

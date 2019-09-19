@@ -82,7 +82,7 @@ private static final long serialVersionUID = 71148004875517941L;
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("publicplatform", result.getId());
+				Result r = iDataService.one("publicplatform", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

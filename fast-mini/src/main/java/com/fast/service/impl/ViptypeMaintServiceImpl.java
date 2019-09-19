@@ -55,7 +55,7 @@ public class ViptypeMaintServiceImpl implements IViptypeMaintService, Serializab
 			result = saveType(viptype, user.getName());
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("viptype", result.getId());
+				Result r = iDataService.one("viptype", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

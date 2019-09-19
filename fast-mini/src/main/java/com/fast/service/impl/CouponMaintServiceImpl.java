@@ -82,7 +82,7 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("coupon", result.getId());
+				Result r = iDataService.one("coupon", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

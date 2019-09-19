@@ -13,7 +13,7 @@ public class Result implements Serializable {
 
 	// 0:成功，-1:未知异常错误,其它数值为指定明确原因的错误，可显示	
 	private Integer errcode = -1;
-	private Integer id;
+	private Object id;
 	private String message;
 	private Object data = null;
 	public Integer getErrcode() {
@@ -22,10 +22,10 @@ public class Result implements Serializable {
 	public void setErrcode(Integer errcode) {
 		this.errcode = errcode;
 	}
-	public Integer getId() {
+	public Object getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Object id) {
 		this.id = id;
 	}
 	public String getMessage() {

@@ -27,7 +27,7 @@ public class VipDepositRecordMaintServiceImpl implements IVipDepositRecordMaintS
 	MVipdepositrecordMapper vipdepositrecordMapper;
 
 	@Override
-	public Result markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Integer type) {
+	public Result markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Integer type, String reason) {
 		Result result = new Result();
 
 		try {
@@ -38,6 +38,7 @@ public class VipDepositRecordMaintServiceImpl implements IVipDepositRecordMaintS
 			vipdepositrecord.setUpdatedtime(new Date());
 			vipdepositrecord.setDeposit(deposit);
 			vipdepositrecord.setNewdeposit(surplusDeposit);
+			vipdepositrecord.setMemo(reason);
 			vipdepositrecordMapper.insertSelective(vipdepositrecord);
 			
 			result.setErrcode(Integer.valueOf(0));

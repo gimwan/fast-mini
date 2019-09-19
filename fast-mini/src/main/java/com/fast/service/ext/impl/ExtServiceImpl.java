@@ -10,12 +10,18 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.fast.base.Result;
+import com.fast.base.data.dao.MBrandMapper;
 import com.fast.base.data.dao.MExtsystemMapper;
 import com.fast.base.data.dao.MGoodsMapper;
+import com.fast.base.data.dao.MGoodscategoryMapper;
+import com.fast.base.data.entity.MBrand;
+import com.fast.base.data.entity.MBrandExample;
 import com.fast.base.data.entity.MExtsystem;
 import com.fast.base.data.entity.MExtsystemExample;
 import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodsExample;
+import com.fast.base.data.entity.MGoodscategory;
+import com.fast.base.data.entity.MGoodscategoryExample;
 import com.fast.service.ext.IExtService;
 import com.fast.service.impl.DataServiceImpl;
 import com.fast.system.log.FastLog;
@@ -40,6 +46,12 @@ public class ExtServiceImpl implements IExtService, Serializable {
 	
 	@Autowired
 	MGoodsMapper goodsMapper;
+	
+	@Autowired
+	MBrandMapper brandMapper;
+	
+	@Autowired
+	MGoodscategoryMapper goodscategoryMapper;
 	
 	@Autowired
 	DataServiceImpl dataServiceImpl;
@@ -552,10 +564,41 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			}
 			Result r = goodsOne(extsystem, code);
 			if (Common.isActive(r)) {
-				MGoods goods = JSON.parseObject(r.getData().toString(), MGoods.class);
-				if (goods.getId() != null) {
-					goods.setExtid(goods.getId().toString());
-					goods.setId(null);
+				com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(r.getData().toString());
+				String id = jsonObject.getString("id");
+				String brandcode = jsonObject.get("brandcode") == null ? "" : jsonObject.getString("brandcode");
+				String categoryid = jsonObject.get("categoryid") == null ? "" : jsonObject.getString("categoryid");
+				String midegoryid = jsonObject.get("midegoryid") == null ? "" : jsonObject.getString("midegoryid");
+				jsonObject.put("id", null);
+				MGoods goods = JSON.parseObject(jsonObject.toString(), MGoods.class);
+				goods.setExtid(id);
+				
+				if (!Common.isEmpty(brandcode)) {
+					MBrandExample brandExample = new MBrandExample();
+					brandExample.createCriteria().andCodeEqualTo(brandcode.trim());
+					brandExample.setOrderByClause(" useflag desc,id desc");
+					List<MBrand> brands = brandMapper.selectByExample(brandExample);
+					if (brands != null && brands.size() > 0) {
+						goods.setBrandid(brands.get(0).getId());
+					}
+				}
+				if (!Common.isEmpty(categoryid)) {
+					MGoodscategoryExample goodscategoryExample = new MGoodscategoryExample();
+					goodscategoryExample.createCriteria().andExtidEqualTo(categoryid.trim()).andGradeEqualTo(Byte.valueOf("1"));
+					goodscategoryExample.setOrderByClause(" useflag desc,id desc");
+					List<MGoodscategory> goodscategories = goodscategoryMapper.selectByExample(goodscategoryExample);
+					if (goodscategories != null && goodscategories.size() > 0) {
+						goods.setBigcategory(goodscategories.get(0).getId());
+					}
+				}
+				if (!Common.isEmpty(midegoryid)) {
+					MGoodscategoryExample goodscategoryExample = new MGoodscategoryExample();
+					goodscategoryExample.createCriteria().andExtidEqualTo(midegoryid.trim()).andGradeEqualTo(Byte.valueOf("2"));
+					goodscategoryExample.setOrderByClause(" useflag desc,id desc");
+					List<MGoodscategory> goodscategories = goodscategoryMapper.selectByExample(goodscategoryExample);
+					if (goodscategories != null && goodscategories.size() > 0) {
+						goods.setMiddlecategory(goodscategories.get(0).getId());
+					}
 				}
 				
 				LinkedHashMap<String, Object> map = BeanUtil.convertObjToLinkedHashMap(goods);

@@ -63,7 +63,7 @@ private static final long serialVersionUID = 71148004875517941L;
 			}	
 			Result r = iVipService.queryVipByOpenid(appid, openid);
 			if (Common.isActive(r)) {
-				Integer vipid = r.getId();
+				Integer vipid = Integer.valueOf(r.getId().toString());
 				
 				// 会员折扣
 				BigDecimal discount = BigDecimal.ONE;

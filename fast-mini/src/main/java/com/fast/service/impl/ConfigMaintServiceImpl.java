@@ -54,7 +54,7 @@ public class ConfigMaintServiceImpl implements IConfigMaintService, Serializable
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("config", result.getId());
+				Result r = iDataService.one("config", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

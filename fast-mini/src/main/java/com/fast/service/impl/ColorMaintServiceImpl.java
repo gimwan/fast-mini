@@ -88,7 +88,7 @@ public class ColorMaintServiceImpl implements IColorMaintService, Serializable {
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("color", result.getId());
+				Result r = iDataService.one("color", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

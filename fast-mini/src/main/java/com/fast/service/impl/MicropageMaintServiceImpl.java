@@ -85,7 +85,7 @@ public class MicropageMaintServiceImpl implements IMicropageMaintService, Serial
 			result = save(micropage, user);
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("micropage", result.getId());
+				Result r = iDataService.one("micropage", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

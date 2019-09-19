@@ -91,7 +91,7 @@ public class DepartmentMaintServiceImpl implements IDepartmentMaintService, Seri
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("department", result.getId());
+				Result r = iDataService.one("department", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

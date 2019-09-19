@@ -82,7 +82,7 @@ public class RoleMaintServiceImpl implements IRoleMaintService, Serializable {
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("role", result.getId());
+				Result r = iDataService.one("role", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

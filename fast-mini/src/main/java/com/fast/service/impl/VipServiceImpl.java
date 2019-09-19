@@ -310,7 +310,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 			if (Common.isActive(r)) {
 				Date now = new Date();
 				MVipcouponExample example = new MVipcouponExample();
-				example.createCriteria().andUseflagEqualTo(Byte.valueOf("0")).andVipidEqualTo(r.getId()).andBegintimeLessThanOrEqualTo(now).andEndtimeGreaterThan(now);
+				example.createCriteria().andUseflagEqualTo(Byte.valueOf("0")).andVipidEqualTo(Integer.valueOf(r.getId().toString())).andBegintimeLessThanOrEqualTo(now).andEndtimeGreaterThan(now);
 				List<MVipcoupon> list = vipcouponMapper.selectByExample(example);
 				
 				result.setData(list.size());
@@ -333,12 +333,12 @@ public class VipServiceImpl implements IVipService, Serializable {
 			if (Common.isActive(r)) {
 				Date now = new Date();
 				HashMap<String, Object> map = new HashMap<>();
-				MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(r.getId());
+				MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(Integer.valueOf(r.getId().toString()));
 				map.put("point", vipaccount.getPoint() == null ? 0 : vipaccount.getPoint());
 				map.put("deposit", vipaccount.getDeposit() == null ? BigDecimal.ZERO : vipaccount.getDeposit());
 				
 				MVipcouponExample example = new MVipcouponExample();
-				example.createCriteria().andUseflagEqualTo(Byte.valueOf("0")).andVipidEqualTo(r.getId()).andBegintimeLessThanOrEqualTo(now).andEndtimeGreaterThan(now);
+				example.createCriteria().andUseflagEqualTo(Byte.valueOf("0")).andVipidEqualTo(Integer.valueOf(r.getId().toString())).andBegintimeLessThanOrEqualTo(now).andEndtimeGreaterThan(now);
 				List<MVipcoupon> list = vipcouponMapper.selectByExample(example);
 				map.put("coupon", list == null ? 0 : list.size());
 				

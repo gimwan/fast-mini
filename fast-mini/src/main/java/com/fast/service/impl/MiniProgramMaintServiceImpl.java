@@ -82,7 +82,7 @@ public class MiniProgramMaintServiceImpl implements IMiniProgramMaintService, Se
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("miniprogram", result.getId());
+				Result r = iDataService.one("miniprogram", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

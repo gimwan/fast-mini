@@ -88,7 +88,7 @@ public class PatternMaintServiceImpl implements IPatternMaintService, Serializab
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("pattern", result.getId());
+				Result r = iDataService.one("pattern", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

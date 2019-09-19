@@ -82,7 +82,7 @@ public class EmployeeMaintServiceImpl implements IEmployeeMaintService, Serializ
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("employee", result.getId());
+				Result r = iDataService.one("employee", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

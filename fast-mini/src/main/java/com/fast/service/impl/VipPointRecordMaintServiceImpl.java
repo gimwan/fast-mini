@@ -27,7 +27,7 @@ public class VipPointRecordMaintServiceImpl implements IVipPointRecordMaintServi
 	MVippointrecordMapper vippointrecordMapper;
 
 	@Override
-	public Result markdownVipPointRecord(Integer vipid, Integer point, Integer surplusPoint, Integer refid, Integer type) {
+	public Result markdownVipPointRecord(Integer vipid, Integer point, Integer surplusPoint, Integer refid, Integer type, String reason) {
 		Result result = new Result();
 
 		try {
@@ -38,6 +38,7 @@ public class VipPointRecordMaintServiceImpl implements IVipPointRecordMaintServi
 			vippointrecord.setUpdatedtime(new Date());
 			vippointrecord.setPoint(point);
 			vippointrecord.setNewpoint(surplusPoint);
+			vippointrecord.setMemo(reason);
 			vippointrecordMapper.insertSelective(vippointrecord);
 			
 			result.setErrcode(Integer.valueOf(0));

@@ -280,26 +280,26 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		vipcartMapper.deleteByExample(vipcartExample);
 		
 		if (updatePoint) {
-			markdownVipPointRecord(order.getVipid(), order.getPoint() * -1, vipaccount.getPoint(), order.getId(), 1);
+			markdownVipPointRecord(order.getVipid(), order.getPoint() * -1, vipaccount.getPoint(), order.getId(), 1, "订单支付");
 		}
 		if (updateDeposit) {
-			markdownVipDepositRecord(order.getVipid(), order.getDeposit().multiply(new BigDecimal(-1)), vipaccount.getDeposit(), order.getId(), 1);
+			markdownVipDepositRecord(order.getVipid(), order.getDeposit().multiply(new BigDecimal(-1)), vipaccount.getDeposit(), order.getId(), 1, "订单支付");
 		}
 		
 		return order;
 	}
 	
-	private void markdownVipPointRecord(Integer vipid, Integer point, Integer surplusPoint, Integer refid, Integer type) {
+	private void markdownVipPointRecord(Integer vipid, Integer point, Integer surplusPoint, Integer refid, Integer type, String reason) {
 		try {
-			iVipPointRecordMaintService.markdownVipPointRecord(vipid, point, surplusPoint, refid, type);
+			iVipPointRecordMaintService.markdownVipPointRecord(vipid, point, surplusPoint, refid, type, reason);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Integer type) {
+	private void markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Integer type, String reason) {
 		try {
-			iVipDepositRecordMaintService.markdownVipDepositRecord(vipid, deposit, surplusDeposit, refid, type);
+			iVipDepositRecordMaintService.markdownVipDepositRecord(vipid, deposit, surplusDeposit, refid, type, reason);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -645,10 +645,10 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		orderMapper.updateByPrimaryKeySelective(order);
 		
 		if (updatePoint) {
-			markdownVipPointRecord(order.getVipid(), order.getPoint(), vipaccount.getPoint(), order.getId(), 2);
+			markdownVipPointRecord(order.getVipid(), order.getPoint(), vipaccount.getPoint(), order.getId(), 2, "退订单支付");
 		}
 		if (updateDeposit) {
-			markdownVipDepositRecord(order.getVipid(), order.getDeposit(), vipaccount.getDeposit(), order.getId(), 2);
+			markdownVipDepositRecord(order.getVipid(), order.getDeposit(), vipaccount.getDeposit(), order.getId(), 2, "退订单支付");
 		}
 	}
 	

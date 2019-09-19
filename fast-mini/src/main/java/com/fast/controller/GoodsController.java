@@ -121,7 +121,7 @@ public class GoodsController {
 				
 				// 外部接口同步
 				if (Common.isActive(result)) {
-					iExtMaintService.syncGoods(result.getId());
+					iExtMaintService.syncGoods(Integer.valueOf(result.getId().toString()));
 				}
 			} else {
 				result.setErrcode(Integer.valueOf(88));

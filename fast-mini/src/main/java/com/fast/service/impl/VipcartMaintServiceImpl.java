@@ -218,7 +218,7 @@ public class VipcartMaintServiceImpl implements IVipcartMaintService, Serializab
 			}	
 			Result r = iVipService.queryVipByOpenid(appid, openid);
 			if (Common.isActive(r)) {
-				Integer vipid = r.getId();
+				Integer vipid = Integer.valueOf(r.getId().toString());
 				MVipcart vipcart = vipcartMapper.selectByPrimaryKey(id);
 				if (vipcart != null && vipcart.getId() != null) {
 					vipcartMapper.deleteByPrimaryKey(vipcart.getId());

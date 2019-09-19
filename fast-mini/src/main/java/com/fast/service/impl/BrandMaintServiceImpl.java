@@ -88,7 +88,7 @@ public class BrandMaintServiceImpl implements IBrandMaintService, Serializable {
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("brand", result.getId());
+				Result r = iDataService.one("brand", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

@@ -110,7 +110,7 @@ public class GoodsMaintServiceImpl implements IGoodsMaintService, Serializable {
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("goods", result.getId());
+				Result r = iDataService.one("goods", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}

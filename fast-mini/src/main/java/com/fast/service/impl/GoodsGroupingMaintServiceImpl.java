@@ -82,7 +82,7 @@ public class GoodsGroupingMaintServiceImpl implements IGoodsGroupingMaintService
 			}
 			
 			if (Common.isActive(result)) {
-				Result r = iDataService.one("goodsgrouping", result.getId());
+				Result r = iDataService.one("goodsgrouping", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
 				}
