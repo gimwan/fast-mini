@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fast.base.Result;
@@ -27,6 +28,7 @@ import com.fast.base.data.dao.MGoodscategoryMapper;
 import com.fast.base.data.dao.MGoodsskuMapper;
 import com.fast.base.data.dao.MOrderMapper;
 import com.fast.base.data.dao.MOrderdtlMapper;
+import com.fast.base.data.dao.MPatternMapper;
 import com.fast.base.data.dao.MSizeMapper;
 import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
@@ -50,6 +52,8 @@ import com.fast.base.data.entity.MGoodscategoryExample;
 import com.fast.base.data.entity.MGoodssku;
 import com.fast.base.data.entity.MGoodsskuExample;
 import com.fast.base.data.entity.MOrder;
+import com.fast.base.data.entity.MPattern;
+import com.fast.base.data.entity.MPatternExample;
 import com.fast.base.data.entity.MSize;
 import com.fast.base.data.entity.MSizeExample;
 import com.fast.base.data.entity.MVip;
@@ -144,6 +148,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	
 	@Autowired
 	IOrderMaintService iOrderMaintService;
+	
+	@Autowired
+	MPatternMapper patternMapper;
 	
 	// 推送任务锁
 	private boolean pushVipTaskLock = false;
@@ -797,52 +804,78 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	public Result saveStock(MGoods goods, JSONArray array) {
 		Result result = new Result();
 		if (array != null && array.size() > 0) {
+			Integer patternid = 0;
+			MPatternExample patternExample = new MPatternExample();
+			patternExample.createCriteria().andUseflagEqualTo(Byte.valueOf("1"));
+			patternExample.setOrderByClause(" id asc");
+			List<MPattern> patterns = patternMapper.selectByExample(patternExample);
+			if (patterns != null && patterns.size() > 0) {
+				patternid = patterns.get(0).getId();
+			}
 			for (int i = 0; i < array.size(); i++) {
-				Date now = new Date();
-				JSONObject json = array.getJSONObject(i);
-				String extid = json.get("id") == null ? "" : json.getString("id").trim();
-				String sizeid = json.get("sizeid") == null ? "" : json.getString("sizeid").trim();
-				String colorid = json.get("colorid") == null ? "" : json.getString("colorid").trim();
-				String barcode = json.get("barcode") == null ? "0" : json.getString("barcode").trim();
-				String quantity = json.get("quantity") == null ? "0" : json.getString("quantity").trim();
-				String ianumber = json.get("ianumber") == null ? "" : json.getString("ianumber").trim();
-				String extbarcode = json.get("extbarcode") == null ? "" : json.getString("extbarcode").trim();
-				
-				MGoodssku sku = new MGoodssku();
-				MGoodsskuExample example = new MGoodsskuExample();
-				example.createCriteria().andExtidEqualTo(extid);
-				List<MGoodssku> skuList = goodsskuMapper.selectByExample(example);
-				if (skuList != null && skuList.size() > 0) {
-					sku = skuList.get(0);
-					sku.setModifytime(now);
-					sku.setModifier("system");
-				} else {
-					sku.setCreatetime(now);
-					sku.setCreator("system");
-				}
-				if (!Common.isEmpty(quantity)) {
-					sku.setQuantity(Long.valueOf(quantity));
-				}
-				if (!Common.isEmpty(barcode)) {
-					sku.setBarcode(barcode);
-				}
-				if (!Common.isEmpty(ianumber)) {
-					sku.setIanumber(ianumber);
-				}
-				if (!Common.isEmpty(extbarcode)) {
-					sku.setExtbarcode(extbarcode);
-				}
-				sku.setGoodsid(goods.getId());
-				sku.setColorid(Integer.valueOf(colorid));
-				sku.setSizeid(Integer.valueOf(sizeid));
-				sku.setPatternid(Integer.valueOf(1));
-				sku.setExtid(extid);
-				sku.setUpdatedtime(now);
-				if (sku.getId() != null) {
-					goodsskuMapper.updateByPrimaryKeySelective(sku);
-				} else {
-					goodsskuMapper.insertSelective(sku);
-				}
+				try {
+					Date now = new Date();
+					JSONObject json = array.getJSONObject(i);
+					String extid = json.get("id") == null ? "" : json.getString("id").trim();
+					String sizeid = json.get("sizeid") == null ? "" : json.getString("sizeid").trim();
+					String colorid = json.get("colorid") == null ? "" : json.getString("colorid").trim();
+					String barcode = json.get("barcode") == null ? "0" : json.getString("barcode").trim();
+					String quantity = json.get("quantity") == null ? "0" : json.getString("quantity").trim();
+					String ianumber = json.get("ianumber") == null ? "" : json.getString("ianumber").trim();
+					String extbarcode = json.get("extbarcode") == null ? "" : json.getString("extbarcode").trim();
+					
+					MSizeExample sizeExample = new MSizeExample();
+					sizeExample.createCriteria().andExtidEqualTo(sizeid.trim());
+					sizeExample.setOrderByClause(" id asc");
+					List<MSize> sizes = sizeMapper.selectByExample(sizeExample);
+					MSize size = sizes.get(0);
+					
+					MColorExample colorExample = new MColorExample();
+					colorExample.createCriteria().andExtidEqualTo(colorid.trim());
+					colorExample.setOrderByClause(" id asc");
+					List<MColor> colors = colorMapper.selectByExample(colorExample);
+					MColor color = colors.get(0);
+					
+					MGoodssku sku = new MGoodssku();
+					MGoodsskuExample example = new MGoodsskuExample();
+					example.createCriteria().andGoodsidEqualTo(goods.getId()).andColoridEqualTo(color.getId()).andSizeidEqualTo(size.getId()).andBarcodeEqualTo(barcode);
+					example.setOrderByClause(" id asc");
+					List<MGoodssku> skuList = goodsskuMapper.selectByExample(example);
+					if (skuList != null && skuList.size() > 0) {
+						sku = skuList.get(0);
+						sku.setModifytime(now);
+						sku.setModifier("system");
+					} else {
+						sku.setCreatetime(now);
+						sku.setCreator("system");
+					}
+					if (!Common.isEmpty(quantity)) {
+						sku.setQuantity(Long.valueOf(quantity));
+					}
+					if (!Common.isEmpty(barcode)) {
+						sku.setBarcode(barcode);
+					}
+					if (!Common.isEmpty(ianumber)) {
+						sku.setIanumber(ianumber);
+					}
+					if (!Common.isEmpty(extbarcode)) {
+						sku.setExtbarcode(extbarcode);
+					}
+					sku.setGoodsid(goods.getId());
+					sku.setColorid(color.getId());
+					sku.setSizeid(size.getId());
+					sku.setPatternid(patternid);
+					sku.setExtid(extid);
+					sku.setUpdatedtime(now);
+					if (sku.getId() != null) {
+						goodsskuMapper.updateByPrimaryKeySelective(sku);
+					} else {
+						goodsskuMapper.insertSelective(sku);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					continue;
+				}				
 			}
 		}
 		result.setErrcode(Integer.valueOf(0));
@@ -1228,6 +1261,18 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 							vip.setExtid(extid.trim());
 							vip.setUpdatedtime(new Date());
 							vipMapper.updateByPrimaryKeySelective(vip);
+						}
+					} else {
+						result = iExtService.vipOne(extsystem, vip.getMobilephone());
+						if (Common.isActive(result)) {
+							com.alibaba.fastjson.JSONObject jObject = com.alibaba.fastjson.JSONObject.parseObject(result.getData().toString());
+							if (jObject != null && !jObject.isEmpty()) {
+								String extid = jObject.get("id") == null ? "" : jObject.getString("id");
+								if (!Common.isEmpty(extid)) {
+									vip.setExtid(extid.trim());
+									vipMapper.updateByPrimaryKeySelective(vip);
+								}
+							}
 						}
 					}
 				}
