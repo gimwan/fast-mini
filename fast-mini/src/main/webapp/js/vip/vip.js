@@ -244,7 +244,7 @@ function createElement(data) {
 }
 
 function showSendBox(idx, data) {
-	var logisticsView = "<div class=\"edit-view\">"+
+	var logisticsView = "<div class=\"edit-view send-view\">"+
 						    "<div class=\"edit-box\">"+
 							    "<div class=\"edit-item\" need=\"1\" key=\"1\" style='width: 100%;display:none;'>"+
 						            "<div class=\"edit-title\">"+
@@ -296,7 +296,7 @@ function showSendBox(idx, data) {
 			common.showLoading();
 			api.load('./vip/gift','post',data, function(result) {
 				if (result.errcode == 0) {
-					layer.close(idx);
+					layer.close(index);
 					common.tips(result.message);
 				} else {
 					common.error(result.message);

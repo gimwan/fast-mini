@@ -110,7 +110,7 @@
     word-break: keep-all;
 }
 
-.edit-view .edit-box .edit-item>div {
+.send-view .edit-box .edit-item>div {
 	width: 100%;
     max-width: none;
 }
