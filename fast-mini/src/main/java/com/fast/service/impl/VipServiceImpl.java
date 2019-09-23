@@ -34,6 +34,7 @@ import com.fast.base.data.entity.MViptype;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipMiniService;
 import com.fast.service.IVipService;
+import com.fast.service.ext.IExtMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
 import com.fast.util.Common;
@@ -76,6 +77,9 @@ public class VipServiceImpl implements IVipService, Serializable {
 	
 	@Autowired
 	MVipaddressMapper vipaddressMapper;
+	
+	@Autowired
+	IExtMaintService iExtMaintService;
 	
 	@Override
 	public Result vip() {
@@ -242,6 +246,8 @@ public class VipServiceImpl implements IVipService, Serializable {
 				JSONObject object = JSONObject.fromObject(result.getData());
 				MVip vip = (MVip) JSONObject.toBean(object, MVip.class);
 				if (vip != null && vip.getId() != null) {
+					// 同步会员信息
+					iExtMaintService.syncVip(vip.getId());
 					MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(vip.getId());
 					if (vipaccount != null && vipaccount.getId() != null) {
 						result.setData(vipaccount);
@@ -333,6 +339,9 @@ public class VipServiceImpl implements IVipService, Serializable {
 			if (Common.isActive(r)) {
 				Date now = new Date();
 				HashMap<String, Object> map = new HashMap<>();
+				// 同步会员信息
+				iExtMaintService.syncVip(Integer.valueOf(r.getId().toString()));
+				
 				MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(Integer.valueOf(r.getId().toString()));
 				map.put("point", vipaccount.getPoint() == null ? 0 : vipaccount.getPoint());
 				map.put("deposit", vipaccount.getDeposit() == null ? BigDecimal.ZERO : vipaccount.getDeposit());

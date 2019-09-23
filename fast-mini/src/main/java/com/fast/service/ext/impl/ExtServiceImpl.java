@@ -637,4 +637,56 @@ public class ExtServiceImpl implements IExtService, Serializable {
 		return result;
 	}
 
+	@Override
+	public Result queryVipPointRecord(MExtsystem extsystem, String vipcode, String begintime, String endtime) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/vip/pointList";
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("vipCode", vipcode);
+			if (!Common.isEmpty(begintime)) {
+				jsonObject.put("beginTime", begintime);
+			}
+			if (!Common.isEmpty(endtime)) {
+				jsonObject.put("endTime", endtime);
+			}
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.queryVipPointRecord报错：", e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Result queryVipDepositRecord(MExtsystem extsystem, String vipcode, String begintime, String endtime) {
+		Result result = new Result();
+
+		try {
+			String url = extsystem.getServeraddress() + "/api/vip/storedValueList";
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("vipCode", vipcode);
+			if (!Common.isEmpty(begintime)) {
+				jsonObject.put("beginTime", begintime);
+			}
+			if (!Common.isEmpty(endtime)) {
+				jsonObject.put("endTime", endtime);
+			}
+			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtServiceImpl.queryVipDepositRecord报错：", e);
+		}
+
+		return result;
+	}
+
 }

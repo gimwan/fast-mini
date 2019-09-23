@@ -198,5 +198,25 @@ public interface IExtService {
 	 * @return
 	 */
 	public Result queryOrderStatus(MExtsystem extsystem, String no);
+	
+	/**
+	 * 查询会员积分流水
+	 * @param extsystem
+	 * @param vipcode
+	 * @param begintime
+	 * @param endtime
+	 * @return
+	 */
+	public Result queryVipPointRecord(MExtsystem extsystem, String vipcode, String begintime, String endtime);
+	
+	/**
+	 * 查询会员储值流水
+	 * @param extsystem
+	 * @param vipcode
+	 * @param begintime
+	 * @param endtime
+	 * @return
+	 */
+	public Result queryVipDepositRecord(MExtsystem extsystem, String vipcode, String begintime, String endtime);
 
 }

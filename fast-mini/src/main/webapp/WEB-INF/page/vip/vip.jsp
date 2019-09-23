@@ -54,9 +54,14 @@
 												<span>注册时间</span>
 											</div>
 										</th>
-										<th class="item memo">
+										<!-- <th class="item memo">
 											<div class="layui-table-cell">
 												<span>备注</span>
+											</div>
+										</th> -->
+										<th class="item operationbtn">
+											<div class="layui-table-cell">
+												<span>操作</span>
 											</div>
 										</th>
 									</tr>
@@ -93,8 +98,15 @@
 										<td class="item registtime time-item">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{formatDate(v.registtime)}}</div>
 										</td>
-										<td class="item memo">
+										<!-- <td class="item memo">
 											<div class="layui-table-cell laytable-cell-1-0-3">{{v.memo}}</div>
+										</td> -->
+										<td class="item operationbtn">
+											<div class="layui-btn-group">
+												<button
+													class="layui-btn layui-btn-normal layui-btn-xs send"
+													title="更多" v-on:click="send">赠送</button>
+											</div>
 										</td>
 									</tr>
 								</tbody>

@@ -2,15 +2,19 @@ package com.fast.service.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fast.base.Result;
+import com.fast.base.data.dao.MExtsystemMapper;
 import com.fast.base.data.dao.MVippointrecordMapper;
-import com.fast.base.data.entity.MVipaccount;
+import com.fast.base.data.entity.MExtsystem;
+import com.fast.base.data.entity.MExtsystemExample;
 import com.fast.base.data.entity.MVippointrecord;
 import com.fast.service.IVipPointRecordMaintService;
+import com.fast.service.ext.IExtMaintService;
 import com.fast.system.log.FastLog;
 
 /**
@@ -25,12 +29,26 @@ public class VipPointRecordMaintServiceImpl implements IVipPointRecordMaintServi
 	
 	@Autowired
 	MVippointrecordMapper vippointrecordMapper;
+	
+	@Autowired
+	MExtsystemMapper extsystemMapper;
+	
+	@Autowired
+	IExtMaintService iExtMaintService;
 
 	@Override
 	public Result markdownVipPointRecord(Integer vipid, Integer point, Integer surplusPoint, Integer refid, Integer type, String reason) {
 		Result result = new Result();
 
 		try {
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(example);
+			if (extList != null && extList.size() > 0) {
+				MExtsystem extsystem = extList.get(0);
+				return iExtMaintService.changeVipPoint(extsystem, vipid, point, reason);
+			}
+			
 			MVippointrecord vippointrecord = new MVippointrecord();
 			vippointrecord.setVipid(vipid);
 			vippointrecord.setType(Byte.valueOf("1"));

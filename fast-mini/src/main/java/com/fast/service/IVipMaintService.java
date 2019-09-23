@@ -36,4 +36,14 @@ public interface IVipMaintService {
 	public Result updateVipInfo(String appid, String openid, String name, String nickname, String birthday,
 			String province, String city, String county, String avatarurl, String gender);
 	
+	/**
+	 * 赠送积分/储值/优惠券
+	 * @param vipid
+	 * @param point
+	 * @param deposit
+	 * @param couponid
+	 * @return
+	 */
+	public Result gift(Integer vipid, String point, String deposit, String couponid);
+	
 }

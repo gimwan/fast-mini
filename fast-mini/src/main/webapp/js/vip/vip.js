@@ -14,6 +14,12 @@ common.bindVue = function() {
                     showEditBox(index,vip[index]);
                 }
             },
+            send: function(event) {
+                if (event) {
+                    let index = $(event.target).parents("tr").data("index");
+                    showSendBox(index,vip[index]);
+                }
+            },
             formatDate: function(jsonDate) {
             	let date = common.formatDate(jsonDate);
 				return date;
@@ -235,4 +241,72 @@ function createElement(data) {
 				    "</div>"+
 				"</div>";
 	return element;
+}
+
+function showSendBox(idx, data) {
+	var logisticsView = "<div class=\"edit-view\">"+
+						    "<div class=\"edit-box\">"+
+							    "<div class=\"edit-item\" need=\"1\" key=\"1\" style='width: 100%;display:none;'>"+
+						            "<div class=\"edit-title\">"+
+						                "<span class=\"title\"><label class=\"name\">ID</label>：</span>"+
+						            "</div>"+
+						            "<div class=\"edit-value\" data-field=\"id\" style=\"display: block;\">"+
+						                "<input type=\"text\" value=\""+data.id+"\" class=\"layui-input value\"/>"+
+						            "</div>"+
+						        "</div>"+
+						        "<div class=\"edit-item\" style=\"width: 100%;\">"+
+							        "<div class=\"edit-title\" style=\"text-align:left;\">"+
+							            "<span class=\"title\"><label class=\"name\">积分</label>：</span>"+
+							        "</div>"+
+							        "<div class=\"edit-value\" data-field=\"point\" style=\"display: block;\">"+
+						                "<input type=\"number\" value=\"\" class=\"layui-input value\"/>"+
+						            "</div>"+
+							    "</div>" +
+							    "<div class=\"edit-item\" style=\"width: 100%;\">"+
+							        "<div class=\"edit-title\" style=\"text-align:left;\">"+
+							            "<span class=\"title\"><label class=\"name\">储值</label>：</span>"+
+							        "</div>"+
+							        "<div class=\"edit-value\" data-field=\"deposit\" style=\"display: block;\">"+
+						                "<input type=\"number\" value=\"\" class=\"layui-input value\"/>"+
+						            "</div>"+
+							    "</div>" +
+							    "<div class=\"edit-item popup\" popup=\"1\" need=\"0\" key=\"0\" style=\"width: 100%;\">"+
+						            "<div class=\"edit-title\" style=\"text-align:left;\">"+
+						                "<span class=\"title\"><label class=\"name\">优惠券</label>：</span>"+
+						            "</div>"+
+						            "<div class=\"edit-value\" data-field=\"couponid\" style=\"display: block;\">"+
+						                "<input type=\"text\" data-id=\"\" value=\"\" " +
+						                		"data-url=\"./data/page?table=coupon\" class=\"layui-input value\" readonly=\"readonly\"/>" +
+						                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
+						            "</div>"+
+						        "</div>"+							    
+							 "</div>" +
+						"</div>";
+	layer.open({
+		type: 1,
+		title: "赠送",
+		content: logisticsView,
+		area: ['500px', '450px'],
+		btn: ["确定","关闭"],
+		btn1: function (index, layero) {
+			let data = catchBoxValue();
+			if (data == '') {
+				return;
+			}
+			common.showLoading();
+			api.load('./vip/gift','post',data, function(result) {
+				if (result.errcode == 0) {
+					layer.close(idx);
+					common.tips(result.message);
+				} else {
+					common.error(result.message);
+				}
+				common.closeLoading();
+			});	
+		},
+		success: function () {
+			// 重新刷新form
+			layuiForm.render();
+		}
+	});
 }

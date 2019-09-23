@@ -11,6 +11,7 @@
 		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
 		<result column="Memo" property="memo" jdbcType="VARCHAR" />
 		<result column="Refid" property="refid" jdbcType="INTEGER" />
+		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -44,7 +45,7 @@
 		</where>
 	</sql>
 	<sql id="Base_Column_List">
-		ID, VipID, Point, NewPoint, Type, UpdatedTime, Memo, Refid
+		ID, VipID, Point, NewPoint, Type, UpdatedTime, Memo, Refid, ExtID
 	</sql>
 	<select id="selectByExample" resultMap="BaseResultMap"
 		parameterType="com.fast.base.data.entity.MVippointrecordExample">
@@ -83,11 +84,12 @@
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into m_vippointrecord (ID, VipID, Point,
 		NewPoint, Type, UpdatedTime,
-		Memo, Refid)
+		Memo, Refid, ExtID)
 		values (#{id,jdbcType=INTEGER}, #{vipid,jdbcType=INTEGER},
 		#{point,jdbcType=INTEGER},
 		#{newpoint,jdbcType=INTEGER}, #{type,jdbcType=TINYINT}, #{updatedtime,jdbcType=TIMESTAMP},
-		#{memo,jdbcType=VARCHAR}, #{refid,jdbcType=INTEGER})
+		#{memo,jdbcType=VARCHAR}, #{refid,jdbcType=INTEGER},
+		#{extid,jdbcType=VARCHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MVippointrecord"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -117,6 +119,9 @@
 			<if test="refid != null">
 				Refid,
 			</if>
+			<if test="extid != null">
+				ExtID,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -142,6 +147,9 @@
 			</if>
 			<if test="refid != null">
 				#{refid,jdbcType=INTEGER},
+			</if>
+			<if test="extid != null">
+				#{extid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -176,6 +184,9 @@
 			<if test="refid != null">
 				Refid = #{refid,jdbcType=INTEGER},
 			</if>
+			<if test="extid != null">
+				ExtID = #{extid,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -187,7 +198,8 @@
 		Type = #{type,jdbcType=TINYINT},
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
 		Memo = #{memo,jdbcType=VARCHAR},
-		Refid = #{refid,jdbcType=INTEGER}
+		Refid = #{refid,jdbcType=INTEGER},
+		ExtID = #{extid,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

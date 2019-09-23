@@ -32,6 +32,8 @@ import com.fast.base.data.dao.MSizeMapper;
 import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipaccountMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
+import com.fast.base.data.dao.MVipdepositrecordMapper;
+import com.fast.base.data.dao.MVippointrecordMapper;
 import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MBrand;
 import com.fast.base.data.entity.MBrandExample;
@@ -60,6 +62,10 @@ import com.fast.base.data.entity.MVipExample;
 import com.fast.base.data.entity.MVipaccount;
 import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipcouponExample;
+import com.fast.base.data.entity.MVipdepositrecord;
+import com.fast.base.data.entity.MVipdepositrecordExample;
+import com.fast.base.data.entity.MVippointrecord;
+import com.fast.base.data.entity.MVippointrecordExample;
 import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
 import com.fast.service.IConfigService;
@@ -151,6 +157,12 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	@Autowired
 	MPatternMapper patternMapper;
 	
+	@Autowired
+	MVippointrecordMapper vippointrecordMapper;
+	
+	@Autowired
+	MVipdepositrecordMapper vipdepositrecordMapper;
+	
 	// 推送任务锁
 	private boolean pushVipTaskLock = false;
 	// 订单自动取消任务锁
@@ -159,6 +171,10 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	private boolean pushOrderTaskLock = false;
 	// 推送订单任务锁
 	private boolean changeOrderStatusTaskLock = false;
+	// 更新积分记录锁
+	private boolean updateVipPointRecordLock = false;
+	// 更新储值记录锁
+	private boolean updateVipDepositRecordLock = false;
 
 	/**
 	 * 同步数据
@@ -1184,6 +1200,8 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 							order.setExtid(extid);
 							order.setUpdatedtime(new Date());
 							orderMapper.updateByPrimaryKeySelective(order);
+							result.setErrcode(Integer.valueOf(0));
+							result.setId(order.getId());
 						}
 						/*Result r = iExtService.queryOrderStatus(extsystem, order.getNo());
 						if (Common.isActive(r)) {
@@ -1215,6 +1233,21 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 		try {
 			MVip vip = vipMapper.selectByPrimaryKey(id);
 			if (vip != null) {
+				result = iExtService.vipOne(extsystem, vip.getMobilephone());
+				if (Common.isActive(result)) {
+					com.alibaba.fastjson.JSONObject jObject = com.alibaba.fastjson.JSONObject.parseObject(result.getData().toString());
+					if (jObject != null && !jObject.isEmpty()) {
+						String extid = jObject.get("id") == null ? "" : jObject.getString("id");
+						if (!Common.isEmpty(extid)) {
+							vip.setExtid(extid.trim());
+							vipMapper.updateByPrimaryKeySelective(vip);
+							result.setErrcode(Integer.valueOf(0));
+							result.setId(vip.getId());
+							return result;
+						}
+					}
+				}
+				
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("code", vip.getCode());
 				jsonObject.put("vip", vip.getName());
@@ -1260,18 +1293,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 							vip.setExtid(extid.trim());
 							vip.setUpdatedtime(new Date());
 							vipMapper.updateByPrimaryKeySelective(vip);
-						}
-					} else {
-						result = iExtService.vipOne(extsystem, vip.getMobilephone());
-						if (Common.isActive(result)) {
-							com.alibaba.fastjson.JSONObject jObject = com.alibaba.fastjson.JSONObject.parseObject(result.getData().toString());
-							if (jObject != null && !jObject.isEmpty()) {
-								String extid = jObject.get("id") == null ? "" : jObject.getString("id");
-								if (!Common.isEmpty(extid)) {
-									vip.setExtid(extid.trim());
-									vipMapper.updateByPrimaryKeySelective(vip);
-								}
-							}
+							
+							result.setErrcode(Integer.valueOf(0));
+							result.setId(vip.getId());
 						}
 					}
 				}
@@ -1650,6 +1674,183 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 		
 		System.out.println("更新订单状态结束...");
 		return result;
+	}
+
+	@Override
+	public Result updateVipPointRecord(Integer vipid) {
+		Result result = new Result();
+
+		try {
+			if (updateVipPointRecordLock) {
+				return result;
+			}		
+			
+			MExtsystem extsystem = null;
+			MExtsystemExample extsystemExample = new MExtsystemExample();
+			extsystemExample.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(extsystemExample);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			
+			// 上锁
+			updateVipPointRecordLock = true;
+			
+			MVip vip = vipMapper.selectByPrimaryKey(vipid);
+			if (vip != null) {				
+				Date date = null;
+				MVippointrecordExample example = new MVippointrecordExample();
+				example.createCriteria().andVipidEqualTo(vip.getId()).andExtidIsNotNull();
+				example.setOrderByClause(" updatedtime desc");
+				List<MVippointrecord> list = vippointrecordMapper.selectByExample(example);
+				if (list != null && list.size() > 0) {
+					date = list.get(0).getUpdatedtime();
+				}
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				if (date == null) {
+					// 2000年至今的记录
+					updatePointRecord(extsystem, vip.getId(), vip.getCode(), "2000-01-01 00:00:00", sdf.format(new Date()));
+				} else {
+					// 最后一条记录至今的记录
+					updatePointRecord(extsystem, vip.getId(), vip.getCode(), sdf.format(date), sdf.format(new Date()));
+					
+					// 第一条记录以前的记录
+					example = new MVippointrecordExample();
+					example.createCriteria().andVipidEqualTo(vip.getId()).andExtidIsNotNull();
+					example.setOrderByClause(" updatedtime asc");
+					list = vippointrecordMapper.selectByExample(example);
+					if (list != null && list.size() > 0) {
+						updatePointRecord(extsystem, vip.getId(), vip.getCode(), "2000-01-01 00:00:00", sdf.format(list.get(0).getUpdatedtime()));
+					}
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.updateVipPointRecord报错：", e);
+		} finally {
+			// 解锁
+			updateVipPointRecordLock = false;
+		}
+		
+		return result;
+	}
+	
+	private void updatePointRecord(MExtsystem extsystem, Integer vipid, String vipcode, String begintime, String endtime) {
+		Result r = iExtService.queryVipPointRecord(extsystem, vipcode, begintime, endtime);
+		if (Common.isActive(r)) {
+			JSONArray array = (JSONArray) r.getData();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			for (int i = 0; i < array.size(); i++) {
+				try {
+					JSONObject object = array.getJSONObject(i);
+					MVippointrecord vippointrecord = new MVippointrecord();
+					vippointrecord.setVipid(vipid);
+					vippointrecord.setType(Byte.valueOf("0"));
+					vippointrecord.setRefid(0);
+					vippointrecord.setUpdatedtime(sdf.parse(object.getString("date")));
+					vippointrecord.setPoint(Integer.valueOf(object.getString("point")));
+					vippointrecord.setNewpoint(0);
+					vippointrecord.setMemo(object.getString("reason"));
+					vippointrecord.setExtid(object.getString("id"));
+					vippointrecordMapper.insertSelective(vippointrecord);
+				} catch (Exception e) {
+					FastLog.error("调用OrderMaintServiceImpl.updatePointRecord报错：", e);
+				}							
+			}
+		}
+	}
+
+	@Override
+	public Result updateVipDepositRecord(Integer vipid) {
+		Result result = new Result();
+
+		try {
+			if (updateVipDepositRecordLock) {
+				return result;
+			}
+			MExtsystem extsystem = null;
+			MExtsystemExample extsystemExample = new MExtsystemExample();
+			extsystemExample.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(extsystemExample);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			
+			// 上锁
+			updateVipDepositRecordLock = true;
+			
+			MVip vip = vipMapper.selectByPrimaryKey(vipid);
+			if (vip != null) {				
+				Date date = null;
+				MVipdepositrecordExample example = new MVipdepositrecordExample();
+				example.createCriteria().andVipidEqualTo(vip.getId()).andExtidIsNotNull();
+				example.setOrderByClause(" updatedtime desc");
+				List<MVipdepositrecord> list = vipdepositrecordMapper.selectByExample(example);
+				if (list != null && list.size() > 0) {
+					date = list.get(0).getUpdatedtime();
+				}
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				if (date == null) {
+					// 2000年至今的记录
+					updateDepositRecord(extsystem, vip.getId(), vip.getCode(), "2000-01-01 00:00:00", sdf.format(new Date()));
+				} else {
+					// 最后一条记录至今的记录
+					updateDepositRecord(extsystem, vip.getId(), vip.getCode(), sdf.format(date), sdf.format(new Date()));
+					
+					// 第一条记录以前的记录
+					example = new MVipdepositrecordExample();
+					example.createCriteria().andVipidEqualTo(vip.getId()).andExtidIsNotNull();
+					example.setOrderByClause(" updatedtime asc");
+					list = vipdepositrecordMapper.selectByExample(example);
+					if (list != null && list.size() > 0) {
+						updateDepositRecord(extsystem, vip.getId(), vip.getCode(), "2000-01-01 00:00:00", sdf.format(list.get(0).getUpdatedtime()));
+					}
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderMaintServiceImpl.updateVipDepositRecord报错：", e);
+		} finally {
+			// 解锁
+			updateVipDepositRecordLock = false;
+		}
+		
+		return result;
+	}
+	
+	private void updateDepositRecord(MExtsystem extsystem, Integer vipid, String vipcode, String begintime, String endtime) {
+		Result r = iExtService.queryVipDepositRecord(extsystem, vipcode, begintime, endtime);
+		if (Common.isActive(r)) {
+			JSONArray array = (JSONArray) r.getData();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			for (int i = 0; i < array.size(); i++) {
+				try {
+					JSONObject object = array.getJSONObject(i);
+					MVipdepositrecord vipdepositrecord = new MVipdepositrecord();
+					vipdepositrecord.setVipid(vipid);
+					vipdepositrecord.setType(Byte.valueOf("0"));
+					vipdepositrecord.setRefid(0);
+					vipdepositrecord.setUpdatedtime(sdf.parse(object.getString("date")));
+					vipdepositrecord.setDeposit(new BigDecimal(object.getString("amount")));
+					vipdepositrecord.setNewdeposit(BigDecimal.ZERO);
+					vipdepositrecord.setMemo(object.getString("reason"));
+					vipdepositrecord.setExtid(object.getString("id"));
+					vipdepositrecordMapper.insertSelective(vipdepositrecord);
+				} catch (Exception e) {
+					FastLog.error("调用OrderMaintServiceImpl.updateDepositRecord报错：", e);
+				}							
+			}
+		}
 	}
 
 }

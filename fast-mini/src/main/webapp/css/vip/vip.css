@@ -54,6 +54,10 @@
 	width: 100%;
 }
 
+.vipPage .layui-table-view .layui-table-box tr .operationbtn {
+	width: 100%;
+}
+
 .vipPage .layui-table-view .layui-table-box tr .time-item {
 	min-width: 200px;
 	max-width: 200px;
@@ -106,6 +110,23 @@
     word-break: keep-all;
 }
 
+.edit-view .edit-box .edit-item>div {
+	width: 100%;
+    max-width: none;
+}
+
 .edit-view .edit-item[need='1'] .edit-title label:before {
 	display: none;
+}
+
+.operationbtn .layui-icon {
+	margin-right: 0px;
+}
+
+.operationbtn .layui-btn-group {
+	padding-left: 15px;
+}
+
+.operationbtn .layui-btn-group .layui-btn {
+	margin-right: 4px !important;
 }

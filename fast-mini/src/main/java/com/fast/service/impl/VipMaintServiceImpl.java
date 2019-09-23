@@ -1,6 +1,7 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +28,10 @@ import com.fast.base.data.entity.MViptype;
 import com.fast.base.data.entity.MViptypeExample;
 import com.fast.service.IConfigService;
 import com.fast.service.IMiniProgramService;
+import com.fast.service.IVipCouponMaintService;
+import com.fast.service.IVipDepositRecordMaintService;
 import com.fast.service.IVipMaintService;
+import com.fast.service.IVipPointRecordMaintService;
 import com.fast.service.IVipService;
 import com.fast.service.ext.IExtMaintService;
 import com.fast.system.log.FastLog;
@@ -77,6 +81,15 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	
 	@Autowired
 	DataMapper dataMapper;
+	
+	@Autowired
+	IVipPointRecordMaintService iVipPointRecordMaintService;
+	
+	@Autowired
+	IVipDepositRecordMaintService iVipDepositRecordMaintService;
+	
+	@Autowired
+	IVipCouponMaintService iVipCouponMaintService;
 
 	@Override
 	public Result bind(String appid, String openid, MVip vip) {
@@ -131,7 +144,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
-	public MVip saveVip(String appid, String openid, MVip vip) {
+	private MVip saveVip(String appid, String openid, MVip vip) {
 		if (vip.getId() != null) {
 			vipMapper.updateByPrimaryKeySelective(vip);
 		} else {
@@ -436,6 +449,53 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 		} catch (Exception e) {
 			FastLog.error("调用VipMaintServiceImpl.syncVipData报错：", e);
 		}
+	}
+
+	@Override
+	public Result gift(Integer vipid, String point, String deposit, String couponid) {
+		Result result = new Result();
+
+		try {
+			MVip vip = vipMapper.selectByPrimaryKey(vipid);
+			if (vip != null) {
+				// 扣减积分、储值，记录积分、储值流水
+				boolean isUpdate = false;
+				MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(vip.getId());
+				boolean updatePoint = false;
+				if (!Common.isEmpty(point) && Integer.valueOf(point.trim()).intValue() != 0) {
+					Integer newPoint = vipaccount.getPoint().intValue() - Integer.valueOf(point.trim()).intValue();			
+					vipaccount.setPoint(newPoint);
+					updatePoint = true;
+					isUpdate = true;
+				}
+				boolean updateDeposit = false;
+				if (!Common.isEmpty(deposit) && new BigDecimal(deposit.trim()).compareTo(BigDecimal.ZERO) != 0) {
+					BigDecimal newDeposit = vipaccount.getDeposit().subtract(new BigDecimal(deposit.trim()));
+					vipaccount.setDeposit(newDeposit);
+					updateDeposit = true;
+					isUpdate = true;
+				}
+				if (isUpdate) {
+					vipaccountMapper.updateByPrimaryKeySelective(vipaccount);
+				}
+				if (updatePoint) {
+					iVipPointRecordMaintService.markdownVipPointRecord(vip.getId(), Integer.valueOf(point.trim()).intValue(), vipaccount.getPoint(), 0, 3, "员工赠送");
+				}
+				if (updateDeposit) {
+					iVipDepositRecordMaintService.markdownVipDepositRecord(vip.getId(), new BigDecimal(deposit.trim()), vipaccount.getDeposit(), 0, 3, "员工赠送");
+				}
+				if (!Common.isEmpty(couponid) && Integer.valueOf(couponid.trim()).intValue() != 0) {
+					iVipCouponMaintService.addVipCoupon(Integer.valueOf(couponid.trim()), vip.getId(), 1);
+				}
+				
+				result.setErrcode(Integer.valueOf(0));
+				result.setMessage("赠送成功");
+			}
+		} catch (Exception e) {
+			FastLog.error("调用VipMaintServiceImpl.gift报错：", e);
+		}
+		
+		return result;
 	}
 
 }

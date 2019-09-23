@@ -32,6 +32,8 @@ public class MVipdepositrecord implements Serializable {
 
     private Integer refid;
 
+    private String extid;
+
     public Integer getId() {
         return id;
     }
@@ -94,5 +96,13 @@ public class MVipdepositrecord implements Serializable {
 
     public void setRefid(Integer refid) {
         this.refid = refid;
+    }
+
+    public String getExtid() {
+        return extid;
+    }
+
+    public void setExtid(String extid) {
+        this.extid = extid;
     }
 }

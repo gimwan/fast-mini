@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fast.base.Result;
+import com.fast.service.IVipMaintService;
 import com.fast.service.IVipService;
 
 import net.sf.json.JSONObject;
@@ -28,6 +29,9 @@ public class VipController {
 	@Autowired
 	IVipService iVipService;
 	
+	@Autowired
+	IVipMaintService iVipMaintService;
+	
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -35,7 +39,7 @@ public class VipController {
 	}
 	
 	/**
-	 * 查询所有尺码
+	 * 查询所有会员
 	 * @param request
 	 * @param response
 	 * @return
@@ -47,6 +51,34 @@ public class VipController {
 		
 		try {
 			Result result = iVipService.vip();
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 赠送积分/储值/优惠券
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/gift")
+	@ResponseBody
+	public String gift(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String vipid = request.getParameter("id");
+			String point = request.getParameter("point");
+			String deposit = request.getParameter("deposit");
+			String couponid = request.getParameter("couponid");
+			
+			Result result = iVipMaintService.gift(Integer.valueOf(vipid.trim()), point, deposit, couponid);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

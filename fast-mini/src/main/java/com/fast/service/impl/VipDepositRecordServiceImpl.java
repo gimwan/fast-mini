@@ -16,6 +16,7 @@ import com.fast.base.page.PagingView;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipDepositRecordService;
 import com.fast.service.IVipMiniService;
+import com.fast.service.ext.IExtMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
 
@@ -40,6 +41,9 @@ private static final long serialVersionUID = 71148004875517941L;
 	
 	@Autowired
 	DataMapper dataMapper;
+	
+	@Autowired
+	IExtMaintService iExtMaintService;
 
 	@Override
 	public Result queryVipDepositRecordByOpenid(String appid, String openid, PagingView page) {
@@ -64,6 +68,9 @@ private static final long serialVersionUID = 71148004875517941L;
 			} else {
 				return r;
 			}
+			
+			iExtMaintService.updateVipDepositRecord(vipmini.getVipid());
+			
 			page.setOrderBy(" order by updatedtime desc");
 			String sql = "select id,vipid,deposit,case type when 1 then '订单支付' when 2 then '取消订单' else '其它' end as source,"
 					+ "convert(varchar(100), updatedtime, 20) as time "

@@ -77,6 +77,22 @@ public interface IExtMaintService {
 	public Result changeVipDeposit(MExtsystem extsystem, Integer vipid, BigDecimal deposit, String reason);
 	
 	/**
+	 * 更新会员积分流水
+	 * @param extsystem
+	 * @param vipid
+	 * @return
+	 */
+	public Result updateVipPointRecord(Integer vipid);
+	
+	/**
+	 * 更新会员储值流水
+	 * @param extsystem
+	 * @param vipid
+	 * @return
+	 */
+	public Result updateVipDepositRecord(Integer vipid);
+	
+	/**
 	 * 定时任务
 	 * 推送会员
 	 * @return
