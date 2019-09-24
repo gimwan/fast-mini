@@ -21,6 +21,6 @@ public interface IVipDepositRecordMaintService {
 	 * @param reason
 	 * @return
 	 */
-	public Result markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Integer type, String reason);
+	public Result markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Byte type, String reason);
 
 }

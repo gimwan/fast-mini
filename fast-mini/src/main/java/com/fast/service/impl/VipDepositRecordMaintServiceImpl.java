@@ -38,7 +38,7 @@ public class VipDepositRecordMaintServiceImpl implements IVipDepositRecordMaintS
 	IExtMaintService iExtMaintService;
 
 	@Override
-	public Result markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Integer type, String reason) {
+	public Result markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Byte type, String reason) {
 		Result result = new Result();
 
 		try {
@@ -52,7 +52,7 @@ public class VipDepositRecordMaintServiceImpl implements IVipDepositRecordMaintS
 			
 			MVipdepositrecord vipdepositrecord = new MVipdepositrecord();
 			vipdepositrecord.setVipid(vipid);
-			vipdepositrecord.setType(Byte.valueOf("1"));
+			vipdepositrecord.setType(type);
 			vipdepositrecord.setRefid(refid);
 			vipdepositrecord.setUpdatedtime(new Date());
 			vipdepositrecord.setDeposit(deposit);

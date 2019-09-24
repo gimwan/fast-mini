@@ -463,14 +463,14 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 				MVipaccount vipaccount = vipaccountMapper.selectByPrimaryKey(vip.getId());
 				boolean updatePoint = false;
 				if (!Common.isEmpty(point) && Integer.valueOf(point.trim()).intValue() != 0) {
-					Integer newPoint = vipaccount.getPoint().intValue() - Integer.valueOf(point.trim()).intValue();			
+					Integer newPoint = vipaccount.getPoint().intValue() + Integer.valueOf(point.trim()).intValue();			
 					vipaccount.setPoint(newPoint);
 					updatePoint = true;
 					isUpdate = true;
 				}
 				boolean updateDeposit = false;
 				if (!Common.isEmpty(deposit) && new BigDecimal(deposit.trim()).compareTo(BigDecimal.ZERO) != 0) {
-					BigDecimal newDeposit = vipaccount.getDeposit().subtract(new BigDecimal(deposit.trim()));
+					BigDecimal newDeposit = vipaccount.getDeposit().add(new BigDecimal(deposit.trim()));
 					vipaccount.setDeposit(newDeposit);
 					updateDeposit = true;
 					isUpdate = true;
@@ -479,10 +479,10 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 					vipaccountMapper.updateByPrimaryKeySelective(vipaccount);
 				}
 				if (updatePoint) {
-					iVipPointRecordMaintService.markdownVipPointRecord(vip.getId(), Integer.valueOf(point.trim()).intValue(), vipaccount.getPoint(), 0, 3, "员工赠送");
+					iVipPointRecordMaintService.markdownVipPointRecord(vip.getId(), Integer.valueOf(point.trim()).intValue(), vipaccount.getPoint(), 0, Byte.valueOf("3"), "员工赠送");
 				}
 				if (updateDeposit) {
-					iVipDepositRecordMaintService.markdownVipDepositRecord(vip.getId(), new BigDecimal(deposit.trim()), vipaccount.getDeposit(), 0, 3, "员工赠送");
+					iVipDepositRecordMaintService.markdownVipDepositRecord(vip.getId(), new BigDecimal(deposit.trim()), vipaccount.getDeposit(), 0, Byte.valueOf("3"), "员工赠送");
 				}
 				if (!Common.isEmpty(couponid) && Integer.valueOf(couponid.trim()).intValue() != 0) {
 					iVipCouponMaintService.addVipCoupon(Integer.valueOf(couponid.trim()), vip.getId(), 1);
