@@ -83,13 +83,14 @@
 
 .layui-carousel {
 	width: 100%;
-	height: 160px;
+	/* height: 160px; */
+	height: auto;
 }
 
 .layui-carousel img {
 	width: 100%;
 	object-fit: cover;
-	max-height: 160px;
+	/* max-height: 160px; */
 }
 
 .layui-blank {
@@ -268,6 +269,8 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	text-align: left;
+	height: 20px;
+	line-height: 20px;
 }
 
 .layui-group .group-list .goods .goodsinfo>div:nth-child(1),
@@ -315,7 +318,7 @@
 
 .microPage .configureView .rightPanel .editBox .editItem .uploadBox {
 	position: relative;
-	width: 150px;
+	width: 130px;
 }
 
 .microPage .configureView .rightPanel .editBox .editItem .selectTitle {
@@ -341,7 +344,7 @@
 
 .microPage .configureView .rightPanel .editBox .uploadField .layui-upload-drag
 	{
-	width: 150px;
+	width: 130px;
 	height: 130px;
 	padding: 0px;
 	position: relative;
@@ -446,6 +449,7 @@
 	font-size: 20px;
 	display: none;
 	z-index: 99;
+	cursor: pointer;
 }
 
 .microPage .configureView .middlePanel .phoneBox .editView {
@@ -544,6 +548,7 @@
 	left: auto;
 	right: 0;
 	bottom: 0;
+	cursor: pointer;
 }
 
 .rightPanel .iconAdd {
@@ -565,7 +570,7 @@
 }
 
 .rightPanel .selectGoods {
-	height: 150px;
+	height: 130px;
 }
 
 .rightPanel .selectGoods .goodsinput {
@@ -579,13 +584,13 @@
 
 .rightPanel .selectGoods .goodsPhoto {
 	border: 1px dashed #e2e2e2;
-	width: 150px;
-	height: 150px;
+	width: 130px;
+	height: 130px;
 }
 
 .rightPanel .selectGoods .goodsPhoto img {
-	width: 150px;
-	height: 150px;
+	width: 130px;
+	height: 130px;
 	object-fit: contain;
 }
 
@@ -610,13 +615,13 @@
 }
 
 .microPage .configureView .rightPanel .editBox .coupon .uploadBox {
-	width: 150px;
-	height: 150px;
+	width: 130px;
+	height: 130px;
 }
 
 .rightPanel .coupon .uploadBox {
-	width: 150px;
-	height: 150px;
+	width: 130px;
+	height: 130px;
 	display: inline-block;
 	vertical-align: top;
 }
@@ -666,4 +671,8 @@
 .microPage .configureView .rightPanel .editBox .coupon .selectBlock input
 	{
 	width: 100%;
+}
+
+.rightPanel .coupon .uploadField {
+	padding-bottom: 10px;
 }

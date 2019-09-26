@@ -234,14 +234,24 @@ var carousel = {};
 function configCarousel() {
 	$(".middlePanel .editView .layui-carousel").each(function() {
 		var length = $(this).find(".carouselBox .layui-this").length;
-		var id = $(this).attr("id");
+		var id = $(this).attr("id");		
 		var options = {
 			elem : '#'+id,
 			arrow : 'none',
 			width : '100%',
-			height : '160px',
+			//height : 'auto',
 			indicator : 'inside'
 		};
+		var maxHeight = 0;
+		$(this).find(".carousel-img img").each(function() {
+			var thisHeight = $(this).height();
+			if (thisHeight > maxHeight) {
+				maxHeight = thisHeight;
+			}
+		});
+		if (maxHeight > 0) {
+			options.height = maxHeight + "px";
+		}
 		if (length > 0) {
 			var thisCarousel = carousel[id];
 			thisCarousel.reload(options);
@@ -250,6 +260,19 @@ function configCarousel() {
 			carousel[id] = thisCarousel;
 		}
 	});
+	
+	setTimeout(() => {
+		$(".middlePanel .editView .layui-carousel").each(function() {
+			var maxHeight = 0;
+			$(this).find(".carousel-img img").each(function() {
+				var thisHeight = $(this).height();
+				if (thisHeight > maxHeight) {
+					maxHeight = thisHeight;
+				}
+			});
+			$(this).css("height", maxHeight+"px");
+		})
+	}, 500);	
 }
 
 function chooseView() {
@@ -277,8 +300,8 @@ function showDeleteIcon() {
 	$(".layui-layer-page").on("click", ".microPage .configureView .rightPanel .editBox .editItem .uploadBox .layui-icon-delete", function(event) {
 		event.stopPropagation();
 		event.preventDefault();
-		var index = $(this).parents(".uploadField").attr("data-index");
-    	var detailIndex = $(this).parents(".uploadField").attr("data-idx");
+		var index = $(this).parents(".uploadBox").attr("data-index");
+    	var detailIndex = $(this).parents(".uploadBox").attr("data-idx");
     	setData[index].detail.splice(detailIndex, 1);
     	configAssembly();
 		return false;

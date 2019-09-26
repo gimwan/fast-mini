@@ -800,7 +800,7 @@ function showSKUBox(id) {
     		}
     	    let btns = ['保存','取消','添加'];
     	    if (sync == 1) {
-    	    	btns = ['保存','取消'];
+    	    	btns = ['保存','取消','同步'];
 			}
     	    layer.open({
     	        type: 1,
@@ -829,7 +829,12 @@ function showSKUBox(id) {
     	            });
     	        },
     	        btn3: function() {
-    	        	addSKU();
+    	        	if (sync == 1) {
+    	        		syncSKU();
+					} else {
+						addSKU();
+					}
+    	        	
     	        	return false;
 				},
     	        success: function (layero, index) {
@@ -907,6 +912,10 @@ function createSKUElement(data) {
 				"</div>";
 	
 	return element;
+}
+
+function syncSKU() {
+	console.log('syncSku');
 }
 
 function addSKU() {

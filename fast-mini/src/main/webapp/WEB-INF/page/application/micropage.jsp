@@ -19,7 +19,7 @@
 					<div v-for="(d, index) in setdata" v-bind:data-index="index" class="setItem" v-bind:key="d.id">
 						<div class="layui-carousel" v-bind:id="'carousel_'+d.id" v-bind:data-index="index" v-bind:lay-filter="'carouselView'+index" v-if="d.kind == 1">
 							<div class="carouselBox" carousel-item>
-								<div v-for="(dt, index) in d.detail"><img v-bind:src="dt.photourl" onerror="defaultImg(this)"></div>
+								<div class="carousel-img" v-for="(dt, index) in d.detail"><img v-bind:src="dt.photourl" onerror="defaultImg(this)"></div>
 							</div>
 						</div>
 						<div class="layui-search" v-else-if="d.kind == 2">
@@ -124,7 +124,7 @@
 				<div class="editItem" v-for="(e, index) in editdata" v-bind:data-index="index" v-bind:key="e.id">
 					<!-- 广告 -->
 					<div class="layTable uploadField ad" v-if="e.kind == 1 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i+i">
-						<div class="uploadBox">
+						<div class="uploadBox" v-bind:data-index="index" v-bind:data-idx="i">
 							<div class="layui-upload-drag layTableCell" v-bind:id="dt.id">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
 								<i class="layui-icon" v-else>&#xe62f;</i>
@@ -211,7 +211,7 @@
 					</div>
 					<!-- 导航 -->
 					<div class="layTable uploadField ad" v-if="e.kind == 3 && e.choose == 1" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
-						<div class="uploadBox">
+						<div class="uploadBox" v-bind:data-index="index" v-bind:data-idx="i">
 							<div class="layui-upload-drag layTableCell" v-bind:id="dt.id">
 								<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
 								<i class="layui-icon" v-else></i>
@@ -476,7 +476,7 @@
 					<!-- 优惠券 -->
 					<div class="group coupon" v-if="e.kind == 10 && e.choose == 1">
 						<form class="layui-form uploadField" v-for="(dt, i) in e.detail" v-bind:data-index="index" v-bind:data-idx="i" v-bind:key="e.id+dt.id+index+i">
-							<div class="uploadBox">
+							<div class="uploadBox" v-bind:data-index="index" v-bind:data-idx="i">
 								<div class="layui-upload-drag layTableCell" v-bind:id="dt.id">
 									<img alt="" v-bind:src="dt.photourl" onerror="defaultImg(this)" v-if="dt.photourl">
 									<i class="layui-icon" v-else></i>
