@@ -199,6 +199,12 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 				order.setRetuenpaystatus(Byte.valueOf("0"));
 				
 				order = saveOrder(order, goodsList);
+				
+				// 无需微信支付
+				if (order.getPaymoney().compareTo(BigDecimal.ZERO) < 1) {
+					afterPay(order.getNo(), "");
+				}
+				
 				result.setId(order.getId());
 				result.setErrcode(Integer.valueOf(0));
 			} else {
@@ -388,7 +394,7 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 					order.setUpdatedtime(now);
 					order.setDeliverer(user.getName());
 					order.setDeliverertime(now);
-					order.setDelivererdepartmentid(0);
+					//order.setDelivererdepartmentid(0);
 					orderMapper.updateByPrimaryKeySelective(order);
 					
 					result.setErrcode(Integer.valueOf(0));

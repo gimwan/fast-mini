@@ -160,6 +160,7 @@ public class Order extends MiniMaster {
 		try {
 			String appid = request.getParameter("appid");
 			String openid = request.getParameter("openid");
+			// 0全部 1待付款 2待发货 3待收货
 			String status = request.getParameter("status");
 			String pageNo = request.getParameter("pageno");
 			String pageSize = request.getParameter("pagesize");

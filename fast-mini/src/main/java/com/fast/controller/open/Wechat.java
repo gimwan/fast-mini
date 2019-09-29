@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fast.service.IWechatService;
-import com.fast.system.RedisCache;
 import com.fast.system.log.FastLog;
 
 import net.sf.json.JSONObject;

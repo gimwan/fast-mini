@@ -85,5 +85,28 @@ public class ExtController {
 		
 		return r;
 	}
+	
+	/**
+	 * 同步商品SKU
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/sync/sku")
+	@ResponseBody
+	public String syncsku(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			Result result = iExtMaintService.syncGoodsSKu(Integer.valueOf(id.trim()));
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
 
 }

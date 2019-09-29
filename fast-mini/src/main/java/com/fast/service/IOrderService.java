@@ -47,7 +47,7 @@ public interface IOrderService {
 	 * 按状态查询订单
 	 * @param appid
 	 * @param openid
-	 * @param status
+	 * @param status 状态 0全部 1待付款 2待发货 3待收货
 	 * @return
 	 */
 	public Result queryOrderByStatus(PagingView page, String appid, String openid, Integer status);

@@ -292,8 +292,12 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 				HashMap<String, Object> map = new HashMap<>();
 				map.put("goodsid", goods.getId());
 				map.put("goodsname", goods.getName() == null ? "" : goods.getName());
-				map.put("price", goods.getPrice() == null ? BigDecimal.ZERO : goods.getPrice());
-				map.put("point", goods.getExchangepoint() == null ? 0 : goods.getExchangepoint());
+				BigDecimal price = goods.getPrice() == null ? BigDecimal.ZERO : goods.getPrice();
+				map.put("price", price);
+				BigDecimal baseprice = goods.getBaseprice() == null ? BigDecimal.ZERO : goods.getBaseprice();
+				map.put("baseprice", baseprice);
+				Integer exchangepoint = goods.getExchangepoint() == null ? 0 : goods.getExchangepoint();
+				map.put("point", exchangepoint);
 				map.put("imageurl", goods.getPhotourl() == null ? "" : goods.getPhotourl());
 				map.put("showcolor", goods.getShowcolor() == null ? 1 : goods.getShowcolor());
 				map.put("showpattern", goods.getShowpattern() == null ? 1 : goods.getShowpattern());
@@ -301,6 +305,21 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 				map.put("atlist", goods.getOnsale() == null ? 1 : goods.getOnsale());
 				map.put("kind", goods.getKind() == null ? 1 : goods.getKind());
 				map.put("saleonweb", goods.getOnlyshow() == null ? 0 : goods.getOnlyshow());
+				
+				// 会员折扣
+				BigDecimal discount = BigDecimal.ONE;
+				if (!Common.isEmpty(openid)) {
+					Result r = iVipService.queryVipByOpenid(appid, openid);
+					if (Common.isActive(r)) {
+						HashMap<String, Object> viptypeMap = (HashMap<String, Object>) r.getData();
+						MViptype viptype = viptypeMapper.selectByPrimaryKey(Integer.valueOf(viptypeMap.get("typeid").toString()));
+						if (viptype != null && viptype.getId() != null) {
+							discount = viptype.getDiscount() == null ? BigDecimal.ONE : viptype.getDiscount();
+						}
+					}
+				}
+				price = price.multiply(discount).setScale(2, BigDecimal.ROUND_HALF_UP);
+				map.put("price", price);
 				
 				String sql = "select a.*,b.name as color,c.name as pattern,d.name as size "
 						+ "from m_goodssku a "
@@ -370,9 +389,9 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 					stock.put("colorid", list.get(i).get("colorid"));
 					stock.put("patternid", list.get(i).get("patternid"));
 					stock.put("sizeid", list.get(i).get("sizeid"));
-					stock.put("baseprice", goods.getBaseprice() == null ? BigDecimal.ZERO : goods.getBaseprice());
-					stock.put("price", goods.getPrice() == null ? BigDecimal.ZERO : goods.getPrice());
-					stock.put("point", goods.getExchangepoint() == null ? 0 : goods.getExchangepoint());
+					stock.put("baseprice", baseprice);
+					stock.put("price", price);
+					stock.put("point", exchangepoint);
 					stock.put("quantity", list.get(i).get("quantity"));
 					stockList.add(stock);
 				}
@@ -450,7 +469,7 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 	}
 
 	@Override
-	public Result queryGoodsBySort(String appid, Integer type, Integer id, String keyword, Integer sortType, PagingView page) {
+	public Result queryGoodsBySort(String appid, String openid, Integer type, Integer id, String keyword, Integer sortType, PagingView page) {
 		Result result = new Result();
 
 		try {
@@ -497,7 +516,26 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 				page.setOrderBy(" order by updatedtime desc,modifytime desc,onsaletime desc");
 			}
 			
-			goods = dataMapper.pageList(sql, page);
+			goods = dataMapper.pageList(sql, page);			
+			
+			// 会员折扣
+			BigDecimal discount = BigDecimal.ONE;
+			if (!Common.isEmpty(openid)) {
+				Result r = iVipService.queryVipByOpenid(appid, openid);
+				if (Common.isActive(r)) {
+					HashMap<String, Object> viptypeMap = (HashMap<String, Object>) r.getData();
+					MViptype viptype = viptypeMapper.selectByPrimaryKey(Integer.valueOf(viptypeMap.get("typeid").toString()));
+					if (viptype != null && viptype.getId() != null) {
+						discount = viptype.getDiscount() == null ? BigDecimal.ONE : viptype.getDiscount();
+					}
+				}
+			}
+			for (int i = 0; i < goods.size(); i++) {
+				BigDecimal price = goods.get(i).get("price") == null ? BigDecimal.ZERO : new BigDecimal(goods.get(i).get("price").toString().trim());
+				price = price.multiply(discount).setScale(2,BigDecimal.ROUND_HALF_UP);
+				goods.get(i).put("price", price);
+			}
+			
 			page.setData(goods);
 					
 			result.setData(page);

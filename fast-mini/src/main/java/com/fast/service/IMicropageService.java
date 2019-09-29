@@ -1,5 +1,7 @@
 package com.fast.service;
 
+import java.math.BigDecimal;
+
 import com.fast.base.Result;
 import com.fast.base.page.PagingView;
 
@@ -20,20 +22,21 @@ public interface IMicropageService {
 	
 	/**
 	 * 获取微页面数据
-	 * @param appid
-	 * @param pageid
-	 * @param openid
-	 * @param ip
+	 * @param appid 小程序appid
+	 * @param pageid 微页面id
+	 * @param openid 会员openid
+	 * @param ip ip地址
 	 * @return
 	 */
 	public Result micropage(String appid, Integer pageid, String openid, String ip);
 	
 	/**
 	 * 获取微页面数据
-	 * @param pageID
-	 * @param isDraft
+	 * @param pageID 微页面id
+	 * @param discount 会员折扣
+	 * @param isDraft 是否草稿
 	 * @return
 	 */
-	public Result queryPageData(Integer pageID, boolean isDraft);
+	public Result queryPageData(Integer pageID, BigDecimal discount, boolean isDraft);
 
 }

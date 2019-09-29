@@ -43,30 +43,31 @@ public interface IGoodsService {
 	
 	/**
 	 * 获取商品SKU
-	 * @param goodsid
+	 * @param goodsid 商品id
 	 * @return
 	 */
 	public Result goodsSKU(Integer goodsid);
 	
 	/**
 	 * 查询商品库存
-	 * @param goodsid
-	 * @param appid
-	 * @param openid
+	 * @param goodsid 商品id
+	 * @param appid 小程序appid
+	 * @param openid 会员openid
 	 * @return
 	 */
 	public Result queryGoodsStock(Integer goodsid, String appid, String openid);
 	
 	/**
 	 * 小程序商品分类
-	 * @param appid
+	 * @param appid 小程序appid
 	 * @return
 	 */
 	public Result queryGoodsClassify(String appid);
 	
 	/**
 	 * 搜索商品
-	 * @param appid  小程序appid
+	 * @param appid 小程序appid
+	 * @param openid 会员openid
 	 * @param type 0全部 1分类 2分组
 	 * @param id  type in (1,2)是分类/分组id
 	 * @param keyword 搜索关键词
@@ -74,6 +75,6 @@ public interface IGoodsService {
 	 * @param page 分页
 	 * @return
 	 */
-	public Result queryGoodsBySort(String appid, Integer type, Integer id, String keyword, Integer sortType, PagingView page);
+	public Result queryGoodsBySort(String appid, String openid, Integer type, Integer id, String keyword, Integer sortType, PagingView page);
 
 }

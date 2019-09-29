@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.DataMapper;
 import com.fast.base.data.dao.MBrandMapper;
 import com.fast.base.data.dao.MColorMapper;
+import com.fast.base.data.dao.MConfigMapper;
 import com.fast.base.data.dao.MCouponMapper;
 import com.fast.base.data.dao.MDepartmentMapper;
 import com.fast.base.data.dao.MEmployeeMapper;
@@ -39,6 +41,8 @@ import com.fast.base.data.entity.MBrand;
 import com.fast.base.data.entity.MBrandExample;
 import com.fast.base.data.entity.MColor;
 import com.fast.base.data.entity.MColorExample;
+import com.fast.base.data.entity.MConfig;
+import com.fast.base.data.entity.MConfigExample;
 import com.fast.base.data.entity.MCoupon;
 import com.fast.base.data.entity.MCouponExample;
 import com.fast.base.data.entity.MDepartment;
@@ -162,6 +166,9 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	
 	@Autowired
 	MVipdepositrecordMapper vipdepositrecordMapper;
+	
+	@Autowired
+	MConfigMapper configMapper;
 	
 	// 推送任务锁
 	private boolean pushVipTaskLock = false;
@@ -827,6 +834,23 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 			if (patterns != null && patterns.size() > 0) {
 				patternid = patterns.get(0).getId();
 			}
+			// 库存比例
+			BigDecimal skuRate = BigDecimal.ONE;
+			MConfigExample configExample = new MConfigExample();
+			configExample.createCriteria().andCodeEqualTo("7002");
+			List<MConfig> configs = configMapper.selectByExample(configExample);
+			if (configs != null && configs.size() > 0) {
+				MConfig config = configs.get(0);
+				if (config != null && !Common.isEmpty(config.getValue())) {
+					skuRate = new BigDecimal(config.getValue().trim());
+				}
+			}
+			if (skuRate.compareTo(BigDecimal.ZERO) < 0) {
+				skuRate = BigDecimal.ONE;
+			}
+			skuRate = skuRate.divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_UP);
+			
+			List<Integer> skuidList = new ArrayList<>();
 			for (int i = 0; i < array.size(); i++) {
 				try {
 					Date now = new Date();
@@ -839,30 +863,66 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 					String ianumber = json.get("ianumber") == null ? "" : json.getString("ianumber").trim();
 					String extbarcode = json.get("extbarcode") == null ? "" : json.getString("extbarcode").trim();
 					
-					MSizeExample sizeExample = new MSizeExample();
-					sizeExample.createCriteria().andExtidEqualTo(sizeid.trim());
-					sizeExample.setOrderByClause(" id asc");
-					List<MSize> sizes = sizeMapper.selectByExample(sizeExample);
-					MSize size = sizes.get(0);
-					
-					MColorExample colorExample = new MColorExample();
-					colorExample.createCriteria().andExtidEqualTo(colorid.trim());
-					colorExample.setOrderByClause(" id asc");
-					List<MColor> colors = colorMapper.selectByExample(colorExample);
-					MColor color = colors.get(0);
+					if (Common.isEmpty(quantity)) {
+						continue;
+					} else {
+						Integer qty = skuQty(skuRate, Integer.valueOf(quantity));
+						if (qty.intValue() > 0) {
+							quantity = qty.toString();
+						} else {
+							continue;
+						}
+					}					
 					
 					MGoodssku sku = new MGoodssku();
-					MGoodsskuExample example = new MGoodsskuExample();
-					example.createCriteria().andGoodsidEqualTo(goods.getId()).andColoridEqualTo(color.getId()).andSizeidEqualTo(size.getId()).andBarcodeEqualTo(barcode);
-					example.setOrderByClause(" id asc");
-					List<MGoodssku> skuList = goodsskuMapper.selectByExample(example);
-					if (skuList != null && skuList.size() > 0) {
-						sku = skuList.get(0);
+					if (!Common.isEmpty(extid)) {
+						MGoodsskuExample example = new MGoodsskuExample();
+						example.createCriteria().andExtidEqualTo(extid);
+						example.setOrderByClause(" id asc");
+						List<MGoodssku> skuList = goodsskuMapper.selectByExample(example);
+						if (skuList != null && skuList.size() > 0) {
+							sku = skuList.get(0);							
+						}
+					}
+					
+					if (sku != null && sku.getId() != null) {
 						sku.setModifytime(now);
 						sku.setModifier("system");
 					} else {
-						sku.setCreatetime(now);
-						sku.setCreator("system");
+						MSizeExample sizeExample = new MSizeExample();
+						sizeExample.createCriteria().andExtidEqualTo(sizeid.trim());
+						sizeExample.setOrderByClause(" id asc");
+						List<MSize> sizes = sizeMapper.selectByExample(sizeExample);
+						MSize size = sizes.get(0);
+						
+						MColorExample colorExample = new MColorExample();
+						colorExample.createCriteria().andExtidEqualTo(colorid.trim());
+						colorExample.setOrderByClause(" id asc");
+						List<MColor> colors = colorMapper.selectByExample(colorExample);
+						MColor color = colors.get(0);
+						
+						MGoodsskuExample example = new MGoodsskuExample();
+						example.createCriteria().andGoodsidEqualTo(goods.getId()).andColoridEqualTo(color.getId()).andSizeidEqualTo(size.getId()).andBarcodeEqualTo(barcode);
+						example.setOrderByClause(" id asc");
+						List<MGoodssku> skuList = goodsskuMapper.selectByExample(example);
+						if (skuList != null && skuList.size() > 0) {
+							sku = skuList.get(0);
+							sku.setModifytime(now);
+							sku.setModifier("system");
+						} else {
+							sku.setCreatetime(now);
+							sku.setCreator("system");
+						}
+						
+						sku.setGoodsid(goods.getId());
+						sku.setColorid(color.getId());
+						sku.setSizeid(size.getId());
+						sku.setPatternid(patternid);
+						sku.setExtid(extid);
+					}
+					
+					if (!Common.isEmpty(extbarcode)) {
+						sku.setExtbarcode(extbarcode);
 					}
 					if (!Common.isEmpty(quantity)) {
 						sku.setQuantity(Long.valueOf(quantity));
@@ -876,25 +936,63 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 					if (!Common.isEmpty(extbarcode)) {
 						sku.setExtbarcode(extbarcode);
 					}
-					sku.setGoodsid(goods.getId());
-					sku.setColorid(color.getId());
-					sku.setSizeid(size.getId());
-					sku.setPatternid(patternid);
-					sku.setExtid(extid);
+					
 					sku.setUpdatedtime(now);
 					if (sku.getId() != null) {
 						goodsskuMapper.updateByPrimaryKeySelective(sku);
 					} else {
 						goodsskuMapper.insertSelective(sku);
 					}
+					skuidList.add(sku.getId());
 				} catch (Exception e) {
 					e.printStackTrace();
 					continue;
 				}				
 			}
+			if (skuidList != null && skuidList.size() > 0) {
+				MGoodsskuExample example = new MGoodsskuExample();
+				example.createCriteria().andGoodsidEqualTo(goods.getId()).andIdNotIn(skuidList);
+				goodsskuMapper.deleteByExample(example);
+			}
 		}
 		result.setErrcode(Integer.valueOf(0));
 		result.setMessage("同步成功");
+		return result;
+	}
+	
+	private Integer skuQty(BigDecimal rate, Integer qty) {
+		Integer quantity = 0;		
+		quantity = new BigDecimal(qty).multiply(rate).setScale(0, BigDecimal.ROUND_DOWN).intValue();		
+		return quantity;
+	}
+	
+	@Override
+	public Result syncGoodsSKu(Integer id) {
+		Result result = new Result();
+
+		try {
+			MExtsystem extsystem = null;
+			MExtsystemExample example = new MExtsystemExample();
+			example.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> list = extsystemMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				extsystem = list.get(0);
+			}
+			if (extsystem != null) {
+				MGoods goods = goodsMapper.selectByPrimaryKey(id);
+				if (!Common.isEmpty(goods.getExtid())) {
+					Result r = iExtService.stockOne(extsystem, goods.getExtid());
+					if (Common.isActive(r)) {
+						JSONArray array = (JSONArray) r.getData();
+						result = saveStock(goods, array);
+					}
+				}
+			}			
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.syncGoods报错：", e);
+		}
+
 		return result;
 	}
 
@@ -1427,7 +1525,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				jsonObject.put("vipID", vip.getExtid());
 				jsonObject.put("depositAmount", deposit);
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				jsonObject.put("deductDate", sdf.format(new Date()));
+				jsonObject.put("date", sdf.format(new Date()));
 				jsonObject.put("memo", reason);
 				
 				String url = extsystem.getServeraddress() + "/api/vip/storeValueChange";

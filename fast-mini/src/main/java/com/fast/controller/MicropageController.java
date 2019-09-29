@@ -1,5 +1,6 @@
 package com.fast.controller;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -167,7 +168,7 @@ public class MicropageController {
 				JSONObject jsonObject = JSONObject.fromObject(result);
 				return jsonObject.toString();
 			}
-			Result result = iMicropageService.queryPageData(Integer.valueOf(pageid.trim()), true);
+			Result result = iMicropageService.queryPageData(Integer.valueOf(pageid.trim()), BigDecimal.ONE, true);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

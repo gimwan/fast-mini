@@ -27,6 +27,13 @@ public interface IExtMaintService {
 	public Result syncGoods(Integer id);
 	
 	/**
+	 * 同步商品SKU
+	 * @param id
+	 * @return
+	 */
+	public Result syncGoodsSKu(Integer id);
+	
+	/**
 	 * 同步会员数据
 	 * @param id
 	 * @return

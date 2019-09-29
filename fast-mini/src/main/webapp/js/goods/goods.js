@@ -340,7 +340,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">名称</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"name\">"+
-				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
+				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item popup\" popup=\"1\" need=\"1\" key=\"0\">"+
@@ -388,7 +388,7 @@ function createElement(data) {
 				                "<span class=\"title\"><label class=\"name\">标准价</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"baseprice\">"+
-				                "<input type=\"number\" value=\""+d.baseprice+"\" class=\"layui-input value\" "+(sync == 1 ? "disabled='disabled'" : "")+"/>"+
+				                "<input type=\"number\" value=\""+d.baseprice+"\" class=\"layui-input value\"/>"+
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item\" need=\"1\" money=\"1\" key=\"0\">"+
@@ -859,29 +859,34 @@ function showSKUBox(id) {
 function createSKUElement(data) {
 	let tr = "";
 	
+	let sync = 0;
+	if (config != null && config != undefined && config.value == 1) {
+		sync = 1;
+	}
+	
 	if (data != null) {
 		for (var i = 0; i < data.length; i++) {
 			tr = tr + "<tr data-id='"+data[i].id+"'>" +
 						"<td>" +
 							"<div class=\"popup\">" +
 								"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">颜色<span></div>" +
-								"<input type=\"text\" class=\"layui-input value color\" data-id=\""+data[i].colorid+"\" value=\""+data[i].color+"\" data-url=\"./data/page?table=color\" readonly=\"readonly\"/>" +
+								"<input type=\"text\" class=\"layui-input value color\" data-id=\""+data[i].colorid+"\" value=\""+data[i].color+"\" data-url=\"./data/page?table=color\" readonly=\"readonly\" "+(sync==1?"disabled='disabled;'":"")+"/>" +
 							"</div>" +
 						"</td>" +
 						"<td>" +
 							"<div class=\"popup\">" +
 								"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">版型<span></div>" +
-								"<input type=\"text\" class=\"layui-input value pattern\" data-id=\""+data[i].patternid+"\" value=\""+data[i].pattern+"\" data-url=\"./data/page?table=pattern\" readonly=\"readonly\"/>" +
+								"<input type=\"text\" class=\"layui-input value pattern\" data-id=\""+data[i].patternid+"\" value=\""+data[i].pattern+"\" data-url=\"./data/page?table=pattern\" readonly=\"readonly\" "+(sync==1?"disabled='disabled;'":"")+"/>" +
 							"</div>" +
 						"</td>" +
 						"<td>" +
 							"<div class=\"popup\">" +
 								"<div class=\"edit-title\" style=\"display:none;\"><span class=\"name\">尺码<span></div>" +
-								"<input type=\"text\" class=\"layui-input value size\" data-id=\""+data[i].sizeid+"\" value=\""+data[i].size+"\" data-url=\"./data/page?table=size\" readonly=\"readonly\"/>" +
+								"<input type=\"text\" class=\"layui-input value size\" data-id=\""+data[i].sizeid+"\" value=\""+data[i].size+"\" data-url=\"./data/page?table=size\" readonly=\"readonly\" "+(sync==1?"disabled='disabled;'":"")+"/>" +
 							"</div>" +
 						"</td>" +
-						"<td><input type=\"text\" class=\"layui-input value barcode\" value=\""+(data[i].barcode==null?'':data[i].barcode)+"\"/></td>" +
-						"<td><input type=\"number\" class=\"layui-input value quantity\" value=\""+(data[i].quantity==null?'':data[i].quantity)+"\" /></td>" +
+						"<td><input type=\"text\" class=\"layui-input value barcode\" value=\""+(data[i].barcode==null?'':data[i].barcode)+"\" "+(sync==1?"disabled='disabled;'":"")+"/></td>" +
+						"<td><input type=\"number\" class=\"layui-input value quantity\" value=\""+(data[i].quantity==null?'':data[i].quantity)+"\" "+(sync==1?"disabled='disabled;'":"")+"/></td>" +
 						"<td class=\"operationBtn\"><i class=\"layui-icon layui-icon-delete\" onclick='deleteTr(this)'></i></td>" +
 					"</tr>";
 		}
@@ -915,7 +920,32 @@ function createSKUElement(data) {
 }
 
 function syncSKU() {
-	console.log('syncSku');
+	let id = $(".sku-view .sku-table .layui-table tbody").attr("data-goodsid");
+	common.showLoading();
+	let da = {};
+	da.id = id;
+    api.load('./ext/sync/sku','post',da, function(result) {
+        if (result.errcode == 0) {
+        	let msg = result.message;
+        	da = {};
+        	da.goodsid = id;
+            api.load('./goods/sku','post', da, function(result) {
+            	if (result.errcode == 0) {
+            		let datas = result.data;
+            		let skuDiv = createSKUElement(datas);
+            		$(".layui-layer .layui-layer-content .sku-view").remove();
+            		$(".layui-layer .layui-layer-content").append(skuDiv);
+            		$(".sku-view .sku-table .layui-table tbody").attr("data-goodsid", id);
+            		common.tips(msg);
+            	} else {
+            		common.error(result.message);
+				}
+            	common.closeLoading();
+            });            
+        } else {
+            common.error(result.message);
+        }
+    });
 }
 
 function addSKU() {

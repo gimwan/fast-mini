@@ -143,6 +143,7 @@ public class Goods extends MiniMaster {
 		
 		try {
 			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
 			String type = request.getParameter("type");
 			String id = request.getParameter("id");
 			String keyword = request.getParameter("keyword");
@@ -168,7 +169,7 @@ public class Goods extends MiniMaster {
 			PagingView page = new PagingView(Integer.valueOf(pageNo));
 			page.setPageSize(Integer.valueOf(pageSize).intValue());
 			
-			r = iGoodsService.queryGoodsBySort(appid, Integer.valueOf(type.trim()), Integer.valueOf(id), keyword, Integer.valueOf(sorttype.trim()), page);
+			r = iGoodsService.queryGoodsBySort(appid, openid, Integer.valueOf(type.trim()), Integer.valueOf(id), keyword, Integer.valueOf(sorttype.trim()), page);
 		} catch (Exception e) {
 			e.printStackTrace();
 			r.setMessage(e.getMessage());

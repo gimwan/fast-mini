@@ -21,6 +21,7 @@ import com.fast.base.data.dao.MMicropageMapper;
 import com.fast.base.data.dao.MMicropagesetMapper;
 import com.fast.base.data.dao.MMicropagesetdtlMapper;
 import com.fast.base.data.dao.MPublicplatformMapper;
+import com.fast.base.data.dao.MViptypeMapper;
 import com.fast.base.data.entity.MCoupon;
 import com.fast.base.data.entity.MGoods;
 import com.fast.base.data.entity.MGoodscategory;
@@ -30,10 +31,13 @@ import com.fast.base.data.entity.MMicropage;
 import com.fast.base.data.entity.MMicropageExample;
 import com.fast.base.data.entity.MMiniprogram;
 import com.fast.base.data.entity.MPublicplatform;
+import com.fast.base.data.entity.MViptype;
 import com.fast.base.page.PagingView;
 import com.fast.service.IDataService;
 import com.fast.service.IMicropageService;
 import com.fast.service.IMiniProgramService;
+import com.fast.service.IVipService;
+import com.fast.service.IViptypeService;
 import com.fast.service.IWechatService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
@@ -84,6 +88,12 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 	
 	@Autowired
 	MCouponMapper couponMapper;
+	
+	@Autowired
+	IVipService iVipService;
+	
+	@Autowired
+	MViptypeMapper viptypeMapper;
 	
 	@Override
 	public Result list(PagingView page, Integer publicPlatformID) {
@@ -146,7 +156,20 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 				return result;
 			}
 			
-			result = queryPageData(micropage.getId(), false);
+			// 会员折扣
+			BigDecimal discount = BigDecimal.ONE;
+			if (!Common.isEmpty(openid)) {
+				Result r = iVipService.queryVipByOpenid(appid, openid);
+				if (Common.isActive(r)) {
+					HashMap<String, Object> map = (HashMap<String, Object>) r.getData();
+					MViptype viptype = viptypeMapper.selectByPrimaryKey(Integer.valueOf(map.get("typeid").toString()));
+					if (viptype != null && viptype.getId() != null) {
+						discount = viptype.getDiscount() == null ? BigDecimal.ONE : viptype.getDiscount();
+					}
+				}
+			}
+			
+			result = queryPageData(micropage.getId(), discount, false);
 			result.setId(micropage.getId());
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
@@ -157,7 +180,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 	}
 
 	@Override
-	public Result queryPageData(Integer pageID, boolean isDraft) {
+	public Result queryPageData(Integer pageID, BigDecimal discount, boolean isDraft) {
 		Result result = new Result();
 
 		try {
@@ -234,7 +257,9 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 													newMap.put("id", goodsMap.get("id"));
 													newMap.put("name", goodsMap.get("name") == null ? "" : goodsMap.get("name"));
 													newMap.put("photourl", goodsMap.get("photourl") == null ? "" : goodsMap.get("photourl"));
-													newMap.put("price", goodsMap.get("price") == null ? 0 : goodsMap.get("price"));
+													price = goodsMap.get("price") == null ? BigDecimal.ZERO : new BigDecimal(goodsMap.get("price").toString().trim());
+													price = price.multiply(discount).setScale(2, BigDecimal.ROUND_HALF_UP);
+													newMap.put("price", price);
 													newMap.put("point", goodsMap.get("exchangepoint") == null ? 0 : goodsMap.get("exchangepoint"));
 													newMap.put("kind", goodsMap.get("kind") == null ? 1 : goodsMap.get("kind"));
 													subList.add(newMap);
@@ -257,7 +282,9 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 														newMap.put("id", goodsMap.get("id"));
 														newMap.put("name", goodsMap.get("name") == null ? "" : goodsMap.get("name"));
 														newMap.put("photourl", goodsMap.get("photourl") == null ? "" : goodsMap.get("photourl"));
-														newMap.put("price", goodsMap.get("price") == null ? 0 : goodsMap.get("price"));
+														price = goodsMap.get("price") == null ? BigDecimal.ZERO : new BigDecimal(goodsMap.get("price").toString().trim());
+														price = price.multiply(discount).setScale(2, BigDecimal.ROUND_HALF_UP);
+														newMap.put("price", price);
 														newMap.put("point", goodsMap.get("exchangepoint") == null ? 0 : goodsMap.get("exchangepoint"));
 														newMap.put("kind", goodsMap.get("kind") == null ? 1 : goodsMap.get("kind"));
 														subList.add(newMap);
@@ -292,7 +319,9 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 														newMap.put("id", goodsMap.get("id"));
 														newMap.put("name", goodsMap.get("name") == null ? "" : goodsMap.get("name"));
 														newMap.put("photourl", goodsMap.get("photourl") == null ? "" : goodsMap.get("photourl"));
-														newMap.put("price", goodsMap.get("price") == null ? 0 : goodsMap.get("price"));
+														price = goodsMap.get("price") == null ? BigDecimal.ZERO : new BigDecimal(goodsMap.get("price").toString().trim());
+														price = price.multiply(discount).setScale(2, BigDecimal.ROUND_HALF_UP);
+														newMap.put("price", price);
 														newMap.put("point", goodsMap.get("exchangepoint") == null ? 0 : goodsMap.get("exchangepoint"));
 														newMap.put("kind", goodsMap.get("kind") == null ? 1 : goodsMap.get("kind"));
 														subList.add(newMap);
@@ -318,7 +347,9 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 														newMap.put("id", goodsMap.get("id"));
 														newMap.put("name", goodsMap.get("name") == null ? "" : goodsMap.get("name"));
 														newMap.put("photourl", goodsMap.get("photourl") == null ? "" : goodsMap.get("photourl"));
-														newMap.put("price", goodsMap.get("price") == null ? 0 : goodsMap.get("price"));
+														price = goodsMap.get("price") == null ? BigDecimal.ZERO : new BigDecimal(goodsMap.get("price").toString().trim());
+														price = price.multiply(discount).setScale(2, BigDecimal.ROUND_HALF_UP);
+														newMap.put("price", price);
 														newMap.put("point", goodsMap.get("exchangepoint") == null ? 0 : goodsMap.get("exchangepoint"));
 														newMap.put("kind", goodsMap.get("kind") == null ? 1 : goodsMap.get("kind"));
 														subList.add(newMap);
@@ -332,6 +363,7 @@ public class MicropageServiceImpl implements IMicropageService, Serializable {
 											if (goods != null && goods.getId() > 0) {
 												goodsname = goods.getName() == null ? "" : goods.getName();
 												price = goods.getPrice() == null ? BigDecimal.ZERO : goods.getPrice();
+												price = price.multiply(discount).setScale(2, BigDecimal.ROUND_HALF_UP);
 												point = goods.getExchangepoint() == null ? 0 : goods.getExchangepoint();
 												type = goods.getKind() == null ? 1 : goods.getKind().intValue();
 												setDtlList.get(j).put("photourl", goods.getPhotourl() == null ? "" : goods.getPhotourl());
