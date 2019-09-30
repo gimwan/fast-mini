@@ -1528,7 +1528,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				jsonObject.put("date", sdf.format(new Date()));
 				jsonObject.put("memo", reason);
 				
-				String url = extsystem.getServeraddress() + "/api/vip/storeValueChange";
+				String url = extsystem.getServeraddress() + "/api/vip/storedValueChange";
 				net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 				if (object != null) {
 					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);

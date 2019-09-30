@@ -196,7 +196,7 @@ function createElement(data) {
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">公众号</label>：</span>"+
 				            "</div>"+
-				            "<div class=\"edit-value\" data-field=\"departmentid\">"+
+				            "<div class=\"edit-value\" data-field=\"publicplatformid\">"+
 				                "<input type=\"text\" data-id=\""+d.publicplatformid+"\" value=\""+d.publicplatform+"\" " +
 				                		"data-url=\"./data/page?table=publicplatform\" class=\"layui-input value\" readonly=\"readonly\"/>" +
 				                "<i class=\"layui-icon layui-icon-layer\"> </i>"+
