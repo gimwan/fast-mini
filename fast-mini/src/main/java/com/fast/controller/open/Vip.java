@@ -406,6 +406,35 @@ public class Vip extends MiniMaster {
 	}
 	
 	/**
+	 * 购物袋数量
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/cart/number")
+	@ResponseBody
+	public String cartnumber(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			
+			r = iVipcartService.sumVipcart(openid, appid);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
 	 * 加入购物袋
 	 * @param request
 	 * @param response

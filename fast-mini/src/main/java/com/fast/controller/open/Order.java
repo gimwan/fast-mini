@@ -268,5 +268,33 @@ public class Order extends MiniMaster {
 		
 		return result;
 	}
+	
+	/**
+	 * 不同状态订单数量
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/order/number")
+	@ResponseBody
+	public String number(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			
+			r = iOrderService.sumOrderByStatus(appid, openid);
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
 
 }

@@ -78,5 +78,13 @@ public interface IOrderService {
 	 * @return
 	 */
 	public Result groupbuyCalculation(Integer groupbuyid, Integer skuid, Integer quantity);
+	
+	/**
+	 * 不同状态订单数量
+	 * @param appid
+	 * @param openid
+	 * @return
+	 */
+	public Result sumOrderByStatus(String appid, String openid);
 
 }

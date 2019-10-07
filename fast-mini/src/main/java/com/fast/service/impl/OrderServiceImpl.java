@@ -628,4 +628,57 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 	
 	}
 
+	@Override
+	public Result sumOrderByStatus(String appid, String openid) {
+		Result result = new Result();
+
+		try {
+			if (Common.isEmpty(openid)) {
+				result.setMessage("openid无效");
+				return result;
+			}
+			MMiniprogram miniprogram = new MMiniprogram();
+			Result r = iMiniProgramService.queryMiniprogramByAppid(appid);
+			if (Common.isActive(r)) {
+				miniprogram = (MMiniprogram) r.getData();
+			} else {
+				return r;
+			}
+			MVipmini vipmini = new MVipmini();
+			r = iVipMiniService.queryVipMiniByOpenid(miniprogram.getId(), openid);
+			if (Common.isActive(r)) {
+				vipmini = (MVipmini) r.getData();
+			} else {
+				return r;
+			}
+			// 待付款
+			MOrderExample example = new MOrderExample();
+			example.createCriteria().andVipidEqualTo(vipmini.getVipid()).andMiniprogramidEqualTo(miniprogram.getId()).andStatusEqualTo(Byte.valueOf("1"));
+			int nopay = orderMapper.countByExample(example);
+			// 待发货
+			example = new MOrderExample();
+			example.createCriteria().andVipidEqualTo(vipmini.getVipid()).andMiniprogramidEqualTo(miniprogram.getId()).andStatusEqualTo(Byte.valueOf("2"));
+			int nodelivery = orderMapper.countByExample(example);
+			// 待收货
+			example = new MOrderExample();
+			example.createCriteria().andVipidEqualTo(vipmini.getVipid()).andMiniprogramidEqualTo(miniprogram.getId()).andStatusEqualTo(Byte.valueOf("3"));
+			int noreceipt = orderMapper.countByExample(example);
+			
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("nopay", nopay);
+			map.put("nodelivery", nodelivery);
+			map.put("noreceipt", noreceipt);
+			
+			result.setData(map);
+			result.setId(vipmini.getVipid());
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setMessage(e.getMessage());
+			FastLog.error("调用OrderServiceImpl.sumOrderByStatus报错：", e);
+		}
+
+		return result;
+	}
+
 }

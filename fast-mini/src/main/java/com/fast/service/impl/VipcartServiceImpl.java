@@ -110,4 +110,50 @@ private static final long serialVersionUID = 71148004875517941L;
 		return result;
 	}
 
+	@Override
+	public Result sumVipcart(String openid, String appid) {
+		Result result = new Result();
+
+		try {
+			if (Common.isEmpty(openid)) {
+				result.setMessage("openid无效");
+				return result;
+			}
+			Integer publicplatformid = 0;
+			Result re = iMiniProgramService.queryMiniprogramByAppid(appid);
+			if (Common.isActive(re)) {
+				MMiniprogram miniprogram = (MMiniprogram) re.getData();
+				publicplatformid = miniprogram.getPublicplatformid();
+			}	
+			Result r = iVipService.queryVipByOpenid(appid, openid);
+			if (Common.isActive(r)) {
+				Integer vipid = Integer.valueOf(r.getId().toString());
+				Integer qty = 0;
+				String sql = "select isnull(sum(a.quantity),0) as qty "
+						+ "from m_vipcart a "
+						+ "inner join m_goods e on a.goodsid=e.id "
+						+ "left join m_color b on a.colorid=b.id "
+						+ "left join m_pattern c on a.patternid=c.id "
+						+ "left join m_size d on a.sizeid=d.id "
+						+ "left join m_goodssku f on a.goodsid=f.goodsid and a.colorid=f.colorid and a.sizeid=f.sizeid and a.patternid=f.patternid "
+						+ "where a.vipid=" + vipid + " and e.onsale=1 and e.onlyshow<>1 and a.publicplatformid=" + publicplatformid;
+				List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+				if (list != null && list.size() > 0) {
+					qty = Integer.valueOf(list.get(0).get("qty").toString());
+				}
+				result.setErrcode(Integer.valueOf(0));
+				result.setData(qty);
+				result.setId(vipid);
+			} else {
+				result.setMessage("会员不存在");
+			}
+			
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipcartServiceImpl.sumVipcart报错：", e);
+		}
+	
+		return result;
+	}
+
 }

@@ -17,5 +17,13 @@ public interface IVipcartService {
 	 * @return
 	 */
 	public Result queryVipcart(String openid, String appid, Integer kind);
+	
+	/**
+	 * 购物袋商品数量
+	 * @param openid
+	 * @param appid
+	 * @return
+	 */
+	public Result sumVipcart(String openid, String appid);
 
 }
