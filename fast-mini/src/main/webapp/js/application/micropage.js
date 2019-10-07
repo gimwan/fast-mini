@@ -107,6 +107,17 @@ function loadSetData() {
                     data : {
                     	editdata: setData
                     },
+                    watch:{
+                    	asyncArray: function(){
+                    		this.nextTick(function(){
+                    			console.log('nextTick');
+                    		});
+                    		this.$nextTick(function(){
+                    			console.log('$nextTick');
+                    		});
+                    		console.log(111);
+                    	}
+                    },
                     methods : {
                     	addItem : function(event) {
 							let kind = $(event.target).attr("data-kind");
@@ -175,7 +186,7 @@ function loadSetData() {
 							/*setTimeout(() => {
 								layuiForm.render();
 								configUploadInst();
-							}, 300);*/
+							}, 300);*/							
 						}
                     }
                 });
@@ -183,6 +194,10 @@ function loadSetData() {
         	setTimeout(() => {
         		$(".middlePanel .phoneBox .editView").css("display","inline-block");
         		$(".rightPanel .editBox").css("display","inline-block");
+			}, 300);
+        	
+        	setTimeout(() => {
+        		itemSort();
 			}, 300);
         } else {
             common.error('数据加载失败');
@@ -365,6 +380,12 @@ function addItemToPhone(kind) {
 	}
 	setData.push(item);
 	configAssembly();
+	
+	setTimeout(() => {
+		$(".layui-layer .microPage .middlePanel .editView").get(0).scrollTop = $(".layui-layer .microPage .middlePanel .editView").get(0).scrollHeight;
+	}, 300);
+	
+	itemSort();
 }
 
 function spellChange(obj) {
@@ -487,6 +508,17 @@ function saveMicroset() {
 				setdata[i].detail[j].micropagesetid = 0;
 			}
 		}
+		/*$(".layui-layer .microPage .middlePanel .editView .setItem").each(function() {
+			var dataIndex = $(this).attr("data-index");
+			if(dataIndex == i) {
+				var showindex = $(this).attr("showindex");
+				setdata[i].showindex = showindex;
+			}			
+		});*/
+		var showindex = $(".layui-layer .microPage .middlePanel .editView .setItem[data-index='"+i+"']").attr("showindex");
+		if(showindex != null && showindex != undefined && showindex != "") {
+			setdata[i].showindex = showindex;
+		}
 	}
 	setdata = JSON.stringify(setdata);
 	let data = {};
@@ -505,4 +537,23 @@ function saveMicroset() {
         }
         common.closeLoading();
     });
+}
+
+function itemSort() {
+	changeItemIndex();
+	$(".layui-layer .microPage .middlePanel .editView").sortable({
+		opacity : 0.5,
+		cursor : 'move',
+		axis  : "y",
+		items : $(".layui-layer .microPage .middlePanel .editView .setItem"),
+		stop : function(event, ui) {
+			changeItemIndex();
+		}
+	});
+}
+
+function changeItemIndex() {
+	$(".layui-layer .microPage .middlePanel .editView .setItem").each(function(i) {
+		$(this).attr("showindex", i);
+	});
 }

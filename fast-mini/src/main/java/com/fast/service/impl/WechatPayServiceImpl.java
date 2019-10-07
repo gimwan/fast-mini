@@ -153,7 +153,7 @@ public class WechatPayServiceImpl implements IWechatPayService, Serializable {
 			}
 			
 			// 支付回调地址
-            String notifyUrl = domain + "/mini/notify/orderpay";            
+            String notifyUrl = domain + "/notify/orderpay";            
             String total_fee = String.valueOf(order.getPaymoney().multiply(new BigDecimal("100")).intValue());        	
         	String out_trade_no = order.getNo();
         	

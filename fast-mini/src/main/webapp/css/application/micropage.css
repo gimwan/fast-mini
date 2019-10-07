@@ -74,6 +74,7 @@
 	overflow-x: hidden;
 	overflow-y: auto;
 	background: #f4f4f4;
+	position: relative;
 }
 
 .microPage .configureView .middlePanel .phoneBox .editView::-webkit-scrollbar
