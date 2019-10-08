@@ -76,7 +76,7 @@
 
 .microPage .layui-table-view .layui-table-box .micro-data {
 	overflow-y: auto;
-	/* overflow-x: hidden; */
+	overflow-x: hidden;
 }
 
 .operationbtn .layui-icon {

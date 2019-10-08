@@ -33,6 +33,21 @@ body {
 	background: #e2e2e2;
 }
 
+.layui-table-main::-webkit-scrollbar {
+	width: 8px;
+	height: 2px;
+	background: #F0F0F0;
+	border-radius: 10px;
+}
+
+.layui-table-main::-webkit-scrollbar-thumb {
+	display: block;
+	width: 8px;
+	margin: 0 auto;
+	border-radius: 10px;
+	background: #e2e2e2;
+}
+
 .layui-layer .layui-layer-btn {
 	border-top: 1px solid #eee;
 }

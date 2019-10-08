@@ -646,10 +646,10 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("vipCode", vipcode);
 			if (!Common.isEmpty(begintime)) {
-				jsonObject.put("beginTime", begintime);
+				jsonObject.put("beginDate", begintime);
 			}
 			if (!Common.isEmpty(endtime)) {
-				jsonObject.put("endTime", endtime);
+				jsonObject.put("endDate", endtime);
 			}
 			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {
@@ -672,10 +672,10 @@ public class ExtServiceImpl implements IExtService, Serializable {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("vipCode", vipcode);
 			if (!Common.isEmpty(begintime)) {
-				jsonObject.put("beginTime", begintime);
+				jsonObject.put("beginDate", begintime);
 			}
 			if (!Common.isEmpty(endtime)) {
-				jsonObject.put("endTime", endtime);
+				jsonObject.put("endDate", endtime);
 			}
 			JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
 			if (object != null) {

@@ -736,7 +736,9 @@ function configUploadInst() {
 	uploadInst = layuiUpload.render({
 	    elem: '.layui-upload-drag',
 	    url: './upload/field/goodsthumbnail',
-	    size: 200,
+	    accept: "images",
+	    acceptMime: "image/*",
+	    size: 100,
 	    multiple: false,
 	    done: function(res, index, upload){
 	    	// 上传完毕回调
@@ -759,7 +761,9 @@ function configImageUploadInst() {
 	uploadInst = layuiUpload.render({
 	    elem: '.layui-upload-drag',
 	    url: './upload/field/goodsdtl',
-	    size: 200,
+	    size: 100,
+	    accept: "images",
+	    acceptMime: "image/*",
 	    multiple: false,
 	    done: function(res, index, upload){
 	    	// 上传完毕回调

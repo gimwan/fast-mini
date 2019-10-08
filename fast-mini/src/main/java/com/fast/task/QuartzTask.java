@@ -21,10 +21,10 @@ public class QuartzTask {
 			iExtMaintService.pushVipTask();
 			// 订单自动取消
 			iExtMaintService.cancelOrderTask();
-			// 推送订单
-			iExtMaintService.pushOrderTask();
 			// 更新订单状态
-			//iExtMaintService.changeOrderStatusTask();
+			iExtMaintService.changeOrderStatusTask();
+			// 推送订单
+			iExtMaintService.pushOrderTask();			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -273,7 +273,9 @@ function configUpload() {
 	layuiUpload.render({
 	    elem: '.layui-upload-drag',
 	    url: './upload/field/platform',
-	    size: 200,
+	    accept: "images",
+	    acceptMime: "image/*",
+	    size: 100,
 	    multiple: false,
 	    done: function(res, index, upload){
 	    	// 上传完毕回调

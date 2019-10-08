@@ -1734,7 +1734,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				result.setMessage("接口配置错误");
 				return result;
 			}
-			String sql = "select * from m_order where status=2 and distributionflag=1 and (extid is null or extid='') order by distributiontime asc,createtime asc";
+			String sql = "select * from m_order where status>=2 and distributionflag=1 and (extid is null or extid='') order by distributiontime asc,createtime asc";
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
 				list = CommonUtil.transformUpperCase(list);

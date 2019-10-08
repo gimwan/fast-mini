@@ -108,14 +108,8 @@ function loadSetData() {
                     	editdata: setData
                     },
                     watch:{
-                    	asyncArray: function(){
-                    		this.nextTick(function(){
-                    			console.log('nextTick');
-                    		});
-                    		this.$nextTick(function(){
-                    			console.log('$nextTick');
-                    		});
-                    		console.log(111);
+                    	editdata: function(val, oldval) {
+                    		
                     	}
                     },
                     methods : {
@@ -225,7 +219,9 @@ function configUploadInst() {
 		layuiUpload.render({
 		    elem: '#'+id,
 		    url: './upload/field/image',
-		    size: 200,
+		    accept: "images",
+		    acceptMime: "image/*",
+		    size: 100,
 		    multiple: false,
 		    done: function(res, index, upload){
 		    	// 上传完毕回调
@@ -383,9 +379,8 @@ function addItemToPhone(kind) {
 	
 	setTimeout(() => {
 		$(".layui-layer .microPage .middlePanel .editView").get(0).scrollTop = $(".layui-layer .microPage .middlePanel .editView").get(0).scrollHeight;
+		itemSort();
 	}, 300);
-	
-	itemSort();
 }
 
 function spellChange(obj) {
