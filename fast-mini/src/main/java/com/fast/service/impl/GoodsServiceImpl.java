@@ -153,6 +153,7 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 				// 主图/明细图
 				List<Object> mainPhoto = new ArrayList<>();
 				List<Object> detailPhoto = new ArrayList<>();
+				String mainVideo = "";
 				sql = "select * from m_goodsdtl where goodsid=" + id + " order by type asc,showindex asc";
 				List<LinkedHashMap<String, Object>> detailList = dataMapper.pageList(sql);
 				if (detailList != null && detailList.size() > 0) {
@@ -161,11 +162,14 @@ public class GoodsServiceImpl implements IGoodsService, Serializable {
 						Integer type = Integer.valueOf(detailList.get(i).get("type").toString());
 						if (type.intValue() == 1) {
 							mainPhoto.add(detailList.get(i).get("photourl"));
-						} else {
+						} else if (type.intValue() == 2) {
 							detailPhoto.add(detailList.get(i).get("photourl"));
+						} else if (type.intValue() == 3) {
+							mainVideo = detailList.get(i).get("photourl") == null ? "" : detailList.get(i).get("photourl").toString();
 						}
 					}
 				}
+				goods.put("mainvideo", mainVideo);
 				goods.put("mainphoto", mainPhoto);
 				goods.put("detailphoto", detailPhoto);
 				

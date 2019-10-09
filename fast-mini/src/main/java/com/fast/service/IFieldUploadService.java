@@ -60,7 +60,7 @@ public interface IFieldUploadService {
 	 * @param file
 	 * @return
 	 */
-	public Result uploadpPlatformPhoto(HttpServletRequest request, MultipartFile file);
+	public Result uploadPlatformPhoto(HttpServletRequest request, MultipartFile file);
 	
 	/**
 	 * 系统参数
@@ -68,7 +68,7 @@ public interface IFieldUploadService {
 	 * @param file
 	 * @return
 	 */
-	public Result uploadpConfigPhoto(HttpServletRequest request, MultipartFile file);
+	public Result uploadConfigPhoto(HttpServletRequest request, MultipartFile file);
 	
 	/**
 	 * 营销活动
@@ -76,6 +76,8 @@ public interface IFieldUploadService {
 	 * @param file
 	 * @return
 	 */
-	public Result uploadpMarketingPhoto(HttpServletRequest request, MultipartFile file);
+	public Result uploadMarketingPhoto(HttpServletRequest request, MultipartFile file);
+	
+	public Result uploadVideo(HttpServletRequest request, MultipartFile file);
 
 }

@@ -152,7 +152,7 @@ public class FieldUploadController {
 		String r = "";
 		
 		try {
-			Result result = iFieldUploadService.uploadpPlatformPhoto(request, file);
+			Result result = iFieldUploadService.uploadPlatformPhoto(request, file);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
@@ -176,7 +176,7 @@ public class FieldUploadController {
 		String r = "";
 		
 		try {
-			Result result = iFieldUploadService.uploadpConfigPhoto(request, file);
+			Result result = iFieldUploadService.uploadConfigPhoto(request, file);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();
@@ -200,7 +200,24 @@ public class FieldUploadController {
 		String r = "";
 		
 		try {
-			Result result = iFieldUploadService.uploadpMarketingPhoto(request, file);
+			Result result = iFieldUploadService.uploadMarketingPhoto(request, file);
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	@RequestMapping("/field/video")
+	@ResponseBody
+	public String video(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) {
+		String r = "";
+		
+		try {
+			Result result = iFieldUploadService.uploadVideo(request, file);
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

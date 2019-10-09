@@ -7,6 +7,7 @@ let btnVm;
  * vue初始页面
  */
 common.bindVue = function() {
+	console.log("goodsdtl");
 	refreshConfig("7001");
 	
 	btnVm = new Vue({
@@ -566,6 +567,7 @@ function showImagesBox(id) {
     	        	layuiForm.render();
     	        	// 初始化图片上传
     	        	configImageUploadInst();
+    	        	configVideoUploadInst();
     	        }
     	    });
         } else {
@@ -578,6 +580,7 @@ function showImagesBox(id) {
 function createImagesElement(data) {
 	let list = data.images;
 	let groups = data.groups;
+	let mainVideo = "";
 	let mainImages = "";
 	let subImages = "";
 	let groupItem = "";
@@ -597,6 +600,13 @@ function createImagesElement(data) {
 								        	"</div>" +
 								        	"<i class=\"layui-icon layui-icon-delete\" onclick=\"removeImage(this)\"></i>" +
 							        	"</div>";
+			} else if (list[i].type == 3) {
+				mainVideo = "<div class=\"uploadField\">" +
+								"<div class=\"layui-upload-drag-video video-item\" data-id=\""+list[i].id+"\">" +
+									"<video src=\""+list[i].photourl+"\" class=\"value\">" +
+								"</div>" +
+								"<i class=\"layui-icon layui-icon-delete\" onclick=\"removeVideo(this)\"></i>" +
+							"</div>";
 			}
 		}
 	}
@@ -619,6 +629,18 @@ function createImagesElement(data) {
     						groupItem +
 		                "</div>" +
     				"</div>" +
+    				"<div class=\"mainvideoView\">" +
+		    			"<div class=\"titleView\"><span class=\"title\"><label class=\"name\">主图视频<label>：</span></div>" +
+		    			"<div class=\"imageView videoView layui-form\" uploadfile=\"1\" key=\"0\">" +
+				            "<div class=\"imagesItem layui-form-item\" data-field=\"photourl\">" +
+				            	(mainVideo != "" ? mainVideo : "<div class=\"uploadField\">" +
+				                	"<div class=\"layui-upload-drag-video addIcon video-item\" data-id=\"\">" +
+				                		"<i class=\"layui-icon\">&#xe608;</i>" +
+				                	"</div>" +
+				                "</div>") +
+				            "</div>"+
+				        "</div>"+
+		    		"</div>" +
 		    		"<div class=\"mainView\">" +
 		    			"<div class=\"titleView\"><span class=\"title\"><label class=\"name\">主图<label>：</span></div>" +
 		    			"<div class=\"imageView layui-form\" uploadfile=\"1\" key=\"0\">" +
@@ -657,6 +679,19 @@ function createImagesElement(data) {
  */
 function catchImages(goodsid) {
 	let list = [];
+	// 主图视频
+	$(".images-view .mainvideoView .videoView .video-item").each(function(i) {
+		let id = $(this).attr("data-id");
+		let videlUrl = $(this).find(".value").attr("src");
+		let data = {
+			id : id,
+			goodsid: goodsid,
+			type: 3,
+			photourl: videlUrl,
+			showindex: i
+		};
+		list.push(data);
+	});
 	// 主图
 	$(".images-view .mainView .imageView .image-item").each(function(i) {
 		let id = $(this).attr("data-id");
@@ -726,6 +761,73 @@ function removeImage(obj) {
 			layer.close(index);
 		}
 	});
+}
+
+/**
+ * 删除视频
+ * @param obj
+ * @returns
+ */
+function removeVideo(obj) {
+	event.stopPropagation();
+	event.preventDefault();
+    layer.confirm('确定删除？', {
+		btn: ['确定','取消'],
+		btn1 : function(index, layero) {
+			let addView = "<div class=\"uploadField\">" +
+						        "<div class=\"layui-upload-drag-video addIcon video-item\" data-id=\"\">" +
+						    		"<i class=\"layui-icon\">&#xe608;</i>" +
+						    	"</div>" +
+						    "</div>";
+			$(obj).parent().next().append(addView);
+			$(obj).parent().remove();
+			layer.close(index);
+			setTimeout(() => {
+				configVideoUploadInst();
+			}, 300);
+		}
+	});
+}
+
+/**
+ * 上传视频
+ * @returns
+ */
+function configVideoUploadInst() {
+	uploadInst = layuiUpload.render({
+	    elem: '.layui-upload-drag-video',
+	    url: './upload/field/video',
+	    accept: "video",
+	    acceptMime: "video/*",
+	    size: 10240,
+	    multiple: false,
+	    done: function(res, index, upload){
+	    	// 上传完毕回调
+	    	var item = this.item;
+	    	let isAdd = this.item.hasClass("addIcon");
+	    	if (isAdd) {
+	    		let view = "<div class=\"uploadField\">" +
+		    					"<div class=\"layui-upload-drag-video video-item\" data-id=\"\">" +
+					    			"<video src=\""+res.data+"\" class=\"value\"></video>" +
+					        	"</div>" +
+					        	"<i class=\"layui-icon layui-icon-delete\" onclick=\"removeVideo(this)\"></i>" +
+					        "<div>";
+				$(item).parent().before(view);
+				$(item).parent().remove();
+				setTimeout(() => {
+					configVideoUploadInst();
+				}, 300);
+				//$(item).parent().css("display","none");
+			} else {
+				$(item).find("video").attr("src",res.data);
+			}
+	    },
+	    error: function(res, index){
+	    	// 请求异常回调
+	    	console.log(res);
+	    	console.log(index);
+	    }
+    });
 }
 
 /**
