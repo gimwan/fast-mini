@@ -1375,6 +1375,186 @@ public class MCouponExample {
             addCriterion("ExtID not between", value1, value2, "extid");
             return (Criteria) this;
         }
+
+        public Criteria andSuitgoodstypeIsNull() {
+            addCriterion("SuitGoodsType is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeIsNotNull() {
+            addCriterion("SuitGoodsType is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeEqualTo(Byte value) {
+            addCriterion("SuitGoodsType =", value, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeNotEqualTo(Byte value) {
+            addCriterion("SuitGoodsType <>", value, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeGreaterThan(Byte value) {
+            addCriterion("SuitGoodsType >", value, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("SuitGoodsType >=", value, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeLessThan(Byte value) {
+            addCriterion("SuitGoodsType <", value, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeLessThanOrEqualTo(Byte value) {
+            addCriterion("SuitGoodsType <=", value, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeIn(List<Byte> values) {
+            addCriterion("SuitGoodsType in", values, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeNotIn(List<Byte> values) {
+            addCriterion("SuitGoodsType not in", values, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeBetween(Byte value1, Byte value2) {
+            addCriterion("SuitGoodsType between", value1, value2, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitgoodstypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("SuitGoodsType not between", value1, value2, "suitgoodstype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeIsNull() {
+            addCriterion("SuitDepartmentType is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeIsNotNull() {
+            addCriterion("SuitDepartmentType is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeEqualTo(Byte value) {
+            addCriterion("SuitDepartmentType =", value, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeNotEqualTo(Byte value) {
+            addCriterion("SuitDepartmentType <>", value, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeGreaterThan(Byte value) {
+            addCriterion("SuitDepartmentType >", value, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("SuitDepartmentType >=", value, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeLessThan(Byte value) {
+            addCriterion("SuitDepartmentType <", value, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeLessThanOrEqualTo(Byte value) {
+            addCriterion("SuitDepartmentType <=", value, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeIn(List<Byte> values) {
+            addCriterion("SuitDepartmentType in", values, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeNotIn(List<Byte> values) {
+            addCriterion("SuitDepartmentType not in", values, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeBetween(Byte value1, Byte value2) {
+            addCriterion("SuitDepartmentType between", value1, value2, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuitdepartmenttypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("SuitDepartmentType not between", value1, value2, "suitdepartmenttype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeIsNull() {
+            addCriterion("TimeType is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeIsNotNull() {
+            addCriterion("TimeType is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeEqualTo(Byte value) {
+            addCriterion("TimeType =", value, "timetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeNotEqualTo(Byte value) {
+            addCriterion("TimeType <>", value, "timetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeGreaterThan(Byte value) {
+            addCriterion("TimeType >", value, "timetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("TimeType >=", value, "timetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeLessThan(Byte value) {
+            addCriterion("TimeType <", value, "timetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeLessThanOrEqualTo(Byte value) {
+            addCriterion("TimeType <=", value, "timetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeIn(List<Byte> values) {
+            addCriterion("TimeType in", values, "timetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeNotIn(List<Byte> values) {
+            addCriterion("TimeType not in", values, "timetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeBetween(Byte value1, Byte value2) {
+            addCriterion("TimeType between", value1, value2, "timetype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimetypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("TimeType not between", value1, value2, "timetype");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

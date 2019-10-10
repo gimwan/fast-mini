@@ -1,37 +1,53 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fast.base.data.dao.MCouponMapper">
 	<cache type="com.fast.system.RedisCache" />
-	<resultMap id="BaseResultMap" type="com.fast.base.data.entity.MCoupon">
-		<id column="ID" property="id" jdbcType="INTEGER" />
-		<result column="Code" property="code" jdbcType="VARCHAR" />
-		<result column="Name" property="name" jdbcType="VARCHAR" />
-		<result column="Amount" property="amount" jdbcType="DECIMAL" />
-		<result column="EnableAmount" property="enableamount" jdbcType="DECIMAL" />
-		<result column="LimitQuantity" property="limitquantity"
-			jdbcType="INTEGER" />
-		<result column="TotalQuantity" property="totalquantity"
-			jdbcType="INTEGER" />
-		<result column="BeginTime" property="begintime" jdbcType="TIMESTAMP" />
-		<result column="EndTime" property="endtime" jdbcType="TIMESTAMP" />
-		<result column="Color" property="color" jdbcType="VARCHAR" />
-		<result column="UseFlag" property="useflag" jdbcType="TINYINT" />
-		<result column="Memo" property="memo" jdbcType="VARCHAR" />
-		<result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
-		<result column="Creator" property="creator" jdbcType="VARCHAR" />
-		<result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
-		<result column="Modifier" property="modifier" jdbcType="VARCHAR" />
-		<result column="UpdatedTime" property="updatedtime" jdbcType="TIMESTAMP" />
-		<result column="SuitType" property="suittype" jdbcType="TINYINT" />
-		<result column="EffectiveTime" property="effectivetime"
-			jdbcType="INTEGER" />
-		<result column="ExtID" property="extid" jdbcType="VARCHAR" />
+	<resultMap id="BaseResultMap"
+		type="com.fast.base.data.entity.MCoupon">
+		<id column="ID" jdbcType="INTEGER" property="id" />
+		<result column="Code" jdbcType="VARCHAR" property="code" />
+		<result column="Name" jdbcType="VARCHAR" property="name" />
+		<result column="Amount" jdbcType="DECIMAL" property="amount" />
+		<result column="EnableAmount" jdbcType="DECIMAL"
+			property="enableamount" />
+		<result column="LimitQuantity" jdbcType="INTEGER"
+			property="limitquantity" />
+		<result column="TotalQuantity" jdbcType="INTEGER"
+			property="totalquantity" />
+		<result column="BeginTime" jdbcType="TIMESTAMP"
+			property="begintime" />
+		<result column="EndTime" jdbcType="TIMESTAMP"
+			property="endtime" />
+		<result column="Color" jdbcType="VARCHAR" property="color" />
+		<result column="UseFlag" jdbcType="TINYINT" property="useflag" />
+		<result column="Memo" jdbcType="VARCHAR" property="memo" />
+		<result column="CreateTime" jdbcType="TIMESTAMP"
+			property="createtime" />
+		<result column="Creator" jdbcType="VARCHAR" property="creator" />
+		<result column="ModifyTime" jdbcType="TIMESTAMP"
+			property="modifytime" />
+		<result column="Modifier" jdbcType="VARCHAR"
+			property="modifier" />
+		<result column="UpdatedTime" jdbcType="TIMESTAMP"
+			property="updatedtime" />
+		<result column="SuitType" jdbcType="TINYINT"
+			property="suittype" />
+		<result column="EffectiveTime" jdbcType="INTEGER"
+			property="effectivetime" />
+		<result column="ExtID" jdbcType="VARCHAR" property="extid" />
+		<result column="SuitGoodsType" jdbcType="TINYINT"
+			property="suitgoodstype" />
+		<result column="SuitDepartmentType" jdbcType="TINYINT"
+			property="suitdepartmenttype" />
+		<result column="TimeType" jdbcType="TINYINT"
+			property="timetype" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
-			<foreach collection="oredCriteria" item="criteria" separator="or">
+			<foreach collection="oredCriteria" item="criteria"
+				separator="or">
 				<if test="criteria.valid">
-					<trim prefix="(" suffix=")" prefixOverrides="and">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
 						<foreach collection="criteria.criteria" item="criterion">
 							<choose>
 								<when test="criterion.noValue">
@@ -46,8 +62,8 @@
 								</when>
 								<when test="criterion.listValue">
 									and ${criterion.condition}
-									<foreach collection="criterion.value" item="listItem"
-										open="(" close=")" separator=",">
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
 										#{listItem}
 									</foreach>
 								</when>
@@ -63,10 +79,11 @@
 		BeginTime, EndTime,
 		Color, UseFlag, Memo, CreateTime, Creator, ModifyTime, Modifier,
 		UpdatedTime, SuitType,
-		EffectiveTime, ExtID
+		EffectiveTime, ExtID, SuitGoodsType, SuitDepartmentType, TimeType
 	</sql>
-	<select id="selectByExample" resultMap="BaseResultMap"
-		parameterType="com.fast.base.data.entity.MCouponExample">
+	<select id="selectByExample"
+		parameterType="com.fast.base.data.entity.MCouponExample"
+		resultMap="BaseResultMap">
 		select
 		<if test="distinct">
 			distinct
@@ -81,24 +98,27 @@
 			order by ${orderByClause}
 		</if>
 	</select>
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
-		parameterType="java.lang.Integer">
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from m_coupon
 		where ID = #{id,jdbcType=INTEGER}
 	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
 		delete from m_coupon
 		where ID = #{id,jdbcType=INTEGER}
 	</delete>
-	<delete id="deleteByExample" parameterType="com.fast.base.data.entity.MCouponExample">
+	<delete id="deleteByExample"
+		parameterType="com.fast.base.data.entity.MCouponExample">
 		delete from m_coupon
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />
 		</if>
 	</delete>
-	<insert id="insert" parameterType="com.fast.base.data.entity.MCoupon"
+	<insert id="insert"
+		parameterType="com.fast.base.data.entity.MCoupon"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into m_coupon (ID, Code, Name,
 		Amount, EnableAmount, LimitQuantity,
@@ -106,7 +126,8 @@
 		Color, UseFlag, Memo,
 		CreateTime, Creator, ModifyTime,
 		Modifier, UpdatedTime, SuitType,
-		EffectiveTime, ExtID)
+		EffectiveTime, ExtID, SuitGoodsType,
+		SuitDepartmentType, TimeType)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{amount,jdbcType=DECIMAL}, #{enableamount,jdbcType=DECIMAL}, #{limitquantity,jdbcType=INTEGER},
@@ -116,9 +137,12 @@
 		#{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
 		#{modifytime,jdbcType=TIMESTAMP},
 		#{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP}, #{suittype,jdbcType=TINYINT},
-		#{effectivetime,jdbcType=INTEGER}, #{extid,jdbcType=VARCHAR})
+		#{effectivetime,jdbcType=INTEGER}, #{extid,jdbcType=VARCHAR},
+		#{suitgoodstype,jdbcType=TINYINT},
+		#{suitdepartmenttype,jdbcType=TINYINT}, #{timetype,jdbcType=TINYINT})
 	</insert>
-	<insert id="insertSelective" parameterType="com.fast.base.data.entity.MCoupon"
+	<insert id="insertSelective"
+		parameterType="com.fast.base.data.entity.MCoupon"
 		useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		insert into m_coupon
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -182,6 +206,15 @@
 			<if test="extid != null">
 				ExtID,
 			</if>
+			<if test="suitgoodstype != null">
+				SuitGoodsType,
+			</if>
+			<if test="suitdepartmenttype != null">
+				SuitDepartmentType,
+			</if>
+			<if test="timetype != null">
+				TimeType,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -244,16 +277,27 @@
 			<if test="extid != null">
 				#{extid,jdbcType=VARCHAR},
 			</if>
+			<if test="suitgoodstype != null">
+				#{suitgoodstype,jdbcType=TINYINT},
+			</if>
+			<if test="suitdepartmenttype != null">
+				#{suitdepartmenttype,jdbcType=TINYINT},
+			</if>
+			<if test="timetype != null">
+				#{timetype,jdbcType=TINYINT},
+			</if>
 		</trim>
 	</insert>
-	<select id="countByExample" parameterType="com.fast.base.data.entity.MCouponExample"
-		resultType="java.lang.Integer">
+	<select id="countByExample"
+		parameterType="com.fast.base.data.entity.MCouponExample"
+		resultType="java.lang.Long">
 		select count(*) from m_coupon
 		<if test="_parameter != null">
 			<include refid="Example_Where_Clause" />
 		</if>
 	</select>
-	<update id="updateByPrimaryKeySelective" parameterType="com.fast.base.data.entity.MCoupon">
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.fast.base.data.entity.MCoupon">
 		update m_coupon
 		<set>
 			<if test="code != null">
@@ -313,10 +357,20 @@
 			<if test="extid != null">
 				ExtID = #{extid,jdbcType=VARCHAR},
 			</if>
+			<if test="suitgoodstype != null">
+				SuitGoodsType = #{suitgoodstype,jdbcType=TINYINT},
+			</if>
+			<if test="suitdepartmenttype != null">
+				SuitDepartmentType = #{suitdepartmenttype,jdbcType=TINYINT},
+			</if>
+			<if test="timetype != null">
+				TimeType = #{timetype,jdbcType=TINYINT},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.fast.base.data.entity.MCoupon">
+	<update id="updateByPrimaryKey"
+		parameterType="com.fast.base.data.entity.MCoupon">
 		update m_coupon
 		set Code = #{code,jdbcType=VARCHAR},
 		Name = #{name,jdbcType=VARCHAR},
@@ -336,7 +390,10 @@
 		UpdatedTime = #{updatedtime,jdbcType=TIMESTAMP},
 		SuitType = #{suittype,jdbcType=TINYINT},
 		EffectiveTime = #{effectivetime,jdbcType=INTEGER},
-		ExtID = #{extid,jdbcType=VARCHAR}
+		ExtID = #{extid,jdbcType=VARCHAR},
+		SuitGoodsType = #{suitgoodstype,jdbcType=TINYINT},
+		SuitDepartmentType = #{suitdepartmenttype,jdbcType=TINYINT},
+		TimeType = #{timetype,jdbcType=TINYINT}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

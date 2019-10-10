@@ -49,8 +49,7 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 	public Result addVipCoupon(Integer couponID, Integer VipID, Integer quantity) {
 		Result result = new Result();
 
-		try {
-			
+		try {			
 			MCoupon coupon = couponMapper.selectByPrimaryKey(couponID);
 			if (coupon == null || coupon.getId() == null) {
 				result.setMessage("优惠券不存在");
@@ -93,27 +92,33 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 	@Transactional(rollbackFor = Exception.class)
 	public void saveData(Integer vipid, MCoupon coupon, Integer quantity) {
 		Date now = new Date();
-		Calendar ca = Calendar.getInstance();
-		ca.setTime(now);
-		ca.set(Calendar.HOUR_OF_DAY, 0);
-		ca.set(Calendar.MINUTE, 0);
-		ca.set(Calendar.SECOND, 0);
 		
-		Integer effectiveTime = coupon.getEffectivetime();
-		Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
-        calendar.add(Calendar.DATE, effectiveTime);
-        ca.set(Calendar.HOUR_OF_DAY, 23);
-		ca.set(Calendar.MINUTE, 59);
-		ca.set(Calendar.SECOND, 59);
-        Date endTime = calendar.getTime();
+		Date beginTime = coupon.getBegintime();
+		Date endTime = coupon.getBegintime();		
+		if (coupon.getTimetype().intValue() == 2) {
+			Calendar ca = Calendar.getInstance();
+			ca.setTime(now);
+			ca.set(Calendar.HOUR_OF_DAY, 0);
+			ca.set(Calendar.MINUTE, 0);
+			ca.set(Calendar.SECOND, 0);
+			beginTime = ca.getTime();
+			
+			Integer effectiveTime = coupon.getEffectivetime();
+			Calendar calendar = Calendar.getInstance();
+	        calendar.setTime(now);
+	        calendar.add(Calendar.DATE, effectiveTime);
+	        ca.set(Calendar.HOUR_OF_DAY, 23);
+			ca.set(Calendar.MINUTE, 59);
+			ca.set(Calendar.SECOND, 59);
+	        endTime = calendar.getTime();
+		}
         
 		for (int i = 0; i < quantity.intValue(); i++) {
         	MVipcoupon vipcoupon = new MVipcoupon();
 	        vipcoupon.setVipid(vipid);
 	        vipcoupon.setCouponid(coupon.getId());
 	        vipcoupon.setGettime(now);
-	        vipcoupon.setBegintime(ca.getTime());
+	        vipcoupon.setBegintime(beginTime);
 	        vipcoupon.setEndtime(endTime);
 	        vipcoupon.setUseflag(Byte.valueOf("0"));
 	        vipcoupon.setCreatetime(now);
@@ -125,8 +130,7 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 	}
 	
 	/**
-	 * 
-	 * @return 获取随机卡号
+	 * 随机券号
 	 * 现金券编号定长12位
 	 */
 	public String getCouponCode() {

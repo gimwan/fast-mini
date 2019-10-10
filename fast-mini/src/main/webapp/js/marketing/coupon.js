@@ -3,6 +3,7 @@ let couponVm;
 let btnVm;
 
 common.bindVue = function() {
+	console.log("coupon");
 	refreshConfig("7001");
 	
 	btnVm = new Vue({
@@ -144,8 +145,25 @@ function showEditBox(idx,data) {
         success: function () {
         	// 重新刷新form
         	layuiForm.render();
+        	// 初始化时间控件
+        	layDate.render({
+        		elem: '#beginDate',
+        		type: 'date',
+        		format: 'yyyy-MM-dd'
+        	});
+        	layDate.render({
+        		elem: '#endDate',
+        		type: 'date',
+        		format: 'yyyy-MM-dd'
+        	});
+        	// 焦点在第一项
             var val = $(".edit-view .focus").val();
             $(".edit-view .focus").val("").focus().val(val);
+            
+            suitTypeClick();
+            timeTypeClick();
+            suitGoodsClick();
+            suitDepartmentClick();
         }
         
     });
@@ -153,9 +171,9 @@ function showEditBox(idx,data) {
 
 function createElement(data) {
 	let sync = 0;
-	if (config != null && config != undefined && config.value == 1) {
-		sync = 1;
-	}
+//	if (config != null && config != undefined && config.value == 1) {
+//		sync = 1;
+//	}
 	
     let d = {
 		id : "",
@@ -165,7 +183,13 @@ function createElement(data) {
 	    enableamount : "",
 	    limitquantity : "",
 	    totalquantity : "",
+	    suittype : 1,
+	    timetype : 1,
+	    begintime : "",
+	    endtime : "",
 	    effectivetime : "",
+	    suitgoodstype: 0,
+	    suitdepartmenttype: 0,
 	    useflag : 1,
 	    memo : ""
     };
@@ -202,9 +226,20 @@ function createElement(data) {
 				                "<input type=\"text\" value=\""+d.name+"\" class=\"layui-input value\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
-				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
-				                "<span class=\"title\"><label class=\"name\">面值</label>：</span>"+
+				                "<span class=\"title\"><label class=\"name\">类型</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value layui-form-item\" data-field=\"suittype\">"+
+				                "<div class=\"layui-input-block\">" +
+				                	"<input type=\"radio\" name=\"suittype\" value=\"1\" title=\"代金券\" "+(d.suittype==1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"suittype\" value=\"2\" title=\"折扣券\" "+(d.suittype!=1?'checked':'')+" class=\"layui-input value\">" +
+				                "</div>" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\" follow=\"suittype\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">"+(d.suittype==1?'面值':'折扣（0~1）')+"</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"amount\">"+
 				                "<input type=\"number\" value=\""+d.amount+"\" class=\"layui-input value\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
@@ -234,12 +269,61 @@ function createElement(data) {
 				                "<input type=\"number\" value=\""+d.limitquantity+"\" class=\"layui-input value\" "+(sync == 1 ? "readonly='readonly' disabled='disabled'" : "")+"/>"+
 				            "</div>"+
 				        "</div>"+
-				        "<div class=\"edit-item\" need=\"1\" key=\"0\">"+
+				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
-				                "<span class=\"title\"><label class=\"name\">有效时长（天）</label>：</span>"+
+				                "<span class=\"title\"><label class=\"name\">有效期</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value layui-form-item\" data-field=\"timetype\">"+
+				                "<div class=\"layui-input-block\">" +
+				                	"<input type=\"radio\" name=\"timetype\" value=\"1\" title=\"固定日期\" "+(d.timetype==1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"timetype\" value=\"2\" title=\"有效天数\" "+(d.timetype!=1?'checked':'')+" class=\"layui-input value\">" +
+				                "</div>" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\" follow=\"timetype\" "+(d.timetype==1?'':'hidden')+">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">生效日期</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"begintime\">"+
+				                "<input type=\"text\" value=\""+common.formatDay(d.begintime)+"\" id=\"beginDate\" class=\"layui-input timechoosed value\" readonly=\"readonly\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\" follow=\"timetype\" "+(d.timetype==1?'':'hidden')+">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">失效日期</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"endtime\">"+
+				                "<input type=\"text\" value=\""+common.formatDay(d.endtime)+"\" id=\"endDate\" class=\"layui-input timechoosed value\" readonly=\"readonly\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item\" need=\"1\" key=\"0\" follow=\"timetype\" "+(d.timetype==1?'hidden':'')+">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">有效天数</label>：</span>"+
 				            "</div>"+
 				            "<div class=\"edit-value\" data-field=\"effectivetime\">"+
 				                "<input type=\"number\" value=\""+d.effectivetime+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">适用商品</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value layui-form-item\" data-field=\"suitgoodstype\">"+
+				                "<div class=\"layui-input-block\">" +
+				                	"<input type=\"radio\" name=\"suitgoodstype\" value=\"0\" title=\"全部\" "+(d.suitgoodstype!=1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"suitgoodstype\" value=\"1\" title=\"指定商品\" "+(d.suitgoodstype==1?'checked':'')+" class=\"layui-input value\">" +
+				                "</div>" +
+				            "</div>"+
+				        "</div>"+
+				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">适用门店</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value layui-form-item\" data-field=\"suitdepartmenttype\">"+
+				                "<div class=\"layui-input-block\">" +
+				                	"<input type=\"radio\" name=\"suitdepartmenttype\" value=\"0\" title=\"全部\" "+(d.suitdepartmenttype!=1?'checked':'')+" class=\"layui-input value\">" +
+				                	"<input type=\"radio\" name=\"suitdepartmenttype\" value=\"1\" title=\"指定门店\" "+(d.suitdepartmenttype==1?'checked':'')+" class=\"layui-input value\">" +
+				                "</div>" +
 				            "</div>"+
 				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
@@ -266,4 +350,44 @@ function createElement(data) {
 				    "</div>"+
 				"</div>";
 	return element;
+}
+
+function suitTypeClick() {
+	$(".edit-view input[name='suittype']").eq(0).parent().find(".layui-form-radio").click(function() {
+		var val = $(this).prev().val();
+		if (val == "1") {
+			$(".edit-view .edit-item[follow='suittype'] .edit-title .name").html("面值");
+		} else {
+			$(".edit-view .edit-item[follow='suittype'] .edit-title .name").html("折扣（0~1）");
+		}
+		$(".edit-view .edit-item[follow='suittype'] .edit-value .value").val("");
+	});
+}
+
+function timeTypeClick() {
+	$(".edit-view input[name='timetype']").eq(0).parent().find(".layui-form-radio").click(function() {
+		var val = $(this).prev().val();
+		if (val == "1") {
+			$(".edit-view .edit-item[follow='timetype']").removeAttr("hidden","hidden");
+			$(".edit-view .edit-item[follow='timetype'] .edit-value[data-field='effectivetime']").parent().attr("hidden","hidden");			
+		} else {
+			$(".edit-view .edit-item[follow='timetype']").attr("hidden","hidden");
+			$(".edit-view .edit-item[follow='timetype'] .edit-value[data-field='effectivetime']").parent().removeAttr("hidden","hidden");			
+		}
+		$(".edit-view .edit-item[follow='timetype'] .edit-value .value").val("");
+	});
+}
+
+function suitGoodsClick() {
+	$(".edit-view input[name='suitgoodstype']").eq(0).parent().find(".layui-form-radio").click(function() {
+		var val = $(this).prev().val();
+		console.log(val);
+	});
+}
+
+function suitDepartmentClick() {
+	$(".edit-view input[name='suitdepartmenttype']").eq(0).parent().find(".layui-form-radio").click(function() {
+		var val = $(this).prev().val();
+		console.log(val);
+	});
 }

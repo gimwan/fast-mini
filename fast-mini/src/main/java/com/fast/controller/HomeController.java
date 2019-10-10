@@ -81,7 +81,7 @@ public class HomeController {
 			}
 			if (ext.intValue() == 1) {
 				map = new HashMap<String, Object>();
-				map.put("name", "接口");
+				map.put("name", "API");
 				map.put("link", "extsystem");
 				sub.add(map);
 			}
@@ -151,10 +151,6 @@ public class HomeController {
 			map.put("name", "会员");
 			map.put("link", "vip");
 			sub.add(map);
-			map = new HashMap<String, Object>();
-			map.put("name", "优惠券");
-			map.put("link", "coupon");
-			sub.add(map);
 			main.put("sub", sub);
 			list.add(main);
 			
@@ -192,6 +188,10 @@ public class HomeController {
 			main.put("name", "营销管理");
 			main.put("link", "");
 			sub = new ArrayList<HashMap<String,Object>>();
+			map = new HashMap<String, Object>();
+			map.put("name", "优惠券");
+			map.put("link", "coupon");
+			sub.add(map);
 			map = new HashMap<String, Object>();
 			map.put("name", "拼团");
 			map.put("link", "groupbuy");

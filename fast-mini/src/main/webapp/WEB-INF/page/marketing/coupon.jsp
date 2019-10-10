@@ -1,22 +1,22 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<link rel="stylesheet" href="css/vip/coupon.css">
-<script type="text/javascript" src="js/vip/coupon.js"></script>
+<link rel="stylesheet" href="css/marketing/coupon.css">
+<script type="text/javascript" src="js/marketing/coupon.js"></script>
 <div class="couponPage">
 	<div class="layui-card layadmin-header nav-bar">
 	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
-	    <a><cite>会员管理</cite></a>
+	    <a><cite>营销管理</cite></a>
 	    <span lay-separator="">/</span>
 	    <a><cite>优惠券</cite></a>
 	  </div>
 	</div>
 	
 	<div class="operating">
-		<div class="layui-btn-group">
-	        <button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add" v-bind:data-extsystem="config.value" v-if="config.value!=1">
-	          <i class="layui-icon layui-icon-add-1"></i>
-	        </button>
-	        <button class="layui-btn layui-btn-sm synchronize" title="同步" v-on:click="synchronize" v-bind:data-extsystem="config.value" v-else>
+		<div class="layui-btn-group">	        
+	        <button class="layui-btn layui-btn-sm synchronize" title="同步" v-on:click="synchronize" v-bind:data-extsystem="config.value" v-if="false">
 	          <i class="layui-icon layui-icon-refresh"></i>
+	        </button>
+	        <button class="layui-btn layui-btn-sm add" title="新增" v-on:click="add" v-bind:data-extsystem="config.value">
+	          <i class="layui-icon layui-icon-add-1"></i>
 	        </button>
 	        <button class="layui-btn layui-btn-sm del" title="删除" v-on:click="del">
 	          <i class="layui-icon layui-icon-delete"></i>

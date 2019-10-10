@@ -287,7 +287,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			BigDecimal discounMoney = goodsSaleAmount.subtract(goodsAmount);
 			// 可用优惠券数量
 			Integer couponNum = 0;
-			couponNum = useableCouponNumber(goodsAmount, vip.getId());
+			couponNum = useableCouponNumber(goodsAmount, vip.getId(), discount);
 			
 			if (couponid != null && couponid.intValue() > 0) {
 				MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(couponid);
@@ -301,7 +301,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 						result.setMessage("优惠券未到启用时间");
 						return result;
 					}
-					if (vipcoupon.getEndtime().getTime() > now.getTime()) {
+					if (now.getTime() > vipcoupon.getEndtime().getTime()) {
 						result.setMessage("优惠券已过期");
 						return result;
 					}
@@ -312,12 +312,35 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 							result.setMessage("优惠券未达到启用金额");
 							return result;
 						}
-						couponMoney = coupon.getAmount() == null ? BigDecimal.ZERO : coupon.getAmount();
-						if (couponMoney.compareTo(paymoney) >= 0) {
-							couponMoney = paymoney;
-							paymoney = BigDecimal.ZERO;
+						// 折扣券，销售价以券折扣计算，不以会员折扣计算
+						if (coupon.getSuittype().intValue() == 2) {
+							discount = coupon.getAmount() == null ? BigDecimal.ONE : coupon.getAmount();
+							for (int i = 0; i < list.size(); i++) {
+								Integer quantity = list.get(i).get("quantity") == null ? 0 : Integer.valueOf(list.get(i).get("quantity").toString().trim());
+								BigDecimal price = list.get(i).get("saleprice") == null ? BigDecimal.ZERO : new BigDecimal(list.get(i).get("saleprice").toString().trim());
+								BigDecimal amount = list.get(i).get("amount") == null ? BigDecimal.ZERO : new BigDecimal(list.get(i).get("amount").toString().trim());
+								goodsSaleAmount = goodsSaleAmount.add(price.multiply(new BigDecimal(quantity.toString())));
+								BigDecimal newPrice = price.multiply(discount).setScale(2, BigDecimal.ROUND_HALF_UP);
+								list.get(i).put("price", newPrice);
+								BigDecimal newAmount = newPrice.multiply(new BigDecimal(quantity.toString()));
+								list.get(i).put("amount", newAmount);
+								goodsAmount = goodsAmount.add(amount);
+								couponMoney = couponMoney.add(amount.subtract(newAmount));
+							}
+							if (couponMoney.compareTo(paymoney) >= 0) {
+								couponMoney = paymoney;
+								paymoney = BigDecimal.ZERO;
+							} else {
+								paymoney = paymoney.subtract(couponMoney);
+							}
 						} else {
-							paymoney = paymoney.subtract(couponMoney);
+							couponMoney = coupon.getAmount() == null ? BigDecimal.ZERO : coupon.getAmount();
+							if (couponMoney.compareTo(paymoney) >= 0) {
+								couponMoney = paymoney;
+								paymoney = BigDecimal.ZERO;
+							} else {
+								paymoney = paymoney.subtract(couponMoney);
+							}
 						}
 					} else {
 						result.setMessage("优惠券无效");
@@ -396,7 +419,7 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 		return result;
 	}
 	
-	public Integer useableCouponNumber(BigDecimal money, Integer vipid) {
+	public Integer useableCouponNumber(BigDecimal money, Integer vipid, BigDecimal discount) {
 		Integer num = 0;
 		Date now = new Date();
 		MCouponExample example = new MCouponExample();
@@ -410,7 +433,26 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			MVipcouponExample vipcouponExample = new MVipcouponExample();
 			vipcouponExample.createCriteria().andUseflagEqualTo(Byte.valueOf("0")).andVipidEqualTo(vipid).andBegintimeLessThanOrEqualTo(now).andEndtimeGreaterThanOrEqualTo(now);
 			List<MVipcoupon> vipcoupons = vipcouponMapper.selectByExample(vipcouponExample);
-			num= vipcoupons.size();
+			num = 0;
+			for (MVipcoupon vipcoupon : vipcoupons) {
+				Byte suitType = 1;
+				BigDecimal couponDiscount = BigDecimal.ONE;
+				for (MCoupon coupon : list) {
+					if (vipcoupon.getCouponid().intValue() == coupon.getId()) {
+						suitType = coupon.getSuittype();
+						couponDiscount = coupon.getAmount();
+						break;
+					}
+				}
+				if (suitType.intValue() == 2) {
+					// 折扣券比会员折扣优惠
+					if (discount.compareTo(couponDiscount) > 0) {
+						num++;
+					}
+				} else {
+					num++;
+				}
+			}
 		}
 		return num;
 	}

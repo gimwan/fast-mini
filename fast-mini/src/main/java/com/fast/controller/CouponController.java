@@ -38,7 +38,7 @@ public class CouponController {
 	@RequestMapping("")
 	public ModelAndView mainView(HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		return new ModelAndView("vip/coupon", map);
+		return new ModelAndView("marketing/coupon", map);
 	}
 	
 	/**

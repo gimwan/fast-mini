@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "m_coupon")
@@ -30,8 +31,10 @@ public class MCoupon implements Serializable {
 
     private Integer totalquantity;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date begintime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endtime;
 
     private String color;
@@ -55,6 +58,12 @@ public class MCoupon implements Serializable {
     private Integer effectivetime;
 
     private String extid;
+
+    private Byte suitgoodstype;
+
+    private Byte suitdepartmenttype;
+
+    private Byte timetype;
 
     public Integer getId() {
         return id;
@@ -214,5 +223,29 @@ public class MCoupon implements Serializable {
 
     public void setExtid(String extid) {
         this.extid = extid;
+    }
+
+    public Byte getSuitgoodstype() {
+        return suitgoodstype;
+    }
+
+    public void setSuitgoodstype(Byte suitgoodstype) {
+        this.suitgoodstype = suitgoodstype;
+    }
+
+    public Byte getSuitdepartmenttype() {
+        return suitdepartmenttype;
+    }
+
+    public void setSuitdepartmenttype(Byte suitdepartmenttype) {
+        this.suitdepartmenttype = suitdepartmenttype;
+    }
+
+    public Byte getTimetype() {
+        return timetype;
+    }
+
+    public void setTimetype(Byte timetype) {
+        this.timetype = timetype;
     }
 }

@@ -70,7 +70,7 @@ public class VipCouponServiceImpl implements IVipCouponService, Serializable {
 			if (type.intValue() == 2) {
 				page.setOrderBy(" order by a.endtime desc");
 				String sql = "select a.id,vipid,a.couponid,a.code,b.name,b.amount,b.enableamount,convert(varchar(100), a.begintime, 20) as begintime,"
-						+ "convert(varchar(100), a.endtime, 20) as endtime "
+						+ "convert(varchar(100), a.endtime, 20) as endtime,a.suittype "
 						+ "from m_vipcoupon a "
 						+ "inner join m_coupon b on a.couponid=b.id "
 						+ "where a.useflag=0 and a.endtime<=getdate() and a.vipid=" + vipmini.getVipid() + " ";
@@ -78,7 +78,7 @@ public class VipCouponServiceImpl implements IVipCouponService, Serializable {
 			} else if (type.intValue() == 1) {
 				page.setOrderBy(" order by a.usetime desc");
 				String sql = "select a.id,vipid,a.couponid,a.code,b.name,b.amount,b.enableamount,convert(varchar(100), a.begintime, 20) as begintime,"
-						+ "convert(varchar(100), a.endtime, 20) as endtime "
+						+ "convert(varchar(100), a.endtime, 20) as endtime,a.suittype "
 						+ "from m_vipcoupon a "
 						+ "inner join m_coupon b on a.couponid=b.id "
 						+ "where a.useflag=1 and a.vipid=" + vipmini.getVipid() + " ";
@@ -86,7 +86,7 @@ public class VipCouponServiceImpl implements IVipCouponService, Serializable {
 			} else {
 				page.setOrderBy(" order by a.gettime desc");
 				String sql = "select a.id,vipid,a.couponid,a.code,b.name,b.amount,b.enableamount,convert(varchar(100), a.begintime, 20) as begintime,"
-						+ "convert(varchar(100), a.endtime, 20) as endtime "
+						+ "convert(varchar(100), a.endtime, 20) as endtime,a.suittype "
 						+ "from m_vipcoupon a "
 						+ "inner join m_coupon b on a.couponid=b.id "
 						+ "where a.useflag=0 and a.endtime>getdate() and a.vipid=" + vipmini.getVipid() + " ";

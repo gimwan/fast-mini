@@ -7,15 +7,15 @@ import java.util.List;
 import org.apache.ibatis.annotations.Options;
 
 public interface MCouponMapper {
-    int countByExample(MCouponExample example);
+    long countByExample(MCouponExample example);
 
     int deleteByExample(MCouponExample example);
 
     int deleteByPrimaryKey(Integer id);
-
+    
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(MCoupon record);
-
+    
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insertSelective(MCoupon record);
 

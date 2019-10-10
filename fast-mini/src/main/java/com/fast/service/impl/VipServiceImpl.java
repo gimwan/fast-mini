@@ -389,7 +389,7 @@ public class VipServiceImpl implements IVipService, Serializable {
 			List<MRegion> regions = regionMapper.selectByExample(regionExample);
 			if (regions != null && regions.size() > 0) {
 				vip.setCounty(regions.get(0).getName());
-				vip.setCityid(regions.get(0).getId());
+				vip.setCountyid(regions.get(0).getId());
 			}
 		}
 		return vip;
