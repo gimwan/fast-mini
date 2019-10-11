@@ -48,3 +48,55 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 }
+
+.layui-tab {
+	margin: 0;
+}
+
+.layui-layer-page .layui-layer-content {
+	overflow: unset;
+}
+
+.layui-tab-content {
+	padding: 0px;
+	overflow: auto;
+}
+
+.layui-tab-content::-webkit-scrollbar {
+	width: 8px;
+	height: 2px;
+	background: #F0F0F0;
+	border-radius: 10px;
+}
+
+.layui-tab-content::-webkit-scrollbar-thumb {
+	display: block;
+	width: 8px;
+	margin: 0 auto;
+	border-radius: 10px;
+	background: #e2e2e2;
+}
+
+.suitview {
+	text-align: center;
+    padding: 15px;
+}
+
+.layui-transfer-box {
+	text-align: left;
+}
+
+.layui-transfer-data::-webkit-scrollbar {
+	width: 8px;
+	height: 2px;
+	background: #F0F0F0;
+	border-radius: 10px;
+}
+
+.layui-transfer-data::-webkit-scrollbar-thumb {
+	display: block;
+	width: 8px;
+	margin: 0 auto;
+	border-radius: 10px;
+	background: #e2e2e2;
+}

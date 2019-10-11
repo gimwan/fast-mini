@@ -106,9 +106,12 @@ function setData(pageView) {
 function showEditBox(idx,data) {
 	let editDiv = createElement(data);
 	
+	let couponid = 0;
 	let boxTitle = "<label style='font-weight:600;'>修改</label>";
 	if (idx < 0) {
 		boxTitle = "<label style='font-weight:600;'>新增</label>";
+	} else {
+		couponid = data.id;
 	}
     
     layer.open({
@@ -122,6 +125,11 @@ function showEditBox(idx,data) {
             if (data == '') {
                 return;
             }
+            let suitGoodsData = catchSuitGoodsChecked();
+            let suitDepartmentData = catchSuitDepartmentChecked();
+            data.suitgoods = escape(suitGoodsData);
+            data.suitdepartments = escape(suitDepartmentData);
+            
             common.showLoading();
             api.load('./coupon/change','post',data, function(result) {
                 if (result.errcode == 0) {
@@ -160,10 +168,16 @@ function showEditBox(idx,data) {
             var val = $(".edit-view .focus").val();
             $(".edit-view .focus").val("").focus().val(val);
             
+            var contentHeight = $(".layui-layer-page .layui-layer-content").height();
+            $(".layui-layer-page .layui-layer-content .layui-tab-content").css("height", contentHeight - 41 + "px");
+            
             suitTypeClick();
             timeTypeClick();
             suitGoodsClick();
             suitDepartmentClick();
+            checkShowTab();
+            
+            loadSuitData(couponid);
         }
         
     });
@@ -349,6 +363,26 @@ function createElement(data) {
 				        "</div>"+
 				    "</div>"+
 				"</div>";
+	
+	let tab = "<div class='layui-tab layui-tab-brief' lay-filter='couponTab'>" +
+					"<ul class='layui-tab-title'>" +
+						"<li class='baseTab layui-this'>基本信息</li>" +
+						"<li class='goodsTab' style='display:none;'>适用商品</li>" +
+						"<li class='departmentTab' style='display:none;'>适用门店</li>" +
+					"</ul>" +
+					"<div class='layui-tab-content'>" +
+						"<div class='layui-tab-item layui-show'>" +
+							element + 
+						"</div>" +
+						"<div class='layui-tab-item'>" +
+							"<div class='suitview suitgoodsview' id='suitgoodsview'></div>" +
+						"</div>" +
+						"<div class='layui-tab-item'>" +
+							"<div class='suitview suitdepartmentview' id='suitdepartmentview'></div>" +
+						"</div>" +
+					"</div>" +
+				"</div>";
+	element = tab;
 	return element;
 }
 
@@ -381,13 +415,121 @@ function timeTypeClick() {
 function suitGoodsClick() {
 	$(".edit-view input[name='suitgoodstype']").eq(0).parent().find(".layui-form-radio").click(function() {
 		var val = $(this).prev().val();
-		console.log(val);
+		if (val == "1") {
+			$(".layui-tab-title .goodsTab").css("display","inline-block");
+		} else {
+			$(".layui-tab-title .goodsTab").css("display","none");
+		}
 	});
 }
 
 function suitDepartmentClick() {
 	$(".edit-view input[name='suitdepartmenttype']").eq(0).parent().find(".layui-form-radio").click(function() {
 		var val = $(this).prev().val();
-		console.log(val);
+		if (val == "1") {
+			$(".layui-tab-title .departmentTab").css("display","inline-block");
+		} else {
+			$(".layui-tab-title .departmentTab").css("display","none");
+		}
 	});
+}
+
+function checkShowTab() {
+	var suitgoodstype = $(".edit-view .edit-value[data-field='suitgoodstype'] .layui-form-radioed").prev().val();
+	var suitdepartmenttype = $(".edit-view .edit-value[data-field='suitdepartmenttype'] .layui-form-radioed").prev().val();
+	if (suitgoodstype == "1") {
+		$(".layui-tab-title .goodsTab").css("display","inline-block");
+	}
+	if (suitdepartmenttype == "1") {
+		$(".layui-tab-title .departmentTab").css("display","inline-block");
+	}
+}
+
+function loadSuitData(id) {
+    api.load(basePath + 'coupon/suitgoods','post',{"id":id},function (result) {
+        if (result.errcode == 0) {
+        	let data = [];
+        	let checkedData = [];
+        	for (var i = 0; i < result.data.length; i++) {
+        		let d = result.data[i];
+        		if (d.checked == 1) {
+        			checkedData.push(d);
+				} else {
+					data.push(d);
+				}
+			}
+        	
+        	layTransfer.render({
+            	elem: '#suitgoodsview',
+            	id: 'goodstab',
+            	title: ['可选', '已选'],
+            	width: 292,
+            	height: 558,
+            	data: data,
+            	value: checkedData,
+                parseData: function(res) {
+                	return {
+                		"value": res.id,
+                    	"title": res.title,
+                    	"disabled": 0,
+                    	"checked": 0
+                	}
+                }
+            });
+        } else {
+            common.error('数据加载失败');
+        }
+    });
+    api.load(basePath + 'coupon/suitdepartment','post',{"id":id},function (result) {
+        if (result.errcode == 0) {
+        	let data = [];
+        	let checkedData = [];
+        	for (var i = 0; i < result.data.length; i++) {
+        		let d = result.data[i];
+        		if (d.checked == 1) {
+        			checkedData.push(d);
+				} else {
+					data.push(d);
+				}
+			}
+        	
+        	layTransfer.render({
+            	elem: '#suitdepartmentview',
+            	id: 'departmenttab',
+            	title: ['可选', '已选'],
+            	width: 292,
+            	height: 558,
+            	data: data,
+            	value: checkedData,
+                parseData: function(res) {
+                	return {
+                		"value": res.id,
+                    	"title": res.title,
+                    	"disabled": 0,
+                    	"checked": 0
+                	}
+                }
+            });
+        } else {
+            common.error('数据加载失败');
+        }
+    });
+}
+
+function catchSuitGoodsChecked() {
+	let data = [];
+	$("#suitgoodsview .layui-transfer-box[data-index='1'] .layui-transfer-data li").each(function() {
+		let id = $(this).find("input").val();
+		data.push(id);
+	});
+	return data;
+}
+
+function catchSuitDepartmentChecked() {
+	let data = [];
+	$("#suitdepartmentview .layui-transfer-box[data-index='1'] .layui-transfer-data li").each(function() {
+		let id = $(this).find("input").val();
+		data.push(id);
+	});
+	return data;
 }

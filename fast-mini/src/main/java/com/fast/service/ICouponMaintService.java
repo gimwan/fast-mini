@@ -15,9 +15,11 @@ public interface ICouponMaintService {
 	 * 修改优惠券
 	 * @param employee
 	 * @param user
+	 * @param suitGoodsStr escape加密适用商品字符串
+	 * @param suitDepartmentsStr escape加密适用门店字符串
 	 * @return
 	 */
-	public Result changeCoupon(MCoupon coupon, MUser user);
+	public Result changeCoupon(MCoupon coupon, MUser user, String suitGoodsStr, String suitDepartmentsStr);
 	
 	/**
 	 * 删除优惠券

@@ -81,7 +81,9 @@ public class CouponController {
 			
 			MUser user = Common.currentUser(request);
 			if (user != null) {
-				result = iCouponMaintService.changeCoupon(coupon, user);
+				String suitgoods = request.getParameter("suitgoods");
+				String suitdepartments = request.getParameter("suitdepartments");
+				result = iCouponMaintService.changeCoupon(coupon, user, suitgoods, suitdepartments);
 			} else {
 				result.setErrcode(Integer.valueOf(88));
 				result.setMessage("当前登入者已失效");
@@ -111,6 +113,60 @@ public class CouponController {
 		try {
 			String id = request.getParameter("id");
 			Result result = iCouponMaintService.deleteCoupon(Integer.valueOf(id));
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 适用商品
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/suitgoods")
+	@ResponseBody
+	public String suitgoods(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			if (Common.isEmpty(id)) {
+				id = "0";
+			}
+			Result result = iCouponService.queryCouponSuitGoods(Integer.valueOf(id));
+			
+			JSONObject jsonObject = JSONObject.fromObject(result);
+			r = jsonObject.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return r;
+	}
+	
+	/**
+	 * 适用门店
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/suitdepartment")
+	@ResponseBody
+	public String suitdepartment(HttpServletRequest request, HttpServletResponse response) {
+		String r = "";
+		
+		try {
+			String id = request.getParameter("id");
+			if (Common.isEmpty(id)) {
+				id = "0";
+			}
+			Result result = iCouponService.queryCouponSuitDepartment(Integer.valueOf(id));
 			
 			JSONObject jsonObject = JSONObject.fromObject(result);
 			r = jsonObject.toString();

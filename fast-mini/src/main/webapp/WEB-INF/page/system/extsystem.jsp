@@ -6,7 +6,7 @@
 	  <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
 	    <a><cite>系统管理</cite></a>
 	    <span lay-separator="">/</span>
-	    <a><cite>接口</cite></a>
+	    <a><cite>API</cite></a>
 	  </div>
 	</div>
 	

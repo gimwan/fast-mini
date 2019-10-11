@@ -14,5 +14,19 @@ public interface ICouponService {
 	 * @return
 	 */
 	public Result coupon();
+	
+	/**
+	 * 查询优惠券适用商品
+	 * @param couponid
+	 * @return
+	 */
+	public Result queryCouponSuitGoods(Integer couponid);
+	
+	/**
+	 * 查询优惠券适用门店
+	 * @param couponid
+	 * @return
+	 */
+	public Result queryCouponSuitDepartment(Integer couponid);
 
 }

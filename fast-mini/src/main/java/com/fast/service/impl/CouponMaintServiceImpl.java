@@ -6,11 +6,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MCouponMapper;
+import com.fast.base.data.dao.MCoupondepartmentMapper;
+import com.fast.base.data.dao.MCoupongoodsMapper;
 import com.fast.base.data.entity.MCoupon;
 import com.fast.base.data.entity.MCouponExample;
+import com.fast.base.data.entity.MCoupondepartment;
+import com.fast.base.data.entity.MCoupondepartmentExample;
+import com.fast.base.data.entity.MCoupongoods;
+import com.fast.base.data.entity.MCoupongoodsExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.ICouponMaintService;
 import com.fast.service.IDataService;
@@ -33,9 +41,15 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 	
 	@Autowired
 	IDataService iDataService;
+	
+	@Autowired
+	MCoupongoodsMapper mCoupongoodsMapper;
+	
+	@Autowired
+	MCoupondepartmentMapper mCoupondepartmentMapper;
 
 	@Override
-	public Result changeCoupon(MCoupon coupon, MUser user) {
+	public Result changeCoupon(MCoupon coupon, MUser user, String suitGoodsStr, String suitDepartmentsStr) {
 		Result result = new Result();
 
 		try {
@@ -51,35 +65,7 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 				return result;
 			}
 			
-			Date now = new Date();
-			MCoupon mCoupon = new MCoupon();
-			coupon.setUpdatedtime(now);
-			if (coupon.getId() != null) {
-				mCoupon = couponMapper.selectByPrimaryKey(coupon.getId());
-				BeanUtil.copyPropertiesIgnoreNull(coupon, mCoupon);
-				mCoupon.setModifier(user.getName());
-				mCoupon.setModifytime(now);
-				int changeNum = couponMapper.updateByPrimaryKeySelective(mCoupon);
-				if (changeNum > 0) {
-					result.setErrcode(0);
-					result.setId(mCoupon.getId());
-					result.setMessage("保存成功");
-				} else {
-					result.setMessage("保存失败");
-				}
-			} else {
-				BeanUtil.copyPropertiesIgnoreNull(coupon, mCoupon);
-				mCoupon.setCreator(user.getName());
-				mCoupon.setCreatetime(now);
-				int key = couponMapper.insertSelective(mCoupon);
-				if (key > 0) {
-					result.setErrcode(0);
-					result.setId(mCoupon.getId());
-					result.setMessage("新增成功");
-				} else {
-					result.setMessage("新增失败");
-				}
-			}
+			result = saveData(coupon, user, suitGoodsStr, suitDepartmentsStr);
 			
 			if (Common.isActive(result)) {
 				Result r = iDataService.one("coupon", Integer.valueOf(result.getId().toString()));
@@ -92,6 +78,66 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 			FastLog.error("调用CouponMaintServiceImpl.changeCoupon报错：", e);
 		}
 
+		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	private Result saveData(MCoupon coupon, MUser user,String suitGoodsStr, String suitDepartmentsStr) {
+		Result result = new Result();
+		
+		Date now = new Date();
+		MCoupon mCoupon = new MCoupon();
+		coupon.setUpdatedtime(now);
+		if (coupon.getId() != null) {
+			mCoupon = couponMapper.selectByPrimaryKey(coupon.getId());
+			BeanUtil.copyPropertiesIgnoreNull(coupon, mCoupon);
+			mCoupon.setModifier(user.getName());
+			mCoupon.setModifytime(now);
+			couponMapper.updateByPrimaryKeySelective(mCoupon);
+		} else {
+			BeanUtil.copyPropertiesIgnoreNull(coupon, mCoupon);
+			mCoupon.setCreator(user.getName());
+			mCoupon.setCreatetime(now);
+			couponMapper.insertSelective(mCoupon);
+		}
+		
+		MCoupongoodsExample coupongoodsExample = new MCoupongoodsExample();
+		coupongoodsExample.createCriteria().andCouponidEqualTo(mCoupon.getId());
+		mCoupongoodsMapper.deleteByExample(coupongoodsExample);
+		
+		if (mCoupon.getSuitgoodstype().intValue() == 1) {
+			String suitGoodsData = Common.unescape(suitGoodsStr);
+			String[] suitGoodsArray = suitGoodsData.split(",");
+			for (int i = 0; i < suitGoodsArray.length; i++) {
+				MCoupongoods coupongoods = new MCoupongoods();
+				coupongoods.setCouponid(mCoupon.getId());
+				coupongoods.setGoodsid(Integer.valueOf(suitGoodsArray[i]));
+				coupongoods.setShowindex(i);
+				coupongoods.setUpdatedtime(now);
+				mCoupongoodsMapper.insertSelective(coupongoods);
+			}
+		}
+		
+		MCoupondepartmentExample coupondepartmentExample = new MCoupondepartmentExample();
+		coupondepartmentExample.createCriteria().andCouponidEqualTo(mCoupon.getId());
+		mCoupondepartmentMapper.deleteByExample(coupondepartmentExample);
+		
+		if (mCoupon.getSuitdepartmenttype().intValue() ==1) {
+			String suitDepartmentsData = Common.unescape(suitDepartmentsStr);
+			String[] suitDepartmentsArray = suitDepartmentsData.split(",");
+			for (int i = 0; i < suitDepartmentsArray.length; i++) {
+				MCoupondepartment coupondepartment = new MCoupondepartment();
+				coupondepartment.setCouponid(mCoupon.getId());
+				coupondepartment.setDepartmentid(Integer.valueOf(suitDepartmentsArray[i]));
+				coupondepartment.setShowindex(i);
+				coupondepartment.setUpdatedtime(now);
+				mCoupondepartmentMapper.insertSelective(coupondepartment);
+			}
+		}
+		
+		result.setErrcode(0);
+		result.setId(mCoupon.getId());
+		result.setMessage("保存成功");
 		return result;
 	}
 
