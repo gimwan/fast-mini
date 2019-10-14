@@ -100,3 +100,36 @@
 	border-radius: 10px;
 	background: #e2e2e2;
 }
+
+.layui-form-checkbox span {
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 242px;
+}
+
+.hidden {
+	display: none;
+}
+
+.edit-view .colorpicker {
+	width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin: 0 !important;
+}
+
+.edit-view .colorpicker .layui-colorpicker {
+	width: 100px;
+    height: 100px;
+    border: 0;
+    padding: 0;
+}
+
+.edit-view .colorpicker .layui-colorpicker .layui-icon {
+	display: none;
+}
+
+.edit-view .colorpicker .layui-colorpicker .layui-colorpicker-trigger-span {
+	border: 0;
+}

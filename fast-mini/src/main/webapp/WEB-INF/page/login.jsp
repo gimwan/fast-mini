@@ -10,7 +10,7 @@
 <html>
 <head>
 <base href="<%=basePath%>">
-<title>FAST</title>
+<title>XINAI</title>
 <%@ include file="common/head.jsp"%>
 <link rel="stylesheet" href="css/login.css">
 <script type="text/javascript" src="js/login.js"></script>

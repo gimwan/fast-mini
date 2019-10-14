@@ -41,6 +41,7 @@
 			property="suitdepartmenttype" />
 		<result column="TimeType" jdbcType="TINYINT"
 			property="timetype" />
+		<result column="Hint" jdbcType="VARCHAR" property="hint" />
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -79,7 +80,7 @@
 		BeginTime, EndTime,
 		Color, UseFlag, Memo, CreateTime, Creator, ModifyTime, Modifier,
 		UpdatedTime, SuitType,
-		EffectiveTime, ExtID, SuitGoodsType, SuitDepartmentType, TimeType
+		EffectiveTime, ExtID, SuitGoodsType, SuitDepartmentType, TimeType, Hint
 	</sql>
 	<select id="selectByExample"
 		parameterType="com.fast.base.data.entity.MCouponExample"
@@ -127,7 +128,8 @@
 		CreateTime, Creator, ModifyTime,
 		Modifier, UpdatedTime, SuitType,
 		EffectiveTime, ExtID, SuitGoodsType,
-		SuitDepartmentType, TimeType)
+		SuitDepartmentType, TimeType, Hint
+		)
 		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
 		#{name,jdbcType=VARCHAR},
 		#{amount,jdbcType=DECIMAL}, #{enableamount,jdbcType=DECIMAL}, #{limitquantity,jdbcType=INTEGER},
@@ -139,7 +141,9 @@
 		#{modifier,jdbcType=VARCHAR}, #{updatedtime,jdbcType=TIMESTAMP}, #{suittype,jdbcType=TINYINT},
 		#{effectivetime,jdbcType=INTEGER}, #{extid,jdbcType=VARCHAR},
 		#{suitgoodstype,jdbcType=TINYINT},
-		#{suitdepartmenttype,jdbcType=TINYINT}, #{timetype,jdbcType=TINYINT})
+		#{suitdepartmenttype,jdbcType=TINYINT}, #{timetype,jdbcType=TINYINT},
+		#{hint,jdbcType=VARCHAR}
+		)
 	</insert>
 	<insert id="insertSelective"
 		parameterType="com.fast.base.data.entity.MCoupon"
@@ -215,6 +219,9 @@
 			<if test="timetype != null">
 				TimeType,
 			</if>
+			<if test="hint != null">
+				Hint,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -285,6 +292,9 @@
 			</if>
 			<if test="timetype != null">
 				#{timetype,jdbcType=TINYINT},
+			</if>
+			<if test="hint != null">
+				#{hint,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -366,6 +376,9 @@
 			<if test="timetype != null">
 				TimeType = #{timetype,jdbcType=TINYINT},
 			</if>
+			<if test="hint != null">
+				Hint = #{hint,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
@@ -393,7 +406,8 @@
 		ExtID = #{extid,jdbcType=VARCHAR},
 		SuitGoodsType = #{suitgoodstype,jdbcType=TINYINT},
 		SuitDepartmentType = #{suitdepartmenttype,jdbcType=TINYINT},
-		TimeType = #{timetype,jdbcType=TINYINT}
+		TimeType = #{timetype,jdbcType=TINYINT},
+		Hint = #{hint,jdbcType=VARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

@@ -65,6 +65,8 @@ public class MCoupon implements Serializable {
 
     private Byte timetype;
 
+    private String hint;
+
     public Integer getId() {
         return id;
     }
@@ -247,5 +249,13 @@ public class MCoupon implements Serializable {
 
     public void setTimetype(Byte timetype) {
         this.timetype = timetype;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 }

@@ -107,9 +107,9 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 			Calendar calendar = Calendar.getInstance();
 	        calendar.setTime(now);
 	        calendar.add(Calendar.DATE, effectiveTime);
-	        ca.set(Calendar.HOUR_OF_DAY, 23);
-			ca.set(Calendar.MINUTE, 59);
-			ca.set(Calendar.SECOND, 59);
+	        calendar.set(Calendar.HOUR_OF_DAY, 23);
+	        calendar.set(Calendar.MINUTE, 59);
+	        calendar.set(Calendar.SECOND, 59);
 	        endTime = calendar.getTime();
 		}
         

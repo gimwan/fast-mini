@@ -1555,6 +1555,76 @@ public class MCouponExample {
             addCriterion("TimeType not between", value1, value2, "timetype");
             return (Criteria) this;
         }
+
+        public Criteria andHintIsNull() {
+            addCriterion("Hint is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintIsNotNull() {
+            addCriterion("Hint is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintEqualTo(String value) {
+            addCriterion("Hint =", value, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintNotEqualTo(String value) {
+            addCriterion("Hint <>", value, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintGreaterThan(String value) {
+            addCriterion("Hint >", value, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintGreaterThanOrEqualTo(String value) {
+            addCriterion("Hint >=", value, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintLessThan(String value) {
+            addCriterion("Hint <", value, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintLessThanOrEqualTo(String value) {
+            addCriterion("Hint <=", value, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintLike(String value) {
+            addCriterion("Hint like", value, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintNotLike(String value) {
+            addCriterion("Hint not like", value, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintIn(List<String> values) {
+            addCriterion("Hint in", values, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintNotIn(List<String> values) {
+            addCriterion("Hint not in", values, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintBetween(String value1, String value2) {
+            addCriterion("Hint between", value1, value2, "hint");
+            return (Criteria) this;
+        }
+
+        public Criteria andHintNotBetween(String value1, String value2) {
+            addCriterion("Hint not between", value1, value2, "hint");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

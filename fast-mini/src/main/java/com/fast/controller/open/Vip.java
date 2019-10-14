@@ -716,6 +716,35 @@ public class Vip extends MiniMaster {
 	}
 	
 	/**
+	 * 会员优惠券详情
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/vip/coupon/detail")
+	@ResponseBody
+	public String coupondetail(HttpServletRequest request, HttpServletResponse response) {
+		String result = "";
+		Result r = new Result();
+		
+		try {
+			String appid = request.getParameter("appid");
+			String openid = request.getParameter("openid");
+			String id = request.getParameter("id");
+			
+			r = iVipCouponService.queryVipCouponDetail(appid, openid, Integer.valueOf(id.trim()));			
+		} catch (Exception e) {
+			e.printStackTrace();
+			r.setMessage(e.getMessage());
+		}
+		
+		JSONObject jsonObject = JSONObject.fromObject(r);
+		result = jsonObject.toString();
+		
+		return result;
+	}
+	
+	/**
 	 * 积分记录
 	 * @param request
 	 * @param response

@@ -19,5 +19,14 @@ public interface IVipCouponService {
 	 * @return
 	 */
 	public Result queryVipCoupon(String appid, String openid, Integer type, PagingView page);
+	
+	/**
+	 * 优惠券详情
+	 * @param appid
+	 * @param openid
+	 * @param id
+	 * @return
+	 */
+	public Result queryVipCouponDetail(String appid, String openid, Integer id);
 
 }

@@ -1,7 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 
 <div class="layui-header">
-	<div class="layui-logo system-name">Fast Management</div>
+	<div class="layui-logo system-name">XINAI Management</div>
 	<ul class="layui-nav layui-layout-right">
 		<li class="layui-nav-item">
 			<a href="javascript:void(0);"> 

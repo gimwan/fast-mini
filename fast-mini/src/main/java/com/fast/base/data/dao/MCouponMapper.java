@@ -12,10 +12,10 @@ public interface MCouponMapper {
     int deleteByExample(MCouponExample example);
 
     int deleteByPrimaryKey(Integer id);
-    
+
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(MCoupon record);
-    
+
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insertSelective(MCoupon record);
 

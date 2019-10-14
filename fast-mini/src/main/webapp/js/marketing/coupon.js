@@ -107,11 +107,15 @@ function showEditBox(idx,data) {
 	let editDiv = createElement(data);
 	
 	let couponid = 0;
+	let color = "#009688";
 	let boxTitle = "<label style='font-weight:600;'>修改</label>";
 	if (idx < 0) {
 		boxTitle = "<label style='font-weight:600;'>新增</label>";
 	} else {
 		couponid = data.id;
+		if (data.color) {
+			color = data.color;
+		}
 	}
     
     layer.open({
@@ -164,6 +168,13 @@ function showEditBox(idx,data) {
         		type: 'date',
         		format: 'yyyy-MM-dd'
         	});
+        	layColorpicker.render({
+        		elem: '#colorbox',
+        		color: color,
+        		done: function (color) {
+        			$(".edit-view #color").val(color);
+        	    }
+        	});
         	// 焦点在第一项
             var val = $(".edit-view .focus").val();
             $(".edit-view .focus").val("").focus().val(val);
@@ -204,6 +215,8 @@ function createElement(data) {
 	    effectivetime : "",
 	    suitgoodstype: 0,
 	    suitdepartmenttype: 0,
+	    hint: '',
+	    color: '#009688',
 	    useflag : 1,
 	    memo : ""
     };
@@ -340,6 +353,23 @@ function createElement(data) {
 				                "</div>" +
 				            "</div>"+
 				        "</div>"+
+				        "<div class=\"edit-item\" need=\"0\" key=\"0\">" +
+					        "<div class=\"edit-title\">" +
+						        "<span class=\"title\"><label class=\"name\">颜色</label>：</span>" +
+						    "</div>"+
+						    "<div class=\"edit-value\" data-field=\"color\">" +
+						        "<input type=\"text\" id=\"color\" value=\""+d.color+"\" class=\"layui-input value hidden\" disabled/>" +
+						        "<div class=\"colorpicker\" id=\"colorbox\"></div>" +
+						    "</div>"+
+						"</div>" +
+				        "<div class=\"edit-item\" need=\"0\" key=\"0\">"+
+				            "<div class=\"edit-title\">"+
+				                "<span class=\"title\"><label class=\"name\">使用提示</label>：</span>"+
+				            "</div>"+
+				            "<div class=\"edit-value\" data-field=\"hint\">"+
+				                "<input type=\"text\" value=\""+d.hint+"\" class=\"layui-input value\"/>"+
+				            "</div>"+
+				        "</div>"+
 				        "<div class=\"edit-item layui-form\" radio=\"1\" key=\"0\">"+
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">是否使用</label>：</span>"+
@@ -452,10 +482,9 @@ function loadSuitData(id) {
         	let checkedData = [];
         	for (var i = 0; i < result.data.length; i++) {
         		let d = result.data[i];
+        		data.push(d);
         		if (d.checked == 1) {
-        			checkedData.push(d);
-				} else {
-					data.push(d);
+        			checkedData.push(d.id);
 				}
 			}
         	
@@ -486,10 +515,9 @@ function loadSuitData(id) {
         	let checkedData = [];
         	for (var i = 0; i < result.data.length; i++) {
         		let d = result.data[i];
+        		data.push(d);
         		if (d.checked == 1) {
-        			checkedData.push(d);
-				} else {
-					data.push(d);
+        			checkedData.push(d.id);
 				}
 			}
         	
