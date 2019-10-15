@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -182,6 +183,8 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	private boolean updateVipPointRecordLock = false;
 	// 更新储值记录锁
 	private boolean updateVipDepositRecordLock = false;
+	// 推送优惠券任务锁
+	private boolean pushCouponLock = false;
 
 	/**
 	 * 同步数据
@@ -1294,7 +1297,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 					if (Common.isActive(result)) {
 						String extid = result.getId() == null ? "" : result.getId().toString();
-						if (Common.isEmpty(extid)) {
+						if (!Common.isEmpty(extid)) {
 							order.setExtid(extid);
 							order.setUpdatedtime(new Date());
 							orderMapper.updateByPrimaryKeySelective(order);
@@ -1387,7 +1390,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 					if (Common.isActive(result)) {
 						String extid = result.getId() == null ? "" : result.getId().toString();
-						if (Common.isEmpty(extid)) {
+						if (!Common.isEmpty(extid)) {
 							vip.setExtid(extid.trim());
 							vip.setUpdatedtime(new Date());
 							vipMapper.updateByPrimaryKeySelective(vip);
@@ -1534,7 +1537,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
 					/*if (Common.isActive(result)) {
 						String extid = result.getId() == null ? "" : result.getId().toString();
-						if (Common.isEmpty(extid)) {
+						if (!Common.isEmpty(extid)) {
 							vip.setExtid(extid.trim());
 							vip.setUpdatedtime(new Date());
 							vipMapper.updateByPrimaryKeySelective(vip);
@@ -1574,10 +1577,10 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				result.setMessage("接口配置错误");
 				return result;
 			}
-			String sql = "select * from m_vip where useflag=1 and (extid is null or extid='') order by id asc";
+			String sql = "select id from m_vip where useflag=1 and (extid is null or extid='') order by id asc";
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
-				list = CommonUtil.transformUpperCase(list);
+				//list = CommonUtil.transformUpperCase(list);
 				for (int i = 0; i < list.size(); i++) {
 					try {
 						Result r = putVip(extsystem, Integer.valueOf(list.get(i).get("id").toString()));
@@ -1588,7 +1591,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 						}
 					} catch (Exception e) {
 						System.out.println("推送会员失败：vipid="+list.get(i).get("id").toString());
-						FastLog.error("调用VipMaintServiceImpl.pushVipTask推送会员报错：", e);
+						FastLog.error("调用ExtMaintServiceImpl.pushVipTask推送会员报错：", e);
 						continue;
 					}
 				}
@@ -1596,7 +1599,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
-			FastLog.error("调用VipMaintServiceImpl.pushVipTask报错：", e);
+			FastLog.error("调用ExtMaintServiceImpl.pushVipTask报错：", e);
 		} finally {
 			pushVipTaskLock = false;
 		}
@@ -1628,17 +1631,17 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 			
 			cancelOrderTaskLock = true;
 			
-			String sql = "select * from m_order where status=1 and datediff(minute, createtime, getdate())>=" + min + " order by createtime asc";
+			String sql = "select id from m_order where status=1 and datediff(minute, createtime, getdate())>=" + min + " order by createtime asc";
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
-				list = CommonUtil.transformUpperCase(list);
+				//list = CommonUtil.transformUpperCase(list);
 				for (int i = 0; i < list.size(); i++) {
 					try {
 						MOrder order = orderMapper.selectByPrimaryKey(Integer.valueOf(list.get(i).get("id").toString()));
 						iOrderMaintService.rollbackOrder(order);
 					} catch (Exception e) {
 						System.out.println("订单自动取消失败：orderid="+list.get(i).get("id").toString());
-						FastLog.error("调用OrderMaintServiceImpl.cancelOrderTask修改订单状态报错：", e);
+						FastLog.error("调用ExtMaintServiceImpl.cancelOrderTask修改订单状态报错：", e);
 						continue;
 					}
 				}
@@ -1646,7 +1649,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
-			FastLog.error("调用OrderMaintServiceImpl.cancelOrderTask报错：", e);
+			FastLog.error("调用ExtMaintServiceImpl.cancelOrderTask报错：", e);
 		} finally {
 			cancelOrderTaskLock = false;
 		}
@@ -1679,10 +1682,10 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				result.setMessage("接口配置错误");
 				return result;
 			}
-			String sql = "select * from m_order where status>=3 and (extid is null or extid='') order by deliverertime asc";
+			String sql = "select id from m_order where status>=3 and (extid is null or extid='') order by deliverertime asc";
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
-				list = CommonUtil.transformUpperCase(list);
+				//list = CommonUtil.transformUpperCase(list);
 				for (int i = 0; i < list.size(); i++) {
 					try {
 						Result r = putOrder(extsystem, Integer.valueOf(list.get(i).get("id").toString()));
@@ -1693,7 +1696,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 						}
 					} catch (Exception e) {
 						System.out.println("推送订单失败：orderid="+list.get(i).get("id").toString());
-						FastLog.error("调用OrderMaintServiceImpl.pushOrderTask推送订单报错：", e);
+						FastLog.error("调用ExtMaintServiceImpl.pushOrderTask推送订单报错：", e);
 						continue;
 					}
 				}
@@ -1701,7 +1704,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
-			FastLog.error("调用OrderMaintServiceImpl.pushOrderTask报错：", e);
+			FastLog.error("调用ExtMaintServiceImpl.pushOrderTask报错：", e);
 		} finally {
 			pushOrderTaskLock = false;
 		}
@@ -1734,16 +1737,17 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				result.setMessage("接口配置错误");
 				return result;
 			}
-			String sql = "select * from m_order where status>=2 and distributionflag=1 and (extid is null or extid='') order by distributiontime asc,createtime asc";
+			String sql = "select id,no from m_order where status>=2 and distributionflag=1 and (extid is null or extid='') order by distributiontime asc,createtime asc";
 			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
 			if (list != null && list.size() > 0) {
-				list = CommonUtil.transformUpperCase(list);
+				//list = CommonUtil.transformUpperCase(list);
 				for (int i = 0; i < list.size(); i++) {
 					try {
 						Result r = iExtService.queryOrderStatus(extsystem, list.get(i).get("no").toString());
 						if (Common.isActive(r)) {
 							com.alibaba.fastjson.JSONObject jObject = com.alibaba.fastjson.JSONObject.parseObject(r.getData().toString());
 							if (jObject != null && !jObject.isEmpty()) {
+								System.out.println(jObject.toString());
 								String state = jObject.get("state") == null ? "" : jObject.getString("state");
 								if (!Common.isEmpty(state) && "已完成".equals(state)) {
 									MOrder order = orderMapper.selectByPrimaryKey(Integer.valueOf(list.get(i).get("id").toString()));
@@ -1757,7 +1761,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 						}
 					} catch (Exception e) {
 						System.out.println("更新订单状态失败：orderid="+list.get(i).get("id").toString());
-						FastLog.error("调用OrderMaintServiceImpl.changeOrderStatusTask更新订单状态报错：", e);
+						FastLog.error("调用ExtMaintServiceImpl.changeOrderStatusTask更新订单状态报错：", e);
 						continue;
 					}
 				}
@@ -1765,7 +1769,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setMessage(e.getMessage());
-			FastLog.error("调用OrderMaintServiceImpl.changeOrderStatusTask报错：", e);
+			FastLog.error("调用ExtMaintServiceImpl.changeOrderStatusTask报错：", e);
 		} finally {
 			changeOrderStatusTaskLock = false;
 		}
@@ -1829,7 +1833,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
-			FastLog.error("调用OrderMaintServiceImpl.updateVipPointRecord报错：", e);
+			FastLog.error("调用ExtMaintServiceImpl.updateVipPointRecord报错：", e);
 		} finally {
 			// 解锁
 			updateVipPointRecordLock = false;
@@ -1857,7 +1861,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 					vippointrecord.setExtid(object.getString("id"));
 					vippointrecordMapper.insertSelective(vippointrecord);
 				} catch (Exception e) {
-					FastLog.error("调用OrderMaintServiceImpl.updatePointRecord报错：", e);
+					FastLog.error("调用ExtMaintServiceImpl.updatePointRecord报错：", e);
 				}							
 			}
 		}
@@ -1917,7 +1921,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
-			FastLog.error("调用OrderMaintServiceImpl.updateVipDepositRecord报错：", e);
+			FastLog.error("调用ExtMaintServiceImpl.updateVipDepositRecord报错：", e);
 		} finally {
 			// 解锁
 			updateVipDepositRecordLock = false;
@@ -1945,10 +1949,252 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 					vipdepositrecord.setExtid(object.getString("id"));
 					vipdepositrecordMapper.insertSelective(vipdepositrecord);
 				} catch (Exception e) {
-					FastLog.error("调用OrderMaintServiceImpl.updateDepositRecord报错：", e);
+					FastLog.error("调用ExtMaintServiceImpl.updateDepositRecord报错：", e);
 				}							
 			}
 		}
+	}
+	
+	@Override
+	public Result pushCouponTask() {
+		System.out.println("推送优惠券开始...");
+		Result result = new Result();
+
+		try {
+			if (pushCouponLock) {
+				return result;
+			}
+			MExtsystem extsystem = null;
+			MExtsystemExample extsystemExample = new MExtsystemExample();
+			extsystemExample.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(extsystemExample);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			
+			// 上锁
+			pushCouponLock = true;
+			
+			String sql = "select id from m_coupon where useflag=1 and (extid is null or extid='') order by createtime asc";
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				//list = CommonUtil.transformUpperCase(list);
+				for (int i = 0; i < list.size(); i++) {
+					Result r = createCoupon(extsystem, Integer.valueOf(list.get(i).get("id").toString()));
+					if (!Common.isActive(r)) {
+						System.out.println("推送优惠券失败，couponid=" + list.get(i).get("id").toString());
+					}
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.pushCouponTask报错：", e);
+		} finally {
+			// 解锁
+			pushCouponLock = false;
+		}
+		
+		System.out.println("推送优惠券结束...");
+		return result;
+	}
+	
+	@Override
+	public Result createCoupon(MExtsystem extsystem, Integer id) {
+		Result result = new Result();
+
+		try {
+			MCoupon coupon = couponMapper.selectByPrimaryKey(id);
+			if (coupon == null || coupon.getId() == null) {
+				result.setMessage("优惠券无效");
+				return result;
+			}
+			
+			JSONObject jsonObject = couponPostData(coupon);
+			
+			String url = extsystem.getServeraddress() + "/api/coupon/create";
+			net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+				if (Common.isActive(result)) {
+					String extid = result.getId() == null ? "" : result.getId().toString();
+					if (!Common.isEmpty(extid)) {
+						coupon.setExtid(extid);
+						coupon.setUpdatedtime(new Date());
+						couponMapper.updateByPrimaryKeySelective(coupon);						
+					}
+					if (coupon.getSuitgoodstype().intValue() == 1) {
+						changeCouponSuitGoods(extsystem, coupon.getId());
+					}
+					if (coupon.getSuitdepartmenttype().intValue() == 1) {
+						changeCouponSuitDepartments(extsystem, coupon.getId());
+					}
+					result.setErrcode(Integer.valueOf(0));
+					result.setId(coupon.getId());
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.createCoupon报错：", e);
+		}
+		
+		return result;
+	}
+	
+	private JSONObject couponPostData(MCoupon coupon) {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("ticketNo",  coupon.getCode() == null ? "" : coupon.getCode());
+		jsonObject.put("ticketName", coupon.getName());
+		jsonObject.put("color", coupon.getColor() == null ? "" : coupon.getColor());
+		jsonObject.put("hint",  coupon.getHint() == null ? "" : coupon.getHint());
+		jsonObject.put("memo",  coupon.getMemo() == null ? "" : coupon.getMemo());
+		jsonObject.put("minConsumption",  coupon.getEnableamount() == null ? BigDecimal.ZERO : coupon.getEnableamount());
+		jsonObject.put("parUse",  0);
+		jsonObject.put("parVIP",  coupon.getLimitquantity() == null ? 0 : coupon.getLimitquantity());
+		jsonObject.put("parValue",  coupon.getAmount() == null ? BigDecimal.ZERO : coupon.getAmount());
+		jsonObject.put("pringTing",  coupon.getTotalquantity() == null ? 0 : coupon.getTotalquantity());
+		jsonObject.put("useScene",  coupon.getSuitgoodstype() == 1 ? 3 : 1);
+		jsonObject.put("useShop",  coupon.getSuitdepartmenttype() == 1 ? 3 : 1);		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		jsonObject.put("created",  sdf.format(coupon.getCreatetime()));
+		jsonObject.put("creater",  coupon.getCreator());	
+		if (coupon.getTimetype().intValue() == 1) {
+			sdf = new SimpleDateFormat("yyyy-MM-dd");			
+			jsonObject.put("beginTime", sdf.format(coupon.getBegintime()));
+			jsonObject.put("endTime", sdf.format(coupon.getBegintime()));
+		}
+		return jsonObject;
+	}
+	
+	@Override
+	public Result updateCoupon(Integer id) {
+		Result result = new Result();
+
+		try {
+			MExtsystem extsystem = null;
+			MExtsystemExample extsystemExample = new MExtsystemExample();
+			extsystemExample.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(extsystemExample);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			
+			MCoupon coupon = couponMapper.selectByPrimaryKey(id);
+			if (coupon == null || coupon.getId() == null) {
+				result.setMessage("优惠券无效");
+				return result;
+			}
+			
+			JSONObject jsonObject = couponPostData(coupon);
+			
+			String url = extsystem.getServeraddress() + "/api/coupon/update";
+			net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+			if (object != null) {
+				result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+				if (Common.isActive(result)) {
+					String extid = result.getId() == null ? "" : result.getId().toString();
+					if (!Common.isEmpty(extid)) {
+						coupon.setExtid(extid);
+						coupon.setUpdatedtime(new Date());
+						couponMapper.updateByPrimaryKeySelective(coupon);						
+					}
+					if (coupon.getSuitgoodstype().intValue() == 1) {
+						changeCouponSuitGoods(extsystem, coupon.getId());
+					}
+					if (coupon.getSuitdepartmenttype().intValue() == 1) {
+						changeCouponSuitDepartments(extsystem, coupon.getId());
+					}
+					result.setErrcode(Integer.valueOf(0));
+					result.setId(coupon.getId());					
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.updateCoupon报错：", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public Result changeCouponSuitGoods(MExtsystem extsystem, Integer id) {
+		Result result = new Result();
+
+		try {
+			String sql = "select b.id,b.extid as couponid,c.extid as goodsid "
+					+ "from m_coupongoods a "
+					+ "inner join m_coupon b on a.couponid=b.id "
+					+ "inner join m_goods c on a.goodsid=c.id "
+					+ "where b.extid is not null and b.extid<>'' and c.extid is not null and c.extid<>'' and a.couponid=" + id.toString();
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				String ticketID = list.get(0).get("couponid").toString();
+				List<String> goodsidList = new ArrayList<String>();
+				for (int i = 0; i < list.size(); i++) {
+					String goodsid = list.get(i).get("goodsid").toString();
+					if (!goodsidList.contains(goodsid)) {
+						goodsidList.add(goodsid);
+					}					
+				}
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("ticketID", ticketID);
+				jsonObject.put("goodsID", StringUtils.join(goodsidList.toArray(), ","));
+				String url = extsystem.getServeraddress() + "/api/coupon/saveCouponGoods";
+				net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+				if (object != null) {
+					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.changeCouponSuitGoods报错：", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public Result changeCouponSuitDepartments(MExtsystem extsystem, Integer id) {
+		Result result = new Result();
+
+		try {
+			String sql = "select b.id,b.extid as couponid,c.extid as departmentid "
+					+ "from m_coupondepartment a "
+					+ "inner join m_coupon b on a.couponid=b.id "
+					+ "inner join m_department c on a.departmentid=c.id "
+					+ "where b.extid is not null and b.extid<>'' and c.extid is not null and c.extid<>'' and a.couponid=" + id.toString();
+			List<LinkedHashMap<String, Object>> list = dataMapper.pageList(sql);
+			if (list != null && list.size() > 0) {
+				String ticketID = list.get(0).get("couponid").toString();
+				List<String> departmentidList = new ArrayList<String>();
+				for (int i = 0; i < list.size(); i++) {
+					String departmentid = list.get(i).get("departmentid").toString();
+					if (!departmentidList.contains(departmentid)) {
+						departmentidList.add(departmentid);
+					}					
+				}
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("ticketID", ticketID);
+				jsonObject.put("departmentID", StringUtils.join(departmentidList.toArray(), ","));
+				String url = extsystem.getServeraddress() + "/api/coupon/saveCouponDept";
+				net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+				if (object != null) {
+					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.changeCouponSuitDepartments报错：", e);
+		}
+		
+		return result;
 	}
 
 }

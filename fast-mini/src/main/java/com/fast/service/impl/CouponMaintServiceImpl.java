@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
 import com.fast.base.Result;
 import com.fast.base.data.dao.MCouponMapper;
 import com.fast.base.data.dao.MCoupondepartmentMapper;
@@ -22,6 +21,7 @@ import com.fast.base.data.entity.MCoupongoodsExample;
 import com.fast.base.data.entity.MUser;
 import com.fast.service.ICouponMaintService;
 import com.fast.service.IDataService;
+import com.fast.service.ext.IExtMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.BeanUtil;
 import com.fast.util.Common;
@@ -47,6 +47,9 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 	
 	@Autowired
 	MCoupondepartmentMapper mCoupondepartmentMapper;
+	
+	@Autowired
+	IExtMaintService iExtMaintService;
 
 	@Override
 	public Result changeCoupon(MCoupon coupon, MUser user, String suitGoodsStr, String suitDepartmentsStr) {
@@ -71,6 +74,10 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 				Result r = iDataService.one("coupon", Integer.valueOf(result.getId().toString()));
 				if (Common.isActive(r)) {
 					result.setData(r.getData());
+				}
+				
+				if (coupon.getModifytime() != null) {
+					syncCoupon(coupon.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -139,6 +146,34 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 		result.setId(mCoupon.getId());
 		result.setMessage("保存成功");
 		return result;
+	}
+	
+	public void syncCoupon(Integer couponid) {
+		try {
+			syncCouponThread thread = new syncCouponThread();
+            thread.setCouponid(couponid);
+            Thread t = new Thread(thread);
+            t.start();
+		} catch (Exception e) {
+			FastLog.error("调用CouponMaintServiceImpl.syncCoupon报错：", e);
+		}
+	}
+	
+	public class syncCouponThread implements Runnable {
+		private Integer couponid;	
+		
+		public Integer getCouponid() {
+			return couponid;
+		}
+		
+		public void setCouponid(Integer couponid) {
+			this.couponid = couponid;
+		}
+		
+		@Override
+		public void run() {
+			iExtMaintService.updateCoupon(couponid);
+		}
 	}
 
 	@Override

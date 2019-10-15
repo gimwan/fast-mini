@@ -428,6 +428,7 @@ public class VipMaintServiceImpl implements IVipMaintService, Serializable {
 			FastLog.error("调用VipMaintServiceImpl.syncVip报错：", e);
 		}
 	}
+	
 	public class syncVipThread implements Runnable {
 		private Integer vipid;		
 		public Integer getVipid() {

@@ -307,7 +307,7 @@ function createElement(data) {
 				                "</div>" +
 				            "</div>"+
 				        "</div>"+
-				        "<div class=\"edit-item\" need=\"1\" key=\"0\" follow=\"timetype\" "+(d.timetype==1?'':'hidden')+">"+
+				        "<div class=\"edit-item\" need=\""+(d.timetype==1?'1':'0')+"\" key=\"0\" follow=\"timetype\" "+(d.timetype==1?'':'hidden')+">"+
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">生效日期</label>：</span>"+
 				            "</div>"+
@@ -315,7 +315,7 @@ function createElement(data) {
 				                "<input type=\"text\" value=\""+common.formatDay(d.begintime)+"\" id=\"beginDate\" class=\"layui-input timechoosed value\" readonly=\"readonly\"/>"+
 				            "</div>"+
 				        "</div>"+
-				        "<div class=\"edit-item\" need=\"1\" key=\"0\" follow=\"timetype\" "+(d.timetype==1?'':'hidden')+">"+
+				        "<div class=\"edit-item\" need=\""+(d.timetype==1?'1':'0')+"\" key=\"0\" follow=\"timetype\" "+(d.timetype==1?'':'hidden')+">"+
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">失效日期</label>：</span>"+
 				            "</div>"+
@@ -323,7 +323,7 @@ function createElement(data) {
 				                "<input type=\"text\" value=\""+common.formatDay(d.endtime)+"\" id=\"endDate\" class=\"layui-input timechoosed value\" readonly=\"readonly\"/>"+
 				            "</div>"+
 				        "</div>"+
-				        "<div class=\"edit-item\" need=\"1\" key=\"0\" follow=\"timetype\" "+(d.timetype==1?'hidden':'')+">"+
+				        "<div class=\"edit-item\" need=\""+(d.timetype==1?'0':'1')+"\" key=\"0\" follow=\"timetype\" "+(d.timetype==1?'hidden':'')+">"+
 				            "<div class=\"edit-title\">"+
 				                "<span class=\"title\"><label class=\"name\">有效天数</label>：</span>"+
 				            "</div>"+
@@ -433,10 +433,14 @@ function timeTypeClick() {
 		var val = $(this).prev().val();
 		if (val == "1") {
 			$(".edit-view .edit-item[follow='timetype']").removeAttr("hidden","hidden");
-			$(".edit-view .edit-item[follow='timetype'] .edit-value[data-field='effectivetime']").parent().attr("hidden","hidden");			
+			$(".edit-view .edit-item[follow='timetype']").attr("need","1");
+			$(".edit-view .edit-item[follow='timetype'] .edit-value[data-field='effectivetime']").parent().attr("hidden","hidden");
+			$(".edit-view .edit-item[follow='timetype'] .edit-value[data-field='effectivetime']").parent().attr("need","0");
 		} else {
 			$(".edit-view .edit-item[follow='timetype']").attr("hidden","hidden");
-			$(".edit-view .edit-item[follow='timetype'] .edit-value[data-field='effectivetime']").parent().removeAttr("hidden","hidden");			
+			$(".edit-view .edit-item[follow='timetype']").attr("need","0");
+			$(".edit-view .edit-item[follow='timetype'] .edit-value[data-field='effectivetime']").parent().removeAttr("hidden","hidden");	
+			$(".edit-view .edit-item[follow='timetype'] .edit-value[data-field='effectivetime']").parent().attr("need","1");
 		}
 		$(".edit-view .edit-item[follow='timetype'] .edit-value .value").val("");
 	});

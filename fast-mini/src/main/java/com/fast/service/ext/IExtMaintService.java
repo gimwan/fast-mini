@@ -100,6 +100,36 @@ public interface IExtMaintService {
 	public Result updateVipDepositRecord(Integer vipid);
 	
 	/**
+	 * 新增优惠券
+	 * @param id
+	 * @return
+	 */
+	public Result createCoupon(MExtsystem extsystem, Integer id);
+	
+	/**
+	 * 修改优惠券
+	 * @param id
+	 * @return
+	 */
+	public Result updateCoupon(Integer id);
+	
+	/**
+	 * 更新优惠券适用商品
+	 * @param extsystem
+	 * @param id
+	 * @return
+	 */
+	public Result changeCouponSuitGoods(MExtsystem extsystem, Integer id);
+	
+	/**
+	 * 更新优惠券适用商品
+	 * @param extsystem
+	 * @param id
+	 * @return
+	 */
+	public Result changeCouponSuitDepartments(MExtsystem extsystem, Integer id);
+	
+	/**
 	 * 定时任务
 	 * 推送会员
 	 * @return
@@ -126,5 +156,12 @@ public interface IExtMaintService {
 	 * @return
 	 */
 	public Result changeOrderStatusTask();
+	
+	/**
+	 * 定时任务
+	 * 创建优惠券
+	 * @return
+	 */
+	public Result pushCouponTask();
 
 }

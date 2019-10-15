@@ -24,7 +24,9 @@ public class QuartzTask {
 			// 更新订单状态
 			iExtMaintService.changeOrderStatusTask();
 			// 推送订单
-			iExtMaintService.pushOrderTask();			
+			iExtMaintService.pushOrderTask();
+			// 推送优惠券
+			iExtMaintService.pushCouponTask();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

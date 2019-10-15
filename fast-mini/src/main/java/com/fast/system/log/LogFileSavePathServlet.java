@@ -34,7 +34,7 @@ public class LogFileSavePathServlet extends HttpServlet {
 
 		String rootPath = this.getServletContext().getRealPath("/");
 		// 获得log4j.properties的输入流
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("log4j.properties");
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("config/log4j.properties");
 		Properties prop = new Properties();
 		try {
 			prop.load(is);
