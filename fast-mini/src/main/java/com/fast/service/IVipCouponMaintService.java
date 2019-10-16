@@ -26,5 +26,13 @@ public interface IVipCouponMaintService {
 	 * @return
 	 */
 	public Result gainVipCoupon(String appid, String openid, Integer id);
+	
+	/**
+	 * 适用优惠券
+	 * @param code
+	 * @param vipcode
+	 * @return
+	 */
+	public Result useVipCoupon(String code, String vipcode);
 
 }

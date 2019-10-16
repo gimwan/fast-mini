@@ -164,11 +164,20 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 				order.setBaseamount(baseAmount);
 				order.setSaleamount(saleAmount);
 				order.setDiscount(discount);
-				order.setDiscountmoney(discountMoney);
-				order.setDeposit(deposit);
-				order.setPoint(point);
-				order.setPointrate(pointRate);
-				order.setPointmoney(pointMoney);
+				order.setDiscountmoney(discountMoney);				
+				if (usepoint.intValue() == 1) {					
+					order.setPoint(point);
+					order.setPointmoney(pointMoney);
+				} else {
+					order.setPoint(0);
+					order.setPointmoney(BigDecimal.ZERO);
+				}
+				if (usedeposit.intValue() == 1) {
+					order.setDeposit(deposit);
+				} else {
+					order.setDeposit(BigDecimal.ZERO);
+				}
+				order.setPointrate(pointRate);				
 				order.setCouponid(couponid);
 				order.setCouponmoney(couponmMoney);
 				order.setPaymoney(payMoney);
@@ -252,12 +261,15 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 			cartidList.add(Integer.valueOf(goodsList.get(i).get("id").toString()));
 		}
 		// 核销优惠券
+		boolean isUuedCoupon = false;
 		if (order.getCouponid() != null && order.getCouponid().intValue() > 0) {
 			MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(order.getCouponid());
 			if (vipcoupon != null && vipcoupon.getId() != null && vipcoupon.getUseflag().intValue() != 1) {
 				vipcoupon.setUseflag(Byte.valueOf("1"));
 				vipcoupon.setUsetime(order.getUpdatedtime());
+				vipcoupon.setUpdatedtime(order.getUpdatedtime());
 				vipcouponMapper.updateByPrimaryKeySelective(vipcoupon);
+				isUuedCoupon = true;
 			}
 		}
 		// 扣减积分、储值，记录积分、储值流水
@@ -285,6 +297,9 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		vipcartExample.createCriteria().andVipidEqualTo(order.getVipid()).andIdIn(cartidList);
 		vipcartMapper.deleteByExample(vipcartExample);
 		
+		if (isUuedCoupon) {
+			usedCoupon(order.getCouponid());
+		}
 		if (updatePoint) {
 			markdownVipPointRecord(order.getVipid(), order.getPoint() * -1, vipaccount.getPoint(), order.getId(), Byte.valueOf("1"), "订单支付");
 		}
@@ -306,6 +321,15 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 	private void markdownVipDepositRecord(Integer vipid, BigDecimal deposit, BigDecimal surplusDeposit, Integer refid, Byte type, String reason) {
 		try {
 			iVipDepositRecordMaintService.markdownVipDepositRecord(vipid, deposit, surplusDeposit, refid, type, reason);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void usedCoupon(Integer couponid) {
+		try {
+			MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(couponid);
+			iExtMaintService.pushVipCouponStatus(vipcoupon);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -604,11 +628,13 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		}
 		
 		// 返还优惠券
+		boolean updateCoupon = false;
 		if (order.getCouponid() != null && order.getCouponid().intValue() > 0) {
 			MVipcoupon vipcoupon = vipcouponMapper.selectByPrimaryKey(order.getCouponid());
 			if (vipcoupon != null && vipcoupon.getId() != null && vipcoupon.getUseflag().intValue() != 1) {
 				vipcoupon.setUseflag(Byte.valueOf("0"));
 				vipcouponMapper.updateByPrimaryKeySelective(vipcoupon);
+				updateCoupon = true;
 			}
 		}
 		
@@ -650,6 +676,9 @@ public class OrderMaintServiceImpl implements IOrderMaintService, Serializable {
 		order.setUpdatedtime(now);
 		orderMapper.updateByPrimaryKeySelective(order);
 		
+		if (updateCoupon) {
+			usedCoupon(order.getCouponid());
+		}
 		if (updatePoint) {
 			markdownVipPointRecord(order.getVipid(), order.getPoint(), vipaccount.getPoint(), order.getId(), Byte.valueOf("2"), "退订单支付");
 		}

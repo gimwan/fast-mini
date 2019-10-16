@@ -12,6 +12,7 @@ import com.fast.base.Result;
 import com.fast.base.data.dao.MCouponMapper;
 import com.fast.base.data.dao.MCoupondepartmentMapper;
 import com.fast.base.data.dao.MCoupongoodsMapper;
+import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.entity.MCoupon;
 import com.fast.base.data.entity.MCouponExample;
 import com.fast.base.data.entity.MCoupondepartment;
@@ -19,6 +20,7 @@ import com.fast.base.data.entity.MCoupondepartmentExample;
 import com.fast.base.data.entity.MCoupongoods;
 import com.fast.base.data.entity.MCoupongoodsExample;
 import com.fast.base.data.entity.MUser;
+import com.fast.base.data.entity.MVipcouponExample;
 import com.fast.service.ICouponMaintService;
 import com.fast.service.IDataService;
 import com.fast.service.ext.IExtMaintService;
@@ -43,13 +45,16 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 	IDataService iDataService;
 	
 	@Autowired
-	MCoupongoodsMapper mCoupongoodsMapper;
+	MCoupongoodsMapper coupongoodsMapper;
 	
 	@Autowired
-	MCoupondepartmentMapper mCoupondepartmentMapper;
+	MCoupondepartmentMapper coupondepartmentMapper;
 	
 	@Autowired
 	IExtMaintService iExtMaintService;
+	
+	@Autowired
+	MVipcouponMapper vipcouponMapper;
 
 	@Override
 	public Result changeCoupon(MCoupon coupon, MUser user, String suitGoodsStr, String suitDepartmentsStr) {
@@ -110,7 +115,7 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 		
 		MCoupongoodsExample coupongoodsExample = new MCoupongoodsExample();
 		coupongoodsExample.createCriteria().andCouponidEqualTo(mCoupon.getId());
-		mCoupongoodsMapper.deleteByExample(coupongoodsExample);
+		coupongoodsMapper.deleteByExample(coupongoodsExample);
 		
 		if (mCoupon.getSuitgoodstype().intValue() == 1) {
 			String suitGoodsData = Common.unescape(suitGoodsStr);
@@ -121,13 +126,13 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 				coupongoods.setGoodsid(Integer.valueOf(suitGoodsArray[i]));
 				coupongoods.setShowindex(i);
 				coupongoods.setUpdatedtime(now);
-				mCoupongoodsMapper.insertSelective(coupongoods);
+				coupongoodsMapper.insertSelective(coupongoods);
 			}
 		}
 		
 		MCoupondepartmentExample coupondepartmentExample = new MCoupondepartmentExample();
 		coupondepartmentExample.createCriteria().andCouponidEqualTo(mCoupon.getId());
-		mCoupondepartmentMapper.deleteByExample(coupondepartmentExample);
+		coupondepartmentMapper.deleteByExample(coupondepartmentExample);
 		
 		if (mCoupon.getSuitdepartmenttype().intValue() ==1) {
 			String suitDepartmentsData = Common.unescape(suitDepartmentsStr);
@@ -138,7 +143,7 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 				coupondepartment.setDepartmentid(Integer.valueOf(suitDepartmentsArray[i]));
 				coupondepartment.setShowindex(i);
 				coupondepartment.setUpdatedtime(now);
-				mCoupondepartmentMapper.insertSelective(coupondepartment);
+				coupondepartmentMapper.insertSelective(coupondepartment);
 			}
 		}
 		
@@ -181,6 +186,13 @@ public class CouponMaintServiceImpl implements ICouponMaintService, Serializable
 		Result result = new Result();
 
 		try {
+			MVipcouponExample example = new MVipcouponExample();
+			example.createCriteria().andCouponidEqualTo(id);
+			int hadNumber = vipcouponMapper.countByExample(example);
+			if (hadNumber > 0) {
+				result.setMessage("优惠券已被领用，不能删除！");
+				return result;
+			}
 			int i = couponMapper.deleteByPrimaryKey(id);
 			if (i > 0) {
 				result.setErrcode(0);

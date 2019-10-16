@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fast.service.ext.IExtMaintService;
+import com.fast.system.log.FastLog;
 
 public class QuartzTask {
 	
@@ -27,6 +28,9 @@ public class QuartzTask {
 			iExtMaintService.pushOrderTask();
 			// 推送优惠券
 			iExtMaintService.pushCouponTask();
+			// 推送会员优惠券
+			iExtMaintService.pushVipCouponTask();
+			FastLog.debug("test");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

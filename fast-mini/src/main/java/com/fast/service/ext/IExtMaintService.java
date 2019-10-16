@@ -1,9 +1,11 @@
 package com.fast.service.ext;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.fast.base.Result;
 import com.fast.base.data.entity.MExtsystem;
+import com.fast.base.data.entity.MVipcoupon;
 
 /**
  * 外部接口
@@ -130,6 +132,20 @@ public interface IExtMaintService {
 	public Result changeCouponSuitDepartments(MExtsystem extsystem, Integer id);
 	
 	/**
+	 * 推送优惠券给会员
+	 * @param vipcouponsList
+	 * @return
+	 */
+	public Result pushVipCoupon(List<MVipcoupon> vipcouponsList);
+	
+	/**
+	 * 更改会员优惠券状态
+	 * @param vipcoupon
+	 * @return
+	 */
+	public Result pushVipCouponStatus(MVipcoupon vipcoupon);
+	
+	/**
 	 * 定时任务
 	 * 推送会员
 	 * @return
@@ -163,5 +179,12 @@ public interface IExtMaintService {
 	 * @return
 	 */
 	public Result pushCouponTask();
+	
+	/**
+	 * 定时任务
+	 * 推送会员优惠券
+	 * @return
+	 */
+	public Result pushVipCouponTask();
 
 }

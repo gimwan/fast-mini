@@ -407,6 +407,8 @@ public class OrderServiceImpl implements IOrderService, Serializable {
 			map.put("pointmoney", pointMoney);
 			map.put("deposit", deposit);
 			map.put("paymoney", paymoney);
+			map.put("usepoint", usepoint);
+			map.put("usedeposit", usedeposit);
 			
 			result.setErrcode(Integer.valueOf(0));
 			result.setData(map);

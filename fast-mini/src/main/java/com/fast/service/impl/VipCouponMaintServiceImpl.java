@@ -1,8 +1,10 @@
 package com.fast.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fast.base.Result;
 import com.fast.base.data.dao.MCouponMapper;
+import com.fast.base.data.dao.MVipMapper;
 import com.fast.base.data.dao.MVipcouponMapper;
 import com.fast.base.data.entity.MCoupon;
 import com.fast.base.data.entity.MMiniprogram;
+import com.fast.base.data.entity.MVip;
 import com.fast.base.data.entity.MVipcoupon;
 import com.fast.base.data.entity.MVipcouponExample;
 import com.fast.base.data.entity.MVipmini;
 import com.fast.service.IMiniProgramService;
 import com.fast.service.IVipCouponMaintService;
 import com.fast.service.IVipMiniService;
+import com.fast.service.ext.IExtMaintService;
 import com.fast.system.log.FastLog;
 import com.fast.util.Common;
+import com.fast.util.CommonUtil;
 
 /**
  * 优惠券
@@ -44,6 +50,12 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 
 	@Autowired
 	IVipMiniService iVipMiniService;
+	
+	@Autowired
+	MVipMapper vipMapper;
+	
+	@Autowired
+	IExtMaintService iExtMaintService;
 	
 	@Override
 	public Result addVipCoupon(Integer couponID, Integer VipID, Integer quantity) {
@@ -78,9 +90,18 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 				}
 			}
 			
-			saveData(VipID, coupon, quantity);
-	        
-	        result.setErrcode(Integer.valueOf(0));
+			List<MVipcoupon> vipcouponsList = saveData(VipID, coupon, quantity);
+			result.setErrcode(Integer.valueOf(0));
+			
+			try {
+				pushVipCouponThread thread = new pushVipCouponThread();
+				thread.setVipcouponsList(vipcouponsList);
+				Thread t = new Thread(thread);
+	            t.start();
+			} catch (Exception e) {
+				e.printStackTrace();
+				FastLog.error("调用VipCouponMaintServiceImpl.pushVipCouponThread报错：", e);
+			}
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 			FastLog.error("调用VipCouponMaintServiceImpl.addVipCoupon报错：", e);
@@ -90,9 +111,9 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
-	public void saveData(Integer vipid, MCoupon coupon, Integer quantity) {
-		Date now = new Date();
-		
+	public List<MVipcoupon> saveData(Integer vipid, MCoupon coupon, Integer quantity) {
+		List<MVipcoupon>vipcouponsList = new ArrayList<MVipcoupon>();
+		Date now = new Date();		
 		Date beginTime = coupon.getBegintime();
 		Date endTime = coupon.getBegintime();		
 		if (coupon.getTimetype().intValue() == 2) {
@@ -126,6 +147,26 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 	        vipcoupon.setUpdatedtime(now);
 	        vipcoupon.setCode(getCouponCode());
 	        vipcouponMapper.insertSelective(vipcoupon);
+	        vipcouponsList.add(vipcoupon);
+		}
+		
+		return vipcouponsList;
+	}
+	
+	public class pushVipCouponThread implements Runnable {
+		List<MVipcoupon> vipcouponsList;
+
+		public List<MVipcoupon> getVipcouponsList() {
+			return vipcouponsList;
+		}
+
+		public void setVipcouponsList(List<MVipcoupon> vipcouponsList) {
+			this.vipcouponsList = vipcouponsList;
+		}
+
+		@Override
+		public void run() {
+			iExtMaintService.pushVipCoupon(vipcouponsList);
 		}
 	}
 	
@@ -174,6 +215,45 @@ public class VipCouponMaintServiceImpl implements IVipCouponMaintService, Serial
 			FastLog.error("调用VipCouponMaintServiceImpl.gainVipCoupon报错：", e);
 		}
 
+		return result;
+	}
+
+	@Override
+	public Result useVipCoupon(String code, String vipcode) {
+		Result result = new Result();
+		
+		try {
+			MVipcouponExample vipcouponExample = new MVipcouponExample();
+			vipcouponExample.createCriteria().andCodeEqualTo(code.trim());
+			vipcouponExample.setOrderByClause("useflag desc");
+			List<MVipcoupon> list = vipcouponMapper.selectByExample(vipcouponExample);
+			if (list == null || list.size() < 1) {
+				result.setMessage("券号无效");
+				return result;
+			}
+			MVipcoupon vipcoupon = list.get(0);
+			MVip vip = vipMapper.selectByPrimaryKey(vipcoupon.getVipid());
+			if (vip == null || vip.getId() == null || !vip.getCode().equals(vipcode.trim())) {
+				result.setMessage("券"+code+"不属于会员"+vipcode+"，不能使用！");
+				return result;
+			}
+			if (vipcoupon.getUseflag().intValue() == 1) {
+				result.setErrcode(Integer.valueOf(1));
+				result.setMessage("此券已使用");
+				return result;
+			}
+			Date now = new Date();
+			vipcoupon.setUseflag(Byte.valueOf("1"));
+			vipcoupon.setUsetime(now);
+			vipcoupon.setUpdatedtime(now);
+			vipcouponMapper.updateByPrimaryKeySelective(vipcoupon);
+			result.setMessage("使用成功");
+			result.setErrcode(Integer.valueOf(0));
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用VipCouponMaintServiceImpl.useVipCoupon报错：", e);
+		}
+		
 		return result;
 	}
 

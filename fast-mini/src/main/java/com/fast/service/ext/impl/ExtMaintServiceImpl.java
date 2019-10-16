@@ -185,6 +185,8 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 	private boolean updateVipDepositRecordLock = false;
 	// 推送优惠券任务锁
 	private boolean pushCouponLock = false;
+	// 推送会员优惠券任务锁
+	private boolean pushVipCouponLock = false;
 
 	/**
 	 * 同步数据
@@ -1640,7 +1642,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 						MOrder order = orderMapper.selectByPrimaryKey(Integer.valueOf(list.get(i).get("id").toString()));
 						iOrderMaintService.rollbackOrder(order);
 					} catch (Exception e) {
-						System.out.println("订单自动取消失败：orderid="+list.get(i).get("id").toString());
+						System.out.println("订单自动取消失败：id="+list.get(i).get("id").toString());
 						FastLog.error("调用ExtMaintServiceImpl.cancelOrderTask修改订单状态报错：", e);
 						continue;
 					}
@@ -1692,10 +1694,10 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 						if (Common.isActive(r)) {
 							
 						} else {
-							System.out.println("推送订单失败：orderid="+list.get(i).get("id").toString());
+							System.out.println("推送订单失败：id="+list.get(i).get("id").toString());
 						}
 					} catch (Exception e) {
-						System.out.println("推送订单失败：orderid="+list.get(i).get("id").toString());
+						System.out.println("推送订单失败：id="+list.get(i).get("id").toString());
 						FastLog.error("调用ExtMaintServiceImpl.pushOrderTask推送订单报错：", e);
 						continue;
 					}
@@ -1757,10 +1759,10 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 								}
 							}
 						} else {
-							System.out.println("查询订单状态失败：orderno="+list.get(i).get("no").toString());
+							System.out.println("查询订单状态失败：id="+list.get(i).get("id").toString());
 						}
 					} catch (Exception e) {
-						System.out.println("更新订单状态失败：orderid="+list.get(i).get("id").toString());
+						System.out.println("更新订单状态失败：id="+list.get(i).get("id").toString());
 						FastLog.error("调用ExtMaintServiceImpl.changeOrderStatusTask更新订单状态报错：", e);
 						continue;
 					}
@@ -1986,7 +1988,7 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 				for (int i = 0; i < list.size(); i++) {
 					Result r = createCoupon(extsystem, Integer.valueOf(list.get(i).get("id").toString()));
 					if (!Common.isActive(r)) {
-						System.out.println("推送优惠券失败，couponid=" + list.get(i).get("id").toString());
+						System.out.println("推送优惠券失败，id=" + list.get(i).get("id").toString());
 					}
 				}
 			}
@@ -2063,8 +2065,8 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 		jsonObject.put("creater",  coupon.getCreator());	
 		if (coupon.getTimetype().intValue() == 1) {
 			sdf = new SimpleDateFormat("yyyy-MM-dd");			
-			jsonObject.put("beginTime", sdf.format(coupon.getBegintime()));
-			jsonObject.put("endTime", sdf.format(coupon.getBegintime()));
+			jsonObject.put("beginTime", sdf.format(coupon.getBegintime()) + " 00:00:00");
+			jsonObject.put("endTime", sdf.format(coupon.getBegintime())  + " 23:59:59");
 		}
 		return jsonObject;
 	}
@@ -2194,6 +2196,148 @@ public class ExtMaintServiceImpl implements IExtMaintService, Serializable {
 			FastLog.error("调用ExtMaintServiceImpl.changeCouponSuitDepartments报错：", e);
 		}
 		
+		return result;
+	}
+
+	@Override
+	public Result pushVipCoupon(List<MVipcoupon> vipcouponsList) {
+		Result result = new Result();
+
+		try {
+			if (vipcouponsList != null && vipcouponsList.size() > 0) {
+				MExtsystem extsystem = null;
+				MExtsystemExample extsystemExample = new MExtsystemExample();
+				extsystemExample.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+				List<MExtsystem> extList = extsystemMapper.selectByExample(extsystemExample);
+				if (extList != null && extList.size() > 0) {
+					extsystem = extList.get(0);
+				}
+				if (extsystem == null) {
+					result.setMessage("接口配置错误");
+					return result;
+				}
+				
+				for (MVipcoupon vipcoupon : vipcouponsList) {
+					MCoupon coupon = couponMapper.selectByPrimaryKey(vipcoupon.getCouponid());
+					if (coupon == null || Common.isEmpty(coupon.getExtid())) {
+						break;
+					}
+					MVip vip = vipMapper.selectByPrimaryKey(vipcoupon.getVipid());
+					if (vip == null || Common.isEmpty(vip.getExtid())) {
+						break;
+					}
+					JSONObject jsonObject = new JSONObject();
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					jsonObject.put("employeeID", "");
+					jsonObject.put("beginTime", sdf.format(vipcoupon.getBegintime()));
+					jsonObject.put("endTime", sdf.format(vipcoupon.getEndtime()));
+					jsonObject.put("getTime", sdf.format(vipcoupon.getGettime()));
+					// 0未使用 1已使用 不传默认0
+					jsonObject.put("status", vipcoupon.getUseflag());
+					jsonObject.put("ticketID", coupon.getExtid());
+					jsonObject.put("ticketNo", vipcoupon.getCode());
+					jsonObject.put("vipID", vip.getExtid());
+					
+					String url = extsystem.getServeraddress() + "/api/vip/couponGrant";
+					net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+					if (object != null) {
+						result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+						if (Common.isActive(result)) {
+							String extid = result.getId() == null ? "" : result.getId().toString();
+							if (!Common.isEmpty(extid)) {
+								vipcoupon.setExtid(extid.trim());
+								vipcoupon.setUpdatedtime(new Date());
+								vipcouponMapper.updateByPrimaryKeySelective(vipcoupon);
+							}
+						}
+					}
+				}
+				result.setErrcode(Integer.valueOf(0));
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.pushVipCoupon报错：", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public Result pushVipCouponStatus(MVipcoupon vipcoupon) {
+		Result result = new Result();
+
+		try {
+			if (vipcoupon != null && vipcoupon.getId() != null) {
+				MExtsystem extsystem = null;
+				MExtsystemExample extsystemExample = new MExtsystemExample();
+				extsystemExample.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+				List<MExtsystem> extList = extsystemMapper.selectByExample(extsystemExample);
+				if (extList != null && extList.size() > 0) {
+					extsystem = extList.get(0);
+				}
+				if (extsystem == null) {
+					result.setMessage("接口配置错误");
+					return result;
+				}
+				JSONObject jsonObject = new JSONObject();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				jsonObject.put("status", vipcoupon.getUseflag());
+				jsonObject.put("ticketNo", vipcoupon.getCode());
+				jsonObject.put("useTime", sdf.format(vipcoupon.getUsetime()));
+				
+				String url = extsystem.getServeraddress() + "/api/vip/couponDestroy";
+				net.sf.json.JSONObject object = CommonUtil.httpRequest(url, "POST", jsonObject.toString());
+				if (object != null) {
+					result = com.alibaba.fastjson.JSONObject.parseObject(object.toString(), Result.class);
+				}
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.pushVipCouponStatus报错：", e);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public Result pushVipCouponTask() {
+		System.out.println("推送会员优惠券开始...");
+		Result result = new Result();
+
+		try {
+			if (pushVipCouponLock) {
+				return result;
+			}
+			MExtsystem extsystem = null;
+			MExtsystemExample extsystemExample = new MExtsystemExample();
+			extsystemExample.createCriteria().andUseflagEqualTo(Byte.valueOf("1")).andActiveEqualTo(Byte.valueOf("1"));
+			List<MExtsystem> extList = extsystemMapper.selectByExample(extsystemExample);
+			if (extList != null && extList.size() > 0) {
+				extsystem = extList.get(0);
+			}
+			if (extsystem == null) {
+				result.setMessage("接口配置错误");
+				return result;
+			}
+			
+			// 上锁
+			pushVipCouponLock = true;
+			
+			MVipcouponExample example = new MVipcouponExample();
+			example.createCriteria().andExtidIsNull();
+			List<MVipcoupon> list = vipcouponMapper.selectByExample(example);
+			if (list != null && list.size() > 0) {
+				pushVipCoupon(list);
+			}
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			FastLog.error("调用ExtMaintServiceImpl.pushVipCouponTask报错：", e);
+		} finally {
+			// 解锁
+			pushVipCouponLock = false;
+		}
+		
+		System.out.println("推送会员优惠券结束...");
 		return result;
 	}
 

@@ -296,6 +296,8 @@ function showSendBox(idx, data) {
 			common.showLoading();
 			api.load('./vip/gift','post',data, function(result) {
 				if (result.errcode == 0) {
+					var pageno = $("#layPage .layui-laypage-em").next().html();
+					loadPageData(pageno);
 					layer.close(index);
 					common.tips(result.message);
 				} else {
